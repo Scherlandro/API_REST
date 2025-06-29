@@ -1,0 +1,91 @@
+
+<div>
+  <mat-card-content class="body-user">
+
+    <mat-toolbar class="head-table body">
+      <h3> Usuarios </h3>
+      <button class="button-add" (click)="openDialogo(usuarioControl.value)">
+        <mat-icon>add</mat-icon>
+      </button>
+      <input matInput class="input-table-user" type="text" placeholder="Digite a busca"
+             [formControl]="usuarioControl" (keydown)="listarUsuarios()"
+             (keyup)="aplicarFiltro(usuarioControl.value)"
+             [matAutocomplete]="auto"
+             [errorStateMatcher]="notificationMsg"
+      />
+      <mat-error
+        *ngIf="usuarioControl.invalid"
+      >Busca invalida. Por favor digite novamente.
+      </mat-error>
+      <mat-autocomplete #auto="matAutocomplete">
+        <mat-option [value]="iUsuarios.name" *ngFor="let iUsuarios of elementsFilter">{{iUsuarios.name}}</mat-option>
+      </mat-autocomplete>
+      <button class="button-search" (click)="consultarPorNome(usuarioControl.value)">
+        <mat-icon>list</mat-icon>
+      </button>
+
+    </mat-toolbar>
+
+    <table mat-table class="componet-gradient body" [dataSource]="tbSourceUsuarios$"
+           matSort (matSortChange)="onMatSortChange()"
+           matSortDirection="asc"
+           multiTemplateDataRows>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+
+<!--      <ng-container matColumnDef="select">
+        <th mat-header-cell *matHeaderCellDef>
+          <mat-checkbox (change)="$event ? masterToggle() : null"
+                        [checked]="selection.hasValue() && isAllSelected()"
+                        [indeterminate]="selection.hasValue() && !isAllSelected()">
+          </mat-checkbox>
+        </th>
+        <td mat-cell *matCellDef="let row;">
+          <mat-checkbox (click)=" $event.stopPropagation();
+                        selectRow(row) "
+                        (change)="$event ? selection.toggle(row) : null"
+                        [checked]="selection.isSelected(row)"  >
+          </mat-checkbox>
+        </td>
+      </ng-container>-->
+
+      <ng-container matColumnDef="nome_usuario">
+        <th mat-header-cell *matHeaderCellDef> Nome</th>
+        <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="email">
+        <th mat-header-cell *matHeaderCellDef> Email</th>
+        <td mat-cell *matCellDef="let element"> {{element.username}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="opicoes">
+        <th mat-header-cell *matHeaderCellDef> Opições</th>
+        <td mat-cell *matCellDef="let element">
+          <div class="buttons-grid">
+            <button mat-icon-button class="edit componet-gradient" (click)="editarElement(element)">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button mat-icon-button class="delete componet-gradient" (click)="deleteElement(element)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </td>
+      </ng-container>
+
+     <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+          (click)="selectRow(row);
+          selection.toggle(row)">
+      </tr>
+
+    </table>
+
+    <mat-paginator [length]="100"
+                   [pageSize]="5"
+                   [pageSizeOptions]="[5, 10, 25, 100]"
+                   (page)="$event"
+                   class="componet-gradient"
+                   aria-label="Select page">
+    </mat-paginator>
+
+  </mat-card-content>
+</div>

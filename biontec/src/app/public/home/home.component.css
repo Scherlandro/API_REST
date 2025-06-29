@@ -1,0 +1,101 @@
+
+
+.container-top-home{
+  width: auto;
+  height: auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr ;
+  grid-gap: 5px;
+  padding: 15px;
+  background: linear-gradient(145deg, #2a0c42, #4f2886);
+  box-shadow:  20px 20px 60px #281340,
+  -20px -20px 60px #3d5257;
+  color: #72ec3a;
+  -webkit-border-radius: 20px;
+  -moz-border-radius: 20px;
+  border-radius: 10px;
+}
+
+.component-about-me{
+  width: auto;
+  display: grid;
+  background: linear-gradient(145deg, #2a0c42, #4f2886);
+  box-shadow:  20px 20px 60px #281340,
+  -20px -20px 60px #3d5257;
+  color: #72ec3a;
+  -webkit-border-radius: 20px;
+  -moz-border-radius: 20px;
+  border-radius: 10px;
+  font-family:"Fira Code Light";
+  font-size: 14px;
+  padding: 8px 20px 10px 20px;
+}
+.component-about-me:hover{
+  color: #00030a;
+  cursor: default;
+}
+
+.label-descrition{
+  width: auto;
+  font-family:"Fira Code Light";
+  font-size: 14px;
+  color: #32e27e;
+  padding: 8px 20px 10px 20px;
+  border-radius: 10px;
+  -webkit-border-radius: 20px;
+  -moz-border-radius: 20px;
+}
+.label-descrition:hover{
+  color: #00030a;
+  cursor: default;
+}
+
+.graphic-of-languages{
+  border-radius: 20px;
+  background: linear-gradient(145deg, #4f2886, #b884e2);
+  box-shadow:  20px 20px 60px #281340,
+  -20px -20px 60px #9975d5;
+  width: auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr ;
+  grid-gap: 5px;
+  justify-content: left;
+  padding: 8px 20px 10px 20px;
+}
+.button-sign-up{
+  border-radius: 8px;
+  background-image: -o-linear-gradient(top, #99bdbc, #205878);
+  background-image: linear-gradient(to bottom, #99bdbc, #205878);
+}
+
+.conteiner-contactme{
+  width: auto;
+  height: auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr ;
+  grid-gap: 5px;
+  background: linear-gradient(145deg, #2a0c42, #4f2886);
+  box-shadow:  20px 20px 60px #281340,
+  -20px -20px 60px #3d5257;
+  color: #72ec3a;
+  -webkit-border-radius: 20px;
+  -moz-border-radius: 20px;
+  border-radius: 10px;
+  font-family:"Fira Code Light";
+  font-size: 14px;
+  padding: 8px 20px 10px 20px;
+}
+
+.grid-mast {
+  display: grid;
+  max-width: 100%;
+  grid-template-columns: 1fr 1fr 1fr ;
+}
+
+.s-grid {
+  border-left:1px solid #aaa;
+  max-width: 95px;
+  margin-top: 0px;
+  margin-bottom: 2px;
+}
+

@@ -1,0 +1,103 @@
+.body-user{
+  background-color: rgba(96, 30, 160, 0);
+}
+
+.mat-card-table{
+  width: auto;
+  height: auto;
+  display: grid;
+  padding: 15px;
+  background: linear-gradient(145deg, rgba(205, 184, 232, 0.45), rgba(155, 127, 213, 0.34));
+  box-shadow:  20px 20px 60px #b2acc4,
+  -20px -20px 60px #3d5257;
+  color: #1a2b15;
+  -webkit-border-radius: 20px;
+  -moz-border-radius: 20px;
+  border-radius: 10px;
+}
+
+.head-table{
+  border-radius: 15px;
+  background-color: rgba(51, 33, 83, 0.07);
+  color: #0f2102;
+  display: grid;
+  align-content: end;
+  grid-template-columns: 1fr 3fr 1fr 1fr;
+  grid-gap: 2px;
+  min-height: 45px;
+  height: auto;
+}
+
+.input-table-user{
+  padding-inline-start: 10px;
+  border-bottom-left-radius: 15px;
+  min-height: 25px;
+  height: auto;
+  max-width: 300px;
+  width: auto;
+  color: #32e27e;
+  background: rgba(0, 3, 10, 0.05);
+}
+
+.button-add{
+  max-width: 80px;
+  width: auto;
+  height: 35px;
+  background-color: rgba(51, 33, 83, 0.07);
+  -webkit-border-radius: 20px;
+  -moz-border-radius: 20px;
+  border-radius: 20px;
+}
+
+.buttons-grid{
+  display: grid;
+  grid-template-columns: 1fr 1fr
+}
+
+.button-search {
+  min-width: 80px;
+  width: auto;
+  height: 35px;
+  background-color: rgba(51, 33, 83, 0.07);
+  -webkit-border-radius: 20px;
+  -moz-border-radius: 20px;
+  border-radius: 20px;
+}
+
+.edit{
+  color: #041436;
+  padding-right: 18px;
+}
+.delete{
+  color: #00ccff;
+  padding-left: 18px;
+}
+
+.mat-header{
+  width: 8rem;
+}
+
+.componet-gradient{
+  min-width: 100%;
+  width: auto;
+  height: 40px;
+  background-color: rgba(51, 33, 83, 0.07);
+  -webkit-border-radius: 20px;
+  -moz-border-radius: 20px;
+  border-radius: 20px;
+}
+.componet-gradient:hover {
+  background-image: -webkit-linear-gradient(top, #8438ee, #34db85);
+  background-image: -moz-linear-gradient(top, #8438ee, #34db85);
+  background-image: -ms-linear-gradient(top, #8438ee, #34db85);
+  background-image: -o-linear-gradient(top, #8438ee, #34db85);
+  background-image: linear-gradient(to bottom, #8438ee, #34db85);
+}
+
+.loading-spinner{
+  padding: 25px;
+  background: rgba(0,0,0,0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

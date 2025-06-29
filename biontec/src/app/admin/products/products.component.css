@@ -1,0 +1,155 @@
+.body-prod-ad{
+  background-color: rgba(96, 30, 160, 0);
+}
+.head-table{
+  border-radius: 15px;
+  background-color: rgba(51, 33, 83, 0.07);
+  color: #0f2102;
+  display: grid;
+  align-content: end;
+  grid-template-columns: 1fr 3fr 1fr 1fr;
+  grid-gap: 2px;
+  min-height: 45px;
+  height: auto;
+}
+.input-table{
+  padding-inline-start: 10px;
+  border-bottom-left-radius: 15px;
+  min-height: 25px;
+  height: auto;
+  max-width: 300px;
+  width: auto;
+  color: #32e27e;
+  background: rgba(0, 3, 10, 0.05);
+}
+
+.colum-table{
+  max-width: max-content;
+}
+
+.loading-spinner{
+  padding: 25px;
+  background: rgba(0,0,0,0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.edit{
+  color: #041436;
+  cursor: pointer;
+}
+
+.delete{
+  color: #00ccff;
+}
+
+.button-add{
+  max-width: 80px;
+  width: auto;
+  height: 35px;
+  background-color: rgba(51, 33, 83, 0.07);
+  -webkit-border-radius: 20px;
+  -moz-border-radius: 20px;
+  border-radius: 20px;
+}
+
+.componet-gradient{
+  height:2%;
+  width: 100%;
+  background-color: rgba(51, 33, 83, 0.07);
+  -webkit-border-radius: 20px;
+  -moz-border-radius: 20px;
+  border-radius: 20px;
+  table-layout: fixed;
+}
+
+.button-search {
+  width: 100%;
+  min-width: 50px;
+  height: 35px;
+  background-color: rgba(51, 33, 83, 0.07);
+  -webkit-border-radius: 20px;
+  -moz-border-radius: 20px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.image-table{
+  height: auto;
+  min-height: 50px;
+  min-width: 50px;
+  width: 20%;
+}
+
+/*
+
+span {
+  position: absolute;
+  transform: rotate(-45deg);
+  top: -18px;
+  left: -25px;
+  white-space: nowrap;
+}
+
+.strikethrough {
+  text-decoration: line-through;
+}
+.text-sm {
+  font-size: 70% !important;
+  border-radius-base: 2px default;
+  transition-duration: 300ms;
+  spacer:   1rem default;
+}
+.media-grid {
+  text-align: center;
+  overflow: hidden;
+}
+
+figure img {
+  opacity: 0.85;
+  transition: transition-duration 2ms;
+}
+
+figure figcaption::before {
+  pointer-events: none;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-style: solid;
+  border-color: rgba(0, 0, 0, .38);
+  content: '';
+  transition: 2ms;
+  transition-duration: 2ms;
+}
+
+figure figcaption::before {
+  right: 0;
+  bottom: 0;
+  border-width: 0 45px 0 0;
+  transform: translate3d(45px, 0, 0);
+}
+
+figure figcaption,
+figure figcaption > a {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+figure figcaption > a {
+  z-index: 1000;
+  text-indent: 200%;
+  white-space: nowrap;
+  font-size: 0;
+  opacity: 0;
+}
+
+ */
+

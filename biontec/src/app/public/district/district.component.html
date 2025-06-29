@@ -1,0 +1,366 @@
+<!--<section>
+  <ul>
+    <li>
+      <a href="#">A 1</a>
+    </li>
+  </ul>
+  <ul>
+    <li>
+      <a href="#">B 2</a>
+    </li>
+  </ul>
+</section>-->
+
+
+<!--<div class="flex-container">
+  <app-area-sistema [area]="codigoAgrupado"></app-area-sistema>
+
+  <div *ngIf="codigoAgrupado > 2">
+    <div class="flex-sistema">
+    </div>
+  </div>
+</div>-->
+
+
+<section class="section-slide">
+<div class="container-fluid" >
+<div class="slider-wrap">
+<div class="slider-main">
+<div class="item">
+  <img class="image-slide" src="assets/image/doctor.png">
+</div>
+<div class="item">
+  <img class="image-slide" src="assets/image/inss-mini.jpg">
+</div>
+<div class="item">
+  <img class="image-slide" src="assets/image/police-office.jpg">
+</div>
+<div class="item">
+  <img class="image-slide" src="assets/image/cagece-mini.jpg">
+</div>
+<div class="item">
+  <img class="image-slide" src="assets/image/programmer.jpg">
+</div>
+<div class="item">
+  <img class="image-slide" src="assets/image/detran-mini.jpg">
+</div>
+<div class="item">
+  <img class="image-slide" src="assets/image/firefighters.jpg">
+</div>
+<div class="item">
+  <img src="assets/image/enel-mini.jpg" class="image-slide">
+</div>
+<div class="item">
+  <img class="image-slide" src="assets/image/teacher.jpg">
+</div>
+<div class="item">
+<img src="assets/image/secury-data.jpg" class="image-slide">
+</div>
+<div class="item">
+  <img class="image-slide" src="assets/image/lawyer.jpg">
+</div>
+<div class="item">
+  <div class="text">12</div>
+</div>
+<div class="item">
+<div class="text">13</div>
+</div>
+<div class="item">
+<div class="text">14</div>
+</div>
+<div class="item">
+<div class="text">15</div>
+</div>
+
+</div>
+<div class="button-area">
+<button type="button" class="button-prev" appPrev > Prev </button>
+<button type="button" class="button-next" appNext >Next</button>
+</div>
+</div>
+</div>
+</section>
+
+<!-- Section News --->
+<section  class="section-slide">
+  <section class="flex-container">
+  <strong>Div flex-container</strong>
+ <div class="parent">
+ <div>
+   <p>Div 1/2 grid(right)</p>
+  <div >
+    <div *ngFor="let news of topHeadlinesData" >
+   <!--   https://www.youtube.com/watch?v=5czWcxksHjc
+     https://www.youtube.com/watch?v=7IMYl4YxDn0
+     -->
+        <img src="{{news.image_url}} " alt="image" width="30px" height="30px">
+        <h5 >{{news.title}}</h5>
+        <time datetime="2023-08-18T17:00+03:00">{{news.pubDate}}</time>
+        <a href="{{news.link}}"  target="_blank">Ler agora</a>
+
+    </div>
+ </div>
+
+  <div class="div2">
+
+    <p>
+      <strong>  Div 2 (intern)  </strong>
+    </p>
+    <time datetime="2023-08-18T17:00+03:00">Notice here..for exemple......................................</time>
+
+  </div>
+ </div>
+
+  <div>
+    <p>Div 2/2 grid(lefth)</p>
+  <div class="div3">
+    <caption>Div3(intern)  </caption>
+    <button class="button-outhers">Outros Serviços</button>
+    <button class="button-outhers">Outros Serviços</button>
+    <button class="button-outhers">Outros Serviços</button>
+
+  </div>
+
+  <div class="div4">
+    <caption>Div4(intern)  </caption>
+    <button class="button-outhers">Outros Serviços</button>
+    <button class="button-outhers">Outros Serviços</button>
+    <button class="button-outhers">Outros Serviços</button>
+
+  </div>
+  </div>
+</div>
+</section>
+
+<div class="flex-container">
+  <strong>Div flex-container</strong>
+  <div class="parent">
+    <div>
+      <p>Div 1/2 grid(right)</p>
+      <div class="div1">
+        <p>
+          <strong>  Div 1 (intern)  </strong>
+        </p>
+        <time datetime="2023-08-18T17:00+03:00">Notice here..for exemple......................................</time>
+
+      </div>
+
+      <div class="div2">
+
+        <p>
+          <strong>  Div 2 (intern)  </strong>
+        </p>
+        <time datetime="2023-08-18T17:00+03:00">Notice here..for exemple......................................</time>
+
+      </div>
+    </div>
+
+    <div>
+      <p>Div 2/2 grid(lefth)</p>
+      <div class="div3">
+        <caption>Div3(intern)  </caption>
+        <button class="button-outhers">Outros Serviços</button>
+        <button class="button-outhers">Outros Serviços</button>
+        <button class="button-outhers">Outros Serviços</button>
+
+      </div>
+
+      <div class="div4">
+        <caption>Div4(intern)  </caption>
+        <button class="button-outhers">Outros Serviços</button>
+        <button class="button-outhers">Outros Serviços</button>
+        <button class="button-outhers">Outros Serviços</button>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+</section>
+
+	<!-- CONTENT -->
+	<section id="content">
+		<!-- NAVBAR -->
+		<nav class="nav-table">
+
+			<form action="#">
+				<div class="form-input">
+					<input class="input-search" type="search" placeholder="Search...">
+				</div>
+			</form>
+			<a target="_blank" href="https://www.youtube-nocookie.com/embed/7HPsdVQhpRw?playlist=7HPsdVQhpRw&autoplay=1&iv_load_policy=3&loop=1&modestbranding=1&start=" class="notification">
+				<i class='bx bxs-bell' ></i>
+				<span >Slide ex.</span>
+			</a>
+			<a target="_blank" href="https://www.youtube.com/watch?v=tihuf0iuUhI" class="profile">
+				<img src="assets/image/scherlandro_no_triciclo.png">
+			</a>
+      <a target="_blank" href="https://www.youtube.com/watch?v=n3ZXOhWg74w" >
+        <span > Tab simples</span>
+      </a>
+		</nav>
+		<!-- NAVBAR -->
+
+		<!-- MAIN -->
+		<main>
+
+			<div class="table-data">
+				<div class="order">
+					<div class="head">
+					</div>
+					<table>
+						<thead>
+							<tr>
+								<th>User</th>
+								<th>Date Order</th>
+								<th>Status</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>
+									<img src="assets/image/clone_old.png">
+									<p>John Doe</p>
+								</td>
+								<td>01-10-2021</td>
+								<td><span class="status completed">Completed</span></td>
+							</tr>
+							<tr>
+								<td>
+									<img src="assets/icons/boba_fett.png">
+									<p>John Doe</p>
+								</td>
+								<td>01-10-2021</td>
+								<td><span class="status pending">Pending</span></td>
+							</tr>
+							<tr>
+								<td>
+									<img src="assets/icons/xwing.png">
+									<p>John Doe</p>
+								</td>
+								<td>01-10-2021</td>
+								<td><span class="status process">Process</span></td>
+							</tr>
+							<tr>
+								<td>
+									<img src="assets/icons/r2_d2.png">
+									<p>John Doe</p>
+								</td>
+								<td>01-10-2021</td>
+								<td><span class="status pending">Pending</span></td>
+							</tr>
+							<tr>
+								<td>
+									<img src="assets/icons/naboo_starfighter.png">
+									<p>John Doe</p>
+								</td>
+								<td>01-10-2021</td>
+								<td><span class="status completed">Completed</span></td>
+							</tr>
+						</tbody>
+					</table>
+        </div>
+      </div>
+
+		</main>
+		<!-- MAIN -->
+	</section>
+
+<form action="http://localhost:8080/app" method="POST" class="city-selector-form formCity">
+
+  <div class="list-wrap">
+    <div class="src-local">
+      <input type="text" name="" id="search-text" placeholder="Digite sua localização" class="search-box">
+    </div>
+    <ul class="menu-selector-city" id="list">
+      <li class="in"><label for="84"><input type="radio" name="citycode" class="radioCity" value="84" id="84"> Aguaí - SP</label></li>
+      <li class="in"><label for="85"><input type="radio" name="citycode" class="radioCity" value="85" id="85"> Águas da Prata - SP</label></li>
+      <li class="in"><label for="742"><input type="radio" name="citycode" class="radioCity" value="742" id="742"> Alfenas - MG</label></li>
+      <li class="in"><label for="743"><input type="radio" name="citycode" class="radioCity" value="743" id="743"> Alterosa - MG</label></li>
+      <li class="in"><label for="913"><input type="radio" name="citycode" class="radioCity" value="913" id="913"> Aquiraz - CE</label></li>
+      <li class="in"><label for="1036"><input type="radio" name="citycode" class="radioCity" value="1036" id="1036"> Araras - SP</label></li>
+      <li class="in"><label for="783"><input type="radio" name="citycode" class="radioCity" value="783" id="783"> Areado - MG</label></li>
+      <li class="in"><label for="612"><input type="radio" name="citycode" class="radioCity" value="612" id="612"> Atibaia - SP</label></li>
+      <li class="in"><label for="744"><input type="radio" name="citycode" class="radioCity" value="744" id="744"> Bandeira do Sul - MG</label></li>
+      <li class="in"><label for="745"><input type="radio" name="citycode" class="radioCity" value="745" id="745"> Bom Jesus da Penha - MG</label></li>
+      <li class="in"><label for="746"><input type="radio" name="citycode" class="radioCity" value="746" id="746"> Botelhos - MG</label></li>
+      <li class="in"><label for="1061"><input type="radio" name="citycode" class="radioCity" value="1061" id="1061"> Brejinho - RN</label></li>
+      <li class="in"><label for="747"><input type="radio" name="citycode" class="radioCity" value="747" id="747"> Cabo Verde - MG</label></li>
+      <li class="in"><label for="748"><input type="radio" name="citycode" class="radioCity" value="748" id="748"> Cachoeira de Minas - MG</label></li>
+      <li class="in"><label for="86"><input type="radio" name="citycode" class="radioCity" value="86" id="86"> Caconde - SP</label></li>
+      <li class="in"><label for="749"><input type="radio" name="citycode" class="radioCity" value="749" id="749"> Caldas - MG</label></li>
+      <li class="in"><label for="76"><input type="radio" name="citycode" class="radioCity" value="76" id="76"> Cambuquira - MG</label></li>
+      <li class="in"><label for="87"><input type="radio" name="citycode" class="radioCity" value="87" id="87"> Campanha - MG</label></li>
+      <li class="in"><label for="750"><input type="radio" name="citycode" class="radioCity" value="750" id="750"> Campestre - MG</label></li>
+      <li class="in"><label for="1062"><input type="radio" name="citycode" class="radioCity" value="1062" id="1062"> Canguaretama - RN</label></li>
+      <li class="in"><label for="751"><input type="radio" name="citycode" class="radioCity" value="751" id="751"> Carmo de Minas - MG</label></li>
+      <li class="in"><label for="88"><input type="radio" name="citycode" class="radioCity" value="88" id="88"> Casa Branca - SP</label></li>
+      <li class="in"><label for="916"><input type="radio" name="citycode" class="radioCity" value="916" id="916"> Caucaia - CE</label></li>
+      <li class="in"><label for="752"><input type="radio" name="citycode" class="radioCity" value="752" id="752"> Conceição do Rio Verde - MG</label></li>
+      <li class="in"><label for="89"><input type="radio" name="citycode" class="radioCity" value="89" id="89"> Divinolândia - SP</label></li>
+      <li class="in"><label for="753"><input type="radio" name="citycode" class="radioCity" value="753" id="753"> Divisa Nova - MG</label></li>
+      <li class="in"><label for="754"><input type="radio" name="citycode" class="radioCity" value="754" id="754"> Elói Mendes- MG</label></li>
+      <li class="in"><label for="90"><input type="radio" name="citycode" class="radioCity" value="90" id="90"> Espírito Santo do Pinhal - SP</label></li>
+      <li class="in"><label for="91"><input type="radio" name="citycode" class="radioCity" value="91" id="91"> Estiva Gerbi - SP</label></li>
+      <li class="in"><label for="755"><input type="radio" name="citycode" class="radioCity" value="755" id="755"> Eunápolis - BA</label></li>
+      <li class="in"><label for="914"><input type="radio" name="citycode" class="radioCity" value="914" id="914"> Eusébio - CE</label></li>
+      <li class="in"><label for="756"><input type="radio" name="citycode" class="radioCity" value="756" id="756"> Fama - MG</label></li>
+      <li class="in"><label for="909"><input type="radio" name="citycode" class="radioCity" value="909" id="909"> Fortaleza - CE</label></li>
+      <li class="in"><label for="1063"><input type="radio" name="citycode" class="radioCity" value="1063" id="1063"> Goianinha - RN</label></li>
+      <li class="in"><label for="92"><input type="radio" name="citycode" class="radioCity" value="92" id="92"> Guaranésia - MG</label></li>
+      <li class="in"><label for="93"><input type="radio" name="citycode" class="radioCity" value="93" id="93"> Guaxupé - MG</label></li>
+      <li class="in"><label for="757"><input type="radio" name="citycode" class="radioCity" value="757" id="757"> Ibitiura de Minas - MG</label></li>
+      <li class="in"><label for="758"><input type="radio" name="citycode" class="radioCity" value="758" id="758"> Ipuiúna - MG</label></li>
+      <li class="in"><label for="759"><input type="radio" name="citycode" class="radioCity" value="759" id="759"> Itajubá - MG</label></li>
+      <li class="in"><label for="760"><input type="radio" name="citycode" class="radioCity" value="760" id="760"> Itamonte - MG</label></li>
+      <li class="in"><label for="761"><input type="radio" name="citycode" class="radioCity" value="761" id="761"> Itanhandu - MG</label></li>
+      <li class="in"><label for="94"><input type="radio" name="citycode" class="radioCity" value="94" id="94"> Itobi - SP</label></li>
+      <li class="in"><label for="1050"><input type="radio" name="citycode" class="radioCity" value="1050" id="1050"> João Pessoa - PB</label></li>
+      <li class="in"><label for="95"><input type="radio" name="citycode" class="radioCity" value="95" id="95"> Lambari - MG</label></li>
+      <li class="in"><label for="980"><input type="radio" name="citycode" class="radioCity" value="980" id="980"> Limeira - SP</label></li>
+      <li class="in"><label for="915"><input type="radio" name="citycode" class="radioCity" value="915" id="915"> Maracanaú - CE</label></li>
+      <li class="in"><label for="96"><input type="radio" name="citycode" class="radioCity" value="96" id="96"> Mococa - SP</label></li>
+      <li class="in"><label for="97"><input type="radio" name="citycode" class="radioCity" value="97" id="97"> Mogi Guaçu - SP</label></li>
+      <li class="in"><label for="98"><input type="radio" name="citycode" class="radioCity" value="98" id="98"> Mogi Mirim - SP</label></li>
+      <li class="in"><label for="1064"><input type="radio" name="citycode" class="radioCity" value="1064" id="1064"> Monte Alegre - RN</label></li>
+      <li class="in"><label for="762"><input type="radio" name="citycode" class="radioCity" value="762" id="762"> Monte Belo - MG</label></li>
+      <li class="in"><label for="99"><input type="radio" name="citycode" class="radioCity" value="99" id="99"> Monte Santo de Minas - MG</label></li>
+      <li class="in"><label for="764"><input type="radio" name="citycode" class="radioCity" value="764" id="764"> Muzambinho - MG</label></li>
+      <li class="in"><label for="1058"><input type="radio" name="citycode" class="radioCity" value="1058" id="1058"> Natal - RN</label></li>
+      <li class="in"><label for="1065"><input type="radio" name="citycode" class="radioCity" value="1065" id="1065"> Nísia Floresta - RN</label></li>
+      <li class="in"><label for="765"><input type="radio" name="citycode" class="radioCity" value="765" id="765"> Nova Resende - MG</label></li>
+      <li class="in"><label for="917"><input type="radio" name="citycode" class="radioCity" value="917" id="917"> Pacatuba - CE</label></li>
+      <li class="in"><label for="766"><input type="radio" name="citycode" class="radioCity" value="766" id="766"> Paraguaçu - MG</label></li>
+      <li class="in"><label for="1059"><input type="radio" name="citycode" class="radioCity" value="1059" id="1059"> Parnamirim - RN</label></li>
+      <li class="in"><label for="767"><input type="radio" name="citycode" class="radioCity" value="767" id="767"> Passa Quatro - MG</label></li>
+      <li class="in"><label for="768"><input type="radio" name="citycode" class="radioCity" value="768" id="768"> Poços de Caldas - MG</label></li>
+      <li class="in"><label for="769"><input type="radio" name="citycode" class="radioCity" value="769" id="769"> Porto Seguro - BA</label></li>
+      <li class="in"><label for="770"><input type="radio" name="citycode" class="radioCity" value="770" id="770"> Pouso Alegre - MG</label></li>
+      <li class="in"><label for="771"><input type="radio" name="citycode" class="radioCity" value="771" id="771"> Pouso Alto - MG</label></li>
+      <li class="in"><label for="1269"><input type="radio" name="citycode" class="radioCity" value="1269" id="1269"> Rio Claro - SP</label></li>
+      <li class="in"><label for="772"><input type="radio" name="citycode" class="radioCity" value="772" id="772"> Santa Cruz Cabrália - BA</label></li>
+      <li class="in"><label for="773"><input type="radio" name="citycode" class="radioCity" value="773" id="773"> Santa Rita de Caldas - MG</label></li>
+      <li class="in"><label for="774"><input type="radio" name="citycode" class="radioCity" value="774" id="774"> Santa Rita do Sapucaí - MG</label></li>
+      <li class="in"><label for="1066"><input type="radio" name="citycode" class="radioCity" value="1066" id="1066"> Santo Antônio - RN</label></li>
+      <li class="in"><label for="100"><input type="radio" name="citycode" class="radioCity" value="100" id="100"> São Bento Abade - MG</label></li>
+      <li class="in"><label for="1060"><input type="radio" name="citycode" class="radioCity" value="1060" id="1060"> São Gonçalo do Amarante - RN</label></li>
+      <li class="in"><label for="775"><input type="radio" name="citycode" class="radioCity" value="775" id="775"> São Gonçalo do Sapucaí - MG</label></li>
+      <li class="in"><label for="101"><input type="radio" name="citycode" class="radioCity" value="101" id="101"> São João da Boa Vista - SP</label></li>
+      <li class="in"><label for="1067"><input type="radio" name="citycode" class="radioCity" value="1067" id="1067"> São José do Mipibu - RN</label></li>
+      <li class="in"><label for="102"><input type="radio" name="citycode" class="radioCity" value="102" id="102"> São José do Rio Pardo - SP</label></li>
+      <li class="in"><label for="776"><input type="radio" name="citycode" class="radioCity" value="776" id="776"> São Lourenço - MG</label></li>
+      <li class="in"><label for="777"><input type="radio" name="citycode" class="radioCity" value="777" id="777"> São Pedro da União - MG</label></li>
+      <li class="in"><label for="103"><input type="radio" name="citycode" class="radioCity" value="103" id="103"> São Sebastião da Grama - SP</label></li>
+      <li class="in"><label for="778"><input type="radio" name="citycode" class="radioCity" value="778" id="778"> São Sebastião do Rio Verde - MG</label></li>
+      <li class="in"><label for="104"><input type="radio" name="citycode" class="radioCity" value="104" id="104"> São Thomé das Letras - MG</label></li>
+      <li class="in"><label for="779"><input type="radio" name="citycode" class="radioCity" value="779" id="779"> Serrania - MG</label></li>
+      <li class="in"><label for="780"><input type="radio" name="citycode" class="radioCity" value="780" id="780"> Tambaú - SP</label></li>
+      <li class="in"><label for="105"><input type="radio" name="citycode" class="radioCity" value="105" id="105"> Tapiratiba - SP</label></li>
+      <li class="in"><label for="1068"><input type="radio" name="citycode" class="radioCity" value="1068" id="1068"> Tibau do Sul - RN</label></li>
+      <li class="in"><label for="106"><input type="radio" name="citycode" class="radioCity" value="106" id="106"> Três Corações - MG</label></li>
+      <li class="in"><label for="781"><input type="radio" name="citycode" class="radioCity" value="781" id="781"> Três Pontas - MG</label></li>
+      <li class="in"><label for="107"><input type="radio" name="citycode" class="radioCity" value="107" id="107"> Vargem Grande do Sul - SP</label></li>
+      <li class="in"><label for="782"><input type="radio" name="citycode" class="radioCity" value="782" id="782"> Varginha - MG</label></li>
+    </ul>
+  </div>
+</form>

@@ -1,0 +1,39 @@
+.comp-contabil-sizes{
+  width: auto;
+  max-height: 450px;
+  height: auto;
+}
+.comp-contabil-colors{
+  color: #00030a;
+  background-image: -webkit-linear-gradient(top, #4d1d89, #87f3be);
+  background-image: -moz-linear-gradient(top, #4d1d89, #87f3be);
+  background-image: -ms-linear-gradient(top,#4d1d89, #87f3be);
+  background-image: -o-linear-gradient(top, #d66cf3, #87f3be);
+  background-image: linear-gradient(to bottom, #d66cf3, #87f3be);
+}
+
+.button-sizes{
+  width: 180px;
+  height: 30px;
+  border-radius: 20px;
+  background-image: -webkit-linear-gradient(top, #d5c9e5, #5b615e);
+}
+.input-date{
+  width: 120px;
+  height: 25px;
+  padding: 1px;
+  border-radius: 8px;
+  background-image: -webkit-linear-gradient(top, #d5c9e5, #5b615e);
+}
+.config-component{
+  display: grid ;
+  grid-template-columns: 1fr 3fr 1fr;
+  grid-gap: 2fr;
+}
+.input-out-line{
+  border-left:none;
+  border-right: none;
+  border-top:none;
+}
+
+

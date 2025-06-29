@@ -1,0 +1,92 @@
+/*@import "~swiper/css";
+@import "~swiper/css/effect-cube";
+@import "~swiper/css/pagination";*/
+
+/*
+.toolbar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 40px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  background-color: #2c044b;
+  color: lawngreen;
+  font-weight: 600;
+}
+*/
+
+.toolbar img {
+  margin: 0 16px;
+}
+.div-top{
+  margin: 280px 0px 0px 8px ;
+  display: grid;
+/*  grid-template-columns: repeat(auto-fit,mimax(250px, 1fr));*/
+  grid-gap: 10px;
+
+}
+.header-image {
+  background-image: url('~src/assets/image/scherlandro.jpg');
+  background-size: cover;
+}
+.menu-lable{
+    width: 100%;
+    display: grid;
+    grid-template-columns: 0.5fr 1.5fr 1fr 2fr 1fr ;
+    grid-gap: 4px;
+  border-radius: 30px;
+  background-color: rgba(4, 28, 75, 0);
+}
+.lable-link{
+  padding: 5px;
+  text-decoration-color: rgba(255, 255, 255, 0);
+  width: fit-content;
+  color: #00030a;
+  cursor: pointer;
+  -webkit-border-radius: 20px;
+  -moz-border-radius: 20px;
+  border-radius: 20px;
+}
+/*
+
+mat-nav-list {
+  div[role="group"] {
+    padding-left: 20px;
+  }
+
+
+  .mat-icon {
+    position: absolute;
+    right: 20px;
+  }
+}
+/*
+
+.swiper-conteiner-head{
+  max-width: 80px;
+  width: 100%;
+  height: 100px;
+  margin: 50px 0px 0px 30px;
+  position: absolute;
+  border-radius: 18px;
+}
+.swiper-slide-head {
+  background-position: center;
+  background-size: cover;
+}
+.swiper-slide-head img {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.imag-swiper-head{
+  width: 100%;
+  height: 100%;
+  margin: auto;
+  background-color: rgba(67, 11, 116, 0.08);
+  border-radius: 18px;
+}
+*/

@@ -1,0 +1,235 @@
+<div>
+  <mat-card class="mat-card-table">
+
+    <mat-toolbar class="head-table-vd body">
+      <h3> Vendas </h3>
+      <button class="button-add" (click)="openDilogVd(vendaControl.value)">
+        <mat-icon>add</mat-icon>
+      </button>
+      <input class="input-table-vd" type="text" placeholder=" Digite a consulta" matInput
+             [formControl]="vendaControl"
+             (keypress)="changeSales(vendaControl.value)"
+             (keydown)="listarVenda()"
+             (ngModelChange)="consultarPorCliente(vendaControl.value)" />
+
+      <button class="button-search-vd body"> Search</button>
+
+    </mat-toolbar>
+
+    <table mat-table class="mdc-data-table__table body" [dataSource]="tbSourceVd$" multiTemplateDataRows>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumnsVd"></tr>
+
+      <!--<ng-container class="table-head-data" matColumnDef="{{column}}" *ngFor="let column of displayedColumnsVd">
+           <mat-header-cell  *matHeaderCellDef> {{column}} </mat-header-cell>
+           <mat-cell  *matCellDef="let element"> {{element[column]}} </mat-cell>
+         </ng-container>
+    -->
+      <ng-container matColumnDef="nome_cliente">
+        <th mat-header-cell *matHeaderCellDef> Cliente</th>
+        <td mat-cell *matCellDef="let elementVd"> {{elementVd.nomeCliente}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="dt_venda">
+        <th mat-header-cell *matHeaderCellDef> Data</th>
+        <td mat-cell *matCellDef="let elementVd"> {{elementVd.dt_venda}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="total_geral">
+        <th mat-header-cell *matHeaderCellDef> Total</th>
+        <td mat-cell *matCellDef="let elementVd"> {{elementVd.totalgeral}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="opicao">
+        <th mat-header-cell *matHeaderCellDef>
+          <mat-icon>redeem</mat-icon>
+          <mat-icon>shopping_basket</mat-icon>
+          <mat-icon>shopping_cart</mat-icon>
+          Adicionar itens
+        </th>
+        <td mat-cell *matCellDef="let elementVd">
+          <button class="componet-gradient" (click)="openDilogVd(elementVd)">
+            <mat-icon type="hidden" title="Adicionar mais Item" class="edit">
+              add_shopping_cart
+            </mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+
+      <!-- Expanded Column -->
+      <ng-container matColumnDef="expandedDetail">
+
+        <th mat-cell *matCellDef="let elemento" [attr.colspan]="displayedColumnsVd.length">
+          <div class="example-element-detail" [@detailExpand]="elemento.isExpanded ? 'expanded' : 'collapsed'">
+
+            <table mat-table class="mdc-data-table__table" [dataSource]="tbSourceItensDaVd$">
+
+             <tr mat-row *matRowDef=" let row; columns: displayedColumns;"></tr>
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+
+              <ng-container matColumnDef="codigo">
+                <th mat-header-cell *matHeaderCellDef> Código</th>
+                <td mat-cell *matCellDef="let element"> {{element.cod_produtos}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="descricao">
+                <th mat-header-cell *matHeaderCellDef> Descrição</th>
+                <td mat-cell *matCellDef="let element"> {{element.descricao}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="preco">
+                <th mat-header-cell *matHeaderCellDef> Preço</th>
+                <td mat-cell *matCellDef="let element"> {{element.valor_venda}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="qtd">
+                <th mat-header-cell *matHeaderCellDef> Qtd</th>
+                <td mat-cell *matCellDef="let element"> {{element.qtd_vendidas}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="soma">
+                <th mat-header-cell *matHeaderCellDef> Soma</th>
+                <td mat-cell *matCellDef="let element"> {{element.valor_parcial}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="data">
+                <th mat-header-cell *matHeaderCellDef> Data </th>
+                <td mat-cell *matCellDef="let element"> {{element.dt_venda}} </td>
+              </ng-container>
+
+
+              <ng-container matColumnDef="imagem">
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td mat-cell *matCellDef="let element">
+                  <img class="image-table"
+                       src="/assets/image/lambao.jpg">
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="opicoes">
+                <th mat-header-cell *matHeaderCellDef> Opições</th>
+                <td mat-cell *matCellDef="let element">
+                  <button class="button-update">
+                    <mat-icon type="hidden" title="Editar Item" class="edit"
+                              (click)="openDilogItenVd(element)"
+                    > <!--  [routerLink]="['edit']" > --> edite
+                    </mat-icon>
+                  </button>
+                  <button class="button-update" title="Remover Item">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </td>
+              </ng-container>
+
+
+            </table>
+
+          </div>
+        </th>
+      </ng-container>
+
+      <tr mat-row *matRowDef="let boss; columns: displayedColumnsVd;"
+          class="example-element-row"
+          [class.example-expanded-row]="boss.isExpanded"
+          (click)="boss.isExpanded = !boss.isExpanded; toggleRow(boss)">
+      </tr>
+
+
+      <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
+
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell" colspan="3"></td>
+      </tr>
+    </table>
+
+
+    <mat-paginator [length]="100"
+                   [pageSize]="5"
+                   [pageSizeOptions]="[5, 10, 25, 100]"
+                   (page)="pageEvent = $event"
+                   aria-label="Select page"
+                   class="button-gradient body">
+    </mat-paginator>
+  </mat-card>
+</div>
+
+
+<!--
+
+<table mat-table [dataSource]="dataSource" multiTemplateDataRows class="mat-elevation-z8">
+
+  <ng-container matColumnDef="{{column}}" *ngFor="let column of columnsToDisplay">
+    <th mat-header-cell *matHeaderCellDef> {{column}} </th>
+    <td mat-cell *matCellDef="let element"> {{element[column]}} </td>
+  </ng-container>
+  &lt;!&ndash; Expanded Content Column - The detail row is made up of this one column that spans across all columns &ndash;&gt;
+  <ng-container matColumnDef="expandedDetail">
+
+    <th mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplay.length">
+      <div class="example-element-detail" [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
+
+       <table mat-table [dataSource]="dataSourceIvd" >
+         <tr mat-header-row *matHeaderRowDef="displayedColItensVd"></tr>
+         <tr mat-row *matRowDef="let element; columns: displayedColItensVd;" class="example-element-row"
+             [class.example-expanded-row]="expandedItensVd === element"
+             (click)="expandedItensVd = expandedItensVd === element ? null : element">
+         </tr>
+          <ng-container matColumnDef="{{column}}"  *ngFor="let column of displayedColItensVd">
+          <th mat-header-cell *matHeaderCellDef> {{column}} </th>
+          <td mat-cell *matCellDef="let element"> {{element[column]}} </td>
+          </ng-container>
+        </table>
+
+      </div>
+    </th>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
+  <tr mat-row *matRowDef="let element; columns: columnsToDisplay;" class="example-element-row"
+      [class.example-expanded-row]="expandedElement === element"
+      (click)="expandedElement = expandedElement === element ? null : element">
+  </tr>
+  <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
+</table>
+
+-->
+
+
+<!--
+<div>
+  <table>
+    <thead>
+    <tr>
+<th>Action</th>
+      <th>Id</th>
+      <th>Cod </th>
+      <th>Descrição</th>
+      <th>Qtd</th>
+      <th>Preço</th>
+      <th>Total</th>
+    </tr>
+    </thead>
+    <tbody>
+ <tr *ngFor="let vendas of listaVendas">
+ <tr *ngFor="let vendas of listaItensVd">
+ <td><a [routerLink]="['edit', vendas.id_itens_vd]">Edit</a>
+
+  <button class="body" (click)="trash(vendas.id)" *ngIf="vendas.deletedAt == null">T</button>
+   <button class="body" (click)="untrash(vendas.id)" *ngIf="vendas.deletedAt != null">U</button>
+ </td>
+      <td>{{ vendas.cod_produtos}}</td>
+      <td>{{ vendas.descricao }}</td>
+      <td>{{vendas.qtd_vendidas}}</td>
+      <td>{{ vendas.valor_venda }}</td>
+      <td>{{vendas.valor_parcial}}</td>&ndash;&gt;
+  <td>{{ vendas.createdAt | date:'dd/mm/yyyy' }} </td>
+   <td>{{ vendas.deletedAt | date:'dd/mm/yyyy' }} </td>
+</tr>
+    </tbody>
+  </table>
+</div>
+-->
+
+
+

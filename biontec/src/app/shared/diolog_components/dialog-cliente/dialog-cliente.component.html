@@ -1,0 +1,75 @@
+
+<h1 *ngIf="!isChange" mat-dialog-title>Adicionar Cliente</h1>
+<h1 *ngIf="isChange" mat-dialog-title>Editar Cliente</h1>
+
+<div mat-dialog-content>
+
+    <mat-form-field appearance="fill">
+      <mat-label>ID</mat-label>
+      <input matInput [(ngModel)]="iCliente.id_cliente">
+    </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Nome </mat-label>
+    <input matInput [(ngModel)]="iCliente.nome_cliente">
+  </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Inscrição Estadual</mat-label>
+      <input matInput [(ngModel)]="iCliente.inscricaoest">
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Pessoa</mat-label>
+      <input matInput [(ngModel)]="iCliente.pessoa">
+    </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>CPF</mat-label>
+    <input matInput [(ngModel)]="iCliente.cpf">
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>CNPJ</mat-label>
+    <input matInput [(ngModel)]="iCliente.cnpj">
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Nº Domiciliar </mat-label>
+    <input matInput [(ngModel)]="iCliente.numero">
+  </mat-form-field>
+
+<form #f="ngForm" ngForm >
+  <mat-form-field appearance="fill" >
+    <mat-label for="cep" >CEP</mat-label>
+<!-- <div class="col-md-3" [ngClass]="aplicaCssErro(cep)">-->
+    <input matInput [(ngModel)]="iCliente.cep"
+      type="text" class="form-control" id="cep" name="cep"
+      ngModel required #cep="ngModel" (blur)="consultaCEP(iCliente.cep.toString(), f)">
+ </mat-form-field>
+</form>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Telefone Fixo</mat-label>
+    <input matInput [(ngModel)]="iCliente.telefone">
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Celular</mat-label>
+    <input matInput [(ngModel)]="iCliente.celular">
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>WhatsApp</mat-label>
+    <input matInput [(ngModel)]="iCliente.zap">
+  </mat-form-field>
+
+<span>
+
+  <button mat-raised-button *ngIf="!isChange" [mat-dialog-close]="iCliente" cdkFocusInitial >Create</button>
+  <button mat-button *ngIf="isChange" [mat-dialog-close]="iCliente" cdkFocusInitial >Edit</button>
+  <button mat-raised-button (click)="onCancel()">Cancel</button>
+ </span>
+
+
+</div>

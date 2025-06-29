@@ -1,0 +1,70 @@
+<div Align="right">
+
+  <ul>
+    <mat-icon class="menu-image " Align="right"
+              title="Bem vindo {{nameDoUsuario}}"
+              [matMenuTriggerFor]="menu" ></mat-icon>
+
+    <mat-menu #menu="matMenu" class="component-gradient body  ">
+
+      <button mat-menu-item class="body">
+        <mat-icon class="menu-image sidemenu " Align="center"
+        title="Bem vindo {{nameDoUsuario}}" ></mat-icon>
+
+      <h5>{{nameDoUsuario}}</h5></button>
+      <button mat-menu-item routerLink="dashboard">Painel</button>
+      <button mat-menu-item routerLink="usuarios">Usuarios</button>
+      <button mat-menu-item routerLink="clientes">Clientes</button>
+      <button mat-menu-item routerLink="produtos">Produtos</button>
+      <button mat-menu-item [matMenuTriggerFor]="menuVendas">Vendas</button>
+      <button mat-menu-item routerLink="contabilidade">Contabilidade</button>
+      <button mat-menu-item href="http://scherlandro.blogspot.com/">MEU BLOGSPOT</button>
+      <button mat-menu-item (click)="logout()">Sair</button>
+
+    </mat-menu>
+    <mat-menu #menuVendas="matMenu">
+      <button mat-menu-item routerLink="vendas">Listar Vendas</button>
+      <button mat-menu-item routerLink="vendas/add">Adicionar vendas</button>
+    </mat-menu>
+
+  </ul>
+</div>
+<form *ngIf="mostrarMenuHeader" class="nav-head componet-table ">
+
+  <!---  Menu horizontal --->
+  <mat-icon class="lable-link body"
+            routerLinkActive="active" routerLink="dashboard">home
+  </mat-icon>
+
+  <button mat-button class="comp-menu body" routerLink="usuarios">Usuarios</button>
+
+  <button mat-button class="comp-menu body" routerLink="clientes">Clientes</button>
+  <!--
+<a  mat-button=""  [routerLink]="['user-demo',idUsuario.value]" >
+  Id do Usuario</a>
+-->
+  <button mat-button class="comp-menu body" routerLink="produtos">Produtos</button>
+
+  <button mat-button class="comp-menu body" routerLink="vendas">Vendas</button>
+
+  <button mat-button class="comp-menu body" routerLink="os">Orden de Serviços</button>
+
+  <button mat-button class="comp-menu body" routerLink="contabilidade">Contabilidade</button>
+
+  <!--  <button mat-button class="comp-menu" routerLink="/busca">Buscas</button>-->
+  <!--
+    <div class="sidemenu">
+      <a href="admin/dashboard"><mat-icon src="assets/icons/jango_fett.png" alt="Meus favoritos" class="menu-image"></mat-icon></a>
+      <a href="admin/dashboard"><mat-icon  src="assets/icons/boba_fett.png" alt="Carrinhos de compras" class="menu-image"></mat-icon></a>
+      <a href="admin/dashboard"><img src="assets/icons/obi_wan.png" alt="Meu perfil" class="menu-image"></a>
+    </div>
+  -->
+
+  <button mat-button class="bt-icon body" (click)="logout()">
+    <mat-icon>logout</mat-icon>
+    Sair
+  </button>
+
+
+</form>
+

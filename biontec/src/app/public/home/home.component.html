@@ -1,0 +1,181 @@
+<!-- !PAGE CONTENT! -->
+<div>
+
+  <!-- First Photo Grid-->
+  <div class="container-top-home body">
+
+    <div>
+      <img class="img-magnifier-container"
+           src="/assets/image/lambao.jpg" alt="Norway"
+           imgMain name="imgMain" ngModel required #imgMain="ngModel"
+           (load)="onImageLoad($event)"
+           style="width:20%">
+      <p><b>Caminho</b></p>
+      <p class="label-descrition"> A estrada dos retos desvia-se do mal; o que guarda o seu caminho preserva a sua
+        vida.</p>
+    </div>
+
+    <div>
+      <img class="img-magnifier-container"
+           src="/assets/image/lambao.jpg" alt="Norway" style="width:20%">
+      <p><b>Insensatos</b></p>
+      <p class="label-descrition">Os insensatos, por causa do seu caminho de transgressão, e por causa das suas
+        iniqüidades, são afligidos. </p>
+    </div>
+
+    <div>
+      <img src="/assets/image/planeta.png" alt="Norway" style="width:20%">
+      <p><b>Sabedoria e Entendimento</b></p>
+      <p class="label-descrition"> Dize à sabedoria: Tu és minha irmã; e chama ao entendimento teu amigo íntimo</p>
+    </div>
+
+    <div>
+      <img src="/assets/image/planeta.png" alt="Norway" style="width:20%">
+      <p><b>Sábios, Néscios e o Estúpido</b></p>
+      <p class="label-descrition"> ... até os sábios morrem, que perecem igualmente o néscio e o estúpido, e deixam a
+        outros os seus bens. </p>
+    </div>
+
+  </div>
+
+  <br>
+  <h4>Sobre me</h4>
+  <div class="component-about-me body ">Entusiasta, curioso e fascinado por tecnologia e seu poder de conectar as pessoas.
+    Desenvolvedor desde 2016, participando de projetos profissionais e pessoais com linguagem Java, TypeScript, Javascript, HTML5, CSS3 e Sql.
+    Atualmente trabalha desenvolvendo aplicações para integração entre sistemas com API's de estruturas Spring Boot, com persistência em Bancos de Dados.
+    Motivado pela "formação contínua", sempre busca de novos conhecimentos e desafios que cativam a jornada
+  </div>
+
+  <div>
+
+    <br>
+    <h4>Technical Skills</h4>
+    <!-- Progress bars / Skills -->
+    <div>
+      <div class="graphic-of-languages body" style="width:95%">95%</div>
+      <p>Java</p>
+    </div>
+
+    <div>
+      <div class="graphic-of-languages body" style="width:85%">85%</div>
+      <p>TypeScript</p>
+    </div>
+
+    <div>
+      <div class="graphic-of-languages body " style="width:80%">80%</div>
+      <p>Web Design</p>
+    </div>
+    <br>
+    <p>
+      <button class="button-sign-up body">
+        <i></i>Download Resume
+      </button>
+    </p>
+    <hr>
+
+    <h4>How much I charge</h4>
+    <!-- Pricing Tables -->
+    <div class="grid-mast">
+      <div class="s-grid">
+        <ul class="border center">
+          <li class="xlarge padding-32">Basic</li>
+          <li class="padding-16">Java</li>
+          <li class="padding-16">Web Design</li>
+          <li class="padding-16">1GB Storage</li>
+          <li class="padding-16">Mail Support</li>
+          <li class="padding-16">
+            <h2>$ 10</h2>
+            <span class="opacity">per hrs</span>
+          </li>
+          <li class="light-grey padding-24">
+            <button class="button-sign-up body ">Sign Up</button>
+          </li>
+        </ul>
+      </div>
+      <div class="s-grid">
+        <ul class="border center ">
+          <li class="padding-32">Pro</li>
+          <li class="padding-16">Java</li>
+          <li class="padding-16">Web Design</li>
+          <li class="padding-16">50GB Storage</li>
+          <li class="padding-16">Endless Support</li>
+          <li class="padding-16">
+            <h2>$ 25</h2>
+            <span class="w3-opacity">per hors</span>
+          </li>
+          <li class="padding-24">
+            <button class="button-sign-up body">Sign Up</button>
+          </li>
+        </ul>
+      </div>
+
+      <div class="s-grid">
+        <ul class="border center ">
+          <li class="padding-32">Premium</li>
+          <li class="padding-16">Java</li>
+          <li class="padding-16">Web Design</li>
+          <li class="padding-16">Unlimited Storage</li>
+          <li class="padding-16">Endless Support</li>
+          <li class="padding-16">
+            <h2>$ 25</h2>
+            <span class="w3-opacity">per hrs</span>
+          </li>
+          <li class="padding-24">
+            <button class="button-sign-up body">Sign Up</button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <br>
+
+  <!-- Contact Section -->
+  <h4 id="contact"><b>Contact Me</b></h4>
+  <div class="conteiner-contactme body">
+
+    <div>
+      <p>scherlandro@gmail.com</p>
+      <p><i></i></p>
+      <p>Caucaia, CE</p>
+      <p><i></i></p>
+      <p>+55 (85) 99258-5768</p>
+    </div>
+
+    <div>
+      <!--<form (ngSubmit)="onSubmit(contactForm)" #contactForm="ngForm">-->
+      <form>
+        <div>
+          <div>
+            <label>Name</label>
+            <br>
+            <input type="text" placeholder="Name" name="name" ngModel required #name="ngModel">
+          </div>
+          <div>
+            <label>Email </label>
+            <br>
+            <input type="text" placeholder="Email" email name="email" ngModel required #email="ngModel">
+          </div>
+          <div>
+            <label>Message</label>
+            <br>
+            <textarea placeholder="Messages" name="messages" ngModel required #messages="ngModel"></textarea>
+          </div>
+          <input type="submit" value="Send">
+        </div>
+
+      </form>
+
+    </div>
+
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+

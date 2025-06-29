@@ -1,0 +1,99 @@
+
+
+
+
+
+<body class="body " style="border-radius: 0px">
+
+  <article>
+  <mat-card class="comp-contabil-sizes comp-contabil-colors ">
+    <canvas class="comp-contabil-sizes" #canvasElement ></canvas>
+  </mat-card>
+</article>
+
+  <form>
+    <label  >Escolha o periodo para análise: </label>
+     <br>
+   <section  class="config-component" >
+
+     <input type="date" class="input-date" name="date_init"   id="date_init"
+            required [(ngModel)]="date_init" >
+
+     <input type="date"  class="input-date"  id="date_finish" name="date_finish"
+            required [(ngModel)]="date_finish"  >
+
+     <button class="button-sizes" type="submit" (click)="mostarGrafico()">
+      Mostrar Análise Gráfica
+    </button>
+
+   </section>
+
+  </form>
+
+</body>
+
+
+
+
+
+
+
+  <!--
+   https://developer.mozilla.org/pt-BR/docs/Web/HTML/Element/input/date
+   About input date
+   pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}"-->
+  <!-- <span class="validity"></span>   -->
+
+<!--<div>
+  <canvas baseChart
+          [chartType] = "lineChartType"
+          [datasets] = "lineChartData"
+          [labels] = "lineChartLabels"
+  >
+  </canvas>
+</div>-->
+
+<!--
+<mat-drawer-container   >
+ <mat-drawer mode="side" opened  >
+   <mat-card class="demo-inline-calendar-card">
+     <h2>With moment</h2>
+       <mat-calendar
+          [selected]="date"
+          startView="multi-year"
+          (yearSelected)="chosenYearHandler($event)"
+          (monthSelected)="chosenMonthHandler($event)"
+          [(selected)]="selected">
+        </mat-calendar>
+     <p>date: {{date.value.format("MM/YYYY")}}</p>
+     <p>Selected date: {{selected}}</p>
+   </mat-card>
+   <div style="height: 40px"></div>
+ </mat-drawer>
+</mat-drawer-container>
+
+  <mat-calendar class="mat-calendar-new" id="id-calendar"
+                   [(selected)]="selected"
+                   (click)="getDay()">
+     </mat-calendar>-->
+
+<!--
+<h2>Demo #1: Highcharts with a basic editor</h2>
+<article>
+  <section>
+    <textarea rows="16" cols="50"
+              [(ngModel)]="optFromInputString"
+    ></textarea>
+    <div class="buttons-wrapper">
+      <button (click)="updateInputChart()">Update chart</button>
+      <button (click)="toggleSeriesType()">1st series type toggle</button>
+    </div>
+  </section>
+ <highcharts-chart
+    [Highcharts]="Highcharts"
+    [options]="optFromInput"
+    [(update)]="updateFromInput"
+    [oneToOne]=true
+    (chartInstance)="logChartInstance($event)"
+  ></highcharts-chart>
+</article>-->

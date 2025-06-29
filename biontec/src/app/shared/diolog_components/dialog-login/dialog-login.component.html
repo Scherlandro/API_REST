@@ -1,0 +1,27 @@
+<h1 *ngIf="!isChange" mat-dialog-title>Fazer login</h1>
+<h1 *ngIf="isChange" mat-dialog-title>Sair</h1>
+
+<div mat-dialog-content>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Nome</mat-label>
+    <input matInput [(ngModel)]="dataLogin.username">
+  </mat-form-field>
+
+
+  <mat-form-field appearance="fill">
+    <mat-label>Senha</mat-label>
+    <input matInput [(ngModel)]="dataLogin.password">
+  </mat-form-field>
+
+
+  <span>
+
+  <button mat-raised-button *ngIf="!isChange" [mat-dialog-close]="dataLogin" cdkFocusInitial >Create</button>
+  <button mat-button *ngIf="isChange" [mat-dialog-close]="dataLogin" cdkFocusInitial >Edit</button>
+  <button mat-raised-button (click)="onCancel()">Cancel</button>
+ </span>
+
+
+</div>
+

@@ -1,0 +1,60 @@
+
+<h1 *ngIf="!isChange" mat-dialog-title>Adicionar Produto</h1>
+<h1 *ngIf="isChange" mat-dialog-title>Editar Produto</h1>
+
+<div mat-dialog-content>
+
+    <mat-form-field appearance="fill">
+      <mat-label>ID</mat-label>
+      <input matInput [(ngModel)]="iProduto.idProduto">
+    </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Códico</mat-label>
+    <input matInput [(ngModel)]="iProduto.codProduto">
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Descrição</mat-label>
+    <input matInput [(ngModel)]="iProduto.nomeProduto">
+  </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Preço de Compra</mat-label>
+      <input type="number" matInput [(ngModel)]="iProduto.valorCompra">
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Preço de Venda</mat-label>
+      <input type="number" matInput [(ngModel)]="iProduto.valorVenda"   >
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Margem de lucro</mat-label>
+      <input type="number" matInput [(ngModel)]="iProduto.percentual">
+    </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Quantidade em Estoque</mat-label>
+    <input type="number" matInput [(ngModel)]="iProduto.qtdEstoque">
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Data de Cadastro</mat-label>
+    <input type="date" matInput [(ngModel)]="iProduto.dtCadastro">
+  </mat-form-field>
+
+
+<span>
+
+  <button mat-button *ngIf="isChange" [mat-dialog-close]="iProduto" cdkFocusInitial >Edit</button>
+  <button mat-button *ngIf="!isChange" [mat-dialog-close]="iProduto" cdkFocusInitial (click)="save()" >salvar</button>
+  <button mat-raised-button (click)="onCancel()">Cancel</button>
+ </span>
+  <!--
+    <button mat-raised-button (click)="onCancel()">Cancel</button>
+    <button mat-raised-button (click)="onCancel()">Atualizar</button>
+    <button mat-raised-button [mat-dialog-close]="data"  >Create</button>
+  -->
+
+</div>

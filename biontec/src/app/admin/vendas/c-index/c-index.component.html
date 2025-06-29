@@ -1,0 +1,73 @@
+<p>c-index works!</p>
+<div>
+    <table>
+        <thead>
+            <tr>
+                <th>Action</th>
+                <th></th>
+                <th>#</th>
+                <th>Nom</th>
+                <th>Descrição</th>
+                <th>Recete</th>
+                <th>Criar</th>
+                <th>Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let vendas of listaVendas">
+                <td><a [routerLink]="['edit', vendas.id]">Edit</a></td>
+                <td>
+                    <button (click)="trash(vendas.id)" *ngIf="vendas.deletedAt == null">T</button>
+                    <button (click)="untrash(vendas.id)" *ngIf="vendas.deletedAt != null">U</button>
+                </td>
+                <td>{{ vendas.id }}</td>
+                <td>{{ vendas.nom }}</td>
+                <td>{{ vendas.description }}</td>
+                <td>{{ vendas.recette }}</td>
+                <td>{{ vendas.createdAt | date:'dd/mm/yyyy' }} </td>
+                <td>{{ vendas.deletedAt | date:'dd/mm/yyyy' }} </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<!--
+
+<table mat-table [dataSource]="carts" class="mat-elevation-z8">
+
+  <ng-container matColumnDef="id">
+    <th mat-header-cell *matHeaderCellDef> Id </th>
+    <td mat-cell *matCellDef="let cart"> {{cart.id}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="userId">
+    <th mat-header-cell *matHeaderCellDef> User Id </th>
+    <td mat-cell *matCellDef="let cart"> {{cart.userId}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="date">
+    <th mat-header-cell *matHeaderCellDef> Date </th>
+    <td mat-cell *matCellDef="let cart"> {{cart.date}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="products-id">
+    <th mat-header-cell *matHeaderCellDef> Product Id </th>
+    <td mat-cell *matCellDef="let row">
+      <span *ngFor="let item of row.products">{{item.productId}}</span>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="products-quantity">
+    <th mat-header-cell *matHeaderCellDef> Quantity </th>
+    <td mat-cell *matCellDef="let row">
+      <span *ngFor="let item of row.products">{{item.quantity}}</span>
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+  </tr>
+</table>
+-->
+
+

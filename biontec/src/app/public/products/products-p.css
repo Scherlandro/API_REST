@@ -1,0 +1,100 @@
+.body-prod-p {
+  background-color: rgba(96, 30, 160, 0);
+}
+
+.head-table {
+  border-radius: 15px;
+  background-color: rgba(51, 33, 83, 0.07);
+  color: #72ec3a;
+  display: grid;
+  align-content: end;
+  grid-template-columns: 5fr 1fr 1fr;
+  grid-gap: 2px;
+  min-height: 45px;
+  height: auto;
+}
+
+.input-table {
+  padding-inline-start: 10px;
+  border-bottom-left-radius: 15px;
+  min-height: 25px;
+  height: auto;
+  max-width: 300px;
+  width: auto;
+  color: #32e27e;
+  background: rgba(0, 3, 10, 0.05);
+}
+
+.loading-spinner {
+  padding: 25px;
+  background: rgba(0, 0, 0, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.edit {
+  width: 70%;
+  height: 70%;
+  background-color: rgba(51, 33, 83, 0.07);
+  -webkit-border-radius: 20px;
+  -moz-border-radius: 20px;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+.button-search {
+  min-width: 80px;
+  width: auto;
+  height: 35px;
+  background-color: rgba(51, 33, 83, 0.07);
+  -webkit-border-radius: 20px;
+  -moz-border-radius: 20px;
+  border-radius: 20px;
+}
+
+.image-table{
+  height: auto;
+  min-height: 50px;
+  min-width: 50px;
+  width: 20%;
+}
+ui.grid {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  -webkit-box-align: stretch;
+  -ms-flex-align: stretch;
+  align-items: stretch;
+  padding: 0;
+  margin: -1rem;
+}
+
+ui.grid>.row {
+  position: relative;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  -webkit-box-pack: inherit;
+  -ms-flex-pack: inherit;
+  justify-content: inherit;
+  -webkit-box-align: stretch;
+  -ms-flex-align: stretch;
+  align-items: stretch;
+  width: 100% !important;
+  padding: 0;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}

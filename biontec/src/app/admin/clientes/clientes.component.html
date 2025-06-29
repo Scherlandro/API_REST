@@ -1,0 +1,129 @@
+
+<div>
+  <mat-card-content class="mat-card-table">
+
+    <mat-toolbar class="head-table body">
+      <h3> Clientes </h3>
+      <button class="button-add"  (click)="openDialogo(clienteControl.value)">
+        <mat-icon>add</mat-icon>
+      </button>
+
+          <input class="input-table" type="text" placeholder="Digite a busca" matInput
+                 [formControl]="clienteControl" (keydown)="listarClientes()"
+                 (keyup)="aplicarFiltro(clienteControl.value)"
+                 [matAutocomplete]="auto"/>
+          <mat-error
+          *ngIf="clienteControl.invalid"
+          >Campo Obrigatório não preenchido.</mat-error>
+          <mat-autocomplete #auto="matAutocomplete">
+            <mat-option [value]="iClientes.nome_cliente"
+                        *ngFor="let iClientes of clienteFilted">{{iClientes.nome_cliente}}</mat-option>
+          </mat-autocomplete>
+        <button class="button-search"  (click)="listarClientes()">
+          <mat-icon>list</mat-icon>
+        </button>
+
+    </mat-toolbar>
+
+    <table mat-table id="tableCliente" [dataSource]="tbSourceClientes$"
+           matSort (matSortChange)="onMatSortChange()" matSortDirection="asc"
+           multiTemplateDataRows class="componet-gradient body">
+
+      <ng-container matColumnDef="nome_cliente">
+        <th mat-header-cell *matHeaderCellDef> Nome</th>
+        <td mat-cell *matCellDef="let element"> {{element.nome_cliente}} </td>
+      </ng-container>
+      <ng-container matColumnDef="pessoa">
+        <th mat-header-cell *matHeaderCellDef> Pessoa</th>
+        <td mat-cell *matCellDef="let element"> {{element.pessoa}} </td>
+      </ng-container>
+      <ng-container matColumnDef="estado">
+        <th mat-header-cell *matHeaderCellDef> Telefone</th>
+        <td mat-cell *matCellDef="let element"> {{element.telefone}} </td>
+      </ng-container>
+      <ng-container matColumnDef="opicoes">
+        <th mat-header-cell *matHeaderCellDef> Opições</th>
+        <td mat-cell *matCellDef="let element">
+          <button mat-icon-button class="edit componet-gradient" (click)="editarElement(element)">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button class="delete componet-gradient" (click)="deleteElement(element.id_cliente)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row  *matRowDef="let row; columns: displayedColumns; "  (click)="selectRow(row)"></tr>
+
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell" colspan="3"></td>
+      </tr>
+
+    </table>
+    <mat-paginator [length]="100"
+                   [pageSize]="5"
+                   [pageSizeOptions]="[5, 10, 25, 100]"
+                   aria-label="Select page">
+    </mat-paginator>
+
+  </mat-card-content>
+
+</div>
+
+<!--
+<form #f="ngForm" (ngSubmit)="onSubmit(f)" class="form-horizontal">
+  <div class="form-group">
+      <label for="nome_cliente" class="control-label">Nome do Cliente</label>
+        <input type="text" class="form-control" name="nome_cliente"
+             id="nome_cliente" placeholder="Nome" [ngModel]="icliente.nome_cliente" >
+        <label for="inscricaoest" class="control-label">Nº Inscrição Estadual</label>
+        <input type="number" class="form-control" name="inscricaoest"
+             id="inscricaoest" placeholder="000000000" [ngModel]="icliente.inscricaoest" >
+
+       <label for="pessoa" class="control-label">Tipo e pessoa</label>
+         <input type="text" class="form-control" name="pessoa"
+             id="pessoa" placeholder="Pessoa física ou jurídica" [ngModel]="icliente.pessoa">
+         <label for="cpf" class="control-label">CPF</label>
+         <input type="text" class="form-control" name="cpf"
+             id="cpf" placeholder="000.000.000-00" [ngModel]="icliente.cpf">
+        <label for="cnpj" class="control-label">CNPJ</label>
+         <input type="text" class="form-control" name="cnpj"
+             id="cnpj" placeholder="000.00000/000.1-000" [ngModel]="icliente.cnpj" >
+        </div>
+
+    <div class="form-group">
+   <div class="col-md-3" [ngClass]="aplicaCssErro(cep)">
+        <label for="cep" class="control-label">CEP</label>
+        <input type="text" class="form-control" id="cep" name="cep">
+          ngModel required #cep="ngModel" (blur)="consultaCEP($event.target, f)">
+
+       <app-campo-control-erro [mostrarErro]="verificaValidTouched(cep)"
+          msgErro="CEP é obrigatório.">
+        </app-campo-control-erro>
+
+         <label for="numero" class="control-label">Nº</label>
+        <input type="number" class="form-control" name="numero"
+               id="numero" placeholder="Nº" [ngModel]="icliente.numero">
+       </div>
+
+    <div class="col-md-3" >
+      <label for="telefone" class="control-label">Telefone Fixo</label>
+      <input type="number" class="form-control" name="telefone"
+             id="telefone" placeholder="(00)0000-0000" [ngModel]="icliente.telefone">
+          <label for="celular" class="control-label">Celular</label>
+      <input type="number" class="form-control" name="celular"
+             id="celular" placeholder="(00)0000-0000" [ngModel]="icliente.celular">
+         <label for="zap" class="control-label">WhatsApp</label>
+      <input type="number" class="form-control" name="zap"
+             id="zap" placeholder="(00)0000-0000" [ngModel]="icliente.zap">
+    </div>
+
+  <button type="submit" class="btn btn-primary">Submit</button>
+       [disabled]="!f.valid">Submit</button>
+
+    <app-form-debug [form]="f"></app-form-debug>
+
+    </form>
+
+
+  </body>  -->

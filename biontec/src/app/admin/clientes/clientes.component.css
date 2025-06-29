@@ -1,0 +1,85 @@
+
+body{
+  background-color: #067979;
+}
+.mat-card-table{
+  background-color: rgba(96, 30, 160, 0);
+}
+.head-table{
+  border-radius: 15px;
+  background-color: rgba(51, 33, 83, 0.07);
+  color: #0f2102;
+  display: grid;
+  align-content: end;
+  grid-template-columns: 1fr 3fr 1fr 1fr;
+  grid-gap: 2px;
+  min-height: 45px;
+  height: auto;
+}
+.componet-gradient{
+  min-width: 100%;
+  width: auto;
+  height: 40px;
+  background-color: rgba(51, 33, 83, 0.07);
+  -webkit-border-radius: 20px;
+  -moz-border-radius: 20px;
+  border-radius: 20px;
+}
+
+.input-table{
+  padding-inline-start: 10px;
+  border-bottom-left-radius: 15px;
+  min-height: 25px;
+  height: auto;
+  max-width: 300px;
+  width: auto;
+  color: #32e27e;
+  background: rgba(0, 3, 10, 0.05);
+}
+
+.loading-spinner{
+  padding: 25px;
+  background: rgba(0,0,0,0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.button-add{
+  max-width: 80px;
+  width: auto;
+  height: 35px;
+  background-color: rgba(51, 33, 83, 0.07);
+  -webkit-border-radius: 20px;
+  -moz-border-radius: 20px;
+  border-radius: 20px;
+}
+.button-search {
+  min-width: 80px;
+  width: auto;
+  height: 35px;
+  background-color: rgba(51, 33, 83, 0.07);
+  -webkit-border-radius: 20px;
+  -moz-border-radius: 20px;
+  border-radius: 20px;
+}
+
+.list{
+  background-color: #0c9a7e;
+  color: #00030a;
+  padding-right: 18px;
+}
+
+.edit{
+  color: #041436;
+  padding-right: 18px;
+}
+.delete{
+  color: #00ccff;
+  padding-left: 18px;
+}
+
+.mat-header{
+  width: 8rem;
+}
+

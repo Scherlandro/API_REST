@@ -1,0 +1,167 @@
+<!--
+<div >
+<mat-form-field appearance="outline">
+<mat-icon >search</mat-icon>
+ <form [formGroup]="clienteControl">
+   <input class="form-control"  type="text"  id="fname" placeholder="Department Name"  formControlName="name"
+     autocomplete="off"   />
+   <p>{{clienteControl.get('name').value}}</p>
+ </form>
+</mat-form-field>
+</div>
+-->
+<div >
+
+  <mat-icon class="cursor-home" routerLink="" >home_circle</mat-icon>
+<mat-card-content class="container conteudo-login">
+
+    <form class="card-logi" name="form" #f="ngForm"  >
+      <div class="bottom-alert " *ngIf="showErrorMessage=='403'">
+        Usuário ou senha inválida! Por favor tente novamente.
+      </div>
+      <div class="bottom-alert " *ngIf="showErrorMessage=='0'">
+        Sistema OFF! Por favor tente novamente mais tarde.
+      </div>
+      <mat-card-content class="conteudo-login component-g ">
+        <h1>Login</h1>
+        <mat-icon>account_circle</mat-icon>
+        <mat-card class="component-g">
+          <label>Email</label>
+          <input class="input-login" type="text" name="email" id="email"
+                 (dblclick)="clearInput()"
+                 [(ngModel)]="form.username" #email="ngModel" required>
+          <mat-error class="form_error" *ngIf="email.invalid">{{getErrorMessage()}}</mat-error>
+        <div class="form_error" *ngIf="email.errors && f.submitted">
+            Email is required !
+          </div>
+          <!--
+       <mat-form-field>
+          <input matInput class="input-login" placeholder="Enter your email"  [formControl]="username" required>
+          <mat-error class="form_error" *ngIf="username.invalid">{{getErrorMessage()}}</mat-error>
+       </mat-form-field>
+          -->
+        </mat-card>
+
+        <aside>
+          <div *ngIf="spiner " class="spinner">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+          </div>
+        </aside>
+
+      <mat-icon>vpn_key</mat-icon>
+      <mat-card class="component-g">
+        <label>Senha</label>
+            <input class="input-login" type="password" name="password" id="password"
+               (dblclick)="clearInput()"   [(ngModel)]="form.password" #password="ngModel" required minlength="3">
+       <!-- <mat-error *ngIf="password.errors && f.submitted"> Senha é  <strong>obrigatória</strong>
+        </mat-error>-->
+            <div class="form_error" *ngIf="password.errors && f.submitted">
+                <div *ngIf="password.errors['required']">Password is required</div>
+                <div *ngIf="password.errors['minlength']">Password must be at least 5 charracters</div>
+            </div>
+      </mat-card>
+        <mat-icon>plane</mat-icon>
+      <button [class.bottom-container]="form"
+              [disabled]="!f.valid"
+              class="bottom-container body "
+              (click)="onSubmit()" >
+        <mat-icon>input</mat-icon>
+        {{'Login'}}
+      </button>
+      </mat-card-content>
+
+    </form>
+  <button class="bottom-container body" (click)="newAccount()" >
+    I still don't have account.</button>
+
+
+</mat-card-content>
+
+
+</div>
+
+
+
+<!--
+ <mat-card-content class="root">
+     <mat-card class="container-log">
+      <form class="login_form">
+        &lt;!&ndash; FORM HEADER &ndash;&gt;
+        <div class="form_header">
+          <h1>Login</h1>
+          <i class="mode_icon" ></i>
+        </div>
+
+        &lt;!&ndash; SOCIAL MEDIA LINKS &ndash;&gt;
+        <div class="social_media">
+          &lt;!&ndash; FACEBOOK &ndash;&gt;
+          <a href="#">
+            <img src="assets/imgs/facebook.png" alt="">
+          </a>
+
+          &lt;!&ndash; GOOGLE &ndash;&gt;
+          <a href="#">
+            <img src="assets/imgs/google.png" alt="Google logo">
+          </a>
+
+          &lt;!&ndash; GITHUB &ndash;&gt;
+          <a href="#">
+            <img src="assets/imgs/github.png" alt="">
+          </a>
+        </div>
+
+        &lt;!&ndash; INPUTS &ndash;&gt;
+        <div class="inputs">
+          &lt;!&ndash; NAME &ndash;&gt;
+          <div class="input-box">
+            <label for="name">
+              Name
+              <div class="input-field">
+                <i class="fa-solid fa-user"></i>
+                <input type="text" id="name" name="name">
+              </div>
+            </label>
+          </div>
+
+          &lt;!&ndash; EMAIL &ndash;&gt;
+          <div class="input-box">
+            <label for="email">
+              E-mail
+              <div class="input-field">
+                <i class="fa-solid fa-envelope"></i>
+                <input type="email" id="email2" name="email">
+              </div>
+            </label>
+          </div>
+
+          &lt;!&ndash; PASSWORD &ndash;&gt;
+          <div class="input-box">
+            <label for="password">
+              Password
+              <div class="input-field">
+                <i class="fa-solid fa-key"></i>
+                <input type="password" id="password2" name="password">
+              </div>
+            </label>
+
+            &lt;!&ndash; FORGOT PASSWORD &ndash;&gt;
+            <div id="forgot_password">
+              <a href="#">
+                Forgot your password?
+              </a>
+            </div>
+          </div>
+        </div>
+
+        &lt;!&ndash; LOGIN BUTTON &ndash;&gt;
+        <button type="submit" class="login_button">
+          Login
+        </button>
+      </form>
+  </mat-card>
+</mat-card-content>
+-->
