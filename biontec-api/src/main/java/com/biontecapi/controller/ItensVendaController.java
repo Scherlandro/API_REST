@@ -64,18 +64,15 @@ public class ItensVendaController {
     public ResponseEntity<List<ItensDaVendaDto>> ConsultarItensVdEntreDatas(
             @RequestParam(name = "dtIni") String dtIni, @RequestParam(name = "dtFinal") String dtFinal) {
         List<ItensDaVendaDto> list = itensDaVendaService.ConsultarItensVdEntreDatas(dtIni, dtFinal);
+      /*  if(!list.isEmpty()){
+            return ResponseEntity.notFound().eTag("Não encontrado").build();
+            //   return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Registro não encontrado");
+        }else */
         return ResponseEntity.ok(list.stream().map(
                 e -> mapper.map(e, ItensDaVendaDto.class))
                 .collect(Collectors.toList()));
     }
 
 
-       /* List<Object> itensDaVd = itensDaVendaService.ConsultarItensVdEntreDatas(dtIni, dtFinal);
-              if(!itensDaVd.isEmpty()){
-            return ResponseEntity.notFound().eTag("Não encontrado").build();
-               //   return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Registro não encontrado");
-              }
-                  }
-        */
 
 }
