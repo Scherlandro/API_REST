@@ -33,8 +33,9 @@ public class OrdemDeServico {
     private String nomeCliente;
     private Integer idFuncionario;
     private String gestorDaOS;
-      /*  @Temporal(TemporalType.DATE)
-        private Date dataDeEntrada;*/
+
+    /*  @Temporal(TemporalType.DATE)
+     private Date dataDeEntrada;*/
     private LocalDateTime dataDeEntrada;
     private LocalDateTime ultimaAtualizacao;
     private Status status;

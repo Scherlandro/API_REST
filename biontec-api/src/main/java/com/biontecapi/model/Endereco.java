@@ -25,10 +25,6 @@ public class Endereco {
     @Column(nullable = false, length = 11)
     private String numero;
 
-  /*  // Getter and Setter for 'number'
-    public String getNumber() {
-        return numero;
-    }*/
 
     public void setNumero(String numero) {
         // Check if the input is a numeric value

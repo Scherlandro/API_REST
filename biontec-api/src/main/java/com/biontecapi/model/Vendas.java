@@ -72,6 +72,7 @@ public class Vendas {
     @OneToMany
     @JoinColumn(name = "codevendas")
     private Collection<ItensDaVenda> itensVd;
+
     /*
     @Transient
     @OneToMany(cascade = CascadeType.ALL)

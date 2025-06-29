@@ -35,12 +35,6 @@ public class ItensDaVenda {
     @Column(length = 11)
     private Integer qtd_vendidas;
 
-
-    // @Transient
-  /*  (Muitos IntensDaVenda(classeLocal) para Uma Venda(atributo referido)
-     Uma venda pode ter vários itensDeVenda*/
-
-
    /* @Transient
     @ManyToOne
     @JoinTable(name = "vendas", joinColumns = {
