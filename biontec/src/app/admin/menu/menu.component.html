@@ -1,15 +1,22 @@
 <div Align="right">
 
   <ul>
+
+    <mat-icon class="logout"
+              title="Sair" (click)="logout()">logout</mat-icon>
+
     <mat-icon class="menu-image " Align="right"
               title="Bem vindo {{nameDoUsuario}}"
               [matMenuTriggerFor]="menu" ></mat-icon>
+
 
     <mat-menu #menu="matMenu" class="component-gradient body  ">
 
       <button mat-menu-item class="body">
         <mat-icon class="menu-image sidemenu " Align="center"
-        title="Bem vindo {{nameDoUsuario}}" ></mat-icon>
+        title="Bem vindo {{nameDoUsuario}}" >
+
+        </mat-icon>
 
       <h5>{{nameDoUsuario}}</h5></button>
       <button mat-menu-item routerLink="dashboard">Painel</button>
@@ -47,7 +54,7 @@
 
   <button mat-button class="comp-menu body" routerLink="vendas">Vendas</button>
 
-  <button mat-button class="comp-menu body" routerLink="os">Orden de Serviços</button>
+  <button mat-button class="comp-menu body" routerLink="os">Serviços</button>
 
   <button mat-button class="comp-menu body" routerLink="contabilidade">Contabilidade</button>
 
@@ -60,10 +67,7 @@
     </div>
   -->
 
-  <button mat-button class="bt-icon body" (click)="logout()">
-    <mat-icon>logout</mat-icon>
-    Sair
-  </button>
+
 
 
 </form>

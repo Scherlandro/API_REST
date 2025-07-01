@@ -2,3 +2,4 @@
 biontec-api/src/test/
 biontec/.angular/
 biontec/node_modules/
+biontec-api/target/
