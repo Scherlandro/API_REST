@@ -1,30 +1,36 @@
 /* You can add global styles to this file, and also import other style files */
 
-html, body { height: 100%; }
+html, body {
+  height: 100%;
+}
+
 body {
   margin: 0;
-  font-family: Roboto,"Helvetica Neue", sans-serif;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
   width: auto;
   height: 100%;
-  background-image: -webkit-linear-gradient(top, #672dcc, #2980b9);
-  background-image: -moz-linear-gradient(top, #672dcc, #2980b9);
-  background-image: -ms-linear-gradient(top, #672dcc, #2980b9);
-  background-image: -o-linear-gradient(top, #672dcc, #2980b9);
-  background-image: linear-gradient(to bottom, #672dcc, #2980b9);
+  /* background-image: -webkit-linear-gradient(top, #672dcc, #2980b9);
+   background-image: -moz-linear-gradient(top, #672dcc, #2980b9);
+   background-image: -ms-linear-gradient(top, #672dcc, #2980b9);
+   background-image: -o-linear-gradient(top, #672dcc, #2980b9);
+   background-image: linear-gradient(to bottom, #672dcc, #2980b9);*/
+  background: radial-gradient(ellipse farthest-corner at right bottom, #FEDB37 0%, #FDB931 8%, #9f7928 30%, #8A6E2F 40%, transparent 80%),
+  radial-gradient(ellipse farthest-corner at left top, #FFFFFF 0%, #FFFFAC 8%, #D1B464 25%, #5d4a1f 62.5%, #5d4a1f 100%);
   -webkit-border-radius: 20px;
   -moz-border-radius: 20px;
   border-radius: 20px;
   padding: 8px 20px 10px 20px;
 }
+
 .body:hover {
-  background-image: -webkit-linear-gradient(top, #8438ee, #34db85);
-  background-image: -moz-linear-gradient(top, #8438ee, #34db85);
-  background-image: -ms-linear-gradient(top, #8438ee, #34db85);
-  background-image: -o-linear-gradient(top, #8438ee, #34db85);
-  background-image: linear-gradient(to bottom, #8438ee, #34db85);
+  background: radial-gradient(ellipse farthest-corner at right bottom, #FEDB37 0%, #FDB931 8%, #9f7928 30%, #8A6E2F 40%, transparent 80%),
+  radial-gradient(ellipse farthest-corner at left top, #FFFFFF 0%, #FFFFAC 8%, #D1B464 25%, #5d4a1f 62.5%, #5d4a1f 100%);
+  border-radius: 10px;
+  padding: 5px;
 }
-.componet-table{
-  height:2%;
+
+.componet-table {
+  height: 2%;
   width: 100%;
   background-color: rgba(51, 33, 83, 0.07);
   -webkit-border-radius: 20px;
@@ -33,20 +39,20 @@ body {
   table-layout: fixed;
 }
 
-.img-magnifier-container{
+.img-magnifier-container {
   position: relative;
   border-radius: 30px;
   width: 525px;
 }
 
-.img-magnifier-container:hover{
+.img-magnifier-container:hover {
   position: absolute;
   cursor: grab;
   width: 125px;
   height: 150px;
 }
 
-.hidden-component:hover{
+.hidden-component:hover {
   overflow: hidden;
   position: absolute;
   cursor: grab;
@@ -56,7 +62,7 @@ body {
 }
 
 
-.bt-icon .elementor-button-icon{
+.bt-icon .elementor-button-icon {
   font-size: 32px;
   margin-bottom: -100%;
   -webkit-border-radius: 20px;
