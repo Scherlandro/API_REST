@@ -32,7 +32,6 @@
   text-decoration-color: rgba(255, 255, 255, 0);
   width: fit-content;
   color: #00030a;
-  cursor: pointer;
   -webkit-border-radius: 20px;
   -moz-border-radius: 20px;
   border-radius: 20px;
@@ -61,16 +60,6 @@ ul li {
   transition: 0.5s;
 }
 
-ul li::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: 60px;
-  background: linear-gradient(45deg, var(--i), var(--j));
-  opacity: 0;
-  transition: 0.5s;
-}
-
 ul li::after {
   content: "";
   position: absolute;
@@ -86,6 +75,7 @@ ul li::after {
 }
 
 ul li:hover {
+  cursor: pointer;
   width: 180px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0);
 }
@@ -104,19 +94,13 @@ ul li icon {
   transition: 0.5s;
   transition-delay: 0.25s;
 }
-
-ul li:hover icon {
-  transform: scale(0);
-  color: #fff;
-  transition-delay: 0s;
-}
-
 ul li span {
   position: absolute;
 }
 
 ul li .title {
-  color: #fff;
+  color: #bbff00;
+  font-weight: bold;
   font-size: 1.1em;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -130,18 +114,13 @@ ul li:hover .title {
   transition-delay: 0.25s;
   font-size: 20px;
 }
-
-
-
-/*
-mat-nav-list {
-  div[role="group"] {
-    padding-left: 20px;
-  }
-
-
-  .mat-icon {
-    position: absolute;
-    right: 20px;
-  }
-}*/
+.hide {
+  color:#95bb16 ;
+ font-weight: bold;
+font-size: 1.1em;
+}
+.hide:hover  {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+}

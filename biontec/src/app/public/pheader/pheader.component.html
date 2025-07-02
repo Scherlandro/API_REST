@@ -1,41 +1,30 @@
-
-
-
-    <nav class="menu-lable">
-      <div>
+<nav class="menu-lable">
+  <ul>
+    <li>
+          <span>
       <mat-icon class="lable-link"
                 routerLinkActive="active" [routerLink]="['/']">home</mat-icon>
-      </div>
-      <ul>
-        <li>
-        <span class="lable-link" routerLinkActive="active" [routerLink]="['products-p']" ></span>
-          <span class="title">Promoções</span>
-        </li>
-        <li>
-          <span class="lable-link" routerLinkActive="active" [routerLink]="['district']">
+          </span>
+    </li>
+
+    <li><label class="hide">Promoções</label>
+      <span class="lable-link title" [routerLink]="['products-p']">Promoções
+         </span>
+    </li>
+    <li><label class="hide">Departamentos</label>
+      <span class="lable-link title" routerLinkActive="active" [routerLink]="['district']">
             Departamentos</span>
-        </li>
+    </li>
 
-        <li>
-           <span  routerLinkActive="active" [routerLink]="['/auth/login']">Entrar</span>
-        </li>
+    <li><label class="hide">Blog</label>
+      <span class="lable-link title" href="http://scherlandro.blogspot.com">Blog</span>
+    </li>
 
-       <li>
-      <span href="http://scherlandro.blogspot.com"
-      >Blog</span>
-       </li>
-     </ul>
-      <div>
-      <mat-icon class="lable-link" >art_track</mat-icon>
-      <a class="lable-link" routerLinkActive="active" [routerLink]="['contact']">
-        Contacts</a>
-      </div>
+    <li><label class="hide">Login</label>
+      <span class="lable-link title" routerLinkActive="active" [routerLink]="['/auth/login']">Login</span>
+    </li>
 
+  </ul>
 
-     <!-- <div>
-      <input class="lable-link" type="search" placeholder="Search">
-      </div>
--->
-
-    </nav>
+</nav>
 
