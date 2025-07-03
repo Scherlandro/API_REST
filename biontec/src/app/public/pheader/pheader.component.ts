@@ -1,10 +1,5 @@
 import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {AuthService} from "../../services/auth.service";
-//import Swiper, { EffectCube, Pagination } from "@angular/swiper";
-//import Swiper from "@angular/swiper";
-import {getTemplateId} from "@angular/compiler-cli/src/ngtsc/typecheck/diagnostics";
-// install swiper modules
-//Swiper.use([EffectCube, Pagination]);
 
 @Component({
   selector: 'app-pheader',
