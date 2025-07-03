@@ -1,7 +1,7 @@
-import {Component, Inject, OnInit} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
-import {iProduto} from "../../../interfaces/product";
-import {ProductService} from "../../../services/product.service";
+import { Component, Inject, OnInit } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
+import { iProduto } from "../../../interfaces/product";
+import { ProductService } from "../../../services/product.service";
 
 @Component({
   selector: 'app-dialog-editor',
@@ -13,14 +13,15 @@ export class DialogProdutoComponent implements OnInit {
 
   constructor(
     @Inject(MAT_DIALOG_DATA)
-    public iProduto: iProduto,
+    public produto: iProduto,
     public dialogRef: MatDialogRef<DialogProdutoComponent>,
     public productServices: ProductService
   ) {}
 
 
   ngOnInit(): void {
-    if (this.iProduto.idProduto != null) {
+    console.log("ID dos produtos", this.produto.percentual);
+    if (this.produto.idProduto != null) {
       this.isChange = true;
     } else {
       this.isChange = false;
@@ -33,7 +34,7 @@ export class DialogProdutoComponent implements OnInit {
   }
 
   save():void{
-    this.productServices.createElements(this.iProduto);
+    this.productServices.createElements(this.produto);
   }
 
   formatter(value: number): string {

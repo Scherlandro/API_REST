@@ -1,22 +1,19 @@
-import {Component, Inject} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog";
-import {FormControl} from "@angular/forms";
-import {iProduto} from "../../../interfaces/product";
-import {ProductService} from "../../../services/product.service";
-import {iVendas} from "../../../interfaces/vendas";
-import {VendasService} from "../../../services/vendas.service";
-import {catchError, map, startWith} from "rxjs/operators";
-import {Observable, of} from "rxjs";
-import {ErrorDiologComponent} from "../error-diolog/error-diolog.component";
-import {each} from "chart.js/dist/helpers";
+import { Component, Inject } from '@angular/core';
+import { FormControl } from "@angular/forms";
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from "@angular/material/dialog";
+import { iServiceOrder } from 'src/app/interfaces/service-order';
+import { OrdemDeServicosService } from 'src/app/services/ordem-de-servicos.service';
+import { iProduto } from "../../../interfaces/product";
+import { ProductService } from "../../../services/product.service";
+import { ErrorDiologComponent } from "../error-diolog/error-diolog.component";
 
 @Component({
-  selector: 'app-dialog-open-sales',
-  templateUrl: './dialog-open-sales.component.html',
-  styleUrls: ['./dialog-open-sales.component.css']
+  selector: 'app-dialog-open-os',
+  templateUrl: './dialog-open-os.component.html',
+  styleUrls: ['./dialog-open-os.component.css']
 })
 export class DialogOpenOsComponent {
-  isChange!: boolean;
+  isChange=true;
   prod!: iProduto;
   produtoControl = new FormControl();
   listProd: any;
@@ -26,9 +23,9 @@ export class DialogOpenOsComponent {
 
   constructor(
     @Inject(MAT_DIALOG_DATA)
-    public vend: iVendas,
+    public os: iServiceOrder,
     public dialogRef: MatDialogRef<DialogOpenOsComponent>,
-    public vendaServices: VendasService,
+    public osServices: OrdemDeServicosService,
     public prodService: ProductService,
     public dialog: MatDialog,
   ) {
@@ -36,16 +33,17 @@ export class DialogOpenOsComponent {
   }
 
   ngOnInit(): void {
-    if (this.vend.idVenda != null) {
+   this.statusDaOS();
+   // this.listarProdutos();
+  //  this.produtosFiltered = this.produtoControl.valueChanges.pipe( startWith(''), map(value => value._filter(value) ) )
+ //   https://v5.material.angular.io/components/autocomplete/examples
+  }
+  statusDaOS(){
+    if (this.os.idOS != null) {
       this.isChange = true;
     } else {
       this.isChange = false;
     }
-   // this.listarProdutos();
-
-  //  this.produtosFiltered = this.produtoControl.valueChanges.pipe( startWith(''), map(value => value._filter(value) ) )
-
- //   https://v5.material.angular.io/components/autocomplete/examples
   }
 
   listarProdutos(value:any) {

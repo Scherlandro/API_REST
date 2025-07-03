@@ -1,17 +1,17 @@
-import { Component, LOCALE_ID, OnInit, ViewChild} from '@angular/core';
-import {of} from 'rxjs';
-import {catchError} from "rxjs/operators";
-import {MatSort} from "@angular/material/sort";
-import {MatPaginator, PageEvent} from "@angular/material/paginator";
-import {MatDialog} from "@angular/material/dialog";
-import {MatTable, MatTableDataSource} from "@angular/material/table";
-import {FormControl} from "@angular/forms";
-import {iProduto} from "../../interfaces/product";
-import {DialogProdutoComponent} from "../../shared/diolog_components/dialog-produto/dialog-produto.component";
-import {ErrorDiologComponent} from "../../shared/diolog_components/error-diolog/error-diolog.component";
-import {ProductService} from "../../services/product.service";
-import {registerLocaleData} from "@angular/common";
+import { registerLocaleData } from "@angular/common";
 import ptBr from '@angular/common/locales/pt';
+import { Component, LOCALE_ID, OnInit, ViewChild } from '@angular/core';
+import { FormControl } from "@angular/forms";
+import { MatDialog } from "@angular/material/dialog";
+import { MatPaginator, PageEvent } from "@angular/material/paginator";
+import { MatSort } from "@angular/material/sort";
+import { MatTable, MatTableDataSource } from "@angular/material/table";
+import { of } from 'rxjs';
+import { catchError } from "rxjs/operators";
+import { iProduto } from "../../interfaces/product";
+import { ProductService } from "../../services/product.service";
+import { DialogProdutoComponent } from "../../shared/diolog_components/dialog-produto/dialog-produto.component";
+import { ErrorDiologComponent } from "../../shared/diolog_components/error-diolog/error-diolog.component";
 
 registerLocaleData(ptBr);
 

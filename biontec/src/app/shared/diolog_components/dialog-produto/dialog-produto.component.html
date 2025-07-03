@@ -6,49 +6,49 @@
 
     <mat-form-field appearance="fill">
       <mat-label>ID</mat-label>
-      <input matInput [(ngModel)]="iProduto.idProduto">
+      <input matInput [(ngModel)]="produto.idProduto">
     </mat-form-field>
 
   <mat-form-field appearance="fill">
     <mat-label>Códico</mat-label>
-    <input matInput [(ngModel)]="iProduto.codProduto">
+    <input matInput [(ngModel)]="produto.codProduto">
   </mat-form-field>
 
   <mat-form-field appearance="fill">
     <mat-label>Descrição</mat-label>
-    <input matInput [(ngModel)]="iProduto.nomeProduto">
+    <input matInput [(ngModel)]="produto.nomeProduto">
   </mat-form-field>
 
     <mat-form-field appearance="fill">
       <mat-label>Preço de Compra</mat-label>
-      <input type="number" matInput [(ngModel)]="iProduto.valorCompra">
+      <input type="number" matInput [(ngModel)]="produto.valorCompra">
     </mat-form-field>
 
     <mat-form-field appearance="fill">
       <mat-label>Preço de Venda</mat-label>
-      <input type="number" matInput [(ngModel)]="iProduto.valorVenda"   >
+      <input type="number" matInput [(ngModel)]="produto.valorVenda"   >
     </mat-form-field>
 
     <mat-form-field appearance="fill">
       <mat-label>Margem de lucro</mat-label>
-      <input type="number" matInput [(ngModel)]="iProduto.percentual">
+      <input type="number" matInput [(ngModel)]="produto.percentual">
     </mat-form-field>
 
   <mat-form-field appearance="fill">
     <mat-label>Quantidade em Estoque</mat-label>
-    <input type="number" matInput [(ngModel)]="iProduto.qtdEstoque">
+    <input type="number" matInput [(ngModel)]="produto.qtdEstoque">
   </mat-form-field>
 
   <mat-form-field appearance="fill">
     <mat-label>Data de Cadastro</mat-label>
-    <input type="date" matInput [(ngModel)]="iProduto.dtCadastro">
+    <input type="date" matInput [(ngModel)]="produto.dtCadastro">
   </mat-form-field>
 
 
 <span>
 
-  <button mat-button *ngIf="isChange" [mat-dialog-close]="iProduto" cdkFocusInitial >Edit</button>
-  <button mat-button *ngIf="!isChange" [mat-dialog-close]="iProduto" cdkFocusInitial (click)="save()" >salvar</button>
+  <button mat-button *ngIf="isChange" [mat-dialog-close]="produto" cdkFocusInitial >Edit</button>
+  <button mat-button *ngIf="!isChange" [mat-dialog-close]="produto" cdkFocusInitial (click)="save()" >salvar</button>
   <button mat-raised-button (click)="onCancel()">Cancel</button>
  </span>
   <!--
