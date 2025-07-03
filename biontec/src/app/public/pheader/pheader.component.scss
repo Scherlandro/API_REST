@@ -75,7 +75,9 @@ ul li:hover .title {
   cursor:pointer;
   transform: scale(1);
   transition-delay: 0.25s;
-  font-size: 20px;
+  font-size: 15px;
+  font-weight: bold;
+  font-family: "Cooper Black";
 }
 
 .hide {
@@ -83,9 +85,9 @@ ul li:hover .title {
   font-weight: bold;
   font-size: 1.1em;
 }
-
+/*
 .hide:hover {
   position: absolute;
   inset: 0;
   opacity: 0;
-}
+}*/
