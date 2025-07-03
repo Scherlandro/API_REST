@@ -2,7 +2,7 @@
 ul {
   display: flex;
   position: relative;
-  gap: 25px;
+  gap: 30px;
 }
 
 ul li {
@@ -41,19 +41,8 @@ ul li:hover {
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0);
 }
 
-ul li:hover::before {
-  opacity: 1;
-}
-
 ul li:hover::after {
   opacity: 0.5;
-}
-
-ul li icon {
-  color: #777;
-  font-size: 1.75em;
-  transition: 0.5s;
-  transition-delay: 0.25s;
 }
 
 ul li span {
@@ -85,9 +74,4 @@ ul li:hover .title {
   font-weight: bold;
   font-size: 1.1em;
 }
-/*
-.hide:hover {
-  position: absolute;
-  inset: 0;
-  opacity: 0;
-}*/
+
