@@ -1,25 +1,25 @@
-.toolbar img {
+/*.toolbar img {
   margin: 0 16px;
 }
 .div-top{
   margin: 280px 0px 0px 8px ;
   display: grid;
-/*  grid-template-columns: repeat(auto-fit,mimax(250px, 1fr));*/
+ grid-template-columns: repeat(auto-fit,mimax(250px, 1fr));
   grid-gap: 10px;
-
 }
 .header-image {
   background-image: url('~src/assets/image/scherlandro.jpg');
   background-size: cover;
 }
-.menu-lable{
- width: 100%;
-    display: grid;
-    grid-template-columns: 0.5fr 1.5fr 1fr 2fr 1fr ;
-    grid-gap: 4px;
+.menu-lable {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 0.5fr 1.5fr 1fr 2fr 1fr;
+  grid-gap: 4px;
   border-radius: 30px;
   background-color: rgba(4, 28, 75, 0);
 }
+
 .menu-lable:hover {
   background: radial-gradient(ellipse farthest-corner at right bottom, #FEDB37 0%, #FDB931 8%, #9f7928 30%, #8A6E2F 40%, transparent 80%),
   radial-gradient(ellipse farthest-corner at left top, #FFFFFF 0%, #FFFFAC 8%, #D1B464 25%, #5d4a1f 62.5%, #5d4a1f 100%);
@@ -27,7 +27,7 @@
   padding: 5px;
 }
 
-.lable-link{
+.lable-link {
   padding: 5px;
   text-decoration-color: rgba(255, 255, 255, 0);
   width: fit-content;
@@ -35,7 +35,7 @@
   -webkit-border-radius: 20px;
   -moz-border-radius: 20px;
   border-radius: 20px;
-}
+}*/
 
 ul {
   display: flex;
@@ -61,21 +61,20 @@ ul li {
 }
 
 ul li::after {
-  content: "";
+  //content: "";
   position: absolute;
-  top: 10px;
+  //top: 10px;
   width: 100%;
   height: 100%;
   border-radius: 60px;
-  background: linear-gradient(45deg, var(--i), var(--j));
+  //background: linear-gradient(45deg, var(--i), var(--j));
   transition: 0.5s;
-  filter: blur(15px);
+ // filter: blur(15px);
   z-index: -1;
-  opacity: 0;
+ // opacity: 0;
 }
 
 ul li:hover {
-  cursor: pointer;
   width: 180px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0);
 }
@@ -94,6 +93,7 @@ ul li icon {
   transition: 0.5s;
   transition-delay: 0.25s;
 }
+
 ul li span {
   position: absolute;
 }
@@ -110,16 +110,19 @@ ul li .title {
 }
 
 ul li:hover .title {
+  cursor:pointer;
   transform: scale(1);
   transition-delay: 0.25s;
   font-size: 20px;
 }
+
 .hide {
-  color:#95bb16 ;
- font-weight: bold;
-font-size: 1.1em;
+  color: #95bb16;
+  font-weight: bold;
+  font-size: 1.1em;
 }
-.hide:hover  {
+
+.hide:hover {
   position: absolute;
   inset: 0;
   opacity: 0;
