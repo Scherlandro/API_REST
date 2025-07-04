@@ -8,6 +8,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.persistence.Transient;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -22,6 +24,7 @@ public class ItensDaVendaDto {
     private Double valVenda;
     private Integer qtdVendidas;
     private Double valorParcial;
-    private Date dtRegistro;
+    @Transient
+    private String dtRegistro;
 
 }

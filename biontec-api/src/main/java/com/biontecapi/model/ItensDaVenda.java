@@ -28,28 +28,23 @@ public class ItensDaVenda {
     @Column(name = "codevendas", length = 20)
     private String codVenda;
 
-    @Column(name = "cod_produtos",length = 80)
+    @Column(name = "cod_produtos",length = 20)
     private String codProduto;
 
-    @Column(length = 120)
+    @Column(length = 60)
     private String descricao;
 
-    @Column(name = "valor_compra",length = 20)
+    @Column(name = "valor_compra")
     private Double valCompra;
 
-    @Column(name = "valor_venda",length = 20)
-    private Double valor_venda;
+    @Column(name = "valor_venda")
+    private Double valVenda;
 
     @Column(name = "qtd_vendidas",length = 11)
     private Integer qtdVendidas;
 
-    @Column(name = "valor_parcial",length = 20)
+    @Column(name = "valor_parcial")
     private Double valor_parcial;
-
-    @Column(name = "dt_registro",length = 20)
-    private Date dtRegistro;
-
-
 
    /* @Transient
     @ManyToOne
