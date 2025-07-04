@@ -156,15 +156,20 @@ export class VendaComponent implements OnInit {
     const dialogRef = this.dialog.open(DialogProdutoComponent, {
       width: '300px',
       data: eventVd === null ? {
-        cod_vendas: null,
-        descricao: '',
-        valor_venda: '',
-        qtd_vendidas: ''
+        idVenda: null,
+        nomeFuncionario: '',
+        nomeCliente:'',
+        dt_venda: '',
       } : {
-        cod_vendas: eventVd.codevendas,
-        descricao: eventVd.descricao,
-        valor_venda: eventVd.valor_venda,
-        qtd_vendidas: eventVd.qtd_vendidas,
+        idVenda: eventVd.codevendas,
+        nomeFuncionario: eventVd.descricao,
+        nomeCliente:eventVd,
+        dt_venda: eventVd,
+        subtotal: eventVd,
+        desconto: eventVd,
+        totalgeral: eventVd,
+        formasDePagamento: eventVd,
+        qtdDeParcelas:eventVd,
       }
 
     });
@@ -193,26 +198,31 @@ export class VendaComponent implements OnInit {
     });*/
   }
 
-  openDilogVd(eventVd: any) {
+  openDilogVd(eventVd: iVendas) {
    // console.log("Evento do  Dialog de vendas-", eventVd)
     const dialogRef = this.dialog.open(DialogOpenSalesComponent, {
       width: '300px',
       data: eventVd === null ? {
         idVenda: null,
-        nomeCliente: '',
         dtVenda: '',
-        cod_vendas: null,
-        descricao: '',
-        valor_venda: '',
-        qtd_vendidas: ''
+        nomeFuncionario: '',
+        nomeCliente: '',
+        subtotal: null,
+        desconto: null,
+        totalgeral: null,
+        formasDePagamento: "",
+        qtdDeParcelas:null,
       } : {
         idVenda: eventVd.idVenda,
+        dtVenda: eventVd.dt_venda,
+        nomeFuncionario: eventVd.nomeFuncionario,
         nomeCliente: eventVd.nomeCliente,
-        dtVenda: eventVd.dtVenda,
-        cod_vendas: eventVd.cod_vendas,
-        descricao: eventVd.descricao,
-        valor_venda: eventVd.valor_venda,
-        qtd_vendidas: eventVd.qtd_vendidas,
+        dt_venda: eventVd.dt_venda,
+        subtotal: eventVd.subtotal,
+        desconto: eventVd.desconto,
+        totalgeral: eventVd.totalgeral,
+        formasDePagamento: eventVd.formasDePagamento,
+        qtdDeParcelas:eventVd.qtdDeParcelas,
 
       }
     });

@@ -1,6 +1,8 @@
 package com.biontecapi.dtos;
 
 
+import java.util.Date;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,14 +14,14 @@ import lombok.Setter;
 @NoArgsConstructor
 public class ItensDaVendaDto {
 
-    private Integer id_itens_vd;
-    private String codevendas;
-    private String cod_produtos;
+    private Integer IdItensVd;
+    private String codVenda;
+    private String codProduto;
     private String descricao;
-    private Double valor_compra;
-    private Double valor_venda;
-    private Integer qtd_vendidas;
-    private Double valor_parcial;
-    private String dt_venda;
+    private Double valCompra;
+    private Double valVenda;
+    private Integer qtdVendidas;
+    private Double valorParcial;
+    private Date dtRegistro;
 
 }

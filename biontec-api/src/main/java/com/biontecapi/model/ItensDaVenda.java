@@ -1,10 +1,17 @@
 package com.biontecapi.model;
 
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import javax.persistence.*;
 
 @Entity
 @Data
@@ -15,25 +22,34 @@ public class ItensDaVenda {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id_itens_vd;
+    @Column(name = "id_itens_vd", length = 20)
+    private Integer IdItensVd;
 
     @Column(name = "codevendas", length = 20)
-    private String codevendas;
+    private String codVenda;
 
-    @Column(length = 20)
-    private String cod_produtos;
+    @Column(name = "cod_produtos",length = 80)
+    private String codProduto;
 
-    @Column(length = 60)
+    @Column(length = 120)
     private String descricao;
 
-    private Double valor_compra;
+    @Column(name = "valor_compra",length = 20)
+    private Double valCompra;
 
+    @Column(name = "valor_venda",length = 20)
     private Double valor_venda;
 
+    @Column(name = "qtd_vendidas",length = 11)
+    private Integer qtdVendidas;
+
+    @Column(name = "valor_parcial",length = 20)
     private Double valor_parcial;
 
-    @Column(length = 11)
-    private Integer qtd_vendidas;
+    @Column(name = "dt_registro",length = 20)
+    private Date dtRegistro;
+
+
 
    /* @Transient
     @ManyToOne
