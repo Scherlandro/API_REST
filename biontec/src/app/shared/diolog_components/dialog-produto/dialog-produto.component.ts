@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import {ChangeDetectionStrategy, Component, Inject, OnInit} from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import { iProduto } from "../../../interfaces/product";
 import { ProductService } from "../../../services/product.service";
@@ -20,7 +20,7 @@ export class DialogProdutoComponent implements OnInit {
 
 
   ngOnInit(): void {
-    console.log("ID dos produtos", this.produto.percentual);
+
     if (this.produto.idProduto != null) {
       this.isChange = true;
     } else {
@@ -38,7 +38,6 @@ export class DialogProdutoComponent implements OnInit {
   }
 
   formatter(value: number): string {
-    //<div>{{ formatter(iProdroduto.valor_venda) }}</div>
     return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
   }
 

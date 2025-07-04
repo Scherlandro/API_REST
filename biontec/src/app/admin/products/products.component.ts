@@ -104,27 +104,28 @@ export class ProductsComponent implements OnInit {
     const dialogRef = this.dialog.open(DialogProdutoComponent, {
       width: '300px',
       data: eventProd === null ? {
-        id_produto: null,
-        cod_produto: '',
-        nome_produto: '',
-        valor_compra: '',
+        idProduto: null,
+        codProduto: '',
+        nomeProduto: '',
+        valorCompra: '',
         percentual: '',
-        valor_venda: '',
-        quantidade_estoque: '',
-        dt_cadastro: ''
+        valorVenda: '',
+        qtdEstoque: '',
+        dtCadastro: ''
       } : {
-        id_produto: eventProd.idProduto,
-        cod_produto: eventProd.codProduto,
-        nome_produto: eventProd.nomeProduto,
-        valor_compra: eventProd.valorCompra,
+        idProduto: eventProd.idProduto,
+        codProduto: eventProd.codProduto,
+        nomeProduto: eventProd.nomeProduto,
+        valorCompra: eventProd.valorCompra,
         percentual: eventProd.percentual,
-        valor_venda: eventProd.valorVenda,
-        quantidade_estoque: eventProd.qtdEstoque,
-        dt_cadastro: eventProd.dtCadastro
+        valorVenda: eventProd.valorVenda,
+        qtdEstoque: eventProd.qtdEstoque,
+        dtCadastro: eventProd.dtCadastro
       }
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+
+   /* dialogRef.afterClosed().subscribe(result => {
       if (result !== undefined) {
         if (this.tbSourceProdutos$.data
           .map(p => p.idProduto).includes(result.idProduto)) {
@@ -143,7 +144,7 @@ export class ProductsComponent implements OnInit {
             });
         }
       }
-    });
+    });*/
   }
 
   editarElement(eventProd: iProduto) {
