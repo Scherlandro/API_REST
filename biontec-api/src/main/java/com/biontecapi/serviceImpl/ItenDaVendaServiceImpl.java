@@ -21,6 +21,9 @@ public class ItenDaVendaServiceImpl implements ItensDaVendaService {
         this.itensDaVendaRepository = repository;
     }
 
+/*   public boolean existsIten(String item) { return ItensDaVendaRepository.existsItem(item);    }
+    public boolean existsByDisponibilidade(Boolean disponibilidade) { return itensDaVendaRepository.existsByDisponibilidade(disponibilidade); }
+    */
 
     @Transactional
     public ItensDaVenda save(ItensDaVenda itensDaVenda) {
@@ -57,21 +60,6 @@ public class ItenDaVendaServiceImpl implements ItensDaVendaService {
         return itensDaVendaRepository.litarItemDaVendaPorCliente(nome);
     }
 
-/*
-    @Override
-    public List<ItensDaVendaDto> litarItemDaVendaPorCod(String codevendas) {
-        return itensDaVendaRepository.litarItemDaVendaPorCod(codevendas);
-    }
 
-    @Override
-    public boolean existsIten(String item) {
-        return ItensDaVendaRepository.existsItem(item);
-    }
-    @Override
-    public boolean existsByDisponibilidade(Boolean disponibilidade) {
-        return itensDaVendaRepository.existsByDisponibilidade(disponibilidade);
-    }
-
-    */
 
 }

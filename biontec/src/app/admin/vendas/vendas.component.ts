@@ -99,9 +99,9 @@ export class VendaComponent implements OnInit {
         this.tbSourceItensDaVd$.data = data;
         var soma = 0;
         for(var i =0;i<data.length;i++){
-          soma+=data.map(i=>i.valor_parcial)[i];
+          soma+=data.map(i=>i.valorParcial)[i];
         }
-     //   console.log('ItensVD somados', soma);
+        console.log('ItensVD ',  this.tbSourceItensDaVd$.data );
       });
   }
 
@@ -159,12 +159,12 @@ export class VendaComponent implements OnInit {
         idVenda: null,
         nomeFuncionario: '',
         nomeCliente:'',
-        dt_venda: '',
+        dtRegistro: '',
       } : {
-        idVenda: eventVd.codevendas,
+        idVenda: eventVd.codVenda,
         nomeFuncionario: eventVd.descricao,
         nomeCliente:eventVd,
-        dt_venda: eventVd,
+        dtRegistro: eventVd,
         subtotal: eventVd,
         desconto: eventVd,
         totalgeral: eventVd,

@@ -44,7 +44,7 @@ public class ItensDaVenda {
     private Integer qtdVendidas;
 
     @Column(name = "valor_parcial")
-    private Double valor_parcial;
+    private Double valorParcial;
 
    /* @Transient
     @ManyToOne

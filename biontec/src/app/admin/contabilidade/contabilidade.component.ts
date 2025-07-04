@@ -66,7 +66,7 @@ export class ContabilidadeComponent implements OnInit {
           },
           {
             borderColor:'rgb(235,105,54)',
-            data: this.restDtItens.map((i:iItensVd)=>i.qtd_vendidas),
+            data: this.restDtItens.map((i:iItensVd)=>i.qtdVendidas),
             label:'Itens das Vendas',
             borderWidth:3,
             backgroundColor:'rgba(21,79,165,0.27)',

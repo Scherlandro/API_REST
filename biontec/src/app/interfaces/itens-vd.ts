@@ -1,14 +1,13 @@
 
 
 export interface iItensVd {
-
-  id_itens_vd?: number;
-  codevendas?: string;
-  cod_produtos: string;
+  idItensVd?: number;
+  codVenda?: string;
+  codProduto: string;
   descricao: string;
-  valor_compra?: number;
-  valor_venda: number;
-  qtd_vendidas: number;
-  valor_parcial: number;
+  valCompra?: number;
+  valVenda: number;
+  qtdVendidas: number;
+  valorParcial: number;
+  dtRegistro: string;
 }
-

@@ -70,17 +70,6 @@ public class VendasController {
     }
 
 
-/*
-
-
-      @GetMapping(path = "/{codVenda}")
-    public ResponseEntity consultarPorCod(@PathVariable("codVenda") String codVenda) {
-        Optional<VendasDto> vendas = vendas_serv.litarVendaPorCod(codVenda);
-        return ResponseEntity.ok(vendas.map(e -> mapper.map(e,
-                VendasDto.class)).map(record -> ResponseEntity.ok().body(record))
-                .orElse(ResponseEntity.notFound().build()));
-    }
-*/
 
 
 }
