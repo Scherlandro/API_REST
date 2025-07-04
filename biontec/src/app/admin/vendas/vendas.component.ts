@@ -156,20 +156,25 @@ export class VendaComponent implements OnInit {
     const dialogRef = this.dialog.open(DialogProdutoComponent, {
       width: '300px',
       data: eventVd === null ? {
-        idVenda: null,
-        nomeFuncionario: '',
-        nomeCliente:'',
-        dtRegistro: '',
+        idItensVd: null,
+        codProduto: ' ' ,
+        codVenda: ' ' ,
+        descricao: ' ' ,
+        dtRegistro: ' ' ,
+        qtdVendidas: null,
+        valCompra: null,
+        valVenda: null,
+        valorParcial: null,
       } : {
-        idVenda: eventVd.codVenda,
-        nomeFuncionario: eventVd.descricao,
-        nomeCliente:eventVd,
-        dtRegistro: eventVd,
-        subtotal: eventVd,
-        desconto: eventVd,
-        totalgeral: eventVd,
-        formasDePagamento: eventVd,
-        qtdDeParcelas:eventVd,
+        idItensVd: eventVd.idItensVd ,
+        codProduto: eventVd.codProduto ,
+        codVenda: eventVd.codVenda ,
+        descricao: eventVd.descricao ,
+        dtRegistro: eventVd.dtRegistro ,
+        qtdVendidas: eventVd.qtdVendidas ,
+        valCompra: eventVd.valCompra ,
+        valVenda: eventVd.valVenda ,
+        valorParcial: eventVd.valorParcial ,
       }
 
     });
