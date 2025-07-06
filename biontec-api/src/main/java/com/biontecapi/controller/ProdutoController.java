@@ -53,7 +53,7 @@ import com.biontecapi.service.ProdutoService;
         }
 
         @GetMapping(value = "/buscarPorNome")
-        public ResponseEntity<List<ProdutoDto>> consultarPorNome(@RequestParam(name = "nome_produto") String nome) {
+        public ResponseEntity<List<ProdutoDto>> consultarPorNome(@RequestParam(name = "nomeProduto") String nome) {
             List<Produto> list = prod_serv.listarProdutoPorNome(nome);
             return ResponseEntity.ok(list.stream().map(
                     e-> mapper.map(e, ProdutoDto.class))

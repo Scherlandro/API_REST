@@ -17,8 +17,8 @@ public class Funcionario {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Integer id_funcionario;
 
-    @Column(nullable = false, length = 50)
-    private String nome_funcionario;
+    @Column(nullable = false, name = "nome_funcionario",length = 50)
+    private String nomeFuncionario;
 
     @Column(nullable = false, length = 15)
     private String rg;
