@@ -1,30 +1,19 @@
 package com.biontecapi.model;
 
-import com.biontecapi.dtos.ItensDaVendaDto;
-import com.biontecapi.dtos.VendasDto;
-import lombok.*;
-
-import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
-/*
 
-@NamedNativeQuery(name = "Vendas.findVendasByNomeDoCliente",
-        query = "Select v.id_venda, v.id_cliente, v.nome_cliente, v.id_funcionario, v.nome_funcionario, v.dt_venda," +
-                " v.subtotal, v.desconto, v.totalgeral,v.forma_de_pagamento, v.numero_de_parcelas, itensVd.*   " +
-                " from Vendas v join (select it.codevendas, it.cod_produtos,it.descricao," +
-                " it.valor_compra, it.valor_venda, it.valor_parcial, it.qtd_vendidas from ItensDaVenda it) as itensVd" +
-                " on v.id_venda = itensVd.codevendas  where v.nome_cliente = :nome_cliente",
-        resultSetMapping = "Mapping.VendasDto" )
-@SqlResultSetMapping(name = "Mapping.VendasDto",
-        classes = @ConstructorResult(targetClass = Vendas.class,
-                columns = {@ColumnResult(name = "id_venda"),@ColumnResult(name = "id_cliente"),@ColumnResult(name = "nome_cliente"),
-                        @ColumnResult(name = "id_funcionario"),@ColumnResult(name = "nome_funcionario"),@ColumnResult(name = "dt_venda"),
-                        @ColumnResult(name = "subtotal"),@ColumnResult(name = "desconto"),@ColumnResult(name = "totalgeral"),
-                        @ColumnResult(name = "forma_de_pagamento"),@ColumnResult(name = "numero_de_parcelas")
-                        ,@ColumnResult(name = "itensVd", type = String.class) }))
-*/
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 
 @Entity

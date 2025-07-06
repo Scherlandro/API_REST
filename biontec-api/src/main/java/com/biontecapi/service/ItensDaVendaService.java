@@ -1,13 +1,10 @@
 package com.biontecapi.service;
 
-import com.biontecapi.dtos.ItensDaVendaDto;
-import com.biontecapi.model.ItensDaVenda;
-import com.biontecapi.repository.ItensDaVendaRepository;
-import org.springframework.stereotype.Service;
-
-import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
+
+import com.biontecapi.dtos.ItensDaVendaDto;
+import com.biontecapi.model.ItensDaVenda;
 
 
 public interface ItensDaVendaService {

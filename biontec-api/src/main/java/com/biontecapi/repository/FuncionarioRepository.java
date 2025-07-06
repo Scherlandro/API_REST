@@ -1,15 +1,16 @@
 package com.biontecapi.repository;
 
-import com.biontecapi.model.Funcionario;
+import java.math.BigDecimal;
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.math.BigDecimal;
-import java.util.List;
+import com.biontecapi.model.Funcionario;
 
 public interface FuncionarioRepository extends JpaRepository<Funcionario,Integer> {
-/*
+
     List<Funcionario> findByFirstName(String firstName);
     @Query(
             "SELECT e FROM Funcionario e " +
@@ -19,5 +20,5 @@ public interface FuncionarioRepository extends JpaRepository<Funcionario,Integer
     )
     List<Funcionario> findByNameLikeAndSalaryAbove(
             @Param("nome_funcionario") String name, @Param("salario") BigDecimal salario);
-*/
+
 }

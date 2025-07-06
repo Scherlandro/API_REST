@@ -1,13 +1,13 @@
 package com.biontecapi.repository;
 
 
-import com.biontecapi.model.OrdemDeServico;
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.time.LocalDateTime;
-import java.util.List;
+import com.biontecapi.model.OrdemDeServico;
 
 public interface OrdemDeServicosRepository extends JpaRepository<OrdemDeServico, Long> {
 
@@ -19,7 +19,7 @@ public interface OrdemDeServicosRepository extends JpaRepository<OrdemDeServico,
     List<OrdemDeServico> findByDataDeEntradaBetween(@Param("start") String start, @Param("end") String end);
 
 
-   /* @Query("SELECT o FROM OrdemDeServico o JOIN o.subservicos s WHERE s.numeracao = :numeracao")
-    List<OrdemDeServico> findByNumeracao(@Param("numeracao") String numeracao);*/
+    @Query("SELECT o FROM OrdemDeServico o JOIN o.subservicos s WHERE s.numeracao = :numeracao")
+    List<OrdemDeServico> findByNumeracao(@Param("numeracao") String numeracao);
 
 }

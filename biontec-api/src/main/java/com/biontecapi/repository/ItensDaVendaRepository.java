@@ -1,15 +1,14 @@
 package com.biontecapi.repository;
 
-import com.biontecapi.dtos.ItensDaVendaDto;
-import com.biontecapi.model.ItensDaVenda;
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-import java.util.Optional;
+import com.biontecapi.dtos.ItensDaVendaDto;
+import com.biontecapi.model.ItensDaVenda;
 
 @Repository
 public interface ItensDaVendaRepository extends JpaRepository<ItensDaVenda, Integer> {
@@ -33,11 +32,11 @@ public interface ItensDaVendaRepository extends JpaRepository<ItensDaVenda, Inte
             "where STR_TO_DATE(v.dt_venda,'%d/%m/%y')  BETWEEN STR_TO_DATE(:dtIni,'%d/%m/%y') AND STR_TO_DATE(:dtFinal,'%d/%m/%y') ")
     List<ItensDaVendaDto> litarItemDaVendaEntreData(@Param("dtIni") String dtIni, @Param("dtFinal") String dtFinal);
 
-/*    @Query("Select new com.biontecapi.dtos.ItensDaVendaDto(i.IdItensVd, i.codVenda, i.codProduto, i.descricao, " +
+    @Query("Select new com.biontecapi.dtos.ItensDaVendaDto(i.IdItensVd, i.codVenda, i.codProduto, i.descricao, " +
             "i.valCompra, i.valVenda, i.qtdVendidas, i.valorParcial, v.dt_venda) " +
             "from Vendas v inner join ItensDaVenda i on v.codevenda = i.codVenda " +
             "where STR_TO_DATE(v.dt_venda,'%d/%m/%y') BETWEEN STR_TO_DATE(:dtIni,'%d/%m/%y') AND STR_TO_DATE(:dtFinal,'%d/%m/%y')")
-    List<ItensDaVendaDto> litarItemDaVendaEntreData(@Param("dtIni") String dtIni, @Param("dtFinal") String dtFinal);*/
+    List<ItensDaVendaDto> litarItensVdPorPeriodo(@Param("dtIni") String dtIni, @Param("dtFinal") String dtFinal);
 
 
     @Query(value = " Select new com.biontecapi.dtos.ItensDaVendaDto(i.IdItensVd,i.codVenda,i.codProduto," +

@@ -1,20 +1,20 @@
 package com.biontecapi.controller;
 
-import com.biontecapi.dtos.ItensDaVendaDto;
-import com.biontecapi.model.ItensDaVenda;
-import com.biontecapi.repository.ItensDaVendaRepository;
-import com.biontecapi.service.ItensDaVendaService;
-import lombok.AllArgsConstructor;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
+import com.biontecapi.dtos.ItensDaVendaDto;
+import com.biontecapi.model.ItensDaVenda;
+import com.biontecapi.service.ItensDaVendaService;
 
 @CrossOrigin(origins = "*")
 @RestController
