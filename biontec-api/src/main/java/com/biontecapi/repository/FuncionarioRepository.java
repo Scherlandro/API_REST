@@ -20,6 +20,4 @@ public interface FuncionarioRepository extends JpaRepository<Funcionario, Intege
     @Query("SELECT e FROM Funcionario e WHERE lower(e.nomeFuncionario) LIKE lower(concat('%',:name,'%')) AND e.salario > :salario ORDER BY e.nomeFuncionario ASC")
     List<Funcionario> listarSalarioPorFuncionario(String name, BigDecimal salario);
 
-   /* @Query("SELECT f FROM Funcionario f WHERE f.nomeFuncionario = :nome AND f.salario = :salario")
-    List<Funcionario> listarSalarioPorFuncionario(@Param("nome") String nome, @Param("salario") BigDecimal salario);*/
 }
