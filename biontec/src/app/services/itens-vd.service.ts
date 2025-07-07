@@ -1,8 +1,8 @@
+import { HttpClient } from "@angular/common/http";
 import { Injectable } from '@angular/core';
-import {HttpClient} from "@angular/common/http";
-import {Observable, of} from "rxjs/index";
-import {environment} from "../../environments/environment";
-import {iItensVd} from "../interfaces/itens-vd";
+import { Observable } from "rxjs/index";
+import { environment } from "../../environments/environment";
+import { iItensVd } from "../interfaces/itens-vd";
 
 @Injectable({
   providedIn: 'root'
@@ -27,5 +27,13 @@ export class ItensVdService {
     return this._http.get<iItensVd[]>(this.baseUrl +'ItensVdEntreDatas?dtIni='+d1+'&dtFinal='+d2);
   }
 
+
+  createElements(element: iItensVd): Observable<iItensVd> {
+    return this._http.post<iItensVd>(this.baseUrl+'salvar',element);
+  }
+
+  editElement(element: iItensVd): Observable<iItensVd> {
+    return this._http.put<iItensVd>(this.baseUrl+'editar', element);
+  }
 
 }

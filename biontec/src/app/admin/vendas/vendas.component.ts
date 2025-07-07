@@ -7,12 +7,12 @@ import { MatSort } from "@angular/material/sort";
 import { MatTable, MatTableDataSource } from "@angular/material/table";
 import { of } from "rxjs";
 import { catchError } from "rxjs/operators";
+import { DialogItensVdComponent } from "src/app/shared/diolog_components/dialog-itensvd/dialog-itensvd.component";
 import { iItensVd } from "../../interfaces/itens-vd";
 import { iVendas } from "../../interfaces/vendas";
 import { ItensVdService } from "../../services/itens-vd.service";
 import { VendasService } from "../../services/vendas.service";
 import { DialogOpenSalesComponent } from "../../shared/diolog_components/dialog-open-sales/dialog-open-sales.component";
-import { DialogProdutoComponent } from "../../shared/diolog_components/dialog-produto/dialog-produto.component";
 import { ErrorDiologComponent } from "../../shared/diolog_components/error-diolog/error-diolog.component";
 
 
@@ -153,7 +153,7 @@ export class VendaComponent implements OnInit {
 
   openDilogItenVd(eventVd: iItensVd){
     console.log("Dados do elementoDialog", eventVd)
-    const dialogRef = this.dialog.open(DialogProdutoComponent, {
+    const dialogRef = this.dialog.open(DialogItensVdComponent, {
       width: '300px',
       data: eventVd === null ? {
         idItensVd: null,

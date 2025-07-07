@@ -1,0 +1,45 @@
+
+<h1 *ngIf="!isChange" mat-dialog-title>Adicionar ItensVd</h1>
+<h1 *ngIf="isChange" mat-dialog-title>Editar ItensVd</h1>
+
+<div mat-dialog-content>
+
+    <mat-form-field appearance="fill">
+      <mat-label>ID</mat-label>
+      <input matInput [(ngModel)]="itensVd.idItensVd">
+    </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Códico</mat-label>
+    <input matInput [(ngModel)]="itensVd.codProduto">
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Descrição</mat-label>
+    <input matInput [(ngModel)]="itensVd.descricao">
+  </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Preço de Compra</mat-label>
+      <input matInput  [value]="formatter(itensVd.valVenda)" >
+    </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Quantidade em Estoque</mat-label>
+    <input matInput type="number" matInput [(ngModel)]="itensVd.qtdVendidas">
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Data de Cadastro</mat-label>
+    <input  matInput [(ngModel)]="itensVd.dtRegistro">
+  </mat-form-field>
+
+<span>
+
+  <button mat-button *ngIf="isChange" [mat-dialog-close]="itensVd" cdkFocusInitial >Edit</button>
+  <button mat-button *ngIf="!isChange" [mat-dialog-close]="itensVd" cdkFocusInitial (click)="save()" >salvar</button>
+  <button mat-raised-button (click)="onCancel()">Cancel</button>
+ </span>
+
+
+</div>
