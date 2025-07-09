@@ -11,6 +11,7 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import { DistrictComponent } from './district/district.component';
 import { PrevDirective } from './district/prev.directive';
 import { NextDirective } from './district/next.directive';
+import {MatCardModule} from '@angular/material/card';
 
 @NgModule({
   declarations: [
@@ -33,6 +34,7 @@ import { NextDirective } from './district/next.directive';
     AppMaterialModule,
     ReactiveFormsModule,
     FormsModule,
+    MatCardModule
   ]
 })
 export class PublicModule {

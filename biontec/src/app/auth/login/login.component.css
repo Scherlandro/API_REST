@@ -33,7 +33,7 @@
 }
 .bottom-container{
   background: var(--color-gradient);
-  color: lawngreen;
+  color: #253d06;
   box-shadow: 10px 5px 5px rgba(10, 40, 30, 0.4);
   border-radius: 15px;
   cursor: pointer;
@@ -52,7 +52,9 @@
 }
 .bottom-alert{
   background: var(--color-gradient);
-  color: #fcef00;
+  color: #583107;
+  font-style: oblique;
+  font-size: 12px;
   box-shadow: 10px 5px 5px rgba(28, 236, 32, 0.4);
   border-radius: 15px;
 }
