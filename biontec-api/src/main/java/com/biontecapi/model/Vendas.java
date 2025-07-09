@@ -44,7 +44,7 @@ public class Vendas {
     private String nomeFuncionario;
 
     @Column(name = "dt_venda", length = 10)
-    private String dt_venda;
+    private String dtVenda;
 
     private Double subtotal;
 

@@ -24,7 +24,7 @@ public class VendasDto {
     private String nomeCliente;
     private Integer idFuncionario;
     private String nomeFuncionario;
-    private String dt_venda;
+    private String dtVenda;
     private Double subtotal;
     private Double desconto;
     private Double totalgeral;
