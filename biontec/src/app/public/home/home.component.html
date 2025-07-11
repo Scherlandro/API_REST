@@ -72,6 +72,21 @@
     <mat-card class="container-cube ">
       <h4>Sobre me</h4>
       Entusiasta, curioso e fascinado por tecnologia e seu poder de conectar as pessoas.
+
+      <div class="container">
+        <h2>Mensagens JMS (Filas e Tópicos)</h2>
+        <div class="card">
+          <div class="card-body">
+            <ul class="list-group">
+              <li class="list-group-item" *ngFor="let msg of mensagens">
+                {{ msg }}
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+
     </mat-card>
 
     <mat-card class="container-cube">

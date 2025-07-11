@@ -1,4 +1,5 @@
 import {Component, ElementRef, OnInit, Renderer2, ViewChild, ViewEncapsulation} from '@angular/core';
+import {MensagemService} from "../../services/mensagem.service";
 
 @Component({
   selector: 'app-home',
@@ -14,10 +15,20 @@ glassHeight=0;
 glassWidth=0;
 glass:any
   constructor(private elRef: ElementRef, private renderer: Renderer2) { }
+  mensagens: string[] = [];
 
-  ngOnInit(): void {
+
+  constructor(private mensagemService: MensagemService) {}
+
+  ngOnInit() {
+    this.mensagemService.buscarMensagensAntigas().subscribe(
+      (mensagens) => this.mensagens = mensagens
+    );
+
+    this.mensagemService.getMensagens().subscribe(
+      (mensagem) => this.mensagens.push(mensagem)
+    );
   }
-
   onImageLoad(e: any){
 
   this.imgWidth=(this.imgMain.nativeElement as HTMLImageElement ).width;
