@@ -1,5 +1,6 @@
 package com.biontecapi;
 
+import org.apache.activemq.broker.BrokerService;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -17,6 +18,13 @@ public class BiontecApplication {
 		return new ModelMapper();
 	}
 
+	@Bean
+	public BrokerService broker() throws Exception {
+		BrokerService broker = new BrokerService();
+		broker.addConnector("tcp://localhost:61616");
+		broker.setPersistent(false);
+		return broker;
+	}
 
 /*	public static void main(String[] args) {
      new SpringApplicationBuilder(BiontecApplication.class)
