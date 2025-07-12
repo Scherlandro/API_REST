@@ -17,6 +17,11 @@ public class MensagemController {
         return mensagens;
     }
 
+    @GetMapping(path = "/notification")
+    public String getNotification() {
+        return "Você tem uma nova mensagem em 11-07-2025";
+    }
+
     // Chamado pelo JMS Listener para adicionar mensagens
     public void adicionarMensagem(String mensagem) {
         mensagens.add(mensagem);

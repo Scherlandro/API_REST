@@ -6,6 +6,8 @@ import {FormControl, FormGroup} from "@angular/forms";
 import {MatTableDataSource} from "@angular/material/table";
 import {IUser} from "../../interfaces/user";
 import {DialogUsuarioComponent} from "../../shared/diolog_components/dialog-usuario/dialog-usuario.component";
+import {MensagemService} from "../../services/mensagem.service";
+import {Observable} from "rxjs";
 
 
 export interface Tile {
@@ -30,10 +32,16 @@ const year = today.getFullYear();
 })
 export class DashboardComponent implements OnInit {
   events = new FormControl();
+  mensagens!: Observable<string>  ;
 
-  constructor() { }
 
-  ngOnInit(): void {
+  constructor(private mensagemService: MensagemService) { }
+
+  ngOnInit(): void {  }
+
+  showNotification(){
+     this.mensagens = this.mensagemService.getNotification();
+    /*   this.mensagemService.getMensagens().subscribe((mensagem) => this.mensagens.push(mensagem)  );*/
   }
 
   tiles: Tile[] = [

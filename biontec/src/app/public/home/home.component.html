@@ -75,7 +75,8 @@
 
       <div class="container">
         <h2>Mensagens JMS (Filas e Tópicos)</h2>
-        <div class="card">
+
+       <!-- <div class="card">
           <div class="card-body">
             <ul class="list-group">
               <li class="list-group-item" *ngFor="let msg of mensagens">
@@ -83,7 +84,7 @@
               </li>
             </ul>
           </div>
-        </div>
+        </div>-->
       </div>
 
 
@@ -116,7 +117,7 @@
             <div>
               <label>Message</label>
               <br>
-              <textarea placeholder="Messages" name="messages" ngModel required #messages="ngModel"></textarea>
+              <textarea placeholder="Messages" name="messages" ngModel required #msgs="ngModel"></textarea>
             </div>
             <input type="submit" value="Send">
           </div>

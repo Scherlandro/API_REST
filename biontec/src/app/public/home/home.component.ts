@@ -1,5 +1,6 @@
 import {Component, ElementRef, OnInit, Renderer2, ViewChild, ViewEncapsulation} from '@angular/core';
 import {MensagemService} from "../../services/mensagem.service";
+import {Observable} from "rxjs";
 
 @Component({
   selector: 'app-home',
@@ -13,26 +14,20 @@ imgWidth:any=0; imgHeight:any=0;
 zoom=2;
 glassHeight=0;
 glassWidth=0;
-glass:any
-  constructor(private elRef: ElementRef, private renderer: Renderer2) { }
-  mensagens: string[] = [];
+glass:any;
+/*mensagens!: Observable<string> ;
+mensagemService!: MensagemService;*/
 
-
-  constructor(private mensagemService: MensagemService) {}
+  constructor(
+              private elRef: ElementRef, private renderer: Renderer2) {}
 
   ngOnInit() {
-    this.mensagemService.buscarMensagensAntigas().subscribe(
-      (mensagens) => this.mensagens = mensagens
-    );
-
-    this.mensagemService.getMensagens().subscribe(
-      (mensagem) => this.mensagens.push(mensagem)
-    );
+  //this.getNotification() ;
   }
   onImageLoad(e: any){
-
   this.imgWidth=(this.imgMain.nativeElement as HTMLImageElement ).width;
   this.imgHeight=(this.imgMain.nativeElement as HTMLImageElement).height;
-
   }
+
+
 }
