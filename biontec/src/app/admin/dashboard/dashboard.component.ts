@@ -8,6 +8,7 @@ import {IUser} from "../../interfaces/user";
 import {DialogUsuarioComponent} from "../../shared/diolog_components/dialog-usuario/dialog-usuario.component";
 import {MensagemService} from "../../services/mensagem.service";
 import {Observable} from "rxjs";
+import {NotificationMgsService} from "../../services/notification-mgs.service";
 
 
 export interface Tile {
@@ -35,12 +36,20 @@ export class DashboardComponent implements OnInit {
   mensagens!: Observable<string>  ;
 
 
-  constructor(private mensagemService: MensagemService) { }
+  constructor(private mensagemService: MensagemService,
+              public notificationMsg:  NotificationMgsService
+              ) { }
 
   ngOnInit(): void {  }
 
   showNotification(){
-     this.mensagens = this.mensagemService.getNotification();
+    this.notificationMsg.openConfirmDialog('Hello')
+      .afterClosed().subscribe(res =>{
+        if (res){
+          this.notificationMsg.openConfirmDialog("Beleza");
+        }
+    });
+   // this.mensagens = this.mensagemService.getNotification();
     /*   this.mensagemService.getMensagens().subscribe((mensagem) => this.mensagens.push(mensagem)  );*/
   }
 

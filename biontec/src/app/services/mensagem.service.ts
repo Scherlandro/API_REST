@@ -41,7 +41,7 @@ export class MensagemService {
 
   public getNotification(): Observable<string> {
     console.log('Notificação ->', this._http.get(this.baseUrl+'/notification'))
-    return  this._http.get(this.baseUrl+'/notification')
+    return  this._http.get<string>(this.baseUrl+'/notification')
       .pipe(map(response => response));
   }
 
