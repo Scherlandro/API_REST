@@ -5,19 +5,13 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import com.biontecapi.dtos.ItenDaOSDto;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.biontecapi.dtos.OrdemDeServicoDTO;
 import com.biontecapi.model.OrdemDeServico;
@@ -44,32 +38,68 @@ public class OrdemDeServicoController {
     public ResponseEntity findById(@PathVariable("id_os") Long idOS) {
         Optional<OrdemDeServico> serv = service.listarOSPorID(idOS);
         return ResponseEntity.ok(serv.map(
-                e -> mapper.map(e, OrdemDeServicoDTO.class)).map(r -> ResponseEntity.ok().body(r))
+                e -> mapper.map(e, OrdemDeServicoDTO.class)).map(r -> ResponseEntity.ok().body(r))//ResponseEntity::ok
                 .orElse(ResponseEntity.notFound().build()));
     }
 
+    @GetMapping("/cliente/{id_cliente}")
+    public ResponseEntity<List<OrdemDeServico>> findOSPorIdClienteId(@PathVariable Integer idCliente) {
+        return ResponseEntity.ok(service.listarOSPorIdCliente(idCliente));
+    }
+
+
+    @GetMapping("/funcionario/{id_funcionario}")
+    public ResponseEntity<List<OrdemDeServico>> findOSPorIdDoTecnico(@PathVariable Long IdTecnico) {
+        return ResponseEntity.ok(service.listarOSPorIdDoTecnico(IdTecnico));
+    }
+
     @PostMapping
-    public ResponseEntity<OrdemDeServico> create(@RequestBody OrdemDeServicoDTO dto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(service.createServiceOrder(dto));
+    public ResponseEntity<OrdemDeServico> criarOS(@RequestBody OrdemDeServicoDTO dto) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(service.criarOS(dto));
     }
 
     @PutMapping("/{idOS}")
-    public ResponseEntity<OrdemDeServico> update(@PathVariable Long idOS, @RequestBody OrdemDeServicoDTO dto) {
-        return ResponseEntity.ok(service.updateServiceOrder(idOS, dto));
+    public ResponseEntity<OrdemDeServico> atualizarOS(@PathVariable Long idOS, @RequestBody OrdemDeServicoDTO dto) {
+        return ResponseEntity.ok(service.atualizarOS(idOS, dto));
     }
 
-    @GetMapping("/searchOS")
-    public ResponseEntity<List<OrdemDeServico>> search(
+    @PostMapping("/{idOS}/items")
+    public ResponseEntity<OrdemDeServico> adicionarItem(@PathVariable Long idOS, @RequestBody ItenDaOSDto itemDto) {
+        return ResponseEntity.ok(service.addItemNaOS(idOS, itemDto));
+    }
+
+    @DeleteMapping("/{idOS}/items/{itemId}")
+    public ResponseEntity<OrdemDeServico> removerItem(@PathVariable Long idOS, @PathVariable Long itemId) {
+        return ResponseEntity.ok(service.removerItemDaOS(idOS, itemId));
+    }
+
+    @PostMapping("/{idOS}/concluirOS")
+    public ResponseEntity<OrdemDeServico> cuncluirOS(@PathVariable Long idOS) {
+        return ResponseEntity.ok(service.concluirOS(idOS));
+    }
+
+    @GetMapping("/variasBuscaOS")
+    public ResponseEntity<List<OrdemDeServico>> variasBuscasOS(
             @RequestParam(required = false) String status,
-            @RequestParam(required = false) String clientName,
-            @RequestParam(required = false) String plate,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate) {
+            @RequestParam(required = false) Integer clientID,
+            @RequestParam(required = false) Long technicianId,
+            @RequestParam(required = false) String placa,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime inicioData,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fimData) {
 
         if (status != null) {
             return ResponseEntity.ok(service.listarOSPorStatus(status));
         }
-        // other search conditions
+        if (clientID != null) {
+            return ResponseEntity.ok(service.listarOSPorIdCliente(clientID));
+        }
+        if (technicianId != null) {
+            return ResponseEntity.ok(service.listarOSPorIdDoTecnico(technicianId));
+        }
+        if (placa != null) {
+            return ResponseEntity.ok(service.listarOSPorIdDoTecnico(technicianId));
+        }
+
         return ResponseEntity.ok(service.listarOS());
     }
 }

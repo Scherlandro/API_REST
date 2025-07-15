@@ -2,11 +2,11 @@ package com.biontecapi.serviceImpl;
 
 
 import com.biontecapi.Enum.Status;
+import com.biontecapi.dtos.ItenDaOSDto;
 import com.biontecapi.dtos.OrdemDeServicoDTO;
+import com.biontecapi.model.ItensDoServico;
 import com.biontecapi.model.OrdemDeServico;
-import com.biontecapi.repository.ClienteRepository;
-import com.biontecapi.repository.FuncionarioRepository;
-import com.biontecapi.repository.OrdemDeServicosRepository;
+import com.biontecapi.repository.*;
 import com.biontecapi.service.OrdemDeServicoService;
 import org.springframework.stereotype.Service;
 
@@ -22,13 +22,19 @@ import java.util.Optional;
          final OrdemDeServicosRepository osRepository;
          final ClienteRepository clientRepository;
          final FuncionarioRepository funcionarioRepository;
+    final ItensDaOSRepository itensDaOSRepository;
+    final ProdutoRepository productRepository;
 
     public OrdemDeServicoServiceImpl(OrdemDeServicosRepository osRepository,
                                      ClienteRepository clientRepository,
-                                     FuncionarioRepository funcionarioRepository) {
+                                     FuncionarioRepository funcionarioRepository,
+                                     ItensDaOSRepository itensDaOSRepository,
+                                     ProdutoRepository productRepository) {
         this.osRepository = osRepository;
         this.clientRepository = clientRepository;
         this.funcionarioRepository = funcionarioRepository;
+        this.itensDaOSRepository = itensDaOSRepository;
+        this.productRepository = productRepository;
     }
 
 
@@ -47,9 +53,20 @@ import java.util.Optional;
         return osRepository.findByStatus(status);
     }
 
+    @Override
+    public List<OrdemDeServico> listarOSPorIdCliente(Integer idCliente) {
+        return null;
+    }
 
     @Override
-    public OrdemDeServico createServiceOrder(OrdemDeServicoDTO dto) {
+    public List<OrdemDeServico> listarOSPorIdDoTecnico(Long idTecnico) {
+        return null;
+    }
+
+
+
+    @Override
+    public OrdemDeServico criarOS(OrdemDeServicoDTO dto) {
         OrdemDeServico order = new OrdemDeServico();
 
         order.setIdCliente(dto.idCliente());
@@ -59,14 +76,90 @@ import java.util.Optional;
         order.setDataDeEntrada(LocalDateTime.now());
         order.setStatus(Status.OS_em_Andamento);
         return osRepository.save(order);
+
+        /*
+         order.setUserId(dto.userId());
+        order.setTechnicianId(dto.technicianId());
+        order.setDeviceDescription(dto.deviceDescription());
+        order.setIssueDescription(dto.issueDescription());
+         */
+
+
     }
 
     @Override
-    public OrdemDeServico updateServiceOrder(Long id, OrdemDeServicoDTO dto) {
+    public OrdemDeServico atualizarOS(Long id, OrdemDeServicoDTO dto) {
             OrdemDeServico order = osRepository.findById(id).orElseThrow();
-            // update fields
+            /*
+              if (dto.technicianId() != null) {
+            order.setTechnicianId(dto.technicianId());
+        }
+        if (dto.deviceDescription() != null) {
+            order.setDeviceDescription(dto.deviceDescription());
+        }
+        if (dto.issueDescription() != null) {
+            order.setIssueDescription(dto.issueDescription());
+        }
+        if (dto.status() != null) {
+            order.setStatus(dto.status());
+        }
+             */
             return osRepository.save(order);
         }
 
+    @Override
+    public OrdemDeServico addItemNaOS(Long osID, ItenDaOSDto itemDto) {
+        OrdemDeServico order = osRepository.findById(osID).orElseThrow();
+
+
+        if (itemDto.prod().getIdProduto() != null) {
+            productRepository.findById(itemDto.prod().getIdProduto()).orElseThrow();
+        } else if (itemDto.idItensDaOS() != null) {
+            osRepository.findById(osID).orElseThrow();
+        }
+
+        ItensDoServico newItem = new ItensDoServico();
+        // newItem.setOSId(serviceOrderId);
+        //newItem.setprodutoId(itemDto.produtoId());
+        newItem.setIdItensDaOS(itemDto.idItensDaOS());
+        newItem.setQuantidade(itemDto.quantidade());
+        newItem.setPrecoDeVenda(itemDto.precoDeVenda());
+        newItem.getSubservicos().setDescricaoObj(itemDto.subservicos().getDescricaoObj());
+
+        //order.getSubservicos().add(newItem);
+        itensDaOSRepository.save(newItem);
+
+        // Recalcular total da OS
+        calcularTotalDaOS(order);
+        return osRepository.save(order);
+    }
+
+    @Override
+    public OrdemDeServico removerItemDaOS(Long serviceOrderId, Long itemId) {
+
+        OrdemDeServico order = osRepository.findById(serviceOrderId).orElseThrow();
+
+       // order.getItems().removeIf(item -> item.getId().equals(itemId));
+        itensDaOSRepository.deleteById(itemId);
+
+        calcularTotalDaOS(order);
+        return osRepository.save(order);
+    }
+
+
+    @Override
+    public OrdemDeServico concluirOS(Long idOS) {
+        OrdemDeServico serviceOrder = osRepository.findById(idOS).orElseThrow();
+        serviceOrder.setStatus(serviceOrder.getStatus());
+       // serviceOrder.setCompletionDate(LocalDateTime.now());
+        return osRepository.save(serviceOrder);
+    }
+
+    private void calcularTotalDaOS(OrdemDeServico order) {
+      /*  double total = order.getItems().stream()
+                .mapToDouble(item -> item.getUnitPrice() * item.getQuantity())
+                .sum();
+        order.setTotalAmount(total);*/
+    }
 
 }
