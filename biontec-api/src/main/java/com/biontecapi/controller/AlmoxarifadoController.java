@@ -3,7 +3,7 @@ package com.biontecapi.controller;
 
 import com.biontecapi.dtos.AlmoxarifadoDto;
 import com.biontecapi.model.Almoxarifado;
-import com.biontecapi.service.AlmoxarifadoService;
+import com.biontecapi.serviceImpl.AlmoxarifadoServiceImpl;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,10 +21,10 @@ import java.util.Optional;
 public class AlmoxarifadoController {
 
 
-    final AlmoxarifadoService almoxarifadoService;
+    final AlmoxarifadoServiceImpl almoxarifadoService;
 
 
-    public AlmoxarifadoController(AlmoxarifadoService almoxarifadoService) {
+    public AlmoxarifadoController(AlmoxarifadoServiceImpl almoxarifadoService) {
         this.almoxarifadoService = almoxarifadoService;
     }
 

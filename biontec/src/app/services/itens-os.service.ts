@@ -27,5 +27,13 @@ export class ItensOsService {
     return this._http.get<iItensOS[]>(this.baseUrl +'ItensOSEntreDatas?dtIni='+d1+'&dtFinal='+d2);
   }
 
+  adicionarItem(element: iItensOS): Observable<iItensOS> {
+    return this._http.post<iItensOS>(this.baseUrl+'salvar',element);
+  }
+
+  editItem(element: iItensOS): Observable<iItensOS> {
+    return this._http.put<iItensOS>(this.baseUrl+'editar', element);
+  }
+
 
 }

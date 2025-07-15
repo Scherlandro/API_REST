@@ -26,6 +26,13 @@ public class ClienteController {
         return repository.findById(id_cliente).map(record -> ResponseEntity.ok().body(record))
                 .orElse(ResponseEntity.notFound().build());
     }
+
+    @GetMapping(path = "/{nome_cliente}")
+    public ResponseEntity consultarPorNome(@PathVariable("nome_cliente") String nome_cliente){
+        return repository.listarClientePorNome(nome_cliente).map(record -> ResponseEntity.ok().body(record))
+                .orElse(ResponseEntity.notFound().build());
+    }
+
     @PostMapping(path = "/salvar")
     public Cliente salvar(@RequestBody Cliente cliente){
         return repository.save(cliente);

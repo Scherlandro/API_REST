@@ -12,6 +12,7 @@ import { DialogOpenSalesComponent } from './diolog_components/dialog-open-sales/
 import { DialogProdutoComponent } from "./diolog_components/dialog-produto/dialog-produto.component";
 import { DialogUsuarioComponent } from "./diolog_components/dialog-usuario/dialog-usuario.component";
 import { ErrorDiologComponent } from "./diolog_components/error-diolog/error-diolog.component";
+import {DialogItensOSComponent} from "./diolog_components/dialog-itens-os/dialog-itens-os.component";
 
 
 
@@ -25,7 +26,8 @@ import { ErrorDiologComponent } from "./diolog_components/error-diolog/error-dio
     DialogProdutoComponent,
     DialogOpenSalesComponent,
     DialogOpenOsComponent,
-    DialogItensVdComponent
+    DialogItensVdComponent,
+    DialogItensOSComponent
   ],
   imports: [
     CommonModule,

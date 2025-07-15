@@ -17,6 +17,9 @@ export class ClienteService {
     return this._http.get<ICliente[]>(this.baseUrl+'/all');
   }
 
+  public getClientePorNome(name: string): Observable<ICliente[]>{
+    return this._http.get<ICliente[]>(this.baseUrl + name);
+  }
   public getClientePorID(id: number): Observable<ICliente[]>{
     return this._http.get<ICliente[]>(this.baseUrl + id);
   }

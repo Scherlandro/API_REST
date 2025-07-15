@@ -1,10 +1,11 @@
-package com.biontecapi.service;
+package com.biontecapi.serviceImpl;
 
 import com.biontecapi.config.PasswordEnconderConfig;
 import com.biontecapi.model.Role;
 import com.biontecapi.model.User;
 import com.biontecapi.repository.RoleRepo;
 import com.biontecapi.repository.UserRepo;
+import com.biontecapi.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
