@@ -6,8 +6,6 @@ import java.util.Optional;
 
 public interface AlmoxarifadoService {
 
-
-
     Almoxarifado save(Almoxarifado almoxarifado);
 
     Optional<Almoxarifado> findById(Integer id);

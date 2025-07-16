@@ -68,7 +68,6 @@ import com.biontecapi.service.ProdutoService;
             return ResponseEntity.ok(prodOptional.map(
                     e-> mapper.map(e, ProdutoDto.class)).map( r->ResponseEntity.ok().body(r))
                     .orElse(ResponseEntity.notFound().build()));
-
         }
 
         @PutMapping(path = "/editar/{id_produto}")

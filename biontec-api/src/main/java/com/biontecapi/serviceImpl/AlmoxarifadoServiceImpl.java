@@ -14,30 +14,27 @@ public class AlmoxarifadoServiceImpl implements AlmoxarifadoService {
 
     final AlmoxarifadoRepository almoxarifadoRepository;
 
-    public AlmoxarifadoServiceImpl(AlmoxarifadoRepository repository) {
-
-        this.almoxarifadoRepository = repository;
-    }
-
+    public AlmoxarifadoServiceImpl(AlmoxarifadoRepository repository) {  this.almoxarifadoRepository = repository;  }
 
     @Transactional
-    public Almoxarifado save(Almoxarifado almoxarifado) {
+    public Almoxarifado save(Almoxarifado almoxarifado) { return almoxarifadoRepository.save(almoxarifado);  }
 
-        return almoxarifadoRepository.save(almoxarifado);
-    }
-
+    @Override
     public Optional<Almoxarifado> findById(Integer id) {
         return almoxarifadoRepository.findById(id);
     }
 
+    @Override
     public List<Almoxarifado> findAll() {
         return almoxarifadoRepository.findAll();
     }
 
+    @Override
     public boolean existsByPlaca(String placa) {
         return almoxarifadoRepository.existsByPlaca(placa);
     }
 
+    @Override
     public boolean existsByDisponibilidade(Boolean disponibilidade) {
         return almoxarifadoRepository.existsByDisponibilidade(disponibilidade);
     }
