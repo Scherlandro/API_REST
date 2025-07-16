@@ -16,8 +16,8 @@ public class Cliente {
  @GeneratedValue(strategy = GenerationType.SEQUENCE)
  private Integer id_cliente;
 
- @Column(nullable = false, length = 50)
- private String nome_cliente;
+ @Column(nullable = false, name = "nome_cliente", length = 50)
+ private String  nomeCliente;
 
  @Column(nullable = false, length = 50)
  private String inscricaoest;

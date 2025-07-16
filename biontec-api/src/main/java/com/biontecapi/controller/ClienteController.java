@@ -36,8 +36,8 @@ public class ClienteController {
     }
 
     @GetMapping(path = "/buscarPorNome")
-    public ResponseEntity<List<ClienteDTO>> consultarPorNome(@RequestParam("nome_cliente") String nome_cliente){
-       List<Cliente> clis = clienteService.listarClientePorNome(nome_cliente);
+    public ResponseEntity<List<ClienteDTO>> consultarPorNome(@RequestParam("nomeCliente") String nomeCliente){
+       List<Cliente> clis = clienteService.listarClientePorNome(nomeCliente);
         return  ResponseEntity.ok(clis.stream().map(
                 c -> mapper.map(c, ClienteDTO.class))
                 .collect(Collectors.toList()));

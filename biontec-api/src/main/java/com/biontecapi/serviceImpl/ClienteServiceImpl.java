@@ -15,13 +15,13 @@ public class ClienteServiceImpl implements ClienteService {
     final private ClienteRepository clienteRepository;
 
     public ClienteServiceImpl(ClienteRepository clienteRepository) {
+
         this.clienteRepository = clienteRepository;
     }
 
     @Override
     public List<Cliente> listarCliente() {
-        Sort sort =  Sort.by(Sort.Direction.ASC,"nome_cliente")
-                .and(Sort.by(Sort.Direction.ASC,"ultimaAtualizacao"));
+        Sort sort =  Sort.by(Sort.Direction.ASC,"nomeCliente");
         return clienteRepository.findAll(sort);
     }
 
