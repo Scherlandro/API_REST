@@ -1,14 +1,14 @@
 import {Component, Inject} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {FormControl} from "@angular/forms";
-import {iProduto} from "../../../interfaces/product";
-import {ProductService} from "../../../services/product.service";
-import {iVendas} from "../../../interfaces/vendas";
 import {VendasService} from "../../../services/vendas.service";
 import {catchError, map, startWith} from "rxjs/operators";
 import {Observable, of} from "rxjs";
 import {ErrorDiologComponent} from "../error-diolog/error-diolog.component";
 import {each} from "chart.js/dist/helpers";
+import {ICliente} from "../../../interfaces/cliente";
+import {ClienteService} from "../../../services/cliente.service";
+import {iServiceOrder} from "../../../interfaces/service-order";
 
 @Component({
   selector: 'app-dialog-open-sales',
@@ -17,81 +17,79 @@ import {each} from "chart.js/dist/helpers";
 })
 export class DialogOpenSalesComponent {
   isChange!: boolean;
-  prod!: iProduto;
-  produtoControl = new FormControl();
+  cli!: ICliente;
+  clienteControl = new FormControl();
   listProd: any;
-  produtosFiltered!:string[];
-  products!: string[] ;
+  clienteFiltered!:string[];
+  clientes!:string[];
   etapa = 1;
 
   constructor(
     @Inject(MAT_DIALOG_DATA)
-    public vend: iVendas,
+    public os: iServiceOrder,
     public dialogRef: MatDialogRef<DialogOpenSalesComponent>,
     public vendaServices: VendasService,
-    public prodService: ProductService,
+    public clienteService: ClienteService,
     public dialog: MatDialog,
   ) {
 
   }
 
   ngOnInit(): void {
-    if (this.vend.idVenda != null) {
+    if (this.os.idOS != null) {
       this.isChange = true;
     } else {
       this.isChange = false;
     }
-   // this.listarProdutos();
 
-  //  this.produtosFiltered = this.produtoControl.valueChanges.pipe( startWith(''), map(value => value._filter(value) ) )
+   // this.clienteFiltered = this.clienteControl.valueChanges.pipe( startWith(''), map(value => value._filter(value) ) )
 
  //   https://v5.material.angular.io/components/autocomplete/examples
   }
 
-  listarProdutos(value:any) {
-	     if (this.produtoControl.valid) {
-      this.prodService.listarProdutoPorNome(value).subscribe(
+  listarClientes(value:any) {
+	     if (this.clienteControl.valid) {
+      this.clienteService.getClientePorNome(value).subscribe(
         (result:any) => {
-          let re = result.map((i:any)=>i.nomeProduto.toString());
-          this.products = re;
-          this.produtosFiltered = re;
-          console.log('lista produtos digitado', re)
+          let re = result.map((i:any)=>i.nomeCliente.toString());
+          this.clientes = re;
+          this.clienteFiltered = re;
+          console.log('lista cliente digitado', re)
           this.etapa = 2;
         },
         error => {
           if (error.status === 404) {
-             this.onError('Erro ao buscar produto.')
+             this.onError('Erro ao buscar cliente.')
           }
         }
       );
     }
- /*   this.prodService.getTodosProdutos()
-      .pipe(catchError(error => { this.onError('Erro ao buscar produto.') return of([])
+ /*   this.prodService.getTodosClientes()
+      .pipe(catchError(error => { this.onError('Erro ao buscar cliente.') return of([])
       }))
-      .subscribe((rest: IProduto[]) => { this.products = rest  });*/
+      .subscribe((rest: ICliente[]) => { this.products = rest  });*/
   }
 
-  changeProdutos(value: any) {
+  changeCliente(value: any) {
     console.log('digitado', value)
-  //  this.listarProdutos(value)
     if (value) {
-      this.produtosFiltered = this.products.filter(o => o.toUpperCase().includes(value.toUpperCase()));
+      this.clienteFiltered = this.clientes.filter(o => o.toUpperCase().includes(value.toUpperCase()));
     } else {
-      this.produtosFiltered = this.products;
+      this.clienteFiltered = this.clientes;
     }
   }
 
   /*
      _filter(value: any): any[] {
       const filterValue = value.toLowerCase();
-      return this.products.filter(option => option.nome_produto.includes(filterValue));
+      return this.products.filter(option => option.nome_cliente.includes(filterValue));
     }
   */
 
 /*
   aplicarFiltro(valor: string) {
     valor = valor.trim().toLowerCase();
-    this.produtoControl.getRawValue().filter = valor;
+    this.clienteControl.getRawValue().filter = valor;
   }
 */
 
@@ -101,11 +99,11 @@ export class DialogOpenSalesComponent {
   }
 
   save():void{
-    //this.productServices.createElements(this.iProduto);
+    //this.clienteServices.createElements(this.iCliente);
   }
 
   formatter(value: number): string {
-    //<div>{{ formatter(iProdroduto.valor_venda) }}</div>
+    //<div>{{ formatter(iCliente.valor_venda) }}</div>
     return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
   }
 

@@ -2,45 +2,47 @@
 <h1 *ngIf="isChange" mat-dialog-title>Editar Venda</h1>
 
 <div mat-dialog-content>
-
-
-  <mat-form-field appearance="fill">
-    <mat-label>ID</mat-label>
-    <input matInput [(ngModel)]="vend.idVenda">
-    <input matInput [(ngModel)]="vend.nomeCliente">
-    <input matInput [(ngModel)]="vend.dt_venda">
-  </mat-form-field>
-
-  <!--<mat-form-field>
-    <mat-select   placeholder="Selecione o Produto" [formControl]="produtoControl" multiple>
-      <mat-option *ngFor="let topping of listProd"  [value]="topping">{{topping}}</mat-option>
-    </mat-select>
-  </mat-form-field>-->
-
   <mat-form-field class="example-full-width">
-    <mat-label>Produtos</mat-label>
+    <mat-label>Abrir Venda</mat-label>
     <input type="text"
-           placeholder="Digite o Produto"
+           placeholder="Digite o Cliente"
            matInput
-           [formControl]="produtoControl"
+           [formControl]="clienteControl"
            [matAutocomplete]="auto"
-           (keyup)="changeProdutos(produtoControl.value)"
-           (keydown)="listarProdutos(produtoControl.value)">
+           (keyup)="changeCliente(clienteControl.value)"
+           (keydown)="listarClientes(clienteControl.value)">
     <mat-autocomplete #auto="matAutocomplete">
-      <mat-option [value]="prods" *ngFor="let prods of produtosFiltered">{{prods}}</mat-option>
+      <mat-option [value]="clis" *ngFor="let clis of clienteFiltered">{{clis}}</mat-option>
     </mat-autocomplete>
   </mat-form-field>
 
+  <mat-form-field appearance="fill">
+    <mat-label>ID</mat-label>
+    <input matInput [(ngModel)]="os.idOS">
+    <input matInput [(ngModel)]="os.nomeCliente">
+    <input matInput [(ngModel)]="os.dt_OS">
+  </mat-form-field>
+
+ <!-- <mat-form-field>
+    <mat-select   placeholder="Selecione o Cliente"
+    [formControl]="clienteControl" multiple>
+      <mat-option *ngFor="let topping of listProd"
+      [value]="topping">{{topping}}</mat-option>
+    </mat-select>
+  </mat-form-field>
+-->
+
+
   <!-- <mat-form-field appearance="outline">
      <input type="text"
-            placeholder="Digite o Produto"
+            placeholder="Digite o Cliente"
             matInput
-            [formControl]="produtoControl"
+            [formControl]="clienteControl"
             [matAutocomplete]="auto"
-            (keyup)="changeProdutos(produtoControl.value)">
+            (keyup)="changeClientes(clienteControl.value)">
      <mat-error>Campo(s) Obrigatório(s) não preenchido(s).</mat-error>
      <mat-autocomplete #auto="matAutocomplete">
-       <mat-option [value]="prods" *ngFor="let prods of produtosFiltered">{{prods}}</mat-option>
+       <mat-option [value]="clis" *ngFor="let cli of clientesFiltered">{{cli}}</mat-option>
      </mat-autocomplete>
 
    </mat-form-field>
@@ -48,60 +50,30 @@
 
   <!--<mat-form-field appearance="fill">
     <mat-label>ID</mat-label>
-    <input matInput [(ngModel)]="prod.id_produto">
+    <input matInput [(ngModel)]="cli.id_cliente">
   </mat-form-field>
 
   <mat-form-field appearance="fill">
     <mat-label>Códico</mat-label>
-    <input matInput [(ngModel)]="prod.cod_produto">
+    <input matInput [(ngModel)]="cli.cod_cliente">
   </mat-form-field>
 
   <mat-form-field appearance="fill">
     <mat-label>Descrição</mat-label>
-    <input matInput [(ngModel)]="prod.nome_produto">
-  </mat-form-field>
-
-  <mat-form-field appearance="fill">
-    <mat-label>Preço de Compra</mat-label>
-    <input type="number" matInput [(ngModel)]="prod.valor_compra">
-  </mat-form-field>
-
-  <mat-form-field appearance="fill">
-    <mat-label>Preço de Venda</mat-label>
-    <input type="number" matInput [(ngModel)]="prod.valor_venda"   >
-  </mat-form-field>
-
-  <mat-form-field appearance="fill">
-    <mat-label>Margem de lucro</mat-label>
-    <input type="number" matInput [(ngModel)]="prod.percentual">
-  </mat-form-field>
-
-  <mat-form-field appearance="fill">
-    <mat-label>Quantidade em Estoque</mat-label>
-    <input type="number" matInput [(ngModel)]="prod.quantidade_estoque">
+    <input matInput [(ngModel)]="cli.nome_cliente">
   </mat-form-field>
 
   <mat-form-field appearance="fill">
     <mat-label>Data de Cadastro</mat-label>
-    <input type="date" matInput [(ngModel)]="prod.dt_cadastro">
+    <input type="date" matInput [(ngModel)]="cli.dt_cadastro">
   </mat-form-field>
 
 -->
 
-  <span>
-
-     <div class="row">
-        <div class="col-4">
-        <!--  <button mat-raised-button color="primary" class="notranslate" (click)="adicionar(produtoControl.value, $event)">
-            <mat-icon>add</mat-icon>
-            {{ 'button.confirmar' }}
-          </button>-->
-        </div>
-      </div>
-
-   <button mat-button *ngIf="isChange" [mat-dialog-close]="prod" cdkFocusInitial (click)="save()">Adicionar</button>
+   <button mat-button *ngIf="isChange" [mat-dialog-close]="cli" cdkFocusInitial
+           (click)="save()">Adicionar</button>
   <button mat-raised-button (click)="onCancel()">Cancel</button>
- </span>
+
   <!--
     <button mat-raised-button (click)="onCancel()">Cancel</button>
     <button mat-raised-button (click)="onCancel()">Atualizar</button>

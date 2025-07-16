@@ -3,15 +3,11 @@ import { FormControl } from "@angular/forms";
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from "@angular/material/dialog";
 import { iServiceOrder } from 'src/app/interfaces/service-order';
 import { OrdemDeServicosService } from 'src/app/services/ordem-de-servicos.service';
-import { iProduto } from "../../../interfaces/product";
-import { ProductService } from "../../../services/product.service";
 import { ErrorDiologComponent } from "../error-diolog/error-diolog.component";
-import {ItensOsService} from "../../../services/itens-os.service";
-import {iItensOS} from "../../../interfaces/itens-os";
 import {ICliente} from "../../../interfaces/cliente";
-import {Observable} from "rxjs";
+import {Observable, of} from "rxjs";
 import {ClienteService} from "../../../services/cliente.service";
-import {map, startWith} from "rxjs/operators";
+import {catchError, map, startWith} from "rxjs/operators";
 
 @Component({
   selector: 'app-dialog-open-os',
@@ -19,18 +15,11 @@ import {map, startWith} from "rxjs/operators";
   styleUrls: ['./dialog-open-os.component.css']
 })
 export class DialogOpenOsComponent {
-  isChange=true;
+  isChange=false;
+  osSelecionada!: iServiceOrder;
   clienteControl = new FormControl();
   clientesFiltrados: Observable<ICliente[]>;
   clienteSelecionado: any;
-
-/*
-  prod!: iProduto;
-  produtoControl = new FormControl();
-  listProd: any;
-  produtosFiltered!:string[];
-  products!: string[] ;
-  */
   etapa = 1;
 
   constructor(
@@ -65,7 +54,7 @@ export class DialogOpenOsComponent {
     this.dialogRef.close(this.clienteSelecionado);
   }
 
-  /*
+
   ngOnInit(): void {
    this.statusDaOS();
   }
@@ -79,63 +68,58 @@ export class DialogOpenOsComponent {
     }
   }
 
-    listarProdutos(value:any) {
-         if (this.produtoControl.valid) {
-        this.prodService.listarProdutoPorNome(value).subscribe(
+    listarClientes(value:any) {
+         if (this.clienteControl.valid) {
+        this.clienteService.getClientePorNome(value).subscribe(
           (result:any) => {
-            let re = result.map((i:any)=>i.nomeProduto.toString());
-            this.products = re;
-            this.produtosFiltered = re;
-            console.log('lista produtos digitado', re)
+            let re = result.map((i:any)=>i.nomeCliente.toString());
+          //  this.clientes = re;
+          //  this.clientesFiltered = re;
+            console.log('lista clientes digitado', re)
             this.etapa = 2;
           },
           error => {
             if (error.status === 404) {
-               this.onError('Erro ao buscar produto.')
+               this.onError('Erro ao buscar cliente.')
             }
           }
         );
       }
-    this.prodService.getTodosProdutos()
-        .pipe(catchError(error => { this.onError('Erro ao buscar produto.') return of([])
+/*    this.clienteService.getTodosClientes()
+        .pipe(catchError(error => { this.onError('Erro ao buscar cliente.') return of([])
         }))
-        .subscribe((rest: IProduto[]) => { this.products = rest  });
+        .subscribe((rest: ICliente[]) => { this.clienteSelecionado = rest  });*/
   }
-
-  changeProdutos(value: any) {
+/*
+  changeClientes(value: any) {
     console.log('digitado', value)
-  //  this.listarProdutos(value)
+  //  this.listarClientes(value)
     if (value) {
-      this.produtosFiltered = this.products.filter(o => o.toUpperCase().includes(value.toUpperCase()));
+      this.clientesFiltered = this.clientes.filter(o => o.toUpperCase().includes(value.toUpperCase()));
     } else {
-      this.produtosFiltered = this.products;
+      this.clientesFiltered = this.clientes;
     }
   }
-
-
      _filter(value: any): any[] {
       const filterValue = value.toLowerCase();
-      return this.products.filter(option => option.nome_produto.includes(filterValue));
-    }
+      return this.clientes.filter(option => option.nome_cliente.includes(filterValue));
+    }*/
 
   aplicarFiltro(valor: string) {
     valor = valor.trim().toLowerCase();
-    this.produtoControl.getRawValue().filter = valor;
+    this.clienteControl.getRawValue().filter = valor;
   }
 
 
-  save(itemOS: any){
-    console.log('Itens a adicionar', itemOS)
-    this.itensOS.adicionarItem(itemOS);
+  save(os: any){
+    console.log('Itens a adicionar', os)
+    this.osServices.create(os);
   }
 
   formatter(value: number): string {
     //<div>{{ formatter(iProdroduto.valor_venda) }}</div>
     return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
   }
-
-
-*/
 
 
   onCancel(): void {

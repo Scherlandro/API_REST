@@ -30,12 +30,7 @@
         </mat-form-field>
       </form>
     </mat-dialog-content>
-    <mat-dialog-actions align="end">
-      <button mat-button (click)="onNoClick()">Cancelar</button>
-      <button mat-raised-button color="primary" [disabled]="!clienteSelecionado" (click)="selecionarCliente()">
-        Selecionar
-      </button>
-    </mat-dialog-actions>
+
 
  <!-- <mat-form-field class="example-full-width">
     <mat-label>Produtos</mat-label>
@@ -51,48 +46,30 @@
     </mat-autocomplete>
   </mat-form-field>
 
-
-<mat-form-field appearance="fill">
-    <mat-label>ID</mat-label>
-    <input matInput [(ngModel)]="prod.idProduto">
-  </mat-form-field>
-
   <mat-form-field appearance="fill">
     <mat-label>Códico</mat-label>
-    <input matInput [(ngModel)]="prod.codProduto">
+    <input matInput [(ngModel)]="cli.cod_cliente">
   </mat-form-field>
 
   <mat-form-field appearance="fill">
     <mat-label>Descrição</mat-label>
-    <input matInput [(ngModel)]="prod.nomeProduto">
-  </mat-form-field>
-
-  <mat-form-field appearance="fill">
-    <mat-label>Preço de Compra</mat-label>
-    <input type="number" matInput [(ngModel)]="prod.valorVenda">
-  </mat-form-field>
-
-
-  <mat-form-field appearance="fill">
-    <mat-label>Quantidade em Estoque</mat-label>
-    <input type="number" matInput [(ngModel)]="prod.qtdVendidas">
+    <input matInput [(ngModel)]="cli.nome_cliente">
   </mat-form-field>
 
   <mat-form-field appearance="fill">
     <mat-label>Data de Cadastro</mat-label>
-    <input type="date" matInput [(ngModel)]="prod.dtCadastro">
+    <input type="date" matInput [(ngModel)]="cli.dt_cadastro">
   </mat-form-field>
+
 -->
 
- <!--  <button mat-button *ngIf="isChange" [mat-dialog-close]="prod" cdkFocusInitial (click)="save(prod)">Adicionar</button>
- -->
+ <button mat-raised-button *ngIf="isChange" [mat-dialog-close]="osSelecionada" cdkFocusInitial (click)="save(osSelecionada)">Adicionar</button>
+
     <button mat-raised-button (click)="onCancel()">Cancel</button>
 
-  <!--
-    <button mat-raised-button (click)="onCancel()">Cancel</button>
-    <button mat-raised-button (click)="onCancel()">Atualizar</button>
-    <button mat-raised-button [mat-dialog-close]="data"  >Create</button>
-  -->
+
+
+
 </mat-form-field>
 </mat-card>
 
