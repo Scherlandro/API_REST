@@ -20,7 +20,7 @@ public class ClienteServiceImpl implements ClienteService {
 
     @Override
     public List<Cliente> listarCliente() {
-        Sort sort =  Sort.by(Sort.Direction.ASC,"nomeCliente")
+        Sort sort =  Sort.by(Sort.Direction.ASC,"nome_cliente")
                 .and(Sort.by(Sort.Direction.ASC,"ultimaAtualizacao"));
         return clienteRepository.findAll(sort);
     }

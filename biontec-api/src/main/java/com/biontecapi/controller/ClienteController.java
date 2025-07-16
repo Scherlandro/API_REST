@@ -22,8 +22,11 @@ public class ClienteController {
     private ModelMapper mapper;
 
     @GetMapping(path = "/all")
-    public ResponseEntity<List<Cliente>> listarClientes(){
-        return ResponseEntity.ok(clienteService.listarCliente());
+    public ResponseEntity<List<ClienteDTO>> listarClientes(){
+       List<Cliente> clis = clienteService.listarCliente();
+         return ResponseEntity.ok(clis.stream().map(
+                 c -> mapper.map(c, ClienteDTO.class))
+                 .collect(Collectors.toList()));
     }
 
     @GetMapping(path = "/{id_cliente}")
