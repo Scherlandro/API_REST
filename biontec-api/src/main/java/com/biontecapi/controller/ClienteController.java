@@ -38,23 +38,22 @@ public class ClienteController {
     @GetMapping(path = "/all")
     public ResponseEntity<List<ClienteDTO>> listarClientes(){
        List<Cliente> clis = clienteService.listarCliente();
-         return ResponseEntity.ok(clis.stream().map(
-                 c -> mapper.map(c, ClienteDTO.class))
-                 .collect(Collectors.toList()));
+         return ResponseEntity.ok(clis.stream().map(Cliente::toDTO).toList());
     }
 
-    @GetMapping(path = "/{id_cliente}")
-    public ResponseEntity consultar(@PathVariable("id_cliente") Integer id_cliente){
-        return clienteService.findById(id_cliente).map(record -> ResponseEntity.ok().body(record))
-                .orElse(ResponseEntity.notFound().build());
+    @GetMapping(path = "/list-id/{id_cliente}")
+    public ResponseEntity<ClienteDTO> consultarPorID(@PathVariable("id_cliente") Integer id_cliente) {
+        Optional<Cliente> cli = clienteService.findById(id_cliente);
+        return cli.map(Cliente::toDTO).map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @GetMapping(path = "/buscarPorNome")
-    public ResponseEntity<List<ClienteDTO>> consultarPorNome(@RequestParam("nomeCliente") String nomeCliente){
-       List<Cliente> clis = clienteService.listarClientePorNome(nomeCliente);
-        return  ResponseEntity.ok(clis.stream().map(
-                c -> mapper.map(c, ClienteDTO.class))
-                .collect(Collectors.toList()));
+    @GetMapping(path = "/list-name/{nomeCliente}")
+    public ResponseEntity<List<ClienteDTO>> consultarPorNome(@PathVariable("nomeCliente") String nomeCliente){
+       List<Cliente> cli = clienteService.listarClientePorNome(nomeCliente);
+        return ResponseEntity.ok(cli.stream().map(Cliente::toDTO).toList());
+        /*return cli.map(Cliente::toDTO).map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());*/
     }
 
     @PostMapping(path = "/salvar")

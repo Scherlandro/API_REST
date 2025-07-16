@@ -11,7 +11,7 @@ import java.util.List;
 @Repository
 public interface ClienteRepository extends JpaRepository<Cliente, Integer> {
 
-    @Query(value = "select c from Cliente c where trim(c.nomeCliente) like %?1%")
+    @Query(value = "select c from Cliente c where trim(c.nomeCliente) like ?1%")
     List<Cliente> listarClientePorNome(@Param("nomeCliente")String nomeCliente);
 
 }

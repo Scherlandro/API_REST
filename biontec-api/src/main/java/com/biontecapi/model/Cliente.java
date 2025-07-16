@@ -1,5 +1,6 @@
 package com.biontecapi.model;
 
+import com.biontecapi.dtos.ClienteDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -47,6 +48,12 @@ public class Cliente {
 
  @Column(nullable = false, length = 30)
  private String zap;
+
+
+ public ClienteDTO toDTO() {
+  return new ClienteDTO(id_cliente, nomeCliente, inscricaoest, pessoa,
+          cpf, cnpj, numero, cep, telefone, celular, zap);
+ }
 
 
 }

@@ -13,4 +13,5 @@ public record ClienteDTO(
         String telefone,
         String celular,
         String zap
-        ) { }
+        ) {
+}
