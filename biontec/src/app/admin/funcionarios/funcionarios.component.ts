@@ -24,7 +24,7 @@ export class FuncionariosComponent implements OnInit {
   @ViewChild(MatTable) tableFuncionario!: MatTable<any>;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
-  displayedColumns: string[] = ['nomeFuncionario', 'pessoa', 'telefone', 'opicoes'];
+  displayedColumns: string[] = ['nomeFuncionario', 'cargo', 'telefone', 'opicoes'];
   tbSourceFuncionarios$: MatTableDataSource<IFuncionario>;
   tbData:any;
   funcionarioControl = new FormControl();

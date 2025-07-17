@@ -8,6 +8,8 @@ import {ICliente} from "../../../interfaces/cliente";
 import {debounceTime, distinctUntilChanged, Observable, of, switchMap} from "rxjs";
 import {ClienteService} from "../../../services/cliente.service";
 import {catchError, map, startWith} from "rxjs/operators";
+import {IFuncionario} from "../../../interfaces/funcionario";
+import {FuncionarioService} from "../../../services/funcionario.service";
 
 @Component({
   selector: 'app-dialog-open-os',
@@ -17,9 +19,12 @@ import {catchError, map, startWith} from "rxjs/operators";
 export class DialogOpenOsComponent implements OnInit {
   isChange = false;
   osSelecionada!: iServiceOrder;
+  funcionarioControl = new FormControl('', [Validators.required]);
+  funcionarioFilted!: Observable<IFuncionario[]>;
+  funcionarios: IFuncionario[]=[];
 
   clienteControl = new FormControl('', [Validators.required]);
-  clientesFiltrados: Observable<ICliente[]>;
+  clientesFiltrados!: Observable<ICliente[]>;
   clientes: ICliente[] = [];
   etapa = 1;
 
@@ -28,10 +33,21 @@ export class DialogOpenOsComponent implements OnInit {
     public os: iServiceOrder,
     public dialogRef: MatDialogRef<DialogOpenOsComponent>,
     public osServices: OrdemDeServicosService,
+    public funcionarioServices: FuncionarioService,
     public dialog: MatDialog,
     private clienteService: ClienteService,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
+   this.verificarFuncionario();
+    this.verificarCliente();
+  }
+
+  ngOnInit(): void {
+    this.listarClientes();
+    this.listarFuncionario();
+  }
+
+  verificarCliente(){
     this.clientesFiltrados = this.clienteControl.valueChanges.pipe(
       startWith(''),
       debounceTime(300),
@@ -48,12 +64,7 @@ export class DialogOpenOsComponent implements OnInit {
       })
     );
   }
-
-  ngOnInit(): void {
-    this.listarClientes();
-  }
-
-  private filtrarClientes(nome: string): Observable<ICliente[]> {
+   filtrarClientes(nome: string): Observable<ICliente[]> {
     if (nome.length < 2) {
       return of([]);
     }
@@ -94,6 +105,66 @@ export class DialogOpenOsComponent implements OnInit {
       }
     }
   }
+
+  verificarFuncionario(){
+    this.funcionarioFilted = this.funcionarioControl.valueChanges.pipe(
+      startWith(''),
+      debounceTime(300),
+      distinctUntilChanged(),
+      switchMap((value:any) => {
+        if (typeof value === 'string') {
+          return this.filtrarFuncionarios(value);
+        } else if (value && value.nomeFuncionario) {
+          return of([value]);
+        } else {
+          return of([]);
+        }
+      })
+    );
+  }
+
+  filtrarFuncionarios(nome: string): Observable<IFuncionario[]> {
+    if (nome.length < 2) {
+      return of([]);
+    }
+    return this.funcionarioServices.getFuncionarioPorNome(nome).pipe(
+      catchError(() => {
+        console.error('Erro ao buscar funcionarios');
+        return of([]);
+      })
+    );
+  }
+
+  displayFnFunc(func: IFuncionario): string {
+    return func ? func.nomeFuncionario : '';
+  }
+
+  listarFuncionario(){
+    if (this.funcionarioControl.valid) {
+      const value = this.funcionarioControl.value;
+      if (typeof value === 'string') {
+        this.funcionarioServices.getFuncionarioPorNome(value).subscribe(
+          (result: IFuncionario[]) => {
+            console.log('resutado do lista', result)
+            if (result.length > 0) {
+              this.etapa = 2;
+            } else {
+              this.onError('Funcionario não encontrado');
+            }
+          },
+          error => {
+            if (error.status === 404) {
+              this.onError('Erro ao buscar Funcionario.');
+            }
+          }
+        );
+      } else {
+        // Já temos um Funcionario selecionado
+        this.etapa = 2;
+      }
+    }
+  }
+
   onNoClick(): void {
     this.dialogRef.close();
   }

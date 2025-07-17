@@ -17,15 +17,12 @@ export class FuncionarioService {
     return this._http.get<IFuncionario[]>(this.baseUrl+'/all');
   }
 
-  public getFuncionarioPorID(id: number): Observable<IFuncionario[]>{
-    return this._http.get<IFuncionario[]>(this.baseUrl + id);
+  public getFuncionarioPorNome(name: string): Observable<IFuncionario[]>{
+    return this._http.get<IFuncionario[]>(this.baseUrl+'/list-name/'+ name);
   }
-  /*
-  getFuncionarioPorID(id: string): Observable<any> {
-    return this._http.get(this.baseUrl + id)
-      .pipe(map(response => response));
-}
-   */
+  public getFuncionarioPorID(id: number): Observable<IFuncionario[]>{
+    return this._http.get<IFuncionario[]>(this.baseUrl+'/list-id/'+ id);
+  }
 
   createFuncionario(element: IFuncionario): Observable<IFuncionario> {
     console.log("Evento chegou no service", element)
