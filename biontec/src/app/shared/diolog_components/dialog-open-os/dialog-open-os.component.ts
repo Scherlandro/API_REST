@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import {Component, Inject, OnInit} from '@angular/core';
 import {FormControl, Validators} from "@angular/forms";
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from "@angular/material/dialog";
 import { iServiceOrder } from 'src/app/interfaces/service-order';
@@ -14,7 +14,7 @@ import {catchError, map, startWith} from "rxjs/operators";
   templateUrl: './dialog-open-os.component.html',
   styleUrls: ['./dialog-open-os.component.css']
 })
-export class DialogOpenOsComponent {
+export class DialogOpenOsComponent implements OnInit {
   isChange = false;
   osSelecionada!: iServiceOrder;
   clienteControl = new FormControl('', [Validators.required]);
@@ -33,11 +33,14 @@ export class DialogOpenOsComponent {
   ) {
     this.clientesFiltrados = this.clienteControl.valueChanges.pipe(
       startWith(''),
-      debounceTime(300), // Adiciona delay para evitar muitas requisições
-      distinctUntilChanged(), // Só emite se o valor mudou
-      switchMap(value => {
+      debounceTime(300),
+      distinctUntilChanged(),
+      switchMap((value:any) => {
         if (typeof value === 'string') {
           return this.filtrarClientes(value);
+        } else if (value && value.nomeCliente) {
+          // Se for um objeto cliente (selecionado no autocomplete)
+          return of([value]);
         } else {
           return of([]);
         }
@@ -46,20 +49,23 @@ export class DialogOpenOsComponent {
   }
 
   ngOnInit(): void {
-    // Carrega clientes iniciais se necessário
+    this.listarClientes();
   }
 
   private filtrarClientes(nome: string): Observable<ICliente[]> {
     if (nome.length < 2) {
-      return of([]); // Não busca para poucos caracteres
+      return of([]);
     }
     return this.clienteService.getClientePorNome(nome).pipe(
-      catchError(() => of([])) // Trata erros retornando array vazio
+      catchError(() => {
+        console.error('Erro ao buscar clientes');
+        return of([]);
+      })
     );
   }
 
   displayFn(cliente: ICliente): string {
-    return cliente && cliente.nomeCliente ? cliente.nomeCliente : '';
+    return cliente ? cliente.nomeCliente : '';
   }
 
   listarClientes() {
@@ -68,6 +74,7 @@ export class DialogOpenOsComponent {
       if (typeof value === 'string') {
         this.clienteService.getClientePorNome(value).subscribe(
           (result: ICliente[]) => {
+            console.log('resutado do lista', result)
             if (result.length > 0) {
               this.etapa = 2;
             } else {

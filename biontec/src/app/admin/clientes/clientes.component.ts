@@ -24,7 +24,7 @@ export class ClientesComponent implements OnInit {
   @ViewChild(MatTable) tableCliente!: MatTable<any>;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
-  displayedColumns: string[] = ['nomeCliente', 'pessoa', 'estado', 'opicoes'];
+  displayedColumns: string[] = ['nomeCliente', 'pessoa', 'telefone', 'opicoes'];
   tbSourceClientes$: MatTableDataSource<ICliente>;
   tbData:any;
   clienteControl = new FormControl();

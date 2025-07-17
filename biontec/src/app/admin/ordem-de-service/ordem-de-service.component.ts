@@ -13,12 +13,9 @@ import {ICliente} from "../../interfaces/cliente";
 import {IFuncionario} from "../../interfaces/funcionario";
 import {ClienteService} from "../../services/cliente.service";
 import {FuncionarioService} from "../../services/funcionario.service";
-import {iVendas} from "../../interfaces/vendas";
-import {iItensVd} from "../../interfaces/itens-vd";
 import {ItensOsService} from "../../services/itens-os.service";
 import {ErrorDiologComponent} from "../../shared/diolog_components/error-diolog/error-diolog.component";
 import {iItensOS} from "../../interfaces/itens-os";
-import {DialogProdutoComponent} from "../../shared/diolog_components/dialog-produto/dialog-produto.component";
 import {DialogOpenOsComponent} from "../../shared/diolog_components/dialog-open-os/dialog-open-os.component";
 import {DialogItensOSComponent} from "../../shared/diolog_components/dialog-itens-os/dialog-itens-os.component";
 
@@ -39,7 +36,7 @@ export class OrdemDeServiceComponent {
   clienteFilted: ICliente[] = [];
   clienteSelecionado: ICliente | null = null;
   tbSourceOS$: MatTableDataSource<iServiceOrder>;
-  displayedColumns0S = ['id', 'client', 'entryDate', 'lastUpdate', 'status', 'actions'];
+  displayedColumns0S = [ 'Nome', 'Data', 'Status', 'Total', 'Opicões'];
   tbSourceItensDaOS$: any;
   displayedColumns: string[] = ['codigo','descricao','preco','qtd','soma','data','imagem','opicoes'];
   loadEmployees:any;
