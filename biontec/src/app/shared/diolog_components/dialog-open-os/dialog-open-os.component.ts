@@ -18,7 +18,8 @@ export class DialogOpenOsComponent {
   isChange=false;
   osSelecionada!: iServiceOrder;
   clienteControl = new FormControl();
-  clientesFiltrados: Observable<ICliente[]>;
+//  clientesFiltrados: Observable<ICliente[]>;
+  clientesFiltrados: ICliente[] = [];
   clienteSelecionado: any;
   etapa = 1;
 
@@ -31,11 +32,11 @@ export class DialogOpenOsComponent {
     private clienteService: ClienteService,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
-    this.clientesFiltrados = this.clienteControl.valueChanges.pipe(
+   /* this.clientesFiltrados = this.clienteControl.valueChanges.pipe(
       startWith(''),
       map(value => typeof value === 'string' ? value : value.nome),
       map(nome => nome ? this._filtrarClientes(nome) : [])
-    );
+    );*/
   }
 
   private _filtrarClientes(nome: string): any  {
@@ -90,26 +91,26 @@ export class DialogOpenOsComponent {
         }))
         .subscribe((rest: ICliente[]) => { this.clienteSelecionado = rest  });*/
   }
-/*
-  changeClientes(value: any) {
+
+  changeCliente(value: any) {
     console.log('digitado', value)
-  //  this.listarClientes(value)
     if (value) {
-      this.clientesFiltered = this.clientes.filter(o => o.toUpperCase().includes(value.toUpperCase()));
+      this.clientesFiltrados = this.clienteSelecionado
+        .filter((o:any) => o.toUpperCase().includes(value.toUpperCase()));
     } else {
-      this.clientesFiltered = this.clientes;
+      this.clientesFiltrados = this.clienteSelecionado;
     }
   }
-     _filter(value: any): any[] {
-      const filterValue = value.toLowerCase();
-      return this.clientes.filter(option => option.nome_cliente.includes(filterValue));
-    }*/
+
+  /*   _filter(value: any): any[] {
+        const filterValue = value.toLowerCase();
+        return this.clientes.filter(option => option.nome_cliente.includes(filterValue));
+      }*/
 
   aplicarFiltro(valor: string) {
     valor = valor.trim().toLowerCase();
     this.clienteControl.getRawValue().filter = valor;
   }
-
 
   save(os: any){
     console.log('Itens a adicionar', os)
