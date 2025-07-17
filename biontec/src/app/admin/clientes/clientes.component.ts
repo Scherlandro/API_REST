@@ -24,7 +24,7 @@ export class ClientesComponent implements OnInit {
   @ViewChild(MatTable) tableCliente!: MatTable<any>;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
-  displayedColumns: string[] = ['nome_cliente', 'pessoa', 'estado', 'opicoes'];
+  displayedColumns: string[] = ['nomeCliente', 'pessoa', 'estado', 'opicoes'];
   tbSourceClientes$: MatTableDataSource<ICliente>;
   tbData:any;
   clienteControl = new FormControl();
@@ -82,11 +82,11 @@ export class ClientesComponent implements OnInit {
     const dialogRef = this.dialog.open(DialogClienteComponent, {
       width: '300px',
       data: eventCli === null ? {
-        id_cliente: null, nome_cliente: '', inscricaoest: '', pessoa: '',
+        id_cliente: null, nomeCliente: '', inscricaoest: '', pessoa: '',
         cpf: '', cnpj: '', cep: '', numero: '', telefone: '', celular: '', zap: '',
       } : {
         id_cliente: eventCli.id_cliente,
-        nome_cliente: eventCli.nome_cliente,
+        nomeCliente: eventCli.nomeCliente,
         inscricaoest: eventCli.inscricaoest,
         pessoa: eventCli.pessoa,
         cpf: eventCli.cpf,

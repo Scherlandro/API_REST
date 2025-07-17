@@ -1,6 +1,6 @@
 export interface ICliente {
   id_cliente: number;
-  nome_cliente: string;
+  nomeCliente: string;
   inscricaoest: string;
   pessoa: string;
   cpf: string;

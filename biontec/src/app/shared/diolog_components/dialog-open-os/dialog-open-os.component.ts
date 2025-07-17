@@ -1,11 +1,11 @@
 import { Component, Inject } from '@angular/core';
-import { FormControl } from "@angular/forms";
+import {FormControl, Validators} from "@angular/forms";
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from "@angular/material/dialog";
 import { iServiceOrder } from 'src/app/interfaces/service-order';
 import { OrdemDeServicosService } from 'src/app/services/ordem-de-servicos.service';
 import { ErrorDiologComponent } from "../error-diolog/error-diolog.component";
 import {ICliente} from "../../../interfaces/cliente";
-import {Observable, of} from "rxjs";
+import {debounceTime, distinctUntilChanged, Observable, of, switchMap} from "rxjs";
 import {ClienteService} from "../../../services/cliente.service";
 import {catchError, map, startWith} from "rxjs/operators";
 
@@ -15,12 +15,11 @@ import {catchError, map, startWith} from "rxjs/operators";
   styleUrls: ['./dialog-open-os.component.css']
 })
 export class DialogOpenOsComponent {
-  isChange=false;
+  isChange = false;
   osSelecionada!: iServiceOrder;
-  clienteControl = new FormControl();
-//  clientesFiltrados: Observable<ICliente[]>;
-  clientesFiltrados: ICliente[] = [];
-  clienteSelecionado:  ICliente[] = [];
+  clienteControl = new FormControl('', [Validators.required]);
+  clientesFiltrados: Observable<ICliente[]>;
+  clientes: ICliente[] = [];
   etapa = 1;
 
   constructor(
@@ -32,19 +31,103 @@ export class DialogOpenOsComponent {
     private clienteService: ClienteService,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
-   /* this.clientesFiltrados = this.clienteControl.valueChanges.pipe(
+    this.clientesFiltrados = this.clienteControl.valueChanges.pipe(
       startWith(''),
-      map(value => typeof value === 'string' ? value : value.nome),
-      map(nome => nome ? this._filtrarClientes(nome) : [])
-    );*/
+      debounceTime(300), // Adiciona delay para evitar muitas requisições
+      distinctUntilChanged(), // Só emite se o valor mudou
+      switchMap(value => {
+        if (typeof value === 'string') {
+          return this.filtrarClientes(value);
+        } else {
+          return of([]);
+        }
+      })
+    );
   }
 
-  private _filtrarClientes(nome: string): any  {
-    return this.clienteService.getClientePorNome(nome);
+  ngOnInit(): void {
+    // Carrega clientes iniciais se necessário
+  }
+
+  private filtrarClientes(nome: string): Observable<ICliente[]> {
+    if (nome.length < 2) {
+      return of([]); // Não busca para poucos caracteres
+    }
+    return this.clienteService.getClientePorNome(nome).pipe(
+      catchError(() => of([])) // Trata erros retornando array vazio
+    );
   }
 
   displayFn(cliente: ICliente): string {
-    return cliente && cliente.nome_cliente ? cliente.nome_cliente : '';
+    return cliente && cliente.nomeCliente ? cliente.nomeCliente : '';
+  }
+
+  listarClientes() {
+    if (this.clienteControl.valid) {
+      const value = this.clienteControl.value;
+      if (typeof value === 'string') {
+        this.clienteService.getClientePorNome(value).subscribe(
+          (result: ICliente[]) => {
+            if (result.length > 0) {
+              this.etapa = 2;
+            } else {
+              this.onError('Cliente não encontrado');
+            }
+          },
+          error => {
+            if (error.status === 404) {
+              this.onError('Erro ao buscar cliente.');
+            }
+          }
+        );
+      } else {
+        // Já temos um cliente selecionado
+        this.etapa = 2;
+      }
+    }
+  }
+
+  onError(message: string) {
+    // Implemente sua lógica de exibição de erro aqui
+    console.error(message);
+  }
+
+  onCancel() {
+    this.dialogRef.close();
+  }
+
+  save(os: iServiceOrder) {
+    // Implemente sua lógica de salvamento aqui
+  }
+
+  /*
+    private _filtrarClientes(nome: string): any  {
+    return this.clienteService.getClientePorNome(nome);
+  }
+
+
+  changeCliente2(value: any) {
+     console.log('digitado', value)
+     if (value) {
+       this.clientesFiltrados = this.clienteSelecionado
+         .filter((o:any) => o.toUpperCase().includes(value.toUpperCase()));
+     } else {
+       this.clientesFiltrados = this.clienteSelecionado;
+     }
+   }
+
+      _filter(value: any): any[] {
+         const filterValue = value.toLowerCase();
+         return this.clientes.filter(option => option.nomeCliente.includes(filterValue));
+       }
+
+  aplicarFiltro(valor: string) {
+    valor = valor.trim().toLowerCase();
+    this.clienteControl.getRawValue().filter = valor;
+  }
+
+  displayFn(cliente: ICliente): string {
+    return cliente && cliente.nomeCliente ? cliente.nomeCliente : '';
   }
 
   onNoClick(): void {
@@ -53,69 +136,6 @@ export class DialogOpenOsComponent {
 
   selecionarCliente(): void {
     this.dialogRef.close(this.clienteSelecionado);
-  }
-
-
-  ngOnInit(): void {
-   this.statusDaOS();
-  }
-
-
-    statusDaOS(){
-    if (this.os.idOS != null) {
-      this.isChange = true;
-    } else {
-      this.isChange = false;
-    }
-  }
-
-    listarClientes(value:any) {
-         if (this.clienteControl.valid) {
-        this.clienteService.getClientePorNome(value).subscribe(
-          (result:any) => {
-            let re = result.map((i:any)=>i.nomeCliente.toString());
-          //  this.clientes = re;
-          //  this.clientesFiltered = re;
-            console.log('lista clientes digitado', re)
-            this.etapa = 2;
-          },
-          error => {
-            if (error.status === 404) {
-               this.onError('Erro ao buscar cliente.')
-            }
-          }
-        );
-      }
-/*    this.clienteService.getTodosClientes()
-        .pipe(catchError(error => { this.onError('Erro ao buscar cliente.') return of([])
-        }))
-        .subscribe((rest: ICliente[]) => { this.clienteSelecionado = rest  });*/
-  }
-  changeCliente(value: any) {
-    if (value) {
-      this.clientesFiltrados = this.clienteSelecionado.filter(c => c.nome_cliente.toUpperCase().includes(value.toUpperCase()));
-    } else {
-      this.clientesFiltrados = this.clienteSelecionado;
-    }
-  }
-  changeCliente2(value: any) {
-    console.log('digitado', value)
-    if (value) {
-      this.clientesFiltrados = this.clienteSelecionado
-        .filter((o:any) => o.toUpperCase().includes(value.toUpperCase()));
-    } else {
-      this.clientesFiltrados = this.clienteSelecionado;
-    }
-  }
-
-  /*   _filter(value: any): any[] {
-        const filterValue = value.toLowerCase();
-        return this.clientes.filter(option => option.nome_cliente.includes(filterValue));
-      }*/
-
-  aplicarFiltro(valor: string) {
-    valor = valor.trim().toLowerCase();
-    this.clienteControl.getRawValue().filter = valor;
   }
 
   save(os: any){
@@ -128,6 +148,13 @@ export class DialogOpenOsComponent {
     return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
   }
 
+  statusDaOS(){
+    if (this.os.idOS != null) {
+      this.isChange = true;
+    } else {
+      this.isChange = false;
+    }
+  }
 
   onCancel(): void {
     this.dialogRef.close();
@@ -145,6 +172,6 @@ export class DialogOpenOsComponent {
       this.etapa = 1;
     }
   }
-
+*/
 
   }

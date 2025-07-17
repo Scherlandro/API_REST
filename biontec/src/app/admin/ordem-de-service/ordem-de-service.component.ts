@@ -222,7 +222,7 @@ export class OrdemDeServiceComponent {
     });
     return of(
       this.clienteFilted.filter(cliente =>
-        cliente.nome_cliente.toLowerCase().includes(filter.toLowerCase())
+        cliente.nomeCliente.toLowerCase().includes(filter.toLowerCase())
       )
     ).pipe(delay(500));
   }

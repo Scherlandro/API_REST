@@ -1,31 +1,45 @@
 <mat-card mat-dialog-content class="div-os">
-
   <h1 *ngIf="!isChange" mat-dialog-title>Adicionar Serviço</h1>
   <h1 *ngIf="isChange" mat-dialog-title>Editar Serviço</h1>
 
   <h2>Abrir OS</h2>
 
- <!-- <div *ngIf="etapa === 1">-->
   <div>
     <form>
       <div class="row">
         <div class="col-4">
           <mat-form-field appearance="outline">
             <input type="text"
-                   placeholder="Digite o cliente "
+                   placeholder="Digite o cliente"
                    matInput
                    [formControl]="clienteControl"
-                   [matAutocomplete]="auto"
-                   (keyup)="changeCliente(clienteControl.value)"/>
+                   [matAutocomplete]="auto"/>
             <mat-error>Campo Obrigatório não preenchido.</mat-error>
-            <mat-autocomplete #auto="matAutocomplete">
-              <mat-option [value]="cliente.nome_cliente" *ngFor="let cliente of clientesFiltrados">{{cliente.nome_cliente}}</mat-option>
+            <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+              <mat-option *ngFor="let cliente of clientesFiltrados | async" [value]="cliente">
+                {{cliente.nomeCliente}}
+              </mat-option>
             </mat-autocomplete>
-
           </mat-form-field>
         </div>
       </div>
+      <div class="row">
+        <div class="col-4">
+          <button mat-raised-button color="primary" class="notranslate" (click)="listarClientes()" [disabled]="!clienteControl.valid">
+            <mat-icon>search</mat-icon>
+            {{ 'button.confirmar' }}
+          </button>
+        </div>
+      </div>
 
+      <button mat-raised-button *ngIf="isChange" [mat-dialog-close]="osSelecionada" cdkFocusInitial
+              (click)="save(osSelecionada)">Adicionar
+      </button>
+
+      <button mat-raised-button (click)="onCancel()">Cancel</button>
+    </form>
+  </div>
+</mat-card>
 
 <!--
 
@@ -40,7 +54,7 @@
       >
       <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
         <mat-option *ngFor="let cliente of clientesFiltrados " [value]="cliente">
-          {{ cliente.nome_cliente }}
+          {{ cliente.nomeCliente }}
         </mat-option>
       </mat-autocomplete>
       <mat-label>ID</mat-label>
@@ -62,7 +76,7 @@
               (keyup)="changeCliente(clienteControl.value)"
               (keydown)="listarClientes(clienteControl.value)">
        <mat-autocomplete #auto="matAutocomplete">
-         <mat-option [value]="client" *ngFor="let client of clientesFiltrados">{{client.nome_cliente}}</mat-option>
+         <mat-option [value]="client" *ngFor="let client of clientesFiltrados">{{client.nomeCliente}}</mat-option>
        </mat-autocomplete>
      </mat-form-field>-->
 <!--
@@ -73,7 +87,7 @@
 
      <mat-form-field appearance="fill">
        <mat-label>Descrição</mat-label>
-       <input matInput [(ngModel)]="cli.nome_cliente">
+       <input matInput [(ngModel)]="cli.nomeCliente">
      </mat-form-field>
 
      <mat-form-field appearance="fill">
@@ -82,7 +96,7 @@
      </mat-form-field>
 
  -->
-
+<!--
     <button mat-raised-button *ngIf="isChange" [mat-dialog-close]="osSelecionada" cdkFocusInitial
             (click)="save(osSelecionada)">Adicionar
     </button>
@@ -93,5 +107,5 @@
 
     </form>
   </div>
-</mat-card>
+</mat-card>-->
 
