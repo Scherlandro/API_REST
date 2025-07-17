@@ -1,14 +1,15 @@
 import {Component, Inject} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog";
-import {FormControl} from "@angular/forms";
+import {FormControl, Validators} from "@angular/forms";
 import {VendasService} from "../../../services/vendas.service";
 import {catchError, map, startWith} from "rxjs/operators";
-import {Observable, of} from "rxjs";
+import {debounceTime, distinctUntilChanged, Observable, of, switchMap} from "rxjs";
 import {ErrorDiologComponent} from "../error-diolog/error-diolog.component";
 import {each} from "chart.js/dist/helpers";
 import {ICliente} from "../../../interfaces/cliente";
 import {ClienteService} from "../../../services/cliente.service";
 import {iServiceOrder} from "../../../interfaces/service-order";
+import {iVendas} from "../../../interfaces/vendas";
 
 @Component({
   selector: 'app-dialog-open-sales',
@@ -18,81 +19,106 @@ import {iServiceOrder} from "../../../interfaces/service-order";
 export class DialogOpenSalesComponent {
   isChange!: boolean;
   cli!: ICliente;
-  clienteControl = new FormControl();
+  clienteControl = new FormControl('', [Validators.required]);
+  clientesFiltrados: Observable<ICliente[]>;
+  clientes: ICliente[] = [];
   listProd: any;
-  clienteFiltered!:string[];
-  clientes!:string[];
   etapa = 1;
 
   constructor(
     @Inject(MAT_DIALOG_DATA)
-    public os: iServiceOrder,
+    public venda: iVendas,
     public dialogRef: MatDialogRef<DialogOpenSalesComponent>,
     public vendaServices: VendasService,
-    public clienteService: ClienteService,
     public dialog: MatDialog,
+    public clienteService: ClienteService,
+    @Inject(MAT_DIALOG_DATA) public data: any
   ) {
-
+    this.clientesFiltrados = this.clienteControl.valueChanges.pipe(
+      startWith(''),
+      debounceTime(300),
+      distinctUntilChanged(),
+      switchMap((value:any) => {
+        if (typeof value === 'string') {
+          return this.filtrarClientes(value);
+        } else if (value && value.nomeCliente) {
+          // Se for um objeto cliente (selecionado no autocomplete)
+          return of([value]);
+        } else {
+          return of([]);
+        }
+      })
+    );
   }
 
   ngOnInit(): void {
-    if (this.os.idOS != null) {
+   this.listarClientes();
+  }
+
+  private filtrarClientes(nome: string): Observable<ICliente[]> {
+    if (nome.length < 2) {
+      return of([]);
+    }
+    return this.clienteService.getClientePorNome(nome).pipe(
+      catchError(() => {
+        console.error('Erro ao buscar clientes');
+        return of([]);
+      })
+    );
+  }
+
+  displayFn(cliente: ICliente): string {
+    return cliente ? cliente.nomeCliente : '';
+  }
+
+
+  listarClientes() {
+    if (this.clienteControl.valid) {
+      const value = this.clienteControl.value;
+      if (typeof value === 'string') {
+        this.clienteService.getClientePorNome(value).subscribe(
+          (result: ICliente[]) => {
+            console.log('resutado do lista', result)
+            if (result.length > 0) {
+              this.etapa = 2;
+            } else {
+              this.onError('Cliente não encontrado');
+            }
+          },
+          error => {
+            if (error.status === 404) {
+              this.onError('Erro ao buscar cliente.');
+            }
+          }
+        );
+      } else {
+        // Já temos um cliente selecionado
+        this.etapa = 2;
+      }
+    }
+  }
+
+  onNoClick(): void {
+    this.dialogRef.close();
+  }
+
+  selecionarCliente(): void {
+    this.dialogRef.close(this.clientes);
+  }
+
+  verificarStatus(){
+    if (this.venda.idVenda != null) {
       this.isChange = true;
     } else {
       this.isChange = false;
     }
-
-   // this.clienteFiltered = this.clienteControl.valueChanges.pipe( startWith(''), map(value => value._filter(value) ) )
-
- //   https://v5.material.angular.io/components/autocomplete/examples
   }
 
-  listarClientes(value:any) {
-	     if (this.clienteControl.valid) {
-      this.clienteService.getClientePorNome(value).subscribe(
-        (result:any) => {
-          let re = result.map((i:any)=>i.nomeCliente.toString());
-          this.clientes = re;
-          this.clienteFiltered = re;
-          console.log('lista cliente digitado', re)
-          this.etapa = 2;
-        },
-        error => {
-          if (error.status === 404) {
-             this.onError('Erro ao buscar cliente.')
-          }
-        }
-      );
-    }
- /*   this.prodService.getTodosClientes()
-      .pipe(catchError(error => { this.onError('Erro ao buscar cliente.') return of([])
-      }))
-      .subscribe((rest: ICliente[]) => { this.products = rest  });*/
+  onError(errrorMsg: string) {
+    this.dialog.open(ErrorDiologComponent, {
+      data: errrorMsg
+    });
   }
-
-  changeCliente(value: any) {
-    console.log('digitado', value)
-    if (value) {
-      this.clienteFiltered = this.clientes.filter(o => o.toUpperCase().includes(value.toUpperCase()));
-    } else {
-      this.clienteFiltered = this.clientes;
-    }
-  }
-
-  /*
-     _filter(value: any): any[] {
-      const filterValue = value.toLowerCase();
-      return this.products.filter(option => option.nome_cliente.includes(filterValue));
-    }
-  */
-
-/*
-  aplicarFiltro(valor: string) {
-    valor = valor.trim().toLowerCase();
-    this.clienteControl.getRawValue().filter = valor;
-  }
-*/
-
 
   onCancel(): void {
     this.dialogRef.close();
@@ -102,22 +128,18 @@ export class DialogOpenSalesComponent {
     //this.clienteServices.createElements(this.iCliente);
   }
 
-  formatter(value: number): string {
-    //<div>{{ formatter(iCliente.valor_venda) }}</div>
-    return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
-  }
-
-  onError(errrorMsg: string) {
-    this.dialog.open(ErrorDiologComponent, {
-      data: errrorMsg
-    });
-  }
-
   voltar(): void {
     if (this.etapa === 2) {
       this.etapa = 1;
     }
   }
-
-
+  /*
+  aplicarFiltro(valor: string) {
+    valor = valor.trim().toLowerCase();
+    this.clienteControl.getRawValue().filter = valor;
   }
+
+*/
+
+
+}

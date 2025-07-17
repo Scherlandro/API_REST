@@ -93,66 +93,12 @@ export class DialogOpenOsComponent implements OnInit {
       }
     }
   }
-
-  onError(message: string) {
-    // Implemente sua lógica de exibição de erro aqui
-    console.error(message);
-  }
-
-  onCancel() {
-    this.dialogRef.close();
-  }
-
-  save(os: iServiceOrder) {
-    // Implemente sua lógica de salvamento aqui
-  }
-
-  /*
-    private _filtrarClientes(nome: string): any  {
-    return this.clienteService.getClientePorNome(nome);
-  }
-
-
-  changeCliente2(value: any) {
-     console.log('digitado', value)
-     if (value) {
-       this.clientesFiltrados = this.clienteSelecionado
-         .filter((o:any) => o.toUpperCase().includes(value.toUpperCase()));
-     } else {
-       this.clientesFiltrados = this.clienteSelecionado;
-     }
-   }
-
-      _filter(value: any): any[] {
-         const filterValue = value.toLowerCase();
-         return this.clientes.filter(option => option.nomeCliente.includes(filterValue));
-       }
-
-  aplicarFiltro(valor: string) {
-    valor = valor.trim().toLowerCase();
-    this.clienteControl.getRawValue().filter = valor;
-  }
-
-  displayFn(cliente: ICliente): string {
-    return cliente && cliente.nomeCliente ? cliente.nomeCliente : '';
-  }
-
   onNoClick(): void {
     this.dialogRef.close();
   }
 
   selecionarCliente(): void {
-    this.dialogRef.close(this.clienteSelecionado);
-  }
-
-  save(os: any){
-    console.log('Itens a adicionar', os)
-    this.osServices.create(os);
-  }
-
-  formatter(value: number): string {
-    //<div>{{ formatter(iProdroduto.valor_venda) }}</div>
-    return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
+    this.dialogRef.close(this.clientes);
   }
 
   statusDaOS(){
@@ -162,22 +108,29 @@ export class DialogOpenOsComponent implements OnInit {
       this.isChange = false;
     }
   }
+  onError(message: string) {
+    console.error(message);
+  }
 
-  onCancel(): void {
+  onCancel() {
+    this.voltar();
     this.dialogRef.close();
   }
 
-
-  onError(errrorMsg: string) {
-    this.dialog.open(ErrorDiologComponent, {
-      data: errrorMsg
-    });
+  save(os: iServiceOrder) {
+    // Implemente sua lógica de salvamento aqui
   }
 
   voltar(): void {
     if (this.etapa === 2) {
       this.etapa = 1;
     }
+  }
+
+  /*
+  aplicarFiltro(valor: string) {
+    valor = valor.trim().toLowerCase();
+    this.clienteControl.getRawValue().filter = valor;
   }
 */
 

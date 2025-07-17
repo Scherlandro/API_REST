@@ -259,6 +259,9 @@ export class OrdemDeServiceComponent {
       }
     });
   }
-
+  formatter(value: number): string {
+    //<div>{{ formatter(iProdroduto.valor_venda) }}</div>
+    return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
+  }
 
 }
