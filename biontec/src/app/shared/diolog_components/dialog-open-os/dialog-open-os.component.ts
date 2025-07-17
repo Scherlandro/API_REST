@@ -20,7 +20,7 @@ export class DialogOpenOsComponent {
   clienteControl = new FormControl();
 //  clientesFiltrados: Observable<ICliente[]>;
   clientesFiltrados: ICliente[] = [];
-  clienteSelecionado: any;
+  clienteSelecionado:  ICliente[] = [];
   etapa = 1;
 
   constructor(
@@ -91,8 +91,14 @@ export class DialogOpenOsComponent {
         }))
         .subscribe((rest: ICliente[]) => { this.clienteSelecionado = rest  });*/
   }
-
   changeCliente(value: any) {
+    if (value) {
+      this.clientesFiltrados = this.clienteSelecionado.filter(c => c.nome_cliente.toUpperCase().includes(value.toUpperCase()));
+    } else {
+      this.clientesFiltrados = this.clienteSelecionado;
+    }
+  }
+  changeCliente2(value: any) {
     console.log('digitado', value)
     if (value) {
       this.clientesFiltrados = this.clienteSelecionado
