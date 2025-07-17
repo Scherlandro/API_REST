@@ -18,10 +18,10 @@ export class ClienteService {
   }
 
   public getClientePorNome(name: string): Observable<ICliente[]>{
-    return this._http.get<ICliente[]>(this.baseUrl+'list-name'+ name);
+    return this._http.get<ICliente[]>(this.baseUrl+'/list-name/'+ name);
   }
   public getClientePorID(id: number): Observable<ICliente[]>{
-    return this._http.get<ICliente[]>(this.baseUrl+'list-id/'+ id);
+    return this._http.get<ICliente[]>(this.baseUrl+'/list-id/'+ id);
   }
   /*
   getClientePorID(id: string): Observable<any> {
