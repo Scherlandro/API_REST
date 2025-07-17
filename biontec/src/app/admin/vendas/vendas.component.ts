@@ -219,10 +219,10 @@ export class VendaComponent implements OnInit {
         qtdDeParcelas:null,
       } : {
         idVenda: eventVd.idVenda,
-        dtVenda: eventVd.dt_venda,
+        dtVenda: eventVd.dtVenda,
         nomeFuncionario: eventVd.nomeFuncionario,
         nomeCliente: eventVd.nomeCliente,
-        dt_venda: eventVd.dt_venda,
+        dt_venda: eventVd.dtVenda,
         subtotal: eventVd.subtotal,
         desconto: eventVd.desconto,
         totalgeral: eventVd.totalgeral,

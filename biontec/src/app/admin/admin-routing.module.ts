@@ -7,8 +7,8 @@ import {UsuariosComponent} from "./usuarios/usuarios.component";
 import {ProductsComponent} from "./products/products.component";
 import {ContabilidadeComponent} from "./contabilidade/contabilidade.component";
 import {VendaComponent} from "./vendas/vendas.component";
-import {CAddComponent} from "./vendas/c-add/c-add.component";
 import {OrdemDeServiceComponent} from "./ordem-de-service/ordem-de-service.component";
+import {FuncionariosComponent} from "./funcionarios/funcionarios.component";
 
 const routes: Routes = [
   {
@@ -16,13 +16,13 @@ const routes: Routes = [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full'},
 
       { path: 'dashboard', component: DashboardComponent },
+      {path: 'funcionarios', component: FuncionariosComponent},
       {path: 'clientes', component: ClientesComponent},
       {path: 'usuarios', component: UsuariosComponent},
       {path: 'produtos', component: ProductsComponent},
       {path: 'contabilidade', component: ContabilidadeComponent},
       {path: 'vendas', component: VendaComponent},
       {path: 'os', component: OrdemDeServiceComponent},
-      {path: 'addIten',component: CAddComponent},
       /*
        {
         path: 'itenSale', loadChildren:()=>import('./vendas/c-add/c-add.component')

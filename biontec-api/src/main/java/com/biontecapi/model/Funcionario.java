@@ -1,5 +1,6 @@
 package com.biontecapi.model;
 
+import com.biontecapi.dtos.FuncionarioDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,7 +18,7 @@ public class Funcionario {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Integer id_funcionario;
 
-    @Column(nullable = false, name = "nome_funcionario",length = 50)
+    @Column(nullable = false, name = "nome_funcionario", length = 50)
     private String nomeFuncionario;
 
     @Column(nullable = false, length = 15)
@@ -36,15 +37,15 @@ public class Funcionario {
     private String dt_demissao;
 
     @Column(length = 45)
-    private String cargo ;
+    private String cargo;
 
-    @Column( length = 10)
+    @Column(length = 10)
     private Double salario;
 
     @Column(length = 25)
     private String tipo_logradouro;
 
-    @Column( length = 65)
+    @Column(length = 65)
     private String logradouro;
 
     @Column(length = 10)
@@ -74,8 +75,13 @@ public class Funcionario {
     @Column(nullable = false, length = 65)
     private String email;
 
-    @Column( length = 200)
-    private String obs ;
+    @Column(length = 200)
+    private String obs;
 
+    public FuncionarioDTO toDTO() {
+        return new FuncionarioDTO(id_funcionario, nomeFuncionario,rg, cpf,  dt_nascimnento,
+                dt_admissao, dt_demissao, cargo,salario, tipo_logradouro,logradouro,
+                n_residencial, complemento,bairro, cidade,telefone,celular,zap,email,obs);
+    }
 
 }

@@ -1,7 +1,9 @@
-<h1 *ngIf="!isChange" mat-dialog-title>Abrir Venda</h1>
-<h1 *ngIf="isChange" mat-dialog-title>Editar Venda</h1>
 
-<div mat-dialog-content>
+<div mat-dialog-content class="div-vd">
+
+  <h1 *ngIf="!isChange" mat-dialog-title>Abrir Venda</h1>
+  <h1 *ngIf="isChange" mat-dialog-title>Editar Venda</h1>
+
   <mat-form-field class="example-full-width">
     <mat-label>Cliente</mat-label>
     <input type="text"
@@ -19,23 +21,21 @@
 
   <mat-form-field appearance="fill">
     <mat-label>Data</mat-label>
-    <input matInput [(ngModel)]="venda.dt_venda">
+    <input matInput [(ngModel)]="venda.dtVenda">
   </mat-form-field>
 
-  <!-- <mat-form-field>
-     <mat-select   placeholder="Selecione o Cliente"
-     [formControl]="clienteControl" multiple>
-       <mat-option *ngFor="let topping of listProd"
-       [value]="topping">{{topping}}</mat-option>
-     </mat-select>
-   </mat-form-field>
- -->
 
   <button mat-button *ngIf="!isChange" cdkFocusInitial
           (click)="save()">Adicionar
   </button>
   <button mat-raised-button (click)="onCancel()">Cancel</button>
 
-
 </div>
-
+<!-- <mat-form-field>
+   <mat-select   placeholder="Selecione o Cliente"
+   [formControl]="clienteControl" multiple>
+     <mat-option *ngFor="let topping of listProd"
+     [value]="topping">{{topping}}</mat-option>
+   </mat-select>
+ </mat-form-field>
+-->

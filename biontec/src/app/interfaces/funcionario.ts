@@ -1,6 +1,6 @@
 export interface IFuncionario{
   idfuncionario: number;
-  nome_uncionario: string;
+  nomeFuncionario: string;
   dt_admissao: string;
   dt_demissao: string;
   pessoa: string;

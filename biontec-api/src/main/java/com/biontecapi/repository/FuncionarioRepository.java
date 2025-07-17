@@ -11,7 +11,9 @@ import com.biontecapi.model.Funcionario;
 
 public interface FuncionarioRepository extends JpaRepository<Funcionario, Integer> {
 
-    List<Funcionario> findFuncionarioByNomeFuncionario(String firstName);
+    @Query(value = "select f from Funcionario f where trim(f.nomeFuncionario) like ?1%")
+    List<Funcionario> listarFuncionarioPorNome(@Param("nomeFuncionario")String nomeFuncionario);
+
 
     @Query("SELECT f FROM Funcionario f WHERE LOWER(TRIM(f.nomeFuncionario)) LIKE LOWER(CONCAT('%', TRIM(':name'), '%')) " +
             " AND f.salario > :amount ORDER BY f.salario DESC, f.nomeFuncionario ASC")

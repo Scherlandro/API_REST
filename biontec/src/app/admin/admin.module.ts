@@ -7,6 +7,7 @@ import { HighchartsChartModule } from "highcharts-angular";
 import { AppMaterialModule } from "../shared/app-material/app-material.module";
 import { AdminRoutingModule } from './admin-routing.module';
 import { AheaderComponent } from './aheader/aheader.component';
+import {FuncionariosComponent} from "./funcionarios/funcionarios.component";
 import { ClientesComponent } from "./clientes/clientes.component";
 import { ContabilidadeComponent } from './contabilidade/contabilidade.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
@@ -15,8 +16,6 @@ import { MenuComponent } from './menu/menu.component';
 import { OrdemDeServiceComponent } from "./ordem-de-service/ordem-de-service.component";
 import { ProductsComponent } from "./products/products.component";
 import { UsuariosComponent } from "./usuarios/usuarios.component";
-import { CAddComponent } from "./vendas/c-add/c-add.component";
-import { CIndexComponent } from "./vendas/c-index/c-index.component";
 import { VendaComponent } from "./vendas/vendas.component";
 
 
@@ -27,13 +26,12 @@ import { VendaComponent } from "./vendas/vendas.component";
     MenuComponent,
     AheaderComponent,
     UsuariosComponent,
+    FuncionariosComponent,
     ClientesComponent,
     ProductsComponent,
     ContabilidadeComponent,
     VendaComponent,
-    CAddComponent,
     OrdemDeServiceComponent,
-    CIndexComponent,
   ],
     imports: [
         CommonModule,

@@ -1,8 +1,25 @@
- <h1 *ngIf="!isChange" mat-dialog-title>Abrir Serviço</h1>
-  <h1 *ngIf="isChange" mat-dialog-title>Editar Serviço</h1>
+
+ <div mat-dialog-content class="div-os">
+
+   <h1 *ngIf="!isChange" mat-dialog-title>Abrir Serviço</h1>
+   <h1 *ngIf="isChange" mat-dialog-title>Editar Serviço</h1>
+
+   <mat-form-field class="example-full-width">
+     <mat-label>Cliente</mat-label>
+     <input type="text"
+            placeholder="Digite o Cliente"
+            matInput
+            [formControl]="clienteControl"
+            [matAutocomplete]="auto"/>
+     <mat-error>Campo Obrigatório não preenchido.</mat-error>
+     <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+       <mat-option *ngFor="let cliente of clientesFiltrados | async" [value]="cliente">
+         {{cliente.nomeCliente}}
+       </mat-option>
+     </mat-autocomplete>
+   </mat-form-field>
 
 
- <div mat-dialog-content>
    <mat-form-field class="example-full-width">
      <mat-label>Cliente</mat-label>
      <input type="text"
@@ -18,7 +35,8 @@
                 </mat-autocomplete>
    </mat-form-field>
 
-   <mat-form-field appearance="fill">
+
+  <mat-form-field appearance="fill">
      <mat-label>Data</mat-label>
      <input matInput [(ngModel)]="os.dt_OS">
    </mat-form-field>

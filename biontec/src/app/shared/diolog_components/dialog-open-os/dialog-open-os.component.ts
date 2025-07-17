@@ -17,6 +17,7 @@ import {catchError, map, startWith} from "rxjs/operators";
 export class DialogOpenOsComponent implements OnInit {
   isChange = false;
   osSelecionada!: iServiceOrder;
+
   clienteControl = new FormControl('', [Validators.required]);
   clientesFiltrados: Observable<ICliente[]>;
   clientes: ICliente[] = [];
