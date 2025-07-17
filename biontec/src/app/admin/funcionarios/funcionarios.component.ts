@@ -41,7 +41,7 @@ export class FuncionariosComponent implements OnInit {
   }
 
   ngOnInit(): void {
-   // this.listarFuncionarios();
+   this.listarFuncionarios();
   }
 
   onMatSortChange() {
@@ -55,6 +55,7 @@ export class FuncionariosComponent implements OnInit {
 
 
   listarFuncionarios() {
+
     this.funcionarioSevice.getTodosFuncionarios()
       .pipe(catchError(error => {
         if (error === 'Session Expired')
