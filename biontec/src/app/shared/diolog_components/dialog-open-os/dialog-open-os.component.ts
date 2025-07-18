@@ -21,7 +21,7 @@ export class DialogOpenOsComponent implements OnInit {
   osSelecionada!: iServiceOrder;
   funcionarioControl = new FormControl('', [Validators.required]);
   funcionarioFilted!: Observable<IFuncionario[]>;
-  funcionarios: IFuncionario[]=[];
+  funcionarios: IFuncionario[] = [];
 
   clienteControl = new FormControl('', [Validators.required]);
   clientesFiltrados!: Observable<ICliente[]>;
