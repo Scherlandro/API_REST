@@ -5,7 +5,7 @@ import { iServiceOrder } from 'src/app/interfaces/service-order';
 import { OrdemDeServicosService } from 'src/app/services/ordem-de-servicos.service';
 import { ErrorDiologComponent } from "../error-diolog/error-diolog.component";
 import {ICliente} from "../../../interfaces/cliente";
-import {debounceTime, distinctUntilChanged, Observable, of, switchMap} from "rxjs";
+import {debounceTime, distinctUntilChanged, Observable, of, Subject, switchMap} from "rxjs";
 import {ClienteService} from "../../../services/cliente.service";
 import {catchError, map, startWith} from "rxjs/operators";
 import {IFuncionario} from "../../../interfaces/funcionario";
@@ -18,6 +18,7 @@ import {FuncionarioService} from "../../../services/funcionario.service";
 })
 export class DialogOpenOsComponent implements OnInit {
   isChange = false;
+  destroy$ = new Subject<void>();
   osSelecionada!: iServiceOrder;
   funcionarioControl = new FormControl('', [Validators.required]);
   funcionarioFilted!: Observable<IFuncionario[]>;
@@ -38,15 +39,21 @@ export class DialogOpenOsComponent implements OnInit {
     private clienteService: ClienteService,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
-   this.verificarFuncionario();
+   //
     this.verificarCliente();
   }
 
   ngOnInit(): void {
-    this.listarClientes();
-    this.listarFuncionario();
+    this.verificarFuncionario();
+   // this.listarClientes();
+    //this.listarFuncionario();
   }
 
+  destroy(value:any) {
+   this.destroy$.next(value);
+    this.destroy$.complete();
+    //this.funcionarioControl = new FormControl();
+  }
   verificarCliente(){
     this.clientesFiltrados = this.clienteControl.valueChanges.pipe(
       startWith(''),
@@ -56,7 +63,7 @@ export class DialogOpenOsComponent implements OnInit {
         if (typeof value === 'string') {
           return this.filtrarClientes(value);
         } else if (value && value.nomeCliente) {
-          // Se for um objeto cliente (selecionado no autocomplete)
+
           return of([value]);
         } else {
           return of([]);
@@ -64,6 +71,7 @@ export class DialogOpenOsComponent implements OnInit {
       })
     );
   }
+
    filtrarClientes(nome: string): Observable<ICliente[]> {
     if (nome.length < 2) {
       return of([]);
@@ -76,9 +84,11 @@ export class DialogOpenOsComponent implements OnInit {
     );
   }
 
+
   displayFn(cliente: ICliente): string {
     return cliente ? cliente.nomeCliente : '';
   }
+
 
   listarClientes() {
     if (this.clienteControl.valid) {
@@ -106,7 +116,7 @@ export class DialogOpenOsComponent implements OnInit {
     }
   }
 
-  verificarFuncionario(){
+ verificarFuncionario(){
     this.funcionarioFilted = this.funcionarioControl.valueChanges.pipe(
       startWith(''),
       debounceTime(300),
@@ -135,15 +145,16 @@ export class DialogOpenOsComponent implements OnInit {
     );
   }
 
-  displayFnFunc(func: IFuncionario): string {
+ displayFnFunc(func: IFuncionario): string {
     return func ? func.nomeFuncionario : '';
   }
 
   listarFuncionario(){
+
     if (this.funcionarioControl.valid) {
       const value = this.funcionarioControl.value;
       if (typeof value === 'string') {
-        this.funcionarioServices.getFuncionarioPorNome(value).subscribe(
+       this.funcionarioServices.getFuncionarioPorNome(value).subscribe(
           (result: IFuncionario[]) => {
             console.log('resutado do lista', result)
             if (result.length > 0) {
@@ -164,6 +175,37 @@ export class DialogOpenOsComponent implements OnInit {
       }
     }
   }
+
+/*
+
+  listarFuncionario(){
+
+     const value = this.funcionarioControl.value
+      if (value != null) {
+       this.funcionarioServices.getFuncionarioPorNome(value).subscribe(
+          (result: IFuncionario[]) => {
+            console.log('resutado do lista', result)
+            this.funcionarios = result;
+            if (result.length > 0) {
+              this.etapa = 2;
+            } else {
+              this.onError('Funcionario não encontrado');
+            }
+          },
+          error => {
+            if (error.status === 404) {
+              this.onError('Erro ao buscar Funcionario.');
+            }
+          }
+        );
+      } else {
+        // Já temos um Funcionario selecionado
+        this.etapa = 2;
+      }
+
+  }
+
+*/
 
   onNoClick(): void {
     this.dialogRef.close();
