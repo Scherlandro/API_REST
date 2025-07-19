@@ -4,11 +4,12 @@ import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from "@angular/material/dial
 import { iServiceOrder } from 'src/app/interfaces/service-order';
 import { OrdemDeServicosService } from 'src/app/services/ordem-de-servicos.service';
 import {ICliente} from "../../../interfaces/cliente";
-import {debounceTime, distinctUntilChanged, Observable, of, switchMap} from "rxjs";
+import {debounceTime, distinctUntilChanged, Observable, of, Subject, switchMap, takeUntil} from "rxjs";
 import {ClienteService} from "../../../services/cliente.service";
 import {catchError, map, startWith} from "rxjs/operators";
 import {IFuncionario} from "../../../interfaces/funcionario";
 import {FuncionarioService} from "../../../services/funcionario.service";
+type ServiceSearchMethod<T> = (nome: string) => Observable<T[]>;
 
 @Component({
   selector: 'app-dialog-open-os',
@@ -17,6 +18,7 @@ import {FuncionarioService} from "../../../services/funcionario.service";
 })
 export class DialogOpenOsComponent implements OnInit {
   isChange = false;
+  destroy$ = new Subject<void>();
   osSelecionada!: iServiceOrder;
   funcionarioControl = new FormControl('', [Validators.required]);
   funcionarioFilted!: Observable<IFuncionario[]>;
@@ -43,118 +45,106 @@ export class DialogOpenOsComponent implements OnInit {
 
   ngOnInit(): void {
   }
+  ngOnDestroy(value: any) {
+    this.destroy$.next(value);
+    this.destroy$.complete();
+  }
 
+   listarEntidade<T>(
+    control: FormControl,
+    serviceMethod: ServiceSearchMethod<T>,
+    errorMsg: string
+  ) {
+    if (control.valid) {
+      const value = control.value;
+      if (typeof value === 'string') {
+        serviceMethod(value).pipe(
+          takeUntil(this.destroy$)
+        ).subscribe({
+          complete(): void {
+          },
+          next: (result: T[]) => {
+            if (result.length > 0) {
+              this.etapa = 2;
+            } else {
+              this.onError(errorMsg);
+            }
+          },
+          error: (error: any) => {
+            if (error.status === 404) {
+              this.onError(`Erro ao buscar ${errorMsg}.`);
+            }
+          }
+        });
+      } else {
+        this.etapa = 2;
+      }
+    }
+  }
 
-  verificarCliente(){
+ listarClientes() {
+    this.listarEntidade<ICliente>(
+      this.clienteControl,
+      (nome: string) => this.clienteService.getClientePorNome(nome),
+      'Cliente não encontrado'
+    );
+  }
+
+  listarFuncionario() {
+    this.listarEntidade<IFuncionario>(
+      this.funcionarioControl,
+      (nome: string) => this.funcionarioServices.getFuncionarioPorNome(nome),
+      'Funcionario não encontrado'
+    );
+  }
+
+  verificarCliente() {
+    this.listarClientes();
     this.clientesFiltrados = this.clienteControl.valueChanges.pipe(
       startWith(''),
       debounceTime(300),
       distinctUntilChanged(),
-      switchMap((value:any) => {
-        if (typeof value === 'string'&& value.length < 2) {
-            return of([]);
-          }else {
-          return this.clienteService.getClientePorNome(value).pipe(
-            catchError(() => {
-              console.error('Erro ao buscar clientes');
-              return of([]);
-            })
-          );
-        } if (value && value.nomeCliente) {
-          return of([value]);
-        }
-      })
+      switchMap(value => this.handleFilter(value, 'cliente')),
+      takeUntil(this.destroy$)
     );
+  }
+
+  verificarFuncionario() {
+    this.listarFuncionario();
+    this.funcionarioFilted = this.funcionarioControl.valueChanges.pipe(
+      startWith(''),
+      debounceTime(300),
+      distinctUntilChanged(),
+      switchMap(value => this.handleFilter(value, 'funcionario')),
+      takeUntil(this.destroy$)
+    );
+  }
+
+  handleFilter(value: any, type: 'cliente' | 'funcionario'): Observable<any[]> {
+   if (typeof value === 'string' && value.length >= 2  ) {
+      return type === 'cliente'
+        ? this.clienteService.getClientePorNome(value).pipe(
+          catchError(() => {
+            console.error('Erro ao buscar clientes');
+            return of([]);
+          })
+        )
+        : this.funcionarioServices.getFuncionarioPorNome(value).pipe(
+        catchError(() => {
+          console.error('Erro ao buscar funcionarios');
+          return of([]);
+        })
+      )
+    }
+    return of([]);
   }
 
   displayFn(cliente: ICliente): string {
     return cliente ? cliente.nomeCliente : '';
   }
 
-
-  listarClientes() {
-    if (this.clienteControl.valid) {
-      const value = this.clienteControl.value;
-      if (typeof value === 'string') {
-        this.clienteService.getClientePorNome(value).subscribe(
-          (result: ICliente[]) => {
-            console.log('resutado do lista', result)
-            if (result.length > 0) {
-              this.etapa = 2;
-            } else {
-              this.onError('Cliente não encontrado');
-            }
-          },
-          error => {
-            if (error.status === 404) {
-              this.onError('Erro ao buscar cliente.');
-            }
-          }
-        );
-      } else {
-        // Já temos um cliente selecionado
-        this.etapa = 2;
-      }
-    }
-  }
-
- verificarFuncionario(){
-    this.funcionarioFilted = this.funcionarioControl.valueChanges.pipe(
-      startWith(''),
-      debounceTime(300),
-      distinctUntilChanged(),
-      switchMap((value:any) => {
-        if (typeof value === 'string') {
-          return this.filtrarFuncionarios(value);
-        } else if (value && value.nomeFuncionario) {
-          return of([value]);
-        } else {
-          return of([]);
-        }
-      })
-    );
-  }
-
-  filtrarFuncionarios(nome: string): Observable<IFuncionario[]> {
-    if (nome.length < 2) {
-      return of([]);
-    }
-    return this.funcionarioServices.getFuncionarioPorNome(nome).pipe(
-      catchError(() => {
-        console.error('Erro ao buscar funcionarios');
-        return of([]);
-      })
-    );
-  }
-
  displayFnFunc(func: IFuncionario): string {
     return func ? func.nomeFuncionario : '';
-  }
-
-  listarFuncionario(){
-
-    if (this.funcionarioControl.valid) {
-      const value = this.funcionarioControl.value;
-      if (typeof value === 'string') {
-       this.funcionarioServices.getFuncionarioPorNome(value).subscribe(
-          (result: IFuncionario[]) => {
-            if (result.length > 0) {
-              this.etapa = 2;
-            } else {
-              this.onError('Funcionario não encontrado');
-            }
-          },
-          error => {
-            if (error.status === 404) {
-              this.onError('Erro ao buscar Funcionario.');
-            }
-          }
-        );
-      } else {
-        // Já temos um Funcionario selecionado
-        this.etapa = 2;
-      }
-    }
   }
 
   onNoClick(): void {
@@ -190,6 +180,5 @@ export class DialogOpenOsComponent implements OnInit {
       this.etapa = 1;
     }
   }
-
 
   }
