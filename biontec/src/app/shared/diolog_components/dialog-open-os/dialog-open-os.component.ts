@@ -10,6 +10,7 @@ import {ClienteService} from "../../../services/cliente.service";
 import {catchError, map, startWith} from "rxjs/operators";
 import {IFuncionario} from "../../../interfaces/funcionario";
 import {FuncionarioService} from "../../../services/funcionario.service";
+type ServiceSearchMethod = (nome: string) => Observable<ICliente[] | IFuncionario[]>;
 
 @Component({
   selector: 'app-dialog-open-os',
@@ -18,7 +19,6 @@ import {FuncionarioService} from "../../../services/funcionario.service";
 })
 export class DialogOpenOsComponent implements OnInit {
   isChange = false;
-  destroy$ = new Subject<void>();
   osSelecionada!: iServiceOrder;
   funcionarioControl = new FormControl('', [Validators.required]);
   funcionarioFilted!: Observable<IFuncionario[]>;
@@ -39,51 +39,35 @@ export class DialogOpenOsComponent implements OnInit {
     private clienteService: ClienteService,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
-   //
+    this.verificarFuncionario();
     this.verificarCliente();
   }
 
   ngOnInit(): void {
-    this.verificarFuncionario();
-   // this.listarClientes();
-    //this.listarFuncionario();
   }
 
-  destroy(value:any) {
-   this.destroy$.next(value);
-    this.destroy$.complete();
-    //this.funcionarioControl = new FormControl();
-  }
+
   verificarCliente(){
     this.clientesFiltrados = this.clienteControl.valueChanges.pipe(
       startWith(''),
       debounceTime(300),
       distinctUntilChanged(),
       switchMap((value:any) => {
-        if (typeof value === 'string') {
-          return this.filtrarClientes(value);
-        } else if (value && value.nomeCliente) {
-
+        if (typeof value === 'string'&& value.length < 2) {
+            return of([]);
+          }else {
+          return this.clienteService.getClientePorNome(value).pipe(
+            catchError(() => {
+              console.error('Erro ao buscar clientes');
+              return of([]);
+            })
+          );
+        } if (value && value.nomeCliente) {
           return of([value]);
-        } else {
-          return of([]);
         }
       })
     );
   }
-
-   filtrarClientes(nome: string): Observable<ICliente[]> {
-    if (nome.length < 2) {
-      return of([]);
-    }
-    return this.clienteService.getClientePorNome(nome).pipe(
-      catchError(() => {
-        console.error('Erro ao buscar clientes');
-        return of([]);
-      })
-    );
-  }
-
 
   displayFn(cliente: ICliente): string {
     return cliente ? cliente.nomeCliente : '';
@@ -156,7 +140,6 @@ export class DialogOpenOsComponent implements OnInit {
       if (typeof value === 'string') {
        this.funcionarioServices.getFuncionarioPorNome(value).subscribe(
           (result: IFuncionario[]) => {
-            console.log('resutado do lista', result)
             if (result.length > 0) {
               this.etapa = 2;
             } else {
@@ -175,37 +158,6 @@ export class DialogOpenOsComponent implements OnInit {
       }
     }
   }
-
-/*
-
-  listarFuncionario(){
-
-     const value = this.funcionarioControl.value
-      if (value != null) {
-       this.funcionarioServices.getFuncionarioPorNome(value).subscribe(
-          (result: IFuncionario[]) => {
-            console.log('resutado do lista', result)
-            this.funcionarios = result;
-            if (result.length > 0) {
-              this.etapa = 2;
-            } else {
-              this.onError('Funcionario não encontrado');
-            }
-          },
-          error => {
-            if (error.status === 404) {
-              this.onError('Erro ao buscar Funcionario.');
-            }
-          }
-        );
-      } else {
-        // Já temos um Funcionario selecionado
-        this.etapa = 2;
-      }
-
-  }
-
-*/
 
   onNoClick(): void {
     this.dialogRef.close();
@@ -232,7 +184,7 @@ export class DialogOpenOsComponent implements OnInit {
   }
 
   save(os: iServiceOrder) {
-    // Implemente sua lógica de salvamento aqui
+    // falta implementar
   }
 
   voltar(): void {
@@ -241,11 +193,5 @@ export class DialogOpenOsComponent implements OnInit {
     }
   }
 
-  /*
-  aplicarFiltro(valor: string) {
-    valor = valor.trim().toLowerCase();
-    this.clienteControl.getRawValue().filter = valor;
-  }
-*/
 
   }
