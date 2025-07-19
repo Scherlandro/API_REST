@@ -3,14 +3,12 @@ import {FormControl, Validators} from "@angular/forms";
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from "@angular/material/dialog";
 import { iServiceOrder } from 'src/app/interfaces/service-order';
 import { OrdemDeServicosService } from 'src/app/services/ordem-de-servicos.service';
-import { ErrorDiologComponent } from "../error-diolog/error-diolog.component";
 import {ICliente} from "../../../interfaces/cliente";
-import {debounceTime, distinctUntilChanged, Observable, of, Subject, switchMap} from "rxjs";
+import {debounceTime, distinctUntilChanged, Observable, of, switchMap} from "rxjs";
 import {ClienteService} from "../../../services/cliente.service";
 import {catchError, map, startWith} from "rxjs/operators";
 import {IFuncionario} from "../../../interfaces/funcionario";
 import {FuncionarioService} from "../../../services/funcionario.service";
-type ServiceSearchMethod = (nome: string) => Observable<ICliente[] | IFuncionario[]>;
 
 @Component({
   selector: 'app-dialog-open-os',
