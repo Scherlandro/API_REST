@@ -5,8 +5,9 @@ export interface iServiceOrder {
   idFuncionario: number,
   nomeFuncionario: string,
   dt_OS: string,
+  status: string,
   subtotal: string,
   desconto: string,
-  total: string
+  totalGeralOS: string
 
 }

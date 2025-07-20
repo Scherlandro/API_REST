@@ -169,20 +169,16 @@ export class DialogOpenOsComponent implements OnInit {
       this.onError('Preencha todos os campos obrigatórios');
       return;
     }
-    // Obtém os valores dos controles
     const cliente: any = this.clienteControl.value ;
     const funcionario:any = this.funcionarioControl.value ;
-    const dataAtual = new Date(); // Data atual
-    // Atribui os valores à OS
+    const dataAtual = new Date();
+
     os.nomeCliente = cliente.nomeCliente;
     os.nomeFuncionario = funcionario.nomeFuncionario;
     os.dt_OS = dataAtual.toLocaleDateString('pt-BR');
-  //  console.log('Os: ',os,)
-
 
   // Verifica se é uma edição ou criação nova
    if (this.isChange && os.idOS) {
-      // Chama o método de atualização do serviço
       this.osServices.update(os.idOS,os).pipe(
         takeUntil(this.destroy$)
       ).subscribe({
@@ -195,8 +191,6 @@ export class DialogOpenOsComponent implements OnInit {
         }
       });
     } else {
-      // Chama o método de criação do serviço
-     console.log('Criando OS', os)
       this.osServices.create(os).pipe(
         takeUntil(this.destroy$)
       ).subscribe({

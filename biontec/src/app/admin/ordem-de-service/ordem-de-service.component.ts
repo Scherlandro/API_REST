@@ -284,5 +284,7 @@ export class OrdemDeServiceComponent {
     //<div>{{ formatter(iProdroduto.valor_venda) }}</div>
     return new Intl.NumberFormat('pt-BR', {style: 'currency', currency: 'BRL'}).format(value);
   }
-
+  formatarData(dataString: string): Date {
+    return new Date(dataString);
+  }
 }
