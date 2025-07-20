@@ -162,6 +162,56 @@ export class DialogOpenOsComponent implements OnInit {
       this.isChange = false;
     }
   }
+
+  save(os: iServiceOrder) {
+    // Verifica se os campos obrigatórios estão preenchidos
+    if (this.clienteControl.invalid || this.funcionarioControl.invalid) {
+      this.onError('Preencha todos os campos obrigatórios');
+      return;
+    }
+    // Obtém os valores dos controles
+    const cliente: any = this.clienteControl.value ;
+    const funcionario:any = this.funcionarioControl.value ;
+    const dataAtual = new Date(); // Data atual
+    // Atribui os valores à OS
+    os.nomeCliente = cliente.nomeCliente;
+    os.nomeFuncionario = funcionario.nomeFuncionario;
+    os.dt_OS = dataAtual.toLocaleDateString('pt-BR');
+  //  console.log('Os: ',os,)
+
+
+  // Verifica se é uma edição ou criação nova
+   if (this.isChange && os.idOS) {
+      // Chama o método de atualização do serviço
+      this.osServices.update(os.idOS,os).pipe(
+        takeUntil(this.destroy$)
+      ).subscribe({
+        next: (osAtualizada) => {
+          this.dialogRef.close(osAtualizada);
+        },
+        error: (err) => {
+          this.onError('Erro ao atualizar a OS');
+          console.error(err);
+        }
+      });
+    } else {
+      // Chama o método de criação do serviço
+     console.log('Criando OS', os)
+      this.osServices.create(os).pipe(
+        takeUntil(this.destroy$)
+      ).subscribe({
+        next: (osCriada) => {
+          this.dialogRef.close(osCriada);
+        },
+        error: (err) => {
+          this.onError('Erro ao criar a OS');
+          console.error(err);
+        }
+      });
+    }
+  }
+
+
   onError(message: string) {
     console.error(message);
   }
@@ -171,9 +221,6 @@ export class DialogOpenOsComponent implements OnInit {
     this.dialogRef.close();
   }
 
-  save(os: iServiceOrder) {
-    // falta implementar
-  }
 
   voltar(): void {
     if (this.etapa === 2) {

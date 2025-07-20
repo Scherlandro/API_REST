@@ -18,6 +18,8 @@ import {ErrorDiologComponent} from "../../shared/diolog_components/error-diolog/
 import {iItensOS} from "../../interfaces/itens-os";
 import {DialogOpenOsComponent} from "../../shared/diolog_components/dialog-open-os/dialog-open-os.component";
 import {DialogItensOSComponent} from "../../shared/diolog_components/dialog-itens-os/dialog-itens-os.component";
+import {TokenService} from "../../services/token.service";
+import {NotificationMgsService} from "../../services/notification-mgs.service";
 
 
 @Component({
@@ -36,10 +38,10 @@ export class OrdemDeServiceComponent {
   clienteFilted: ICliente[] = [];
   clienteSelecionado: ICliente | null = null;
   tbSourceOS$: MatTableDataSource<iServiceOrder>;
-  displayedColumns0S = [ 'Nome', 'Data', 'Status', 'Total', 'Opicões'];
+  displayedColumns0S = ['Nome', 'Data', 'Status', 'Total', 'Opicões'];
   tbSourceItensDaOS$: any;
-  displayedColumns: string[] = ['codigo','descricao','preco','qtd','soma','data','imagem','opicoes'];
-  loadEmployees:any;
+  displayedColumns: string[] = ['codigo', 'descricao', 'preco', 'qtd', 'soma', 'data', 'imagem', 'opicoes'];
+  loadEmployees: any;
 
   OSControl = new FormControl();
 
@@ -65,35 +67,53 @@ export class OrdemDeServiceComponent {
 
   constructor(
     private osService: OrdemDeServicosService,
-  private itensOs: ItensOsService,
-  private fb: FormBuilder,
+    private tokenServer: TokenService,
+    public notificationMsg:  NotificationMgsService,
+    private itensOs: ItensOsService,
+    private fb: FormBuilder,
     public dialog: MatDialog,
-  private clienteService: ClienteService,
-  private employeeService: FuncionarioService
-) {
+    private clienteService: ClienteService,
+    private employeeService: FuncionarioService
+  ) {
     this.tbSourceOS$ = new MatTableDataSource();
     this.tbSourceItensDaOS$ = new MatTableDataSource();
-  this.form = this.fb.group({
-    clientId: ['', Validators.required],
-    technicianId: ['', Validators.required],
-    status: ['O.S em Andamento', Validators.required],
-    receiver: [''],
-    subtotal: [0],
-    discount: [0],
-    onAccount: [0],
-    total: [0],
-    remaining: [0],
-    subServices: this.fb.array([])
-  });
-}
+    this.form = this.fb.group({
+      clientId: ['', Validators.required],
+      technicianId: ['', Validators.required],
+      status: ['O.S em Andamento', Validators.required],
+      receiver: [''],
+      subtotal: [0],
+      discount: [0],
+      onAccount: [0],
+      total: [0],
+      remaining: [0],
+      subServices: this.fb.array([])
+    });
+  }
 
   ngOnInit() {
     this.loadOrders();
-  //  this.loadEmployees();
+    //  this.loadEmployees();
   }
 
   loadOrders() {
-    this.osService.getAll().subscribe(orders => this.orders = orders);
+    this.osService.getAll()
+      .pipe(catchError(error => {
+        if (error === 'Session Expired')
+          this.onError('Sua sessão expirou!');
+          this.tokenServer.clearTokenExpired();
+        return of([])
+      })).subscribe(
+      (result: iServiceOrder[]) => {
+        console.log('Lista de OSs ', result)
+        this.tbSourceOS$.data = result;
+        this.tbSourceOS$.paginator = this.paginator;
+      });
+  }
+
+  loadOrders2() {
+    this.osService.getAll().subscribe(
+      orders => this.orders = orders);
   }
 
   consultarPorCliente(nome: string) {
@@ -141,7 +161,7 @@ export class OrdemDeServiceComponent {
     return params;
   }
 
-  changeOS(value: any){
+  changeOS(value: any) {
     if (value) {
       this.orders = this.orders.filter(
         vd => vd.nomeCliente.toString()
@@ -169,7 +189,7 @@ export class OrdemDeServiceComponent {
       });
   }
 
-    get subServices(): FormArray {
+  get subServices(): FormArray {
     return this.form.get('subServices') as FormArray;
   }
 
@@ -214,7 +234,7 @@ export class OrdemDeServiceComponent {
   }
 
   buscarClientes(filter: string = ''): Observable<ICliente[]> {
-    this.clienteFilted.map(c =>{
+    this.clienteFilted.map(c => {
       this.clienteService.getTodosClientes();
     });
     return of(
@@ -229,7 +249,7 @@ export class OrdemDeServiceComponent {
     const dialogRef = this.dialog.open(DialogOpenOsComponent, {
       width: '280px',
       height: '300px',
-      data: { /*  passar dados aqui se necessário */ }
+      data: { /*  passar dados aqui se necessário */}
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -241,7 +261,7 @@ export class OrdemDeServiceComponent {
 
   }
 
-  openDilogItenOS(eventOS: any){
+  openDilogItenOS(eventOS: any) {
     // console.log("Dados do elementoDialog", eventVd)
     const dialogRef = this.dialog.open(DialogItensOSComponent, {
       width: '300px',
@@ -259,9 +279,10 @@ export class OrdemDeServiceComponent {
       }
     });
   }
+
   formatter(value: number): string {
     //<div>{{ formatter(iProdroduto.valor_venda) }}</div>
-    return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
+    return new Intl.NumberFormat('pt-BR', {style: 'currency', currency: 'BRL'}).format(value);
   }
 
 }
