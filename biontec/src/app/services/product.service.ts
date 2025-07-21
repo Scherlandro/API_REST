@@ -24,6 +24,9 @@ export class ProductService {
     return this._http.get(this.baseUrl)
       .pipe(map(response => response));
   }
+  getAll(): Observable<string[]> {
+    return this._http.get<string[]>(this.baseUrl+'all');
+  }
 
   getProdutoPorCod(id: string): Observable<any> {
     //return this._http.get<IProduto[]>(`${this.baseUrl}/${id}`);

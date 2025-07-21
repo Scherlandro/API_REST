@@ -3,7 +3,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import { iItensVd } from 'src/app/interfaces/itens-vd';
 import { ItensVdService } from 'src/app/services/itens-vd.service';
 import {iProduto} from "../../../interfaces/product";
-import {FormControl} from "@angular/forms";
+import {FormControl, Validators} from "@angular/forms";
 import {catchError} from "rxjs/operators";
 import {Observable, of,pipe} from "rxjs";
 import {ProductService} from "../../../services/product.service";
@@ -15,9 +15,10 @@ import {ProductService} from "../../../services/product.service";
 })
 export class DialogItensOSComponent implements OnInit {
   isChange!: boolean;
-  produtoFiltered!: Observable<iProduto[]>;
-  products: iProduto[] = [];
-  produtoControl = new FormControl();
+  produtoFiltered: iProduto[]=[];
+  products: iProduto[]=[];
+  produtoControl: FormControl;
+
 
   constructor(
     @Inject(MAT_DIALOG_DATA)
@@ -25,11 +26,13 @@ export class DialogItensOSComponent implements OnInit {
     public dialogRef: MatDialogRef<DialogItensOSComponent>,
     public itensVdService: ItensVdService,
     private prodService: ProductService,
-  ) {}
+  ) {
+    this.produtoControl = new FormControl(null, [Validators.required])
+  }
 
 
   ngOnInit(): void {
-
+    this.listarProdutos();
     if (this.itensVd.idItensVd != null) {
       this.isChange = true;
     } else {
@@ -44,13 +47,28 @@ export class DialogItensOSComponent implements OnInit {
         return of([])
       }))
       .subscribe((rest: iProduto[]) => {
-        this.produtoFiltered.subscribe(()=> rest);
-        this.products.filter(()=>rest);
+        this.produtoFiltered= rest;
+        this.products = rest;
       });
   }
+/*
 
-    displayPd(prod: iProduto): string {
-    return prod ? prod.nomeProduto : '';
+  listarProdutosString() {
+    this.prodService.getAll()
+      .pipe(catchError(error => {
+        this.onError('Erro ao buscar produto.')
+        return of([])
+      }))
+      .subscribe((rest: any[]) => {
+        this.products = rest ;
+        this.produtoFiltered = rest;
+      });
+  }
+*/
+
+
+    displayPd(produto: iProduto): string {
+    return produto ? produto.nomeProduto : '';
   }
 
 
@@ -71,5 +89,14 @@ export class DialogItensOSComponent implements OnInit {
   }
 
 
+  changeProduto(value: any) {
+    if (value) {
+      this.produtoFiltered = this.products.filter(
+        produto => produto.nomeProduto.toUpperCase()
+          .includes(value.toUpperCase()));
+    } else {
+      this.produtoFiltered = this.products;
+    }
+  }
 }
 

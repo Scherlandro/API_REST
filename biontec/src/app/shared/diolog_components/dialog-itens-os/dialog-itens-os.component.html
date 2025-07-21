@@ -21,13 +21,11 @@
            matInput
            [formControl]="produtoControl"
            [matAutocomplete]="auto"
-           (keypress)="listarProdutos()"/>
+           (keyup)="changeProduto(produtoControl.value)"/>
     <mat-error>Campo Obrigatório não preenchido.</mat-error>
     <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayPd">
-      <mat-option *ngFor="let produto of produtoFiltered | async" [value]="produto">
-        {{produto.nomeProduto}}
-      </mat-option>
-    </mat-autocomplete>
+      <mat-option [value]="produto" *ngFor="let produto of produtoFiltered " >{{displayPd(produto)}}</mat-option>
+      </mat-autocomplete>
   </mat-form-field>
 
   <mat-form-field appearance="fill">
