@@ -31,8 +31,24 @@ public class OrdemDeServicoController {
 
     @GetMapping
     public ResponseEntity<List<OrdemDeServico>> findAll() {
+
         return ResponseEntity.ok(service.listarOS());
     }
+
+
+    @GetMapping(path = "/all")
+    public ResponseEntity<List<OrdemDeServicoDTO>> listarOrdemDeServicos(){
+       List<OrdemDeServico> os = service.listarOS();
+         return ResponseEntity.ok(os.stream().map(OrdemDeServico::toDTO).toList());
+    }
+/*
+    @GetMapping("/{id}")
+    public OrdemDeServicoDTO getOrdemDeServico(@PathVariable Long id) {
+        OrdemDeServico entity = service.findById(id);
+        return mapper.toDTO(entity); // Usa um mapper (MapStruct, manual, etc.)
+    }*/
+
+
 
     @GetMapping(path = "/{id_os}")
     public ResponseEntity findById(@PathVariable("id_os") Long idOS) {
@@ -52,7 +68,10 @@ public class OrdemDeServicoController {
     public ResponseEntity<List<OrdemDeServico>> findOSPorIdDoTecnico(@PathVariable Long IdTecnico) {
         return ResponseEntity.ok(service.listarOSPorIdDoTecnico(IdTecnico));
     }
-
+/*    @PostMapping
+    public void create(@RequestBody OrdemDeServicoDTO dto) {
+        service.save(dto);
+    }*/
     @PostMapping
     public ResponseEntity<OrdemDeServico> criarOS(@RequestBody OrdemDeServicoDTO dto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.criarOS(dto));
