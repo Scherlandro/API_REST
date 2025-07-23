@@ -16,12 +16,12 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-    @Transactional
-    public class OrdemDeServicoServiceImpl implements OrdemDeServicoService {
+@Transactional
+public class OrdemDeServicoServiceImpl implements OrdemDeServicoService {
 
-         final OrdemDeServicosRepository osRepository;
-         final ClienteRepository clientRepository;
-         final FuncionarioRepository funcionarioRepository;
+    final OrdemDeServicosRepository osRepository;
+    final ClienteRepository clientRepository;
+    final FuncionarioRepository funcionarioRepository;
     final ItensDaOSRepository itensDaOSRepository;
     final ProdutoRepository productRepository;
 
@@ -64,7 +64,6 @@ import java.util.Optional;
     }
 
 
-
     @Override
     public OrdemDeServico criarOS(OrdemDeServicoDTO dto) {
         OrdemDeServico order = new OrdemDeServico();
@@ -89,7 +88,7 @@ import java.util.Optional;
 
     @Override
     public OrdemDeServico atualizarOS(Long id, OrdemDeServicoDTO dto) {
-            OrdemDeServico order = osRepository.findById(id).orElseThrow();
+        OrdemDeServico order = osRepository.findById(id).orElseThrow();
             /*
               if (dto.technicianId() != null) {
             order.setTechnicianId(dto.technicianId());
@@ -104,8 +103,8 @@ import java.util.Optional;
             order.setStatus(dto.status());
         }
              */
-            return osRepository.save(order);
-        }
+        return osRepository.save(order);
+    }
 
     @Override
     public OrdemDeServico addItemNaOS(Long osID, ItenDaOSDto itemDto) {
@@ -124,7 +123,7 @@ import java.util.Optional;
         newItem.setIdItensDaOS(itemDto.idItensDaOS());
         newItem.setQuantidade(itemDto.quantidade());
         newItem.setPrecoDeVenda(itemDto.precoDeVenda());
-        
+
         //order.getSubservicos().add(newItem);
         itensDaOSRepository.save(newItem);
 
@@ -138,7 +137,7 @@ import java.util.Optional;
 
         OrdemDeServico order = osRepository.findById(serviceOrderId).orElseThrow();
 
-       // order.getItems().removeIf(item -> item.getId().equals(itemId));
+        // order.getItems().removeIf(item -> item.getId().equals(itemId));
         itensDaOSRepository.deleteById(itemId);
 
         calcularTotalDaOS(order);
@@ -150,7 +149,7 @@ import java.util.Optional;
     public OrdemDeServico concluirOS(Long idOS) {
         OrdemDeServico serviceOrder = osRepository.findById(idOS).orElseThrow();
         serviceOrder.setStatus(serviceOrder.getStatus());
-       // serviceOrder.setCompletionDate(LocalDateTime.now());
+        // serviceOrder.setCompletionDate(LocalDateTime.now());
         return osRepository.save(serviceOrder);
     }
 

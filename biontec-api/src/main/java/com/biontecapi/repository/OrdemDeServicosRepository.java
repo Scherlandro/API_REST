@@ -19,7 +19,5 @@ public interface OrdemDeServicosRepository extends JpaRepository<OrdemDeServico,
     List<OrdemDeServico> findByDataDeEntradaBetween(@Param("start") String start, @Param("end") String end);
 
 
-    @Query("SELECT o FROM OrdemDeServico o JOIN o.subservicos s WHERE s.numeracao = :numeracao")
-    List<OrdemDeServico> findByNumeracao(@Param("numeracao") String numeracao);
 
 }

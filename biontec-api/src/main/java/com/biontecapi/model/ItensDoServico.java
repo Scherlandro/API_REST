@@ -27,4 +27,10 @@ import javax.persistence.*;
         private Double total;
         private String serviceType;
 
+        @ManyToOne
+        @JoinColumn(name = "ordem_de_servico_id")
+        private OrdemDeServico ordemDeServico;
+
+
+
     }
