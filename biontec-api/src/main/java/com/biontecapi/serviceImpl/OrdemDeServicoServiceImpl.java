@@ -69,10 +69,10 @@ import java.util.Optional;
     public OrdemDeServico criarOS(OrdemDeServicoDTO dto) {
         OrdemDeServico order = new OrdemDeServico();
 
-        order.setIdCliente(dto.idCliente());
+        order.setIdCliente(dto.clienteId());
         order.setNomeCliente(dto.nomeCliente());
-        order.setIdFuncionario(dto.idFuncionario());
-        order.setGestorDaOS(dto.gestorDaOS());
+        order.setIdFuncionario(dto.funcionarioId());
+        order.setGestorDaOS(dto.gestorId());
         order.setDataDeEntrada(LocalDateTime.now());
         order.setStatus(Status.OS_em_Andamento);
         return osRepository.save(order);
@@ -124,8 +124,7 @@ import java.util.Optional;
         newItem.setIdItensDaOS(itemDto.idItensDaOS());
         newItem.setQuantidade(itemDto.quantidade());
         newItem.setPrecoDeVenda(itemDto.precoDeVenda());
-        newItem.getSubservicos().setDescricaoObj(itemDto.subservicos().getDescricaoObj());
-
+        
         //order.getSubservicos().add(newItem);
         itensDaOSRepository.save(newItem);
 

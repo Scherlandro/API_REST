@@ -17,8 +17,6 @@ import javax.persistence.*;
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         private Long idItensDaOS;
 
-        @ManyToOne
-        private SubServicos subservicos;
 
         @ManyToOne
         @Transient
