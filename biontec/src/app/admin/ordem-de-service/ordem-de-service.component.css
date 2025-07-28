@@ -67,6 +67,18 @@
   overflow: hidden;
 }
 
+.button-delete {
+  width: auto;
+  height: 35px;
+  background-color: rgba(51, 33, 83, 0.07);
+  -webkit-border-radius: 20px;
+  -moz-border-radius: 20px;
+  border-radius: 20px;
+}
+
+.button-delete:hover {
+  background-image: linear-gradient( #e2efec, #d90505);
+}
 
 .image-table{
   height: auto;
