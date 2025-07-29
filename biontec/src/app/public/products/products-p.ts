@@ -1,5 +1,5 @@
 import {Component, LOCALE_ID, OnInit, ViewChild} from '@angular/core';
-import { of} from 'rxjs';
+import {Observable, of} from 'rxjs';
 import {ProductService} from "../../services/product.service";
 import {ShoppingCartService} from "../../services/shopping-cart.service";
 import {catchError} from "rxjs/operators";
@@ -27,16 +27,13 @@ export class ProductsPComponent implements OnInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   pageEvent!: PageEvent;
-  displayedColumns: string[] = ['descricao','preco',
-    'qtd','imagem','opicoes'];
+  //displayedColumns: string[] = ['descricao','preco','qtd','imagem','opicoes'];
+  cardProduts= new Observable<iProduto[]>;
   tbSourceProdutos$ = new MatTableDataSource<iProduto>();
   produtosFiltered: iProduto[] = [];
   products: iProduto[] = [];
   produtoControl = new FormControl();
   searchTerm !:any;
- /*  string;@ViewChild('imgMain') imgMain!: ElementRef;
-  imgWidth:any=0;
-  imgHeight:any=0;*/
 
   constructor(private prodService: ProductService,
               private cartService: ShoppingCartService,
@@ -54,7 +51,17 @@ export class ProductsPComponent implements OnInit {
 
   }*/
 
-  listarProdutos(){
+/*  listarProdutos(){
+    this.prodService.getTodosProdutos()
+      .pipe(catchError(error => {
+        this.onError('Erro ao buscar produto.')
+        return of([])}))
+      .subscribe(  (rest: any)=>  {
+        console.log('Resut de produtos ', rest)
+        this.cardProduts = rest;
+      } );
+  }*/
+ listarProdutos(){
     this.prodService.getTodosProdutos()
       .pipe(catchError(error => {
         this.onError('Erro ao buscar produto.')

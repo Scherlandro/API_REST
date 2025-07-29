@@ -1,3 +1,80 @@
+<div>
+  <mat-card-content class="body-prod-p">
+    <!-- Barra de pesquisa (mantida igual) -->
+    <mat-toolbar class="head-table body">
+      <span> Produtos </span>
+      <input class="input-table" type="text" placeholder=" Digite a consulta" matInput
+             [formControl]="produtoControl"
+             (keypress)="changeProdutos(produtoControl.value)"
+             (keydown)="listarProdutos()"
+             (ngModelChange)="consultarPorNome(produtoControl.value)"/>
+      <button class="button-search body" (click)="consultarPorNome(produtoControl.value)">Search</button>
+    </mat-toolbar>
+
+    <!-- Lista de Cards -->
+    <div class="products-grid">
+      <mat-card *ngFor="let produto of tbSourceProdutos$.data " class="product-card body">
+       <div class="box-card-main">
+         <div class="box-card">
+
+             <img mat-card-image class="face front product-image3d" src="/assets/image/lambao.jpg" alt="{{produto.nomeProduto}}">
+
+           <div class="face back">Angular</div>
+           <div class="face right">React</div>
+           <div class="face left">SQL</div>
+           <div class="face top">SpringBoot</div>
+           <div class="face bottom">Pyton</div>
+
+           <div class="box-card">
+             <img mat-card-image class="face front product-image3d" src="/assets/image/lambao.jpg" alt="{{produto.nomeProduto}}">
+             <div class="face back">Angular</div>
+             <div class="face right">React</div>
+             <div class="face left">SQL</div>
+             <div class="face top">SpringBoot</div>
+             <div class="face bottom">Pyton</div>
+           </div>
+         </div>
+        </div>
+        <mat-card-content class="product-content">
+          <h3 class="product-title">{{produto.nomeProduto}}</h3>
+
+         <div class="price-section">
+            <span class="price">{{produto.valorVenda | currency: 'BRL'}}</span>
+            <span *ngIf="produto.qtdEstoque > 0" class="stock-available">Em estoque</span>
+            <span *ngIf="produto.qtdEstoque <= 0" class="stock-unavailable">Sem estoque</span>
+          </div>
+
+          <div class="shipping-info">
+            <mat-icon>local_shipping</mat-icon>
+            <span>Frete grátis</span>
+          </div>
+        </mat-card-content>
+
+        <mat-card-actions class="product-actions">
+          <button mat-raised-button color="primary" class="add-to-cart" [routerLink]="['/auth/login']">
+            <mat-icon>add_shopping_cart</mat-icon>
+            Comprar
+          </button>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+
+    <!-- Paginação (mantida igual) -->
+    <mat-paginator [length]="100"
+                   [pageSize]="5"
+                   [pageSizeOptions]="[5, 10, 25, 100]"
+                   (page)="pageEvent = $event"
+                   aria-label="Select page"
+                   class="componet-table body">
+    </mat-paginator>
+  </mat-card-content>
+</div>
+
+
+
+
+
+<!--
 
 
 
@@ -67,3 +144,4 @@
 
   </mat-card-content>
 </div>
+-->
