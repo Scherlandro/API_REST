@@ -304,20 +304,21 @@ ui.grid>.row {
 
 @keyframes rotate3d {
   0% {
-    transform: rotateX(0) rotateY(0);
+    transform: rotateY(0) rotateY(0);
   }
   25% {
-    transform: rotateX(90deg) rotateY(90deg);
+    transform: rotateY(90deg) rotateY(90deg);
   }
   50% {
-    transform: rotateX(180deg) rotateY(180deg);
+    transform: rotateY(180deg) rotateY(180deg);
   }
   75% {
-    transform: rotateX(270deg) rotateY(270deg);
+    transform: rotateY(270deg) rotateY(270deg);
   }
   100% {
-    transform: rotateX(360deg) rotateY(360deg);
+    transform: rotateY(360deg) rotateY(360deg);
   }
+
 }
 
 @media (max-width: 768px) {
