@@ -132,7 +132,7 @@ ui.grid>.row {
   height: 100px;
   weight: 100px;
   object-fit: contain;
-  padding: 5px;
+  padding: 2px;
 }
 .product-content {
   padding: 16px;
@@ -200,9 +200,9 @@ ui.grid>.row {
 .cubo-main {
   background: radial-gradient(ellipse farthest-corner at right bottom, #FEDB37 0%, #FDB931 8%, #9f7928 30%, #8A6E2F 40%, transparent 80%),
   radial-gradient(ellipse farthest-corner at left top, #FFFFFF 0%, #FFFFAC 8%, #D1B464 25%, #5d4a1f 62.5%, #5d4a1f 100%);
-  width: 120px;
-  height: 60px;
-  display: flex;
+  width: 150px;
+  height: 120px;
+  /*display: flex;*/
   justify-content: center;
   align-items: center;
   padding: 30px;
@@ -210,7 +210,8 @@ ui.grid>.row {
 .cubo {
   width: 80px;
   height: 80px;
-  position: relative;
+  padding: 2px;
+ /* position: relative;*/
   transform-style: preserve-3d;
   transition: transform 1s ease;
   cursor: pointer;
@@ -273,7 +274,7 @@ ui.grid>.row {
 }
 
 .front {
-  transform: translateZ(100px);
+  transform: translateZ(90px);
   border-color: #646cff;
 }
 
