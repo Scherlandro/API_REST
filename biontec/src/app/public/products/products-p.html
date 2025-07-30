@@ -14,25 +14,15 @@
     <!-- Lista de Cards -->
     <div class="products-grid">
       <mat-card *ngFor="let produto of tbSourceProdutos$.data " class="product-card body">
-       <div class="box-card-main">
-         <div class="box-card">
-
-             <img mat-card-image class="face front product-image3d" src="/assets/image/lambao.jpg" alt="{{produto.nomeProduto}}">
-
+       <div class="cubo-main">
+         <div class="cubo">
+           <img class="face front product-image3d" src="/assets/image/lambao.jpg" alt="{{produto.nomeProduto}}">
            <div class="face back">Angular</div>
            <div class="face right">React</div>
            <div class="face left">SQL</div>
            <div class="face top">SpringBoot</div>
            <div class="face bottom">Pyton</div>
 
-           <div class="box-card">
-             <img mat-card-image class="face front product-image3d" src="/assets/image/lambao.jpg" alt="{{produto.nomeProduto}}">
-             <div class="face back">Angular</div>
-             <div class="face right">React</div>
-             <div class="face left">SQL</div>
-             <div class="face top">SpringBoot</div>
-             <div class="face bottom">Pyton</div>
-           </div>
          </div>
         </div>
         <mat-card-content class="product-content">
