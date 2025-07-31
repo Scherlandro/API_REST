@@ -111,6 +111,9 @@ ui.grid>.row {
 }
 
 .product-card {
+  padding-left: 30px;
+  justify-content: center;
+  align-items: center;
   transition: all 0.3s ease;
   border-radius: 4px;
   overflow: hidden;
@@ -198,19 +201,18 @@ ui.grid>.row {
 */
 
 .cubo-main {
-  background: radial-gradient(ellipse farthest-corner at right bottom, #FEDB37 0%, #FDB931 8%, #9f7928 30%, #8A6E2F 40%, transparent 80%),
+ /* background: radial-gradient(ellipse farthest-corner at right bottom, #FEDB37 0%, #FDB931 8%, #9f7928 30%, #8A6E2F 40%, transparent 80%),
   radial-gradient(ellipse farthest-corner at left top, #FFFFFF 0%, #FFFFAC 8%, #D1B464 25%, #5d4a1f 62.5%, #5d4a1f 100%);
-  width: 150px;
-  height: 120px;
-  /*display: flex;*/
+ */ width: 160px;
+  height: 150px;
   justify-content: center;
   align-items: center;
-  padding: 30px;
+  padding: 5px;
 }
 .cubo {
   width: 80px;
   height: 80px;
-  padding: 2px;
+  padding: 1px;
  /* position: relative;*/
   transform-style: preserve-3d;
   transition: transform 1s ease;

@@ -1,6 +1,5 @@
 <div>
   <mat-card-content class="body-prod-p">
-    <!-- Barra de pesquisa (mantida igual) -->
     <mat-toolbar class="head-table body">
       <span> Produtos </span>
       <input class="input-table" type="text" placeholder=" Digite a consulta" matInput
@@ -11,20 +10,17 @@
       <button class="button-search body" (click)="consultarPorNome(produtoControl.value)">Search</button>
     </mat-toolbar>
 
-    <!-- Lista de Cards -->
-    <div class="products-grid">
+   <div class="products-grid">
       <mat-card *ngFor="let produto of tbSourceProdutos$.data " class="product-card body">
       <div class="product-card">
        <div class="cubo-main">
          <div class="cubo">
-
            <img class="face front product-image3d" src="/assets/image/lambao.jpg" alt="{{produto.nomeProduto}}">
            <img class="face back product-image3d" src="/assets/image/r2_d2.png" alt="{{produto.nomeProduto}}">
            <img class="face right product-image3d" src="/assets/image/american-gold-card.png" alt="{{produto.nomeProduto}}">
            <img class="face left product-image3d" src="/assets/image/clone_old.png" alt="{{produto.nomeProduto}}">
            <div class="face top">SpringBoot</div>
            <div class="face bottom">Pyton</div>
-
          </div>
         </div>
       </div>
