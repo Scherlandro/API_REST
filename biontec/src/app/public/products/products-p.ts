@@ -28,7 +28,6 @@ export class ProductsPComponent implements OnInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   pageEvent!: PageEvent;
-  //displayedColumns: string[] = ['descricao','preco','qtd','imagem','opicoes'];
   cardProduts= new Observable<iProduto[]>;
   tbSourceProdutos$ = new MatTableDataSource<iProduto>();
   produtosFiltered: iProduto[] = [];
@@ -36,8 +35,6 @@ export class ProductsPComponent implements OnInit {
   produtoControl = new FormControl();
   searchTerm !:any;
   imageUrl: SafeUrl | undefined;
-  name = 'Test display image';
-  thumbnail: any;
 
   constructor(private prodService: ProductService,
               private cartService: ShoppingCartService,
@@ -48,16 +45,8 @@ export class ProductsPComponent implements OnInit {
 
   ngOnInit(): void {
     this.listarProdutos();
-  //  const blob = new Blob(['...'], { type: 'image/jpeg' }); // Substitua pelo seu blob
-   // this.createImageFromBlob(blob);
-
    }
-/*  onImageLoad(e: any){
 
-    this.imgWidth=(this.imgMain.nativeElement as HTMLImageElement ).width;
-    this.imgHeight=(this.imgMain.nativeElement as HTMLImageElement).height;
-
-  }*/
 
  listarProdutos(){
     this.prodService.getTodosProdutos()
@@ -66,14 +55,16 @@ export class ProductsPComponent implements OnInit {
         return of([])}))
       .subscribe(  (rest: iProduto[])=>  {
         this.tbSourceProdutos$.data = rest;
-        this.tbSourceProdutos$.paginator = this.paginator;
-            let objectURL = 'data:image/jpeg;base64,' + rest[0].fotoProduto;
-            this.imageUrl = this.sanitizer.bypassSecurityTrustUrl(objectURL);
+     /*  this.tbSourceProdutos$.paginator = this.paginator;*/
       } );
+  }
+  getImageUrl(fotoProduto: string): SafeUrl {
+    if (!fotoProduto) return '';
+    const objectURL = 'data:image/jpeg;base64,' + fotoProduto;
+    return this.sanitizer.bypassSecurityTrustUrl(objectURL);
   }
 
   consultarPorCod(codProd: string){
-   // event.preventDefault();
     if (this.produtoControl.valid) {
       this.prodService.getProdutoPorCod(codProd)
         .pipe(catchError(error => {
@@ -100,8 +91,7 @@ export class ProductsPComponent implements OnInit {
   }
 
   aplicarFiltro(valor: string) {
-    valor = valor.trim().toLowerCase(); // Remove espaços em branco
-    //valor = valor.toLowerCase(); // MatTableDataSource padrão para lowercase
+    valor = valor.trim().toLowerCase();
     this.tbSourceProdutos$.filter = valor;
   }
 
@@ -111,7 +101,6 @@ export class ProductsPComponent implements OnInit {
 
   changeProdutos(value: any){
     if (value) {
-      // https://www.youtube.com/watch?v=ZhcYPXLGr_E
       this.produtosFiltered = this.products.filter(products => products.idProduto.toString()
         .includes(value.toUpperCase()));
     } else {
@@ -131,26 +120,17 @@ export class ProductsPComponent implements OnInit {
     this.cartService.search.next(this.searchTerm);
   }
 
-  onSubmit(valor: string) {
+ /* onSubmit(valor: string) {
      this.prodService.search(valor).subscribe(
       (result:iProduto[]) => {  this.tbSourceProdutos$.data = result }
     );
-   //  this.prodService.getTodosProdutos().pipe(
-   //   map((options) => (options.length == 0 ? true : false))
-  //  );
-   // this.router.navigate(['/search-results-list']);
-    //valor.resetForm();
-  }
+    this.prodService.getTodosProdutos().pipe(
+      map((options) => (options.length == 0 ? true : false))
+    );
+   this.router.navigate(['/search-results-list']);
+   valor.resetForm();
+  }*/
 
-  createImageFromBlob(image: Blob) {
-    let reader = new FileReader();
-    reader.addEventListener('load', () => {
-      this.imageUrl = this.sanitizer.bypassSecurityTrustUrl(reader.result as string);
-    }, false);
 
-    if (image) {
-      reader.readAsDataURL(image);
-    }
-  }
 
 }
