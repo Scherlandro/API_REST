@@ -109,7 +109,6 @@ ui.grid > .row {
 }
 
 .product-card {
-  padding-left: 30px;
   justify-content: center;
   align-items: center;
   transition: all 0.3s ease;
@@ -137,8 +136,8 @@ ui.grid > .row {
 .product-title {
   font-size: 14px;
   font-weight: 500;
-  margin: 0 0 8px 0;
-  height: 40px;
+  /*margin: 0 0 8px 0;*/
+  height: 50px;
   overflow: hidden;
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -193,18 +192,17 @@ ui.grid > .row {
 ----------######cubo3D-------------------
 */
 .cubo-main {
-  width: 160px;
-  height: 150px;
+  width: 170px;
+  height: 170px;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 5px;
   perspective: 1000px; /* melhora o efeito 3D */
 }
 
 .cubo {
-  width: 100px;
-  height: 100px;
+  width: 120px;
+  height: 120px;
   position: relative;
   transform-style: preserve-3d;
   cursor: pointer;
@@ -217,8 +215,8 @@ ui.grid > .row {
 
 .face-p {
   position: absolute;
-  width: 100px;
-  height: 100px;
+  width: 140px;
+  height: 140px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -230,19 +228,19 @@ ui.grid > .row {
 }
 
 .front-p {
-  transform: translateZ(50px); /* Metade da largura do cubo */
+  transform: translateZ(70px); /* Metade da largura do cubo */
 }
 
 .back-p {
-  transform: translateZ(-50px) rotateY(180deg);
+  transform: translateZ(-70px) rotateY(180deg);
 }
 
 .right-p {
-  transform: translateX(50px) rotateY(90deg);
+  transform: translateX(70px) rotateY(90deg);
 }
 
 .left-p {
-  transform: translateX(-50px) rotateY(-90deg);
+  transform: translateX(-70px) rotateY(-90deg);
 }
 
 @keyframes giro {
