@@ -1,3 +1,67 @@
+<div >
+  <mat-card-content class="body-prod-p">
+    <mat-toolbar class="head-table body">
+      <span> Produtos </span>
+      <input class="input-table" type="text" placeholder=" Digite a consulta" matInput
+             [formControl]="produtoControl"
+             (keypress)="changeProdutos(produtoControl.value)"
+             (keydown)="listarProdutos()"
+             (ngModelChange)="consultarPorNome(produtoControl.value)"/>
+      <button class="button-search body" (click)="consultarPorNome(produtoControl.value)">Search</button>
+      <button class="button-add" (click)="openDialogo(produtoControl.value)">
+        <mat-icon>add</mat-icon>
+      </button>
+    </mat-toolbar>
+
+    <div class="products-grid">
+      <mat-card *ngFor="let produto of tbSourceProdutos$.data " class="product-card body">
+
+        <div class=" cubo-main">
+          <div class="cubo">
+            <img class="face front " [src]="getImageUrl(produto.fotoProduto)" *ngIf="produto.fotoProduto">
+            <img class="face back " src="/assets/image/r2_d2.png" >
+            <img class="face right " src="/assets/image/obi_wan.png" >
+            <img class="face left " src="/assets/image/clone_old.png" >
+          </div>
+        </div>
+
+        <mat-card-content class="product-content">
+          <h3 class="product-title">{{produto.nomeProduto}}</h3>
+
+          <div class="price-section">
+            <span class="price">{{produto.valorVenda | currency: 'BRL'}}</span>
+            <span *ngIf="produto.qtdEstoque > 0" class="stock-available">Em estoque</span>
+            <span *ngIf="produto.qtdEstoque <= 0" class="stock-unavailable">Sem estoque</span>
+          </div>
+
+          <div class="shipping-info">
+            <mat-icon>local_shipping</mat-icon>
+            <span>Frete grátis</span>
+          </div>
+        </mat-card-content>
+
+        <mat-card-actions class="product-actions">
+          <button mat-raised-button color="primary" class="add-to-cart" [routerLink]="['/auth/login']">
+            <mat-icon>add_shopping_cart</mat-icon>
+            Comprar
+          </button>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+
+
+    <mat-paginator [length]="100"
+                   [pageSize]="5"
+                   [pageSizeOptions]="[5, 10, 25, 100]"
+                   (page)="pageEvent = $event"
+                   aria-label="Select page"
+                   class="componet-table body">
+    </mat-paginator>
+  </mat-card-content>
+</div>
+
+
+<!--
 
 <div>
   <mat-card-content class="body-prod-ad">
@@ -85,3 +149,4 @@
 
   </mat-card-content>
 </div>
+-->

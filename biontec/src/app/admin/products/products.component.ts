@@ -12,6 +12,7 @@ import { iProduto } from "../../interfaces/product";
 import { ProductService } from "../../services/product.service";
 import { DialogProdutoComponent } from "../../shared/diolog_components/dialog-produto/dialog-produto.component";
 import { ErrorDiologComponent } from "../../shared/diolog_components/error-diolog/error-diolog.component";
+import {DomSanitizer, SafeUrl} from "@angular/platform-browser";
 
 registerLocaleData(ptBr);
 
@@ -34,10 +35,12 @@ export class ProductsComponent implements OnInit {
   products: iProduto[] = [];
   produtoControl = new FormControl();
   searchTerm !: string;
+  imageUrl: SafeUrl | undefined;
 
   constructor(private prodService: ProductService,
               /* private cartService: ShoppingCartService,*/
               public dialog: MatDialog,
+              private sanitizer: DomSanitizer
   ) {
   }
 
@@ -45,17 +48,23 @@ export class ProductsComponent implements OnInit {
     this.listarProdutos();
   }
 
-  listarProdutos() {
+
+  listarProdutos(){
     this.prodService.getTodosProdutos()
       .pipe(catchError(error => {
         this.onError('Erro ao buscar produto.')
-        return of([])
-      }))
-      .subscribe((rest: iProduto[]) => {
+        return of([])}))
+      .subscribe(  (rest: iProduto[])=>  {
         this.tbSourceProdutos$.data = rest;
-        this.tbSourceProdutos$.paginator = this.paginator;
-      });
+        /*  this.tbSourceProdutos$.paginator = this.paginator;*/
+      } );
   }
+  getImageUrl(fotoProduto: string): SafeUrl {
+    if (!fotoProduto) return '';
+    const objectURL = 'data:image/jpeg;base64,' + fotoProduto;
+    return this.sanitizer.bypassSecurityTrustUrl(objectURL);
+  }
+
 
   consultarPorCod(codProd: string) {
     if (this.produtoControl.valid) {
