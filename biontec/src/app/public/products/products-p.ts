@@ -12,6 +12,7 @@ import {MatPaginator, PageEvent} from "@angular/material/paginator";
 import {MatSort} from "@angular/material/sort";
 import {registerLocaleData} from "@angular/common";
 import ptBr from "@angular/common/locales/pt";
+import {DomSanitizer, SafeUrl} from "@angular/platform-browser";
 
 registerLocaleData(ptBr);
 
@@ -34,15 +35,22 @@ export class ProductsPComponent implements OnInit {
   products: iProduto[] = [];
   produtoControl = new FormControl();
   searchTerm !:any;
+  imageUrl: SafeUrl | undefined;
+  name = 'Test display image';
+  thumbnail: any;
 
   constructor(private prodService: ProductService,
               private cartService: ShoppingCartService,
-              public dialog: MatDialog
+              public dialog: MatDialog,
+              private sanitizer: DomSanitizer
               ) {
   }
 
   ngOnInit(): void {
     this.listarProdutos();
+  //  const blob = new Blob(['...'], { type: 'image/jpeg' }); // Substitua pelo seu blob
+   // this.createImageFromBlob(blob);
+
    }
 /*  onImageLoad(e: any){
 
@@ -51,16 +59,6 @@ export class ProductsPComponent implements OnInit {
 
   }*/
 
-/*  listarProdutos(){
-    this.prodService.getTodosProdutos()
-      .pipe(catchError(error => {
-        this.onError('Erro ao buscar produto.')
-        return of([])}))
-      .subscribe(  (rest: any)=>  {
-        console.log('Resut de produtos ', rest)
-        this.cardProduts = rest;
-      } );
-  }*/
  listarProdutos(){
     this.prodService.getTodosProdutos()
       .pipe(catchError(error => {
@@ -69,7 +67,8 @@ export class ProductsPComponent implements OnInit {
       .subscribe(  (rest: iProduto[])=>  {
         this.tbSourceProdutos$.data = rest;
         this.tbSourceProdutos$.paginator = this.paginator;
-        // this.produtosFiltered = res;
+            let objectURL = 'data:image/jpeg;base64,' + rest[0].fotoProduto;
+            this.imageUrl = this.sanitizer.bypassSecurityTrustUrl(objectURL);
       } );
   }
 
@@ -143,56 +142,15 @@ export class ProductsPComponent implements OnInit {
     //valor.resetForm();
   }
 
+  createImageFromBlob(image: Blob) {
+    let reader = new FileReader();
+    reader.addEventListener('load', () => {
+      this.imageUrl = this.sanitizer.bypassSecurityTrustUrl(reader.result as string);
+    }, false);
 
-
-
-
-}
-/*
-https://youtu.be/aPU1YawBWN8
-https://youtu.be/jcpS5d4yz2w
- */
-
-
-/*
-   addProductCart(product: ProdutoModel_T): void {
-    this.cartService.addProduct();
+    if (image) {
+      reader.readAsDataURL(image);
+    }
   }
 
-  onSearch() {
-    const fields = 'name,description,version,homepage';
-    let value = this.produtoControl.value;
-    if (value && (value = value.trim()) !== '') {
-    const params_ = {
-        search: value,
-        fields: fields
-      };
-      let params = this.prodService.getProdutoPorCod(value.toString());
-      params = params;
-      params = params;
-      this.tbSourceProdutos$ = this.prodService.getProdutoPorCod(value.toString())
-        .pipe(
-          tap((res: any) => (this.total = res.total)),
-          map((res: any) => res.results)
-        );
-      console.log('Valor cod Produto ->', this.tbSourceProdutos$);
-
 }
-}
-
- */
-/*
-  ngOnInit(): void {
-    this.tbSourceProdutos$ = this.queryField.valueChanges
-      .pipe(
-        map(value => value.trim()),
-        filter(value => value.length > 1),
-        debounceTime(200),
-        distinctUntilChanged(),
-        tap(value => console.log(value)),
-        switchMap((value:string) => this.prodService.getProdutoPorCod(value.toString())) ,
-        tap((res: any) => this.total = res.total),
-        map((res: any) => res.results)
-  );
-}
- */

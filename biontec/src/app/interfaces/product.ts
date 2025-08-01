@@ -18,7 +18,7 @@ export interface iProduto {
   qtdVendidas?: number
   idFornecedor?: number
   idModelo?: number
-  imagen_prod: any;
+  fotoProduto: any;
 
 }
 /*
