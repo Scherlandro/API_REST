@@ -1,5 +1,5 @@
 .body-prod-ad{
-  background-color: rgba(96, 30, 160, 0);
+
 }
 
 .products-grid {
@@ -29,7 +29,7 @@
   align-items: center;
   justify-content: center;
   padding: 10px;
-  background-color: rgba(219, 139, 55, 0.42);
+  background-color: rgba(232, 213, 115, 0);
 }
 
 .card-image img {
@@ -54,10 +54,9 @@
 
 .card-actions {
   display: flex;
-  justify-content: flex-end;
+  justify-content: flex-start;
   padding-top: 10px;
-  border-top: 1px solid #eee;
-  margin-top: auto;
+  align-items: center;
 }
 
 .edit, .delete {
@@ -263,12 +262,12 @@ ui.grid > .row {
 
 .stock-available {
   color: #00a650;
-  font-size: 12px;
+  font-size: 14px;
 }
 
 .stock-unavailable {
   color: #f44336;
-  font-size: 12px;
+  font-size: 14px;
 }
 
 .shipping-info {
@@ -308,8 +307,8 @@ ui.grid > .row {
 }
 
 .cubo {
-  width: 120px;
-  height: 120px;
+  width: 145px;
+  height: 145px;
   position: relative;
   transform-style: preserve-3d;
   cursor: pointer;
