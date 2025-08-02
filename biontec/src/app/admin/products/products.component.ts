@@ -55,6 +55,7 @@ export class ProductsComponent implements OnInit {
         this.onError('Erro ao buscar produto.')
         return of([])}))
       .subscribe(  (rest: iProduto[])=>  {
+        console.log('Listar de produtos ', rest)
         this.tbSourceProdutos$.data = rest;
         /*  this.tbSourceProdutos$.paginator = this.paginator;*/
       } );

@@ -2,7 +2,7 @@
   background-color: rgba(96, 30, 160, 0);
 }
 
-.cards-container {
+.products-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
   gap: 20px;
@@ -24,11 +24,12 @@
 
 .card-image {
   width: 40%;
+  height: 150px;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 10px;
-  background-color: #f5f5f5;
+  background-color: rgba(219, 139, 55, 0.42);
 }
 
 .card-image img {
@@ -43,6 +44,7 @@
   flex-direction: column;
   padding: 15px;
   justify-content: space-between;
+  min-width: max-content;
 }
 
 .card-field {
@@ -75,22 +77,18 @@
 
 /* Responsividade */
 @media (max-width: 600px) {
-  .cards-container {
+  /*.cards-container {
     grid-template-columns: 1fr;
-  }
+  }*/
 
-  .card-content-wrapper {
-    flex-direction: column;
-  }
 
+  /*
   .card-image, .card-details {
     width: 100%;
     height: auto;
   }
+  */
 
-  .card-image {
-    height: 150px;
-  }
 
   .product-card {
     height: auto;
@@ -240,11 +238,11 @@ ui.grid > .row {
 .product-content {
   padding: 16px;
 }
-
+*/
 .product-title {
   font-size: 14px;
   font-weight: 500;
-  !*margin: 0 0 8px 0;*!
+  margin: 0 0 8px 0;
   height: 50px;
   overflow: hidden;
   display: -webkit-box;
@@ -295,7 +293,7 @@ ui.grid > .row {
 .add-to-cart {
   width: 100%;
 }
-*/
+
 
 /*
 ----------######cubo3D-------------------

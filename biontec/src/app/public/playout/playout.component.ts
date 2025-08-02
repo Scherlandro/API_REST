@@ -10,7 +10,7 @@ import {HttpClient, HttpHeaders} from "@angular/common/http";
 @Component({
   selector: 'app-playout',
   templateUrl: './playout.component.html',
-  styleUrls:['./playout.component.css','playout.component.scss'],
+  styleUrls:['./playout.component.css'],
   encapsulation:ViewEncapsulation.None,
 })
 export class PlayoutComponent implements OnInit {
