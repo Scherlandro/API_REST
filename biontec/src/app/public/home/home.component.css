@@ -7,46 +7,20 @@
   height: 400px;
 }
 
-.container-cube {
+.container-box {
   background: radial-gradient(ellipse farthest-corner at right bottom, #FEDB37 0%, #FDB931 8%, #9f7928 30%, #8A6E2F 40%, transparent 80%),
-  radial-gradient(ellipse farthest-corner at left top, #FFFFFF 0%, #FFFFAC 8%, #D1B464 25%, #5d4a1f 62.5%, #5d4a1f 100%);
+  radial-gradient(ellipse farthest-corner at left top, rgba(255, 255, 255, 0) 0%, #FFFFAC 8%, #D1B464 25%, #5d4a1f 62.5%, #5d4a1f 100%);
   flex: 1 1 calc(33.333% - 32px); /* 3 colunas por linha (descontando o gap) */
   min-width: 250px;
   box-sizing: border-box;
   height: 350px;
-}
-
-.img-container {
-  border-radius: 30px;
-  position: absolute;
-  cursor: grab;
-  width: 125px;
-  height: 150px;
-}
-
-.image-slide-conteiner{
-  max-width: 150px;
-  min-width: 150px;
-  height: 250px;
-}
-
-/* Media Queries para ajustar em telas menores */
-@media (max-width: 900px) {
-  .container-cube {
-    flex: 1 1 calc(50% - 16px); /* 2 colunas */
-  }
-}
-
-@media (max-width: 600px) {
-  .container-cube {
-    flex: 1 1 100%; /* 1 coluna */
-  }
+  position: center;
 }
 
 
-.label-descrition{
+.label-descrition {
   width: auto;
-  font-family:"Fira Code Light";
+  font-family: "Fira Code Light";
   font-size: 14px;
   color: #32e27e;
   padding: 8px 20px 10px 20px;
@@ -54,164 +28,75 @@
   -webkit-border-radius: 20px;
   -moz-border-radius: 20px;
 }
-.label-descrition:hover{
+
+.label-descrition:hover {
   color: #00030a;
   cursor: default;
 }
 
-.graphic-of-languages{
-  border-radius: 20px;
-  background: linear-gradient(145deg, #4f2886, #b884e2);
-  box-shadow:  20px 20px 60px #281340,
-  -20px -20px 60px #9975d5;
-  width: auto;
-  display: grid;
-  grid-template-columns: 1fr 1fr ;
-  grid-gap: 5px;
-  justify-content: left;
-  padding: 8px 20px 10px 20px;
-}
-.button-sign-up{
-  border-radius: 8px;
-  background-image: -o-linear-gradient(top, #99bdbc, #205878);
-  background-image: linear-gradient(to bottom, #99bdbc, #205878);
-}
-
-.box-card-main {
+/*
+----------######cubo3D-------------------
+*/
+.cubo-main {
   background: radial-gradient(ellipse farthest-corner at right bottom, #FEDB37 0%, #FDB931 8%, #9f7928 30%, #8A6E2F 40%, transparent 80%),
   radial-gradient(ellipse farthest-corner at left top, #FFFFFF 0%, #FFFFAC 8%, #D1B464 25%, #5d4a1f 62.5%, #5d4a1f 100%);
-  width: 150px;
-  height: 50px;
+  width: 170px;
+  height: 170px;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 30px;
+  perspective: 1000px; /* melhora o efeito 3D */
 }
-.box-card {
-  width: 100px;
-  height: 100px;
+
+.cubo {
+  width: 120px;
+  height: 120px;
   position: relative;
   transform-style: preserve-3d;
-  transition: transform 1s ease;
   cursor: pointer;
+  transform-origin: center; /* Garante rotação centralizada */
 }
 
-.box-card:hover {
-  animation: rotate3d 8s infinite linear;
+.cubo:hover {
+  animation: giro 5s infinite linear;
 }
 
-.face {
+.face-p {
   position: absolute;
-  width: 100%;
-  height: 100%;
+  width: 140px;
+  height: 140px;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 1rem;
-  font-weight: bold;
-  backface-visibility: visible;
-  border-radius: 8px;
-  background: linear-gradient(145deg, #2a2a2a, #383838);
-  border: 2px solid #646cff;
-  transition: all 0.3s ease;
+  border-radius: 3px;
+  background: linear-gradient(50deg, #9f7928, #5d4a1f);
+  border: 3px solid #9f7928;
   overflow: hidden;
+  box-sizing: border-box; /* Garante que a borda não aumente o tamanho */
 }
 
-.face::before {
-  content: '';
-  position: absolute;
-  width: 60%;
-  height: 60%;
-  background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
-  top: -100%;
-  left: -100%;
-  transition: all 0.5s ease;
-  transform: translateZ(20px);
+.front-p {
+  transform: translateZ(70px); /* Metade da largura do cubo */
 }
 
-.face::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    135deg,
-    transparent 0%,
-    rgba(255, 255, 255, 0.05) 50%,
-    transparent 100%
-  );
-  opacity: 0;
-  transition: opacity 0.3s ease;
+.back-p {
+  transform: translateZ(-70px) rotateY(180deg);
 }
 
-.face:hover::before {
-  top: 100%;
-  left: 100%;
+.right-p {
+  transform: translateX(70px) rotateY(90deg);
 }
 
-.face:hover::after {
-  opacity: 1;
+.left-p {
+  transform: translateX(-70px) rotateY(-90deg);
 }
 
-.front {
-  transform: translateZ(100px);
-  border-color: #646cff;
-}
-
-.back {
-  transform: translateZ(-100px) rotateY(180deg);
-  border-color: #00bcd4;
-}
-
-.right {
-  transform: translateX(100px) rotateY(90deg);
-  border-color: #4caf50;
-}
-
-.left {
-  transform: translateX(-100px) rotateY(-90deg);
-  border-color: #ff4081;
-}
-
-.top {
-  transform: translateY(-100px) rotateX(90deg);
-  border-color: #ffc107;
-}
-
-.bottom {
-  transform: translateY(100px) rotateX(-90deg);
-  border-color: #9c27b0;
-}
-
-@keyframes rotate3d {
+@keyframes giro {
   0% {
-    transform: rotateX(0) rotateY(0);
-  }
-  25% {
-    transform: rotateX(90deg) rotateY(90deg);
-  }
-  50% {
-    transform: rotateX(180deg) rotateY(180deg);
-  }
-  75% {
-    transform: rotateX(270deg) rotateY(270deg);
+    transform: rotateY(0deg);
   }
   100% {
-    transform: rotateX(360deg) rotateY(360deg);
+    transform: rotateY(360deg);
   }
 }
-
-@media (max-width: 768px) {
-  .box-card {
-    width: 80px;
-    height: 80px;
-  }
-
-  .front { transform: translateZ(75px); }
-  .back { transform: translateZ(-75px) rotateY(180deg); }
-  .right { transform: translateX(75px) rotateY(90deg); }
-  .left { transform: translateX(-75px) rotateY(-90deg); }
-  .top { transform: translateY(-75px) rotateX(90deg); }
-  .bottom { transform: translateY(75px) rotateX(-90deg); }
-}
-
 
