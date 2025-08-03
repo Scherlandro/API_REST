@@ -10,7 +10,20 @@
       <button class="button-search body" (click)="consultarPorNome(produtoControl.value)">Search</button>
     </mat-toolbar>
 
-   <div class="products-grid">
+    <div class="spinner-container">
+      <aside>
+        <div *ngIf="spiner " class="spinner">
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+        </div>
+      </aside>
+    </div>
+
+    <div class="products-grid">
+
       <mat-card *ngFor="let produto of tbSourceProdutos$.data " class="product-card body">
 
        <div class=" cubo-main">
