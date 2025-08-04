@@ -98,3 +98,62 @@
   }
 }
 
+/*----------------###########--------- */
+.card-container {
+  position: relative;
+  width: 900px;
+  height: 500px;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  color: white;
+  font-family: 'Arial', sans-serif;
+}
+
+.particle-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
+}
+
+.card-content {
+  position: relative;
+  z-index: 10;
+  padding: 40px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.card-content h2 {
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+}
+
+.card-content p {
+  font-size: 1.2rem;
+  margin-bottom: 30px;
+  max-width: 60%;
+}
+
+.cta-button {
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+  width: fit-content;
+  transition: background-color 0.3s;
+  pointer-events: auto;
+}
+
+.cta-button:hover {
+  background-color: #2563eb;
+}
