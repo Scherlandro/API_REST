@@ -42,16 +42,6 @@
           -->
         </mat-card>
 
-        <aside>
-          <div *ngIf="spiner " class="spinner">
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-          </div>
-        </aside>
-
       <mat-icon>vpn_key</mat-icon>
       <mat-card class="component-g">
         <label>Senha</label>
@@ -64,6 +54,19 @@
                 <div *ngIf="password.errors['minlength']">Password must be at least 5 charracters</div>
             </div>
       </mat-card>
+
+        <div class="spinner-container">
+          <aside>
+            <div *ngIf="spiner " class="spinner">
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+            </div>
+          </aside>
+        </div>
+
         <mat-icon>plane</mat-icon>
       <button [class.bottom-container]="form"
               [disabled]="!f.valid"

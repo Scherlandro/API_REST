@@ -17,6 +17,18 @@
 
   </mat-toolbar>
 
+    <div class="spinner-container">
+      <aside>
+        <div *ngIf="spiner " class="spinner">
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+        </div>
+      </aside>
+    </div>
+
     <div class="products-grid">
       <mat-card *ngFor="let produto of tbSourceProdutos$.data" class="product-card">
         <div class="card-content-wrapper">

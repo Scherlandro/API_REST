@@ -28,8 +28,8 @@ import {ErrorDiologComponent} from "../../shared/diolog_components/error-diolog/
 })
 export class DashboardComponent implements OnInit {
   events = new FormControl();
-  mensagens!: Observable<string>  ;
-
+  mensagens!: Observable<string> ;
+  spiner = false;
   @ViewChild(MatTable) tableProduto!: MatTable<any>;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -56,12 +56,14 @@ export class DashboardComponent implements OnInit {
 
 
   listarProdutos(){
+    this.spiner = true;
     this.prodService.getTodosProdutos()
       .pipe(catchError(error => {
         this.onError('Erro ao buscar produto.')
         return of([])}))
       .subscribe(  (rest: iProduto[])=>  {
         this.tbSourceProdutos$.data = rest;
+        this.spiner = false;
         /*  this.tbSourceProdutos$.paginator = this.paginator;*/
       } );
   }

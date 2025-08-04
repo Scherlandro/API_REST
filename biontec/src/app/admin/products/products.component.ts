@@ -28,6 +28,7 @@ export class ProductsComponent implements OnInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   pageEvent!: PageEvent;
+  spiner = false;
   displayedColumns: string[] = ['cod_produto', 'descricao'
     , 'valor_venda', 'quantidade_estoque', 'dt_cadastro', 'imagem', 'opicoes'];
   tbSourceProdutos$ = new MatTableDataSource<iProduto>();
@@ -50,6 +51,7 @@ export class ProductsComponent implements OnInit {
 
 
   listarProdutos(){
+    this.spiner = true;
     this.prodService.getTodosProdutos()
       .pipe(catchError(error => {
         this.onError('Erro ao buscar produto.')
@@ -57,6 +59,7 @@ export class ProductsComponent implements OnInit {
       .subscribe(  (rest: iProduto[])=>  {
         console.log('Listar de produtos ', rest)
         this.tbSourceProdutos$.data = rest;
+        this.spiner = false;
         /*  this.tbSourceProdutos$.paginator = this.paginator;*/
       } );
   }
