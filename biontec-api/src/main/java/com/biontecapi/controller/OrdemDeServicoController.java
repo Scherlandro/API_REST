@@ -31,24 +31,14 @@ public class OrdemDeServicoController {
 
     @GetMapping
     public ResponseEntity<List<OrdemDeServico>> findAll() {
-
         return ResponseEntity.ok(service.listarOS());
     }
-
 
     @GetMapping(path = "/all")
     public ResponseEntity<List<OrdemDeServicoDTO>> listarOrdemDeServicos(){
        List<OrdemDeServico> os = service.listarOS();
          return ResponseEntity.ok(os.stream().map(OrdemDeServico::toDTO).toList());
     }
-/*
-    @GetMapping("/{id}")
-    public OrdemDeServicoDTO getOrdemDeServico(@PathVariable Long id) {
-        OrdemDeServico entity = service.findById(id);
-        return mapper.toDTO(entity); // Usa um mapper (MapStruct, manual, etc.)
-    }*/
-
-
 
     @GetMapping(path = "/{id_os}")
     public ResponseEntity findById(@PathVariable("id_os") Long idOS) {
@@ -58,11 +48,16 @@ public class OrdemDeServicoController {
                 .orElse(ResponseEntity.notFound().build()));
     }
 
+  /*   @GetMapping("/{id}")
+    public OrdemDeServicoDTO getOrdemDeServico(@PathVariable Long id) {
+        Optional <OrdemDeServico> os = service.listarOSPorID(id);
+        return os.get().toDTO();
+    }*/
+
     @GetMapping("/cliente/{id_cliente}")
     public ResponseEntity<List<OrdemDeServico>> findOSPorIdClienteId(@PathVariable Integer idCliente) {
         return ResponseEntity.ok(service.listarOSPorIdCliente(idCliente));
     }
-
 
     @GetMapping("/funcionario/{id_funcionario}")
     public ResponseEntity<List<OrdemDeServico>> findOSPorIdDoTecnico(@PathVariable Long IdTecnico) {
