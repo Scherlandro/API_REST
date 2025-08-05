@@ -14,8 +14,8 @@ import {
 export class HomeComponent implements AfterViewInit {
   @ViewChild('canvas', { static: true }) canvasRef!: ElementRef<HTMLCanvasElement>;
   private ctx!: CanvasRenderingContext2D;
-  private width = 900;
-  private height = 500;
+  private width = 400;
+  private height = 300;
   private mousePos = { x: -100, y: -100 };
   private particles: Particle[] = [];
   private animationId!: number;
@@ -60,7 +60,7 @@ export class HomeComponent implements AfterViewInit {
         centerY - size * 0.4 + i * 2,
         centerX - size * 0.6 + i * 3,
         centerY - size * 0.4 + i * 2,
-        '#E44D26'
+        '#c99914'
       ));
 
       // Partículas para o >
@@ -92,7 +92,7 @@ export class HomeComponent implements AfterViewInit {
         centerY + Math.sin(angle) * radius,
         centerX + Math.cos(angle) * radius,
         centerY + Math.sin(angle) * radius,
-        '#264DE4'
+        '#430da1'
       ));
 
       particles.push(new Particle(
@@ -100,7 +100,7 @@ export class HomeComponent implements AfterViewInit {
         centerY + Math.sin(angle) * radius2,
         centerX + Math.cos(angle) * radius2,
         centerY + Math.sin(angle) * radius2,
-        '#264DE4'
+        '#5e16ee'
       ));
     }
 
@@ -132,7 +132,7 @@ export class HomeComponent implements AfterViewInit {
         centerY + Math.sin(angle) * size * 0.3,
         centerX + size * 0.3 + Math.cos(angle) * size * 0.3,
         centerY + Math.sin(angle) * size * 0.3,
-        '#F7DF1E'
+        '#abf71e'
       ));
     }
 
