@@ -28,7 +28,9 @@ import com.biontecapi.fiter.CustomAuthorizationFilter;
 import lombok.RequiredArgsConstructor;
 
 
-@Configuration @EnableWebSecurity @RequiredArgsConstructor
+@Configuration
+@EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final UserDetailsService userDetailsService;
@@ -41,28 +43,27 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-     CustomAuthenticationFilter customAuthenticationFilter = new CustomAuthenticationFilter(authenticationManagerBean());
-      customAuthenticationFilter.setFilterProcessesUrl("/api/login/");
-       http.csrf().disable()
-       .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-       .authorizeRequests().antMatchers(GET,"/api/user/token-refresh/**","/api/produtos/**","/api/paises/**").permitAll().and()
-         .authorizeRequests().antMatchers(POST, "/api/login/**","/api/user/save-user").permitAll().and()
-       //.authorizeRequests().antMatchers(GET, "/api/user/**").hasAnyAuthority("ROLE_USER")
-       .authorizeRequests().antMatchers(POST, "/api/user/save-role","/api/user/role-addtouser").hasAnyAuthority("ROLE_ADMIN")
-      .anyRequest().authenticated().and()
-       .addFilter(customAuthenticationFilter).cors();
-       http.addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
+        CustomAuthenticationFilter customAuthenticationFilter = new CustomAuthenticationFilter(authenticationManagerBean());
+        customAuthenticationFilter.setFilterProcessesUrl("/api/login/");
+        http.csrf().disable()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+                .authorizeRequests().antMatchers(GET, "/api/user/token-refresh/**", "/api/produtos/**", "/api/paises/**").permitAll().and()
+                .authorizeRequests().antMatchers(POST, "/api/login/**", "/api/user/save-user").permitAll().and()
+                .authorizeRequests().antMatchers(POST, "/api/user/save-role", "/api/user/role-addtouser").hasAnyAuthority("ROLE_ADMIN")
+                .anyRequest().authenticated().and()
+                .addFilter(customAuthenticationFilter).cors();
+        http.addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
     }
 
     @Bean
     @Override
-    public AuthenticationManager authenticationManagerBean()throws Exception{
+    public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }
 
 
     @Bean
-    public CorsFilter corsFilter(){
+    public CorsFilter corsFilter() {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
         config.addAllowedHeader("*");
@@ -71,11 +72,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         config.setAllowedOrigins(Arrays.asList("http://localhost:4200"));
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**",config);
+        source.registerCorsConfiguration("/**", config);
 
         return new CorsFilter(source);
     }
-
 
 
 }

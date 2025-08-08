@@ -4,6 +4,7 @@ package com.biontecapi.controller;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import jakarta.inject.Inject;
 
 import com.biontecapi.dtos.ItenDaOSDto;
 import org.modelmapper.ModelMapper;
@@ -20,6 +21,7 @@ import com.biontecapi.service.OrdemDeServicoService;
 @RestController
 @RequestMapping("/api/service-orders")
 public class OrdemDeServicoController {
+
 
     private final OrdemDeServicoService service;
     @Autowired
@@ -48,12 +50,6 @@ public class OrdemDeServicoController {
                 .orElse(ResponseEntity.notFound().build()));
     }
 
-  /*   @GetMapping("/{id}")
-    public OrdemDeServicoDTO getOrdemDeServico(@PathVariable Long id) {
-        Optional <OrdemDeServico> os = service.listarOSPorID(id);
-        return os.get().toDTO();
-    }*/
-
     @GetMapping("/cliente/{id_cliente}")
     public ResponseEntity<List<OrdemDeServico>> findOSPorIdClienteId(@PathVariable Integer idCliente) {
         return ResponseEntity.ok(service.listarOSPorIdCliente(idCliente));
@@ -63,10 +59,7 @@ public class OrdemDeServicoController {
     public ResponseEntity<List<OrdemDeServico>> findOSPorIdDoTecnico(@PathVariable Long IdTecnico) {
         return ResponseEntity.ok(service.listarOSPorIdDoTecnico(IdTecnico));
     }
-/*    @PostMapping
-    public void create(@RequestBody OrdemDeServicoDTO dto) {
-        service.save(dto);
-    }*/
+
     @PostMapping
     public ResponseEntity<OrdemDeServico> criarOS(@RequestBody OrdemDeServicoDTO dto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.criarOS(dto));
@@ -116,6 +109,18 @@ public class OrdemDeServicoController {
 
         return ResponseEntity.ok(service.listarOS());
     }
+
+
+      /*   @GetMapping("/{id}")
+    public OrdemDeServicoDTO getOrdemDeServico(@PathVariable Long id) {
+        Optional <OrdemDeServico> os = service.listarOSPorID(id);
+        return os.get().toDTO();
+    }
+
+        @PostMapping
+    public void create(@RequestBody OrdemDeServicoDTO dto) {
+        service.save(dto);
+    }*/
 }
 
 

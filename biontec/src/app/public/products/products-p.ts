@@ -6,10 +6,9 @@ import {catchError} from "rxjs/operators";
 import {ErrorDiologComponent} from "../../shared/diolog_components/error-diolog/error-diolog.component";
 import {MatDialog} from "@angular/material/dialog";
 import { FormControl} from "@angular/forms";
-import {MatTable, MatTableDataSource} from "@angular/material/table";
+import { MatTableDataSource} from "@angular/material/table";
 import {iProduto} from "../../interfaces/product";
-import {MatPaginator, PageEvent} from "@angular/material/paginator";
-import {MatSort} from "@angular/material/sort";
+import { PageEvent} from "@angular/material/paginator";
 import {registerLocaleData} from "@angular/common";
 import ptBr from "@angular/common/locales/pt";
 import {DomSanitizer, SafeUrl} from "@angular/platform-browser";
@@ -24,17 +23,14 @@ registerLocaleData(ptBr);
 })
 
 export class ProductsPComponent implements OnInit {
-  @ViewChild(MatTable) tableProduto!: MatTable<any>;
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
-  @ViewChild(MatSort) sort!: MatSort;
-  pageEvent!: PageEvent;
   spiner = false;
-  cardProduts= new Observable<iProduto[]>;
   tbSourceProdutos$ = new MatTableDataSource<iProduto>();
-  produtosFiltered: iProduto[] = [];
+  pageSize = 20;
+  currentPage = 0;
+  produtosFiltrados: iProduto[] = [];
+  pagedProdutosFiltrados: iProduto[] = [];
   products: iProduto[] = [];
   produtoControl = new FormControl();
-  searchTerm !:any;
   imageUrl: SafeUrl | undefined;
 
   constructor(private prodService: ProductService,
@@ -57,83 +53,51 @@ export class ProductsPComponent implements OnInit {
         return of([])}))
       .subscribe(  (rest: iProduto[])=>  {
         this.tbSourceProdutos$.data = rest;
+        this.produtosFiltrados = rest;
+        this.updatePagedProdutos();
         this.spiner = false;
-     /*  this.tbSourceProdutos$.paginator = this.paginator;*/
       } );
   }
+
   getImageUrl(fotoProduto: string): SafeUrl {
     if (!fotoProduto) return '';
     const objectURL = 'data:image/jpeg;base64,' + fotoProduto;
     return this.sanitizer.bypassSecurityTrustUrl(objectURL);
   }
 
-  consultarPorCod(codProd: string){
-    if (this.produtoControl.valid) {
-      this.prodService.getProdutoPorCod(codProd)
-        .pipe(catchError(error => {
-          this.onError('Erro ao buscar produto.')
-          return of([]) })).subscribe((result:iProduto[]) => {
-      this.tbSourceProdutos$.data = result;
-          console.log("Retorno da MatTableDat ", result )
-    } )
-    }
-  }
-
-  consultarPorNome(nomeProd: string){
-    if (this.produtoControl.valid) {
-      this.prodService.listarProdutoPorNome(nomeProd)
-        .pipe(catchError(error => {
-          this.onError('Erro ao buscar produto.')
-          return of([]) }))
-        .subscribe((result:iProduto[]) => {
-          this.aplicarFiltro(nomeProd);
-          this.tbSourceProdutos$.data = result;
-          console.log(result)
-        } )
-    }
-  }
-
-  aplicarFiltro(valor: string) {
-    valor = valor.trim().toLowerCase();
-    this.tbSourceProdutos$.filter = valor;
-  }
-
-  loginAndAddProd(){
-  //  this.router.navigate(['/auth/login']);
-  }
-
-  changeProdutos(value: any){
-    if (value) {
-      this.produtosFiltered = this.products.filter(products => products.idProduto.toString()
-        .includes(value.toUpperCase()));
+  consultarPorNome(nomeProd: string) {
+    if (!nomeProd || nomeProd.trim() === '') {
+      this.produtosFiltrados = this.tbSourceProdutos$.data;
     } else {
-      this.produtosFiltered = this.products;
+      nomeProd = nomeProd.toLowerCase().trim();
+      this.produtosFiltrados = this.tbSourceProdutos$.data.filter(produto =>
+        produto.nomeProduto.toLowerCase().includes(nomeProd)
+      );
     }
+    this.currentPage = 0; // Reset para a primeira página ao filtrar
+    this.updatePagedProdutos();
   }
+
+  onPageChange(event: PageEvent) {
+    this.currentPage = event.pageIndex;
+    this.pageSize = event.pageSize;
+    this.updatePagedProdutos();
+  }
+
+  updatePagedProdutos() {
+    const startIndex = this.currentPage * this.pageSize;
+    this.pagedProdutosFiltrados = this.produtosFiltrados.slice(
+      startIndex,
+      startIndex + this.pageSize
+    );
+  }
+
 
   onError(errrorMsg: string) {
     this.dialog.open(ErrorDiologComponent, {
       data: errrorMsg
     });
   }
-
-  search(event:any){
-    this.searchTerm = (event.target as HTMLInputElement).value;
-    console.log(this.searchTerm);
-    this.cartService.search.next(this.searchTerm);
-  }
-
- /* onSubmit(valor: string) {
-     this.prodService.search(valor).subscribe(
-      (result:iProduto[]) => {  this.tbSourceProdutos$.data = result }
-    );
-    this.prodService.getTodosProdutos().pipe(
-      map((options) => (options.length == 0 ? true : false))
-    );
-   this.router.navigate(['/search-results-list']);
-   valor.resetForm();
-  }*/
-
 
 
 }

@@ -29,7 +29,7 @@ export class ProductService {
   }
 
   getProdutoPorCod(id: string): Observable<any> {
-    //return this._http.get<IProduto[]>(`${this.baseUrl}/${id}`);
+
     return this._http.get(this.baseUrl + id)
       .pipe(map(response => response));
   }
