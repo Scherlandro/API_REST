@@ -1,19 +1,20 @@
-import { registerLocaleData } from "@angular/common";
+import {registerLocaleData} from "@angular/common";
 import ptBr from '@angular/common/locales/pt';
-import { Component, LOCALE_ID, OnInit, ViewChild } from '@angular/core';
-import { FormControl } from "@angular/forms";
-import { MatDialog } from "@angular/material/dialog";
-import { MatPaginator, PageEvent } from "@angular/material/paginator";
-import { MatSort } from "@angular/material/sort";
-import { MatTable, MatTableDataSource } from "@angular/material/table";
-import { of } from 'rxjs';
-import { catchError } from "rxjs/operators";
-import { iProduto } from "../../interfaces/product";
-import { ProductService } from "../../services/product.service";
-import { DialogProdutoComponent } from "../../shared/diolog_components/dialog-produto/dialog-produto.component";
-import { ErrorDiologComponent } from "../../shared/diolog_components/error-diolog/error-diolog.component";
+import {Component, LOCALE_ID, OnInit, ViewChild} from '@angular/core';
+import {FormControl} from "@angular/forms";
+import {MatDialog} from "@angular/material/dialog";
+import {MatPaginator, PageEvent} from "@angular/material/paginator";
+import {MatSort} from "@angular/material/sort";
+import {MatTable, MatTableDataSource} from "@angular/material/table";
+import {of} from 'rxjs';
+import {catchError} from "rxjs/operators";
+import {iProduto} from "../../interfaces/product";
+import {ProductService} from "../../services/product.service";
+import {DialogProdutoComponent} from "../../shared/diolog_components/dialog-produto/dialog-produto.component";
+import {ErrorDiologComponent} from "../../shared/diolog_components/error-diolog/error-diolog.component";
 import {DomSanitizer, SafeUrl} from "@angular/platform-browser";
 import {ShoppingCartService} from "../../services/shopping-cart.service";
+import {TokenService} from "../../services/token.service";
 
 registerLocaleData(ptBr);
 
@@ -21,8 +22,8 @@ registerLocaleData(ptBr);
   selector: 'app-products-public',
   templateUrl: './products.component.html',
   styleUrls: ['./products.component.css'],
-   providers:    [ { provide: LOCALE_ID, useValue: 'pt' },
-    ],
+  providers: [{provide: LOCALE_ID, useValue: 'pt'},
+  ],
 })
 export class ProductsComponent implements OnInit {
   spiner = false;
@@ -34,10 +35,12 @@ export class ProductsComponent implements OnInit {
   produtoControl = new FormControl();
   imageUrl: SafeUrl | undefined;
 
-  constructor(private prodService: ProductService,
-              private cartService: ShoppingCartService,
-              public dialog: MatDialog,
-              private sanitizer: DomSanitizer
+  constructor(
+    private tokenServer: TokenService,
+    private prodService: ProductService,
+    private cartService: ShoppingCartService,
+    public dialog: MatDialog,
+    private sanitizer: DomSanitizer
   ) {
   }
 
@@ -46,18 +49,21 @@ export class ProductsComponent implements OnInit {
   }
 
 
-  listarProdutos(){
+  listarProdutos() {
     this.spiner = true;
     this.prodService.getTodosProdutos()
       .pipe(catchError(error => {
-        this.onError('Erro ao buscar produto.')
-        return of([])}))
-      .subscribe(  (rest: iProduto[])=>  {
+        if (error === 'Session Expired')
+          this.onError('Sua sessão expirou!');
+        this.tokenServer.clearTokenExpired();
+        return of([])
+      }))
+      .subscribe((rest: iProduto[]) => {
         this.products = rest;
         this.produtosFiltrados = rest;
         this.updatePagedProdutos();
         this.spiner = false;
-      } );
+      });
   }
 
   getImageUrl(fotoProduto: string): SafeUrl {
@@ -130,26 +136,26 @@ export class ProductsComponent implements OnInit {
     });
 
 
-   /* dialogRef.afterClosed().subscribe(result => {
-      if (result !== undefined) {
-        if (this.tbSourceProdutos$.data
-          .map(p => p.idProduto).includes(result.idProduto)) {
-          this.prodService.editElement(result)
-            .subscribe((data: iProduto) => {
-              const index = this.tbSourceProdutos$.data
-                .findIndex(p => p.idProduto === data.idProduto);
-              this.tbSourceProdutos$.data[index] = data;
-              this.tableProduto.renderRows();
-            });
-        } else {
-          this.prodService.createElements(result)
-            .subscribe((data: iProduto) => {
-              this.tbSourceProdutos$.data.push(result);
-              this.tableProduto.renderRows();
-            });
-        }
-      }
-    });*/
+    /* dialogRef.afterClosed().subscribe(result => {
+       if (result !== undefined) {
+         if (this.tbSourceProdutos$.data
+           .map(p => p.idProduto).includes(result.idProduto)) {
+           this.prodService.editElement(result)
+             .subscribe((data: iProduto) => {
+               const index = this.tbSourceProdutos$.data
+                 .findIndex(p => p.idProduto === data.idProduto);
+               this.tbSourceProdutos$.data[index] = data;
+               this.tableProduto.renderRows();
+             });
+         } else {
+           this.prodService.createElements(result)
+             .subscribe((data: iProduto) => {
+               this.tbSourceProdutos$.data.push(result);
+               this.tableProduto.renderRows();
+             });
+         }
+       }
+     });*/
   }
 
   editarElement(eventProd: iProduto) {
@@ -160,9 +166,9 @@ export class ProductsComponent implements OnInit {
     if (confirm('Tem certeza em REMOVER este item ?')) {
       this.prodService.delete(id)
         .subscribe(data => {
-       //   this.tbSourceProdutos$.data.pop();
-       //   this.tableProduto.renderRows();
-         this.produtosFiltrados = this.products.filter(
+          //   this.tbSourceProdutos$.data.pop();
+          //   this.tableProduto.renderRows();
+          this.produtosFiltrados = this.products.filter(
             p => p.idProduto !== data.idProduto);//.renderRows();
         });
     }

@@ -1,6 +1,6 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {CommonModule} from '@angular/common';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MatCalendar} from "@angular/material/datepicker";
 import {FormControl, FormGroup} from "@angular/forms";
 import {MatTable, MatTableDataSource} from "@angular/material/table";
@@ -17,6 +17,7 @@ import {ShoppingCartService} from "../../services/shopping-cart.service";
 import {MatDialog} from "@angular/material/dialog";
 import {catchError} from "rxjs/operators";
 import {ErrorDiologComponent} from "../../shared/diolog_components/error-diolog/error-diolog.component";
+import {TokenService} from "../../services/token.service";
 
 
 @Component({
@@ -27,7 +28,7 @@ import {ErrorDiologComponent} from "../../shared/diolog_components/error-diolog/
 })
 export class DashboardComponent implements OnInit {
   events = new FormControl();
-  mensagens!: Observable<string> ;
+  mensagens!: Observable<string>;
   spiner = false;
   pageSize = 20;
   currentPage = 0;
@@ -35,34 +36,37 @@ export class DashboardComponent implements OnInit {
   pagedProdutosFiltrados: iProduto[] = [];
   products: iProduto[] = [];
   produtoControl = new FormControl();
-  searchTerm !:any;
   imageUrl: SafeUrl | undefined;
 
   constructor(
-              public notificationMsg:  NotificationMgsService,
-              private prodService: ProductService,
-              private cartService: ShoppingCartService,
-              public dialog: MatDialog,
-              private sanitizer: DomSanitizer
-              ) { }
+    private tokenServer: TokenService,
+    public notificationMsg: NotificationMgsService,
+    private prodService: ProductService,
+    private cartService: ShoppingCartService,
+    public dialog: MatDialog,
+    private sanitizer: DomSanitizer
+  ) {
+  }
 
   ngOnInit(): void {
     this.listarProdutos();
   }
 
-  listarProdutos(){
+  listarProdutos() {
     this.spiner = true;
     this.prodService.getTodosProdutos()
       .pipe(catchError(error => {
-        this.onError('Erro ao buscar produto.')
-        return of([])}))
-      .subscribe(  (rest: iProduto[])=>  {
-        //this.tbSourceProdutos$.data = rest;
+        if (error === 'Session Expired')
+          this.onError('Sua sessão expirou!');
+        this.tokenServer.clearTokenExpired();
+        return of([])
+      }))
+      .subscribe((rest: iProduto[]) => {
         this.products = rest;
         this.produtosFiltrados = rest;
         this.updatePagedProdutos();
         this.spiner = false;
-      } );
+      });
   }
 
   getImageUrl(fotoProduto: string): SafeUrl {
@@ -98,29 +102,10 @@ export class DashboardComponent implements OnInit {
     );
   }
 
-
   onError(errrorMsg: string) {
     this.dialog.open(ErrorDiologComponent, {
       data: errrorMsg
     });
   }
-
-  search(event:any){
-    this.searchTerm = (event.target as HTMLInputElement).value;
-    console.log(this.searchTerm);
-    this.cartService.search.next(this.searchTerm);
-  }
-
-  showNotification(){
-    this.notificationMsg.openConfirmDialog('Hello')
-      .afterClosed().subscribe(res =>{
-      if (res){
-        this.notificationMsg.openConfirmDialog("Beleza");
-      }
-    });
-    // this.mensagens = this.mensagemService.getNotification();
-    /*   this.mensagemService.getMensagens().subscribe((mensagem) => this.mensagens.push(mensagem)  );*/
-  }
-
 
 }
