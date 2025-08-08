@@ -13,6 +13,7 @@ import { ProductService } from "../../services/product.service";
 import { DialogProdutoComponent } from "../../shared/diolog_components/dialog-produto/dialog-produto.component";
 import { ErrorDiologComponent } from "../../shared/diolog_components/error-diolog/error-diolog.component";
 import {DomSanitizer, SafeUrl} from "@angular/platform-browser";
+import {ShoppingCartService} from "../../services/shopping-cart.service";
 
 registerLocaleData(ptBr);
 
@@ -24,22 +25,17 @@ registerLocaleData(ptBr);
     ],
 })
 export class ProductsComponent implements OnInit {
-  @ViewChild(MatTable) tableProduto!: MatTable<any>;
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
-  @ViewChild(MatSort) sort!: MatSort;
-  pageEvent!: PageEvent;
   spiner = false;
-  displayedColumns: string[] = ['cod_produto', 'descricao'
-    , 'valor_venda', 'quantidade_estoque', 'dt_cadastro', 'imagem', 'opicoes'];
-  tbSourceProdutos$ = new MatTableDataSource<iProduto>();
-  produtosFiltered: iProduto[] = [];
+  pageSize = 20;
+  currentPage = 0;
+  produtosFiltrados: iProduto[] = [];
+  pagedProdutosFiltrados: iProduto[] = [];
   products: iProduto[] = [];
   produtoControl = new FormControl();
-  searchTerm !: string;
   imageUrl: SafeUrl | undefined;
 
   constructor(private prodService: ProductService,
-              /* private cartService: ShoppingCartService,*/
+              private cartService: ShoppingCartService,
               public dialog: MatDialog,
               private sanitizer: DomSanitizer
   ) {
@@ -57,12 +53,13 @@ export class ProductsComponent implements OnInit {
         this.onError('Erro ao buscar produto.')
         return of([])}))
       .subscribe(  (rest: iProduto[])=>  {
-        console.log('Listar de produtos ', rest)
-        this.tbSourceProdutos$.data = rest;
+        this.products = rest;
+        this.produtosFiltrados = rest;
+        this.updatePagedProdutos();
         this.spiner = false;
-        /*  this.tbSourceProdutos$.paginator = this.paginator;*/
       } );
   }
+
   getImageUrl(fotoProduto: string): SafeUrl {
     if (!fotoProduto) return '';
     const objectURL = 'data:image/jpeg;base64,' + fotoProduto;
@@ -76,40 +73,35 @@ export class ProductsComponent implements OnInit {
         .pipe(catchError(error => {
           this.onError('Erro ao buscar produto.')
           return of([])
-        })).subscribe((result: iProduto[]) => {
-        this.tbSourceProdutos$.data = result;
-        console.log("Retorno da MatTableDat ", result)
+        })).subscribe((rest: iProduto[]) => {
+        this.products = rest;
+        this.produtosFiltrados = rest;
       })
     }
   }
 
   consultarPorNome(nomeProd: string) {
-    if (this.produtoControl.valid) {
-      this.prodService.listarProdutoPorNome(nomeProd)
-        .pipe(catchError(error => {
-          this.onError('Erro ao buscar produto.')
-          return of([])
-        }))
-        .subscribe((result: iProduto[]) => {
-          this.aplicarFiltro(nomeProd);
-          this.tbSourceProdutos$.data = result;
-        })
+    if (!nomeProd || nomeProd.trim() === '') {
+      this.produtosFiltrados = this.products;
+    } else {
+      nomeProd = nomeProd.toLowerCase().trim();
+      this.produtosFiltrados = this.products.filter(p =>
+        p.nomeProduto.toLowerCase().includes(nomeProd)
+      );
     }
+    this.currentPage = 0; // Reset para a primeira página ao filtrar
+    this.updatePagedProdutos();
   }
+
 
   changeProdutos(value: any) {
     if (value) {
-      this.produtosFiltered = this.products.filter(
+      this.produtosFiltrados = this.products.filter(
         p => p.idProduto.toString()
           .includes(value.toUpperCase()));
     } else {
-      this.produtosFiltered = this.products;
+      this.produtosFiltrados = this.products;
     }
-  }
-
-  aplicarFiltro(valor: string) {
-    valor = valor.trim().toLowerCase();
-    this.tbSourceProdutos$.filter = valor;
   }
 
   openDialogo(eventProd: iProduto) {
@@ -168,12 +160,26 @@ export class ProductsComponent implements OnInit {
     if (confirm('Tem certeza em REMOVER este item ?')) {
       this.prodService.delete(id)
         .subscribe(data => {
-          this.tbSourceProdutos$.data.pop();
-          this.tableProduto.renderRows();
-          this.tbSourceProdutos$.data = this.produtosFiltered.filter(
+       //   this.tbSourceProdutos$.data.pop();
+       //   this.tableProduto.renderRows();
+         this.produtosFiltrados = this.products.filter(
             p => p.idProduto !== data.idProduto);//.renderRows();
         });
     }
+  }
+
+  onPageChange(event: PageEvent) {
+    this.currentPage = event.pageIndex;
+    this.pageSize = event.pageSize;
+    this.updatePagedProdutos();
+  }
+
+  updatePagedProdutos() {
+    const startIndex = this.currentPage * this.pageSize;
+    this.pagedProdutosFiltrados = this.produtosFiltrados.slice(
+      startIndex,
+      startIndex + this.pageSize
+    );
   }
 
   onError(errrorMsg: string) {
@@ -182,58 +188,9 @@ export class ProductsComponent implements OnInit {
     });
   }
 
-  onMatSortChange() {
-    this.tbSourceProdutos$.sort = this.sort;
-  }
-
   mostrarLinhaClicada(row: any) {
     console.log('Linha clicada -->: ', row);
   }
-
-
-  /*
-    buscarPorNome(valor:string){
-      if(valor !== '') {
-        this.prodService.searchByName(valor).subscribe(
-          (rest: IProduto[]) => {
-            this.tbSourceProdutos$.data = rest;
-            // this.tbSourceProdutos$.paginator = this.paginator;
-          });
-      }
-    }*/
-
-
-  /*
-  removerLinha(index: number){
-    console.log(index);
-    this.tbSourceProdutosL$.splice(index,1);
-    this.tbSourceProdutosL$.length.toString(1);
-    }
-
-    search(event:any){
-      this.searchTerm = (event.target as HTMLInputElement).value;
-      console.log(this.searchTerm);
-      this.cartService.search.next(this.searchTerm);
-    }
-
-    buscar(){
-      if(this.produtoControl.value == ""){
-        this.ngOnInit();
-      }else{
-        this.tbSourceProdutos$.data = this.produtosFiltered.filter(
-          res => {  return res.nome_produto.toLocaleLowerCase()
-              .match(this.produtoControl.value.toLocaleLowerCase());
-          } ) }
-    }
-
-    ...   implements OnInit, AfterViewInit {
-
-  ngAfterViewInit(): void {
-    this.tbSourceProdutos$.sort = this.sort;
-  }
-
-
-  */
 
 
 }

@@ -1,7 +1,6 @@
 import {Component, LOCALE_ID, OnInit, ViewChild} from '@angular/core';
 import {Observable, of} from 'rxjs';
 import {ProductService} from "../../services/product.service";
-import {ShoppingCartService} from "../../services/shopping-cart.service";
 import {catchError} from "rxjs/operators";
 import {ErrorDiologComponent} from "../../shared/diolog_components/error-diolog/error-diolog.component";
 import {MatDialog} from "@angular/material/dialog";
@@ -24,7 +23,7 @@ registerLocaleData(ptBr);
 
 export class ProductsPComponent implements OnInit {
   spiner = false;
-  tbSourceProdutos$ = new MatTableDataSource<iProduto>();
+  //tbSourceProdutos$ = new MatTableDataSource<iProduto>();
   pageSize = 20;
   currentPage = 0;
   produtosFiltrados: iProduto[] = [];
@@ -34,7 +33,6 @@ export class ProductsPComponent implements OnInit {
   imageUrl: SafeUrl | undefined;
 
   constructor(private prodService: ProductService,
-              private cartService: ShoppingCartService,
               public dialog: MatDialog,
               private sanitizer: DomSanitizer
               ) {
@@ -52,7 +50,8 @@ export class ProductsPComponent implements OnInit {
         this.onError('Erro ao buscar produto.')
         return of([])}))
       .subscribe(  (rest: iProduto[])=>  {
-        this.tbSourceProdutos$.data = rest;
+        //this.tbSourceProdutos$.data = rest;
+        this.products = rest;
         this.produtosFiltrados = rest;
         this.updatePagedProdutos();
         this.spiner = false;
@@ -67,11 +66,11 @@ export class ProductsPComponent implements OnInit {
 
   consultarPorNome(nomeProd: string) {
     if (!nomeProd || nomeProd.trim() === '') {
-      this.produtosFiltrados = this.tbSourceProdutos$.data;
+      this.produtosFiltrados = this.products;
     } else {
       nomeProd = nomeProd.toLowerCase().trim();
-      this.produtosFiltrados = this.tbSourceProdutos$.data.filter(produto =>
-        produto.nomeProduto.toLowerCase().includes(nomeProd)
+      this.produtosFiltrados = this.products.filter(p =>
+        p.nomeProduto.toLowerCase().includes(nomeProd)
       );
     }
     this.currentPage = 0; // Reset para a primeira página ao filtrar

@@ -10,7 +10,6 @@ import {MensagemService} from "../../services/mensagem.service";
 import {Observable, of} from "rxjs";
 import {NotificationMgsService} from "../../services/notification-mgs.service";
 import {MatPaginator, PageEvent} from "@angular/material/paginator";
-import {MatSort} from "@angular/material/sort";
 import {iProduto} from "../../interfaces/product";
 import {DomSanitizer, SafeUrl} from "@angular/platform-browser";
 import {ProductService} from "../../services/product.service";
@@ -30,13 +29,10 @@ export class DashboardComponent implements OnInit {
   events = new FormControl();
   mensagens!: Observable<string> ;
   spiner = false;
-  @ViewChild(MatTable) tableProduto!: MatTable<any>;
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
-  @ViewChild(MatSort) sort!: MatSort;
-  pageEvent!: PageEvent;
-  cardProduts= new Observable<iProduto[]>;
-  tbSourceProdutos$ = new MatTableDataSource<iProduto>();
-  produtosFiltered: iProduto[] = [];
+  pageSize = 20;
+  currentPage = 0;
+  produtosFiltrados: iProduto[] = [];
+  pagedProdutosFiltrados: iProduto[] = [];
   products: iProduto[] = [];
   produtoControl = new FormControl();
   searchTerm !:any;
@@ -54,7 +50,6 @@ export class DashboardComponent implements OnInit {
     this.listarProdutos();
   }
 
-
   listarProdutos(){
     this.spiner = true;
     this.prodService.getTodosProdutos()
@@ -62,60 +57,47 @@ export class DashboardComponent implements OnInit {
         this.onError('Erro ao buscar produto.')
         return of([])}))
       .subscribe(  (rest: iProduto[])=>  {
-        this.tbSourceProdutos$.data = rest;
+        //this.tbSourceProdutos$.data = rest;
+        this.products = rest;
+        this.produtosFiltrados = rest;
+        this.updatePagedProdutos();
         this.spiner = false;
-        /*  this.tbSourceProdutos$.paginator = this.paginator;*/
       } );
   }
+
   getImageUrl(fotoProduto: string): SafeUrl {
     if (!fotoProduto) return '';
     const objectURL = 'data:image/jpeg;base64,' + fotoProduto;
     return this.sanitizer.bypassSecurityTrustUrl(objectURL);
   }
 
-  consultarPorCod(codProd: string){
-    if (this.produtoControl.valid) {
-      this.prodService.getProdutoPorCod(codProd)
-        .pipe(catchError(error => {
-          this.onError('Erro ao buscar produto.')
-          return of([]) })).subscribe((result:iProduto[]) => {
-        this.tbSourceProdutos$.data = result;
-        console.log("Retorno da MatTableDat ", result )
-      } )
-    }
-  }
-
-  consultarPorNome(nomeProd: string){
-    if (this.produtoControl.valid) {
-      this.prodService.listarProdutoPorNome(nomeProd)
-        .pipe(catchError(error => {
-          this.onError('Erro ao buscar produto.')
-          return of([]) }))
-        .subscribe((result:iProduto[]) => {
-          this.aplicarFiltro(nomeProd);
-          this.tbSourceProdutos$.data = result;
-          console.log(result)
-        } )
-    }
-  }
-
-  aplicarFiltro(valor: string) {
-    valor = valor.trim().toLowerCase();
-    this.tbSourceProdutos$.filter = valor;
-  }
-
-  loginAndAddProd(){
-    //  this.router.navigate(['/auth/login']);
-  }
-
-  changeProdutos(value: any){
-    if (value) {
-      this.produtosFiltered = this.products.filter(products => products.idProduto.toString()
-        .includes(value.toUpperCase()));
+  consultarPorNome(nomeProd: string) {
+    if (!nomeProd || nomeProd.trim() === '') {
+      this.produtosFiltrados = this.products;
     } else {
-      this.produtosFiltered = this.products;
+      nomeProd = nomeProd.toLowerCase().trim();
+      this.produtosFiltrados = this.products.filter(p =>
+        p.nomeProduto.toLowerCase().includes(nomeProd)
+      );
     }
+    this.currentPage = 0; // Reset para a primeira página ao filtrar
+    this.updatePagedProdutos();
   }
+
+  onPageChange(event: PageEvent) {
+    this.currentPage = event.pageIndex;
+    this.pageSize = event.pageSize;
+    this.updatePagedProdutos();
+  }
+
+  updatePagedProdutos() {
+    const startIndex = this.currentPage * this.pageSize;
+    this.pagedProdutosFiltrados = this.produtosFiltrados.slice(
+      startIndex,
+      startIndex + this.pageSize
+    );
+  }
+
 
   onError(errrorMsg: string) {
     this.dialog.open(ErrorDiologComponent, {

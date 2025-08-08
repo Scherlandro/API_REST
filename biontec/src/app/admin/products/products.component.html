@@ -9,10 +9,7 @@
     </button>
     <input class="input-table" type="text" placeholder=" Digite a consulta" matInput
            [formControl]="produtoControl"
-           (keypress)="changeProdutos(produtoControl.value)"
-           (keydown)="listarProdutos()"
-           (ngModelChange)="consultarPorNome(produtoControl.value)"
-    />
+           (input)="consultarPorNome(produtoControl.value)"/>
     <button class="button-search body" (click)="consultarPorNome(produtoControl.value)">Search</button>
 
   </mat-toolbar>
@@ -30,7 +27,7 @@
     </div>
 
     <div class="products-grid">
-      <mat-card *ngFor="let produto of tbSourceProdutos$.data" class="product-card">
+      <mat-card *ngFor="let produto of pagedProdutosFiltrados" class="product-card">
         <div class="card-content-wrapper">
           <div class="card-image">
               <div class=" cubo-main">
@@ -76,13 +73,14 @@
         </div>
       </mat-card>
     </div>
-
-    <mat-paginator [length]="100"
-                   [pageSize]="5"
-                   [pageSizeOptions]="[5, 10, 25, 100]"
-                   (page)="pageEvent = $event"
-                   class="componet-gradient body">
+    <mat-paginator [length]="produtosFiltrados.length"
+                   [pageSize]="20"
+                   [pageSizeOptions]="[20, 40, 60]"
+                   (page)="onPageChange($event)"
+                   aria-label="Select page"
+                   class="componet-table body">
     </mat-paginator>
+
   </mat-card-content>
 
 </div>
