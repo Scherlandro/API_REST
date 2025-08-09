@@ -13,7 +13,7 @@ import {ProductService} from "../../services/product.service";
 import {DialogProdutoComponent} from "../../shared/diolog_components/dialog-produto/dialog-produto.component";
 import {ErrorDiologComponent} from "../../shared/diolog_components/error-diolog/error-diolog.component";
 import {DomSanitizer, SafeUrl} from "@angular/platform-browser";
-import {ShoppingCartService} from "../../services/shopping-cart.service";
+import {PurchaseStateService} from "../../services/purchase-state.service";
 import {TokenService} from "../../services/token.service";
 
 registerLocaleData(ptBr);
@@ -38,7 +38,7 @@ export class ProductsComponent implements OnInit {
   constructor(
     private tokenServer: TokenService,
     private prodService: ProductService,
-    private cartService: ShoppingCartService,
+    private cartService: PurchaseStateService,
     public dialog: MatDialog,
     private sanitizer: DomSanitizer
   ) {

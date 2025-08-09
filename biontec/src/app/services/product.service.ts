@@ -28,8 +28,12 @@ export class ProductService {
     return this._http.get<string[]>(this.baseUrl+'all');
   }
 
-  getProdutoPorCod(id: string): Observable<any> {
+  getIdProduto(id: number): Observable<any> {
+    return this._http.get(this.baseUrl + id)
+      .pipe(map(response => response));
+  }
 
+  getProdutoPorCod(id: string): Observable<any> {
     return this._http.get(this.baseUrl + id)
       .pipe(map(response => response));
   }

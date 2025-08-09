@@ -4,12 +4,33 @@ import {BehaviorSubject, Observable, Subject} from "rxjs";
 @Injectable({
   providedIn: 'root'
 })
-export class ShoppingCartService {
+export class PurchaseStateService {
   private total = 0;
   private cartCount$ = new Subject<number>();
   public search = new BehaviorSubject<string>("");
+  private selectedProductId = new BehaviorSubject<number | null>(null);
 
   constructor() { }
+
+  setSelectedProduct(id: number) {
+    this.selectedProductId.next(id);
+    // Armazena também no localStorage para persistência
+    localStorage.setItem('selectedProductId', id.toString());
+  }
+
+  getSelectedProduct() {
+    // Verifica se há um ID no localStorage (útil se a página for recarregada)
+    const storedId = localStorage.getItem('selectedProductId');
+    if (storedId && !this.selectedProductId.value) {
+      this.selectedProductId.next(Number(storedId));
+    }
+    return this.selectedProductId.asObservable();
+  }
+
+  clearSelectedProduct() {
+    this.selectedProductId.next(null);
+    localStorage.removeItem('selectedProductId');
+  }
 
   getCartCount(): Observable<number> {
     return this.cartCount$.asObservable();

@@ -13,7 +13,7 @@ import {MatPaginator, PageEvent} from "@angular/material/paginator";
 import {iProduto} from "../../interfaces/product";
 import {DomSanitizer, SafeUrl} from "@angular/platform-browser";
 import {ProductService} from "../../services/product.service";
-import {ShoppingCartService} from "../../services/shopping-cart.service";
+import {PurchaseStateService} from "../../services/purchase-state.service";
 import {MatDialog} from "@angular/material/dialog";
 import {catchError} from "rxjs/operators";
 import {ErrorDiologComponent} from "../../shared/diolog_components/error-diolog/error-diolog.component";
@@ -28,6 +28,7 @@ import {TokenService} from "../../services/token.service";
 })
 export class DashboardComponent implements OnInit {
   events = new FormControl();
+  selectedProduct: iProduto | null = null; // Alterado para armazenar o produto completo
   mensagens!: Observable<string>;
   spiner = false;
   pageSize = 20;
@@ -42,7 +43,7 @@ export class DashboardComponent implements OnInit {
     private tokenServer: TokenService,
     public notificationMsg: NotificationMgsService,
     private prodService: ProductService,
-    private cartService: ShoppingCartService,
+    private purchaseState: PurchaseStateService,
     public dialog: MatDialog,
     private sanitizer: DomSanitizer
   ) {
@@ -50,6 +51,42 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit(): void {
     this.listarProdutos();
+   // const productId = localStorage.getItem('selectedProductId');
+
+    this.purchaseState.getSelectedProduct().subscribe(productId => {
+      if (productId) {
+        this.loadProductDetails(productId);
+      }
+    });
+  }
+
+  loadProductDetails(productId: number) {
+    this.prodService.getIdProduto(productId).subscribe({
+      next: (response) => {
+        // Assumindo que a API retorna o produto diretamente ou em response.body
+        this.selectedProduct = response.body || response;
+
+        // Opcional: destacar o produto na lista
+        if (this.selectedProduct) {
+          this.highlightProductInList(this.selectedProduct.idProduto);
+        }
+      },
+      error: (err) => {
+        console.error('Erro ao carregar produto:', err);
+      }
+    });
+  }
+
+  // Método para destacar o produto na lista (opcional)
+  highlightProductInList(productId: number) {
+    this.products = this.products.map(p => {
+      return {
+        ...p,
+        highlighted: p.idProduto === productId
+      };
+    });
+    this.produtosFiltrados = [...this.products];
+    this.updatePagedProdutos();
   }
 
   listarProdutos() {
@@ -82,6 +119,18 @@ export class DashboardComponent implements OnInit {
       nomeProd = nomeProd.toLowerCase().trim();
       this.produtosFiltrados = this.products.filter(p =>
         p.nomeProduto.toLowerCase().includes(nomeProd)
+      );
+    }
+    this.currentPage = 0; // Reset para a primeira página ao filtrar
+    this.updatePagedProdutos();
+  }
+
+  consultarPorID(id:number) {
+    if (!id || id == null) {
+      this.produtosFiltrados = this.products;
+    } else {
+      this.produtosFiltrados = this.products.filter(p =>
+        p.idProduto.toString(id)
       );
     }
     this.currentPage = 0; // Reset para a primeira página ao filtrar

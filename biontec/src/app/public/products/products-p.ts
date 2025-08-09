@@ -11,6 +11,8 @@ import { PageEvent} from "@angular/material/paginator";
 import {registerLocaleData} from "@angular/common";
 import ptBr from "@angular/common/locales/pt";
 import {DomSanitizer, SafeUrl} from "@angular/platform-browser";
+import {Router} from "@angular/router";
+import {PurchaseStateService} from "../../services/purchase-state.service";
 
 registerLocaleData(ptBr);
 
@@ -34,8 +36,10 @@ export class ProductsPComponent implements OnInit {
 
   constructor(private prodService: ProductService,
               public dialog: MatDialog,
-              private sanitizer: DomSanitizer
-              ) {
+              private sanitizer: DomSanitizer,
+              private router: Router,
+              private purchaseState: PurchaseStateService
+  ) {
   }
 
   ngOnInit(): void {
@@ -98,5 +102,13 @@ export class ProductsPComponent implements OnInit {
     });
   }
 
+  preparePurchase(productId: number) {
+    // Armazena o ID do produto no localStorage ou em um serviço
+   // localStorage.setItem('selectedProductId', productId.toString());
+    console.log('ID do produto selecionado', productId);
+    // Redireciona para login
+    this.purchaseState.setSelectedProduct(productId);
+    this.router.navigate(['/auth/login']);
+  }
 
 }

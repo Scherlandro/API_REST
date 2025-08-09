@@ -1,3 +1,37 @@
+<div *ngIf="selectedProduct" class="selected-product-banner">
+  <h3>Continue sua compra:</h3>
+  <div class="product-card">
+    <div class="cubo-main-p">
+      <div class="cubo">
+        <img class="face-p front-p" [src]="getImageUrl(selectedProduct.fotoProduto)" *ngIf="selectedProduct.fotoProduto">
+        <img class="face-p back-p" src="/assets/image/r2_d2.png">
+        <img class="face-p right-p" src="/assets/image/obi_wan.png">
+        <img class="face-p left-p" src="/assets/image/clone_old.png">
+      </div>
+    </div>
+
+    <div class="product-content">
+      <h3 class="product-title">{{selectedProduct.nomeProduto}}</h3>
+      <div class="price-section">
+        <span class="price">{{selectedProduct.valorVenda | currency: 'BRL'}}</span>
+        <span *ngIf="selectedProduct.qtdEstoque > 0" class="stock-available">Em estoque</span>
+        <span *ngIf="selectedProduct.qtdEstoque <= 0" class="stock-unavailable">Sem estoque</span>
+      </div>
+      <div class="shipping-info">
+        <mat-icon>local_shipping</mat-icon>
+        <span>Frete grátis</span>
+      </div>
+    </div>
+
+    <div class="product-actions">
+      <button mat-raised-button color="primary" class="add-to-cart">
+        <mat-icon>add_shopping_cart</mat-icon>
+        Finalizar Compra
+      </button>
+    </div>
+  </div>
+</div>
+
 <div>
 
   <div>
