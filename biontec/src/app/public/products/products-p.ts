@@ -5,7 +5,6 @@ import {catchError} from "rxjs/operators";
 import {ErrorDiologComponent} from "../../shared/diolog_components/error-diolog/error-diolog.component";
 import {MatDialog} from "@angular/material/dialog";
 import { FormControl} from "@angular/forms";
-import { MatTableDataSource} from "@angular/material/table";
 import {iProduto} from "../../interfaces/product";
 import { PageEvent} from "@angular/material/paginator";
 import {registerLocaleData} from "@angular/common";
@@ -25,7 +24,6 @@ registerLocaleData(ptBr);
 
 export class ProductsPComponent implements OnInit {
   spiner = false;
-  //tbSourceProdutos$ = new MatTableDataSource<iProduto>();
   pageSize = 20;
   currentPage = 0;
   produtosFiltrados: iProduto[] = [];
@@ -54,7 +52,6 @@ export class ProductsPComponent implements OnInit {
         this.onError('Erro ao buscar produto.')
         return of([])}))
       .subscribe(  (rest: iProduto[])=>  {
-        //this.tbSourceProdutos$.data = rest;
         this.products = rest;
         this.produtosFiltrados = rest;
         this.updatePagedProdutos();
@@ -103,10 +100,6 @@ export class ProductsPComponent implements OnInit {
   }
 
   preparePurchase(productId: number) {
-    // Armazena o ID do produto no localStorage ou em um serviço
-   // localStorage.setItem('selectedProductId', productId.toString());
-    console.log('ID do produto selecionado', productId);
-    // Redireciona para login
     this.purchaseState.setSelectedProduct(productId);
     this.router.navigate(['/auth/login']);
   }

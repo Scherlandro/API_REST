@@ -68,7 +68,16 @@ export class DashboardComponent implements OnInit {
 
         // Opcional: destacar o produto na lista
         if (this.selectedProduct) {
+          // Destaca o produto na lista
           this.highlightProductInList(this.selectedProduct.idProduto);
+
+          // Rolagem automática para o produto destacado (opcional)
+          setTimeout(() => {
+            const element = document.querySelector('.highlighted');
+            if (element) {
+              element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+          }, 500);
         }
       },
       error: (err) => {
@@ -77,14 +86,26 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  // Método para destacar o produto na lista (opcional)
+  // Método para destacar o produto na lista
   highlightProductInList(productId: number) {
+    // Remove o destaque de todos os produtos primeiro
+    this.products = this.products.map(p => ({
+      ...p,
+      highlighted: false
+    }));
+
+    // Aplica o destaque apenas ao produto selecionado
     this.products = this.products.map(p => {
-      return {
-        ...p,
-        highlighted: p.idProduto === productId
-      };
+      if (p.idProduto === productId) {
+        return {
+          ...p,
+          highlighted: true
+        };
+      }
+      return p;
     });
+
+    // Atualiza a lista filtrada e paginada
     this.produtosFiltrados = [...this.products];
     this.updatePagedProdutos();
   }
@@ -155,6 +176,12 @@ export class DashboardComponent implements OnInit {
     this.dialog.open(ErrorDiologComponent, {
       data: errrorMsg
     });
+  }
+
+  clearHighlight() {
+    this.selectedProduct = null;
+    this.purchaseState.clearSelectedProduct();
+    this.highlightProductInList(-1); // Passa um ID inválido para remover todos os destaques
   }
 
 }

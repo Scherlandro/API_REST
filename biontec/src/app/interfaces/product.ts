@@ -19,6 +19,7 @@ export interface iProduto {
   idFornecedor?: number
   idModelo?: number
   fotoProduto: any;
+  highlighted?: boolean;
 
 }
 /*
