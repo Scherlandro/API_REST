@@ -1,6 +1,15 @@
 <div *ngIf="selectedProduct" class="selected-product-banner">
-  <h3>Continue sua compra:</h3>
+
+  <div class="products-grid">
+
+    <h3>Continue sua compra:</h3>
   <div class="product-card">
+
+    <button mat-raised-button color="error" class="remove-cart"
+            (click)="clearHighlight()" matTooltip="Fechar">
+      <mat-icon>delete</mat-icon>
+    </button>
+
     <div class="spinner-container2">
     <div class="cubo-main-p">
       <div class="cubo">
@@ -31,11 +40,11 @@
         Finalizar Compra
       </button>
     </div>
-    <button mat-icon-button (click)="clearHighlight()" matTooltip="Fechar">
-    <mat-icon>close</mat-icon>
-  </button>
+
+  </div>
   </div>
 </div>
+
 
 <div>
 
