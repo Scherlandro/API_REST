@@ -12,7 +12,7 @@ export interface iVendas {
   totalgeral: string,
   formasDePagamento: string,
   qtdDeParcelas: number,
-  itensVd: iItensVd
+  itensVd: iItensVd[]
  /*   updatedAt?: string,
     createdAt?: string,
     deletedAt?: null | string*/

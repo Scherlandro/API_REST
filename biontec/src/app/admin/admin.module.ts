@@ -17,6 +17,7 @@ import { OrdemDeServiceComponent } from "./ordem-de-service/ordem-de-service.com
 import { ProductsComponent } from "./products/products.component";
 import { UsuariosComponent } from "./usuarios/usuarios.component";
 import { VendaComponent } from "./vendas/vendas.component";
+import { CarrinhoDeComprasComponent } from './carrinho-de-compras/carrinho-de-compras.component';
 
 
 @NgModule({
@@ -32,6 +33,7 @@ import { VendaComponent } from "./vendas/vendas.component";
     ContabilidadeComponent,
     VendaComponent,
     OrdemDeServiceComponent,
+    CarrinhoDeComprasComponent,
   ],
     imports: [
         CommonModule,

@@ -40,35 +40,25 @@
 <form *ngIf="mostrarMenuHeader" class="nav-head componet-table ">
 
   <!---  Menu horizontal --->
-  <mat-icon class="lable-link body"
+  <mat-icon class="lable-link body" title="home"
             routerLinkActive="active" routerLink="dashboard">home
   </mat-icon>
 
-  <button mat-button class="comp-menu body" routerLink="usuarios">Usuarios</button>
+  <mat-icon class="lable-link body" title="Usuários" routerLink="usuarios">person</mat-icon>
 
-  <button mat-button class="comp-menu body" routerLink="funcionarios">Funcionarios</button>
+  <mat-icon class="lable-link body" title="Funcinários" routerLink="funcionarios">engineering</mat-icon> <!-- managers-->
 
-  <button mat-button class="comp-menu body" routerLink="clientes">Clientes</button>
-  <!--
-<a  mat-button=""  [routerLink]="['user-demo',idUsuario.value]" >
-  Id do Usuario</a>
--->
-  <button mat-button class="comp-menu body" routerLink="produtos">Produtos</button>
+  <mat-icon class="lable-link body" title="Clientes" routerLink="clientes">workman</mat-icon>
 
-  <button mat-button class="comp-menu body" routerLink="vendas">Vendas</button>
+  <mat-icon class="lable-link body" title="Produtos" routerLink="produtos">storefront</mat-icon>
 
-  <button mat-button class="comp-menu body" routerLink="os">Serviços</button>
+  <mat-icon class="lable-link body" title="Vendas" routerLink="vendas">shopping </mat-icon>
 
-  <button mat-button class="comp-menu body" routerLink="contabilidade">Contabilidade</button>
+  <mat-icon class="lable-link body" title="Carrinho de Compras" routerLink="carrinho-de-compras" >shopping_cart</mat-icon>
 
-  <!--  <button mat-button class="comp-menu" routerLink="/busca">Buscas</button>-->
-  <!--
-    <div class="sidemenu">
-      <a href="admin/dashboard"><mat-icon src="assets/icons/jango_fett.png" alt="Meus favoritos" class="menu-image"></mat-icon></a>
-      <a href="admin/dashboard"><mat-icon  src="assets/icons/boba_fett.png" alt="Carrinhos de compras" class="menu-image"></mat-icon></a>
-      <a href="admin/dashboard"><img src="assets/icons/obi_wan.png" alt="Meu perfil" class="menu-image"></a>
-    </div>
-  -->
+  <mat-icon class="lable-link body" title="Ordem de Serviços" routerLink="os">handyman</mat-icon>
+
+  <mat-icon class="lable-link body" title="Contabilidade" routerLink="contabilidade">assessment</mat-icon>
 
 
 </form>

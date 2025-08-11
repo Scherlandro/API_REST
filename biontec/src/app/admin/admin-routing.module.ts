@@ -9,6 +9,7 @@ import {ContabilidadeComponent} from "./contabilidade/contabilidade.component";
 import {VendaComponent} from "./vendas/vendas.component";
 import {OrdemDeServiceComponent} from "./ordem-de-service/ordem-de-service.component";
 import {FuncionariosComponent} from "./funcionarios/funcionarios.component";
+import {CarrinhoDeComprasComponent} from "./carrinho-de-compras/carrinho-de-compras.component";
 
 const routes: Routes = [
   {
@@ -21,6 +22,7 @@ const routes: Routes = [
       {path: 'usuarios', component: UsuariosComponent},
       {path: 'produtos', component: ProductsComponent},
       {path: 'contabilidade', component: ContabilidadeComponent},
+      {path: 'carrinho-de-compras', component: CarrinhoDeComprasComponent},
       {path: 'vendas', component: VendaComponent},
       {path: 'os', component: OrdemDeServiceComponent},
    /* {path: 'itenSale', loadChildren:()=>import('./vendas/c-add/c-add.component')
