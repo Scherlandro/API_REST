@@ -42,7 +42,5 @@ import { VendaComponent } from "./vendas/vendas.component";
         FormsModule,
         HighchartsChartModule
     ],
-
- // exports:[ErrorDiologComponent]
 })
 export class AdminModule { }

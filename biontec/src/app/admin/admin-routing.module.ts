@@ -23,12 +23,8 @@ const routes: Routes = [
       {path: 'contabilidade', component: ContabilidadeComponent},
       {path: 'vendas', component: VendaComponent},
       {path: 'os', component: OrdemDeServiceComponent},
-      /*
-       {
-        path: 'itenSale', loadChildren:()=>import('./vendas/c-add/c-add.component')
-          .then(m => m.CAddComponent)
-      }
-      */
+   /* {path: 'itenSale', loadChildren:()=>import('./vendas/c-add/c-add.component')
+          .then(m => m.CAddComponent)  }  */
     ]
   }
 ];
