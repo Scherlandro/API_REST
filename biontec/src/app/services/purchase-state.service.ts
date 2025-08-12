@@ -32,11 +32,10 @@ export class PurchaseStateService {
     localStorage.removeItem('selectedProductId');
   }
 
-  startSaleOfSelectedProduct(idUsuario: number, idProduto: number) {
-    const starSale = [idUsuario,idProduto];
+  startSaleOfSelectedProduct(userName: string, idProduto: number) {
+    const starSale = [userName,idProduto];
     this.startSellingSelectedProduct.next(starSale);
     // Armazena também no localStorage para persistência
-    //localStorage.setItem('selectedProductId', idProduto.toString());
     localStorage.setItem('startSaleOfSelectedProduct', starSale.toString());
   }
 

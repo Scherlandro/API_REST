@@ -3,7 +3,6 @@ import {CommonModule} from '@angular/common';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MatCalendar} from "@angular/material/datepicker";
 import {FormControl, FormGroup} from "@angular/forms";
-import {MatTable, MatTableDataSource} from "@angular/material/table";
 import {IUser} from "../../interfaces/user";
 import {DialogUsuarioComponent} from "../../shared/diolog_components/dialog-usuario/dialog-usuario.component";
 import {MensagemService} from "../../services/mensagem.service";
@@ -19,6 +18,7 @@ import {catchError} from "rxjs/operators";
 import {ErrorDiologComponent} from "../../shared/diolog_components/error-diolog/error-diolog.component";
 import {TokenService} from "../../services/token.service";
 import {Router} from "@angular/router";
+import {AuthService} from "../../services/auth.service";
 
 
 @Component({
@@ -30,7 +30,7 @@ import {Router} from "@angular/router";
 export class DashboardComponent implements OnInit {
   events = new FormControl();
   selectedProduct: iProduto | null = null; // Alterado para armazenar o produto completo
-  selectedUser!: IUser;
+  selectedUser!: string; //= { id: 0, name: '',  username: '' };
   mensagens!: Observable<string>;
   spiner = false;
   pageSize = 20;
@@ -43,6 +43,7 @@ export class DashboardComponent implements OnInit {
 
   constructor(
     private tokenServer: TokenService,
+    private authService: AuthService,
     private router: Router,
     public notificationMsg: NotificationMgsService,
     private prodService: ProductService,
@@ -53,7 +54,8 @@ export class DashboardComponent implements OnInit {
   }
 
   ngOnInit(): void {
-   // this.user = this.tokenServer.getPayload();
+    this.selectedUser = this.authService.getUserName();
+    console.log('logado com: ', this.selectedUser);
     this.listarProdutos();
    // const productId = localStorage.getItem('selectedProductId');
     this.prodSelecionado();
@@ -185,9 +187,11 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  launchingPurchaseToShoppingCart(userId:number, productId: number) {
-    if(userId == null){ this.selectedUser.id_usuario = this.tokenServer.getPayload().id;}
-    this.purchaseState.startSaleOfSelectedProduct(userId, productId);
+  launchingPurchaseToShoppingCart(userName:string, productId: number) {
+    if(userName == null || productId == null){
+      console.info('Usuário ou produto nulo',  userName , productId)
+    }
+    this.purchaseState.startSaleOfSelectedProduct(userName, productId);
     this.router.navigate(['/admin/carrinho-de-compras']);
   }
 
