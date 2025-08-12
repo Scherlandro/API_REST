@@ -15,7 +15,6 @@
       <button mat-menu-item class="body">
         <mat-icon class="menu-image sidemenu " Align="center"
         title="Bem vindo {{nameDoUsuario}}" >
-
         </mat-icon>
 
       <h5>{{nameDoUsuario}}</h5></button>
@@ -39,10 +38,8 @@
 </div>
 <form *ngIf="mostrarMenuHeader" class="nav-head componet-table ">
 
-  <!---  Menu horizontal --->
-  <mat-icon class="lable-link body" title="home"
-            routerLinkActive="active" routerLink="dashboard">home
-  </mat-icon>
+  <!---  Menu horizontal   --->
+  <mat-icon class="lable-link body" title="home"  routerLink="dashboard">home</mat-icon>
 
   <mat-icon class="lable-link body" title="Usuários" routerLink="usuarios">person</mat-icon>
 

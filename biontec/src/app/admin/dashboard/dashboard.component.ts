@@ -18,6 +18,7 @@ import {MatDialog} from "@angular/material/dialog";
 import {catchError} from "rxjs/operators";
 import {ErrorDiologComponent} from "../../shared/diolog_components/error-diolog/error-diolog.component";
 import {TokenService} from "../../services/token.service";
+import {Router} from "@angular/router";
 
 
 @Component({
@@ -41,6 +42,7 @@ export class DashboardComponent implements OnInit {
 
   constructor(
     private tokenServer: TokenService,
+    private router: Router,
     public notificationMsg: NotificationMgsService,
     private prodService: ProductService,
     private purchaseState: PurchaseStateService,
@@ -177,6 +179,12 @@ export class DashboardComponent implements OnInit {
       data: errrorMsg
     });
   }
+
+  preparePurchase(productId: number) {
+    this.purchaseState.setSelectedProduct(productId);
+    this.router.navigate(['/admin/carrinho-de-compras']);
+  }
+
 
   clearHighlight() {
     this.selectedProduct = null;

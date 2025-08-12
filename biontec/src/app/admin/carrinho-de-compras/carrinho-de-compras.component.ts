@@ -79,13 +79,13 @@ export class CarrinhoDeComprasComponent implements OnInit {
   }
 
   inicializarNovaVenda(): void {
-    // Aqui você pode inicializar uma nova venda com dados padrão
-    // ou carregar do localStorage se for um carrinho temporário
+    // Aqui inicializa uma nova venda com dados padrão
+    // ou carrega do localStorage se for um carrinho temporário
     this.venda = {
       idVenda: 0,
-      idCliente: 0, // Você pode obter do serviço de autenticação
-      nomeCliente: '', // Você pode obter do serviço de autenticação
-      idFuncionario: 0, // Você pode obter do serviço de autenticação
+      idCliente: 0, // pode obter do serviço de autenticação
+      nomeCliente: '', // pode obter do serviço de autenticação
+      idFuncionario: 0, // pode obter do serviço de autenticação
       nomeFuncionario: 'Atendente Virtual',
       dtVenda: new Date().toISOString(),
       subtotal: "0",
@@ -131,9 +131,8 @@ export class CarrinhoDeComprasComponent implements OnInit {
     const itemId = item.idItensVd;
 
     if (itemId) {
-      // Na API real, você precisaria de um método para deletar itens
-      // Como não temos no serviço, vou simular com o editElement
-      // Em produção, crie um método delete no serviço
+      // Na API real precisarei de um método para deletar itens
+      // Enquanto não tenho no serviço, vou simular com o editElement
       this.itensVdService.editElement(item).subscribe({
         next: () => {
           this.venda.itensVd.splice(index, 1);
