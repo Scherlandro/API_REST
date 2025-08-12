@@ -4,6 +4,9 @@ import {ItensVdService} from "../../services/itens-vd.service";
 import {ActivatedRoute} from "@angular/router";
 import {iItensVd} from "../../interfaces/itens-vd";
 import {iVendas} from "../../interfaces/vendas";
+import {PurchaseStateService} from "../../services/purchase-state.service";
+import {ProductService} from "../../services/product.service";
+import {iProduto} from "../../interfaces/product";
 
 @Component({
   selector: 'app-carrinho-de-compras',
@@ -11,6 +14,7 @@ import {iVendas} from "../../interfaces/vendas";
   styleUrls: ['./carrinho-de-compras.component.css']
 })
 export class CarrinhoDeComprasComponent implements OnInit {
+  selectedProduct: iProduto | null = null; // Alterado para armazenar o produto completo
   venda: iVendas = {
     idVenda: 0,
     idCliente: 0,
@@ -30,12 +34,15 @@ export class CarrinhoDeComprasComponent implements OnInit {
   erroCarregamento: string | null = null;
 
   constructor(
+    private purchaseState: PurchaseStateService,
     private vendasService: VendasService,
     private itensVdService: ItensVdService,
+    private prodService: ProductService,
     private route: ActivatedRoute
   ) { }
 
   ngOnInit(): void {
+    this.itenSelecionado();
     this.route.paramMap.subscribe(params => {
       const idVenda = params.get('id');
       if (idVenda) {
@@ -62,6 +69,46 @@ export class CarrinhoDeComprasComponent implements OnInit {
       }
     });
   }
+
+  itenSelecionado(){
+    this.purchaseState.getSelectedProduct().subscribe(productId => {
+      if (productId) {
+        this.loadProductDetails(productId);
+      }
+    });
+  }
+
+
+  loadProductDetails(productId: number) {
+    this.prodService.getIdProduto(productId).subscribe({
+      next: (response) => {
+        // Assumindo que a API retorna o produto diretamente ou em response.body
+       // this.selectedProduct = response.body || response;
+        this.venda.itensVd = response.body || response;
+        console.log('ItenVD chegou aqui', this.venda.itensVd)
+        // Opcional: destacar o produto na lista
+        if (this.venda.itensVd) {
+          console.log('Detalhe dos ITENS', this.venda.itensVd)
+          // Destaca o produto na lista
+         // this.highlightProductInList(this.selectedProduct.idProduto);
+
+          // Rolagem automática para o produto destacado (opcional)
+          setTimeout(() => {
+            const element = document.querySelector('.highlighted');
+            if (element) {
+              element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+          }, 500);
+        }
+      },
+      error: (err) => {
+        console.error('Erro ao carregar produto:', err);
+      }
+    });
+  }
+
+
+
 
   carregarItensVenda(idVenda: string): void {
     this.itensVdService.listarItensVdPorCodVenda(idVenda).subscribe({
