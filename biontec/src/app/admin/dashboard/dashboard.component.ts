@@ -30,6 +30,7 @@ import {Router} from "@angular/router";
 export class DashboardComponent implements OnInit {
   events = new FormControl();
   selectedProduct: iProduto | null = null; // Alterado para armazenar o produto completo
+  selectedUser!: IUser;
   mensagens!: Observable<string>;
   spiner = false;
   pageSize = 20;
@@ -52,11 +53,16 @@ export class DashboardComponent implements OnInit {
   }
 
   ngOnInit(): void {
+   // this.user = this.tokenServer.getPayload();
     this.listarProdutos();
    // const productId = localStorage.getItem('selectedProductId');
+    this.prodSelecionado();
+  }
 
+  prodSelecionado(){
     this.purchaseState.getSelectedProduct().subscribe(productId => {
       if (productId) {
+        console.log('productId', productId)
         this.loadProductDetails(productId);
       }
     });
@@ -87,7 +93,6 @@ export class DashboardComponent implements OnInit {
       }
     });
   }
-
   // Método para destacar o produto na lista
   highlightProductInList(productId: number) {
     // Remove o destaque de todos os produtos primeiro
@@ -180,8 +185,9 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  preparePurchase(productId: number) {
-    this.purchaseState.setSelectedProduct(productId);
+  launchingPurchaseToShoppingCart(userId:number, productId: number) {
+    if(userId == null){ this.selectedUser.id_usuario = this.tokenServer.getPayload().id;}
+    this.purchaseState.startSaleOfSelectedProduct(userId, productId);
     this.router.navigate(['/admin/carrinho-de-compras']);
   }
 

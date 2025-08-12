@@ -72,11 +72,11 @@ export class CarrinhoDeComprasComponent implements OnInit {
     });
   }
 
-  itenSelecionado(){
-    this.purchaseState.getSelectedProduct().subscribe(productId => {
-      if (productId) {
-        console.log('productId', productId)
-        this.loadProductDetails(productId);
+  itenSelecionado(){ // launchingPurchaseToShoppingCart
+    this.purchaseState.getSaleOfSelectedProduct().subscribe(sale => {
+      if (sale) {
+        console.log('Detalhe de venda iniciada', sale)
+      //  this.loadProductDetails(sale);
       }
     });
   }

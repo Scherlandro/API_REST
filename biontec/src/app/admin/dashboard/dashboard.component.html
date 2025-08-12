@@ -36,7 +36,7 @@
 
     <div class="product-actions">
       <button mat-raised-button color="primary" class="add-to-cart"
-              (click)="preparePurchase(selectedProduct.idProduto)">
+              (click)="launchingPurchaseToShoppingCart(selectedUser.id_usuario, selectedProduct.idProduto)">
         <mat-icon>add_shopping_cart</mat-icon>
         Finalizar Compra
       </button>

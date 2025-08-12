@@ -9,7 +9,7 @@ export class PurchaseStateService {
   private cartCount$ = new Subject<number>();
   public search = new BehaviorSubject<string>("");
   private selectedProductId = new BehaviorSubject<number | null>(null);
-
+  private startSellingSelectedProduct = new BehaviorSubject<any>(null);
   constructor() { }
 
   setSelectedProduct(id: number) {
@@ -30,6 +30,23 @@ export class PurchaseStateService {
   clearSelectedProduct() {
     this.selectedProductId.next(null);
     localStorage.removeItem('selectedProductId');
+  }
+
+  startSaleOfSelectedProduct(idUsuario: number, idProduto: number) {
+    const starSale = [idUsuario,idProduto];
+    this.startSellingSelectedProduct.next(starSale);
+    // Armazena também no localStorage para persistência
+    //localStorage.setItem('selectedProductId', idProduto.toString());
+    localStorage.setItem('startSaleOfSelectedProduct', starSale.toString());
+  }
+
+  getSaleOfSelectedProduct() {
+    // Verifica se há um ID no localStorage (útil se a página for recarregada)
+    const storedId = localStorage.getItem('startSaleOfSelectedProduct');
+    if (storedId && !this.startSellingSelectedProduct.value) {
+      this.startSellingSelectedProduct.next(Number(storedId));
+    }
+    return this.startSellingSelectedProduct.asObservable();
   }
 
   getCartCount(): Observable<number> {
