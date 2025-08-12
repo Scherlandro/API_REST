@@ -7,6 +7,7 @@ import {iVendas} from "../../interfaces/vendas";
 import {PurchaseStateService} from "../../services/purchase-state.service";
 import {ProductService} from "../../services/product.service";
 import {iProduto} from "../../interfaces/product";
+import {Observable} from "rxjs";
 
 @Component({
   selector: 'app-carrinho-de-compras',
@@ -44,6 +45,7 @@ export class CarrinhoDeComprasComponent implements OnInit {
   ngOnInit(): void {
     this.itenSelecionado();
     this.route.paramMap.subscribe(params => {
+      console.log('Param do onit', params)
       const idVenda = params.get('id');
       if (idVenda) {
         this.carregarVenda(idVenda);
@@ -73,6 +75,7 @@ export class CarrinhoDeComprasComponent implements OnInit {
   itenSelecionado(){
     this.purchaseState.getSelectedProduct().subscribe(productId => {
       if (productId) {
+        console.log('productId', productId)
         this.loadProductDetails(productId);
       }
     });
@@ -85,7 +88,6 @@ export class CarrinhoDeComprasComponent implements OnInit {
         // Assumindo que a API retorna o produto diretamente ou em response.body
        // this.selectedProduct = response.body || response;
         this.venda.itensVd = response.body || response;
-        console.log('ItenVD chegou aqui', this.venda.itensVd)
         // Opcional: destacar o produto na lista
         if (this.venda.itensVd) {
           console.log('Detalhe dos ITENS', this.venda.itensVd)
