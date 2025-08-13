@@ -1,186 +1,55 @@
 <div class="carrinho-container">
-  <h1 class="titulo-carrinho">
-    <i class="fas fa-shopping-cart"></i> Meu carrinho
-  </h1>
+  <!-- Coluna de produtos -->
+  <div class="produtos-container">
 
-  <!-- Estado de carregamento -->
-  <div *ngIf="carregando" class="estado carregando">
-    <i class="fas fa-spinner fa-spin"></i> Carregando seu carrinho...
-  </div>
+    <!-- Checkbox geral -->
+    <div class="selecionar-todos">
+      <input type="checkbox" [(ngModel)]="selecionarTodos" (change)="toggleTodos()">
+      <label>Todos os produtos</label>
+    </div>
 
-  <!-- Estado de erro -->
-  <div *ngIf="erroCarregamento" class="estado erro">
-    <i class="fas fa-exclamation-circle"></i> {{ erroCarregamento }}
-    <button (click)="ngOnInit()">Tentar novamente</button>
-  </div>
+    <!-- Agrupamento por vendedor -->
+    <div class="grupo-vendedor" *ngFor="let vendedor of vendedores">
+      <div class="vendedor-header">
+        <input type="checkbox" [(ngModel)]="vendedor.selecionado" (change)="toggleVendedor(vendedor)">
+        <span class="nome-vendedor">{{ vendedor.vendedor[0].nomeFuncionario }}</span>
+      </div>
 
-  <!-- Carrinho vazio -->
-  <div *ngIf="!carregando && venda.itensVd.length === 0" class="carrinho-vazio">
-    <img src="assets/img/empty-cart.svg" alt="Carrinho vazio">
-    <p>Seu carrinho está vazio</p>
-    <button class="btn-continuar" routerLink="/produtos">Continuar comprando</button>
-  </div>
+      <!-- Lista de produtos do vendedor -->
+      <div class="produto-item" *ngFor="let produto of vendedor.produtos">
+        <input type="checkbox" [(ngModel)]="produto.highlighted" (change)="verificarSelecao()">
 
-  <!-- Lista de itens -->
-  <div class="conteudo-carrinho" *ngIf="!carregando && venda.itensVd.length > 0">
-    <div class="lista-itens">
-      <div *ngFor="let item of venda.itensVd; let i = index" class="item">
-        <img [src]="item.fotoProduto || 'assets/img/no-image.jpg'" alt="{{ item.descricao }}" class="item-img">
-        <img [src]="item.fotoProduto" alt="{{ item.descricao }}" class="item-img">
+        <img [src]="produto.fotoProduto" alt="{{ produto.descricao }}">
 
-        <div class="item-info">
-          <h3>{{ item.descricao }}</h3>
-          <span class="codigo">Cód: {{ item.codProduto }}</span>
-
-          <div class="quantidade">
-            <button (click)="alterarQuantidade(item, -1)">-</button>
-            <input type="number" [(ngModel)]="item.qtdVendidas" (change)="alterarQuantidade(item, 0)">
-            <button (click)="alterarQuantidade(item, 1)">+</button>
-          </div>
+        <div class="produto-info">
+          <span class="produto-nome">{{ produto.descricao }}</span>
+          <a class="excluir" (click)="removerProduto(produto)">Excluir</a>
         </div>
 
-        <div class="item-preco">
-          <span class="preco-unit">R$ {{ item.valVenda | number:'1.2-2' }}</span>
-          <span class="preco-total">R$ {{ item.valorParcial | number:'1.2-2' }}</span>
-          <button class="btn-remover" (click)="removerItem(i)">
-            <i class="fas fa-trash"></i>
-          </button>
+        <div class="quantidade">
+          <button (click)="alterarQuantidade(produto, -1)">-</button>
+          <span>{{ produto.qtdVendidas }}</span>
+          <button (click)="alterarQuantidade(produto, 1)">+</button>
+        </div>
+
+        <div class="preco">
+          <span *ngIf="produto.descPorUnidade" class="preco-antigo">R$ {{ produto.valVenda | number:'1.2-2' }}</span>
+          <span class="preco-atual">R$ {{ produto.valVenda | number:'1.2-2' }}</span>
         </div>
       </div>
     </div>
+  </div>
 
-    <!-- Resumo da compra -->
-    <div class="resumo">
+  <!-- Coluna resumo -->
+  <div class="resumo-container">
+    <div class="resumo-card">
       <h3>Resumo da compra</h3>
-      <div class="linha">
-        <span>Subtotal</span>
-        <span>R$ {{ venda.subtotal | number:'1.2-2' }}</span>
-      </div>
-      <div class="linha desconto" *ngIf="parseFloat(venda.desconto) > 0">
-        <span>Desconto</span>
-        <span>- R$ {{ venda.desconto | number:'1.2-2' }}</span>
-      </div>
-      <div class="linha total">
+      <div class="resumo-total">
         <span>Total</span>
-        <span>R$ {{ venda.totalgeral | number:'1.2-2' }}</span>
+        <strong>R$ {{ total | number:'1.2-2' }}</strong>
       </div>
-
-      <div class="pagamento">
-        <label>Forma de pagamento</label>
-        <select [(ngModel)]="venda.formasDePagamento">
-          <option>Cartão de Crédito</option>
-          <option>Boleto Bancário</option>
-          <option>Pix</option>
-          <option>Cartão de Débito</option>
-        </select>
-
-        <div *ngIf="venda.formasDePagamento === 'Cartão de Crédito'" class="parcelamento">
-          <label>Parcelas:</label>
-          <select [(ngModel)]="venda.qtdDeParcelas">
-            <option *ngFor="let p of [1,2,3,4,5,6,7,8,9,10]" [value]="p">
-              {{ p }}x de R$ {{ (parseFloat(venda.totalgeral) / p) | number:'1.2-2' }} sem juros
-            </option>
-          </select>
-        </div>
-      </div>
-
-      <button class="btn-finalizar" (click)="finalizarCompra()">Finalizar compra</button>
+      <button class="btn-continuar" (click)="continuarCompra()">Continuar a compra</button>
     </div>
   </div>
 </div>
-<!--
-<div class="carrinho-container">
-  <div class="header">
-    <h1><i class="fas fa-shopping-cart"></i> Meu carrinho</h1>
-    <div class="steps">
-      <span class="active">1. Carrinho</span>
-      <span>2. Pagamento</span>
-      <span>3. Confirmação</span>
-    </div>
-  </div>
 
-  &lt;!&ndash; Mensagem de carregamento &ndash;&gt;
-  <div *ngIf="carregando" class="carregando">
-    <i class="fas fa-spinner fa-spin"></i> Carregando seu carrinho...
-  </div>
-
-  &lt;!&ndash; Mensagem de erro &ndash;&gt;
-  <div *ngIf="erroCarregamento" class="erro-carregamento">
-    <i class="fas fa-exclamation-triangle"></i> {{ erroCarregamento }}
-    <button (click)="ngOnInit()">Tentar novamente</button>
-  </div>
-
-  <div class="content" *ngIf="!carregando && !erroCarregamento">
-    <div class="itens-container">
-      <div *ngIf="venda.itensVd.length === 0" class="carrinho-vazio">
-        <i class="fas fa-shopping-cart"></i>
-        <p>Seu carrinho está vazio</p>
-        <button class="btn-continuar">Continuar comprando</button>
-      </div>
-
-      <div *ngFor="let item of venda.itensVd; let i = index" class="item-carrinho">
-        <div class="item-imagem">
-          <img src="https://via.placeholder.com/100" alt="Produto">
-        </div>
-        <div class="item-detalhes">
-          <h3>{{ item.descricao }}</h3>
-          <p class="codigo">Cód. {{ item.codProduto }}</p>
-          <div class="quantidade">
-            <button (click)="alterarQuantidade(item, -1)">-</button>
-            <span>{{ item.qtdVendidas }}</span>
-            <button (click)="alterarQuantidade(item, 1)">+</button>
-          </div>
-        </div>
-        <div class="item-preco">
-          <p class="preco-unitario">R$ {{ item.valVenda.toFixed(2).replace('.', ',') }}</p>
-          <p class="preco-total">R$ {{ item.valorParcial.toFixed(2).replace('.', ',') }}</p>
-          <button class="btn-remover" (click)="removerItem(i)">
-            <i class="fas fa-trash"></i> Remover
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <div class="resumo-container" *ngIf="venda.itensVd.length > 0">
-      <div class="resumo-box">
-        <h3>Resumo da compra</h3>
-        <div class="resumo-linha">
-          <span>Subtotal</span>
-          <span>R$ {{ venda.subtotal.replace('.', ',') }}</span>
-        </div>
-        <div class="resumo-linha desconto">
-          <span>Desconto</span>
-          <span>- R$ {{ venda.desconto.replace('.', ',') }}</span>
-        </div>
-        <div class="resumo-linha total">
-          <span>Total</span>
-          <span>R$ {{ venda.totalgeral.replace('.', ',') }}</span>
-        </div>
-
-        <div class="opcoes-pagamento">
-          <h4>Forma de pagamento</h4>
-          <select [(ngModel)]="venda.formasDePagamento">
-            <option value="Cartão de Crédito">Cartão de Crédito</option>
-            <option value="Boleto Bancário">Boleto Bancário</option>
-            <option value="Pix">Pix</option>
-            <option value="Cartão de Débito">Cartão de Débito</option>
-          </select>
-
-          <div *ngIf="venda.formasDePagamento === 'Cartão de Crédito'" class="parcelamento">
-            <label>Parcelas:</label>
-            <select [(ngModel)]="venda.qtdDeParcelas">
-              <option *ngFor="let p of [1,2,3,4,5,6,7,8,9,10]" [value]="p">
-                {{p}}x de R$ {{ (parseFloat(venda.totalgeral) / p).toFixed(2).replace('.', ',') }} sem juros
-              </option>
-            </select>
-          </div>
-        </div>
-
-        <button class="btn-finalizar" (click)="finalizarCompra()">
-          Finalizar compra
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
--->

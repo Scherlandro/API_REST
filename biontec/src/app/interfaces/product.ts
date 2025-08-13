@@ -1,6 +1,5 @@
 export interface iProduto {
 
-
   idProduto: number,
   codProduto: string;
   codDoFabricante: number
@@ -15,7 +14,7 @@ export interface iProduto {
   valorVenda: number
   qtdEstoque: number
   estoqueMinimo?: number
-  qtdVendidas?: number
+  qtdVendidas: number
   idFornecedor?: number
   idModelo?: number
   fotoProduto: any;

@@ -9,6 +9,14 @@ import {ProductService} from "../../services/product.service";
 import {iProduto} from "../../interfaces/product";
 import {forkJoin, of} from "rxjs";
 import {catchError, map} from "rxjs/operators";
+import {IFuncionario} from "../../interfaces/funcionario";
+
+interface Vendedor {
+  vendedor: IFuncionario[];
+  selecionado: boolean;
+ // produtos: iProduto[];
+  produtos: iItensVd[];
+}
 
 @Component({
   selector: 'app-carrinho-de-compras',
@@ -16,6 +24,10 @@ import {catchError, map} from "rxjs/operators";
   styleUrls: ['./carrinho-de-compras.component.css']
 })
 export class CarrinhoDeComprasComponent implements OnInit {
+  selecionarTodos: boolean = false;
+  vendedores: Vendedor[] = [];
+  total: number = 0;
+
   selectedProduct: iProduto | null = null; // Alterado para armazenar o produto completo
   venda: iVendas = {
     idVenda: 0,
@@ -45,6 +57,10 @@ export class CarrinhoDeComprasComponent implements OnInit {
 
   ngOnInit(): void {
     this.launchingPurchaseToShoppingCart();
+
+
+    this.carregarCarrinho();
+    this.calcularTotal();
     this.route.paramMap.subscribe(params => {
       console.log('Param do onit', params)
       const idVenda = params.get('id');
@@ -285,6 +301,104 @@ export class CarrinhoDeComprasComponent implements OnInit {
     return 'data:image/jpeg;base64,' + fotoProduto;
   }
 
+  carregarCarrinho() {
+    this.vendedores = [
+   /*   {
+        id: 1,
+        nome: 'Loja A',
+        selecionado: false,
+        produtos: [
+          {
+            id: 101,
+            nome: 'Mouse Gamer RGB',
+            imagem: 'https://via.placeholder.com/50',
+            preco: 120.00,
+            precoOriginal: 150.00,
+            desconto: true,
+            quantidade: 1,
+            selecionado: false
+          },
+          {
+            id: 102,
+            nome: 'Teclado Mecânico ABNT2',
+            imagem: 'https://via.placeholder.com/50',
+            preco: 250.00,
+            quantidade: 1,
+            selecionado: false
+          }
+        ]
+      },
+      {
+        id: 2,
+        nome: 'Loja B',
+        selecionado: false,
+        produtos: [
+          {
+            id: 201,
+            nome: 'Monitor Full HD 24"',
+            imagem: 'https://via.placeholder.com/50',
+            preco: 900.00,
+            quantidade: 1,
+            selecionado: false
+          }
+        ]
+      }*/
+    ];
+  }
 
+  toggleTodos() {
+    this.vendedores.forEach(v => {
+      v.selecionado = this.selecionarTodos;
+      v.produtos.forEach(p => p.highlighted = this.selecionarTodos);
+    });
+    this.calcularTotal();
+  }
+
+  toggleVendedor(vendedor: Vendedor) {
+    vendedor.produtos.forEach(p => p.highlighted = vendedor.selecionado);
+    this.verificarSelecao();
+    this.calcularTotal();
+  }
+
+  verificarSelecao() {
+    this.selecionarTodos = this.vendedores.every(v => v.produtos.every(p => p.highlighted));
+    this.vendedores.forEach(v => {
+      v.selecionado = v.produtos.every(p => p.highlighted);
+    });
+    this.calcularTotal();
+  }
+
+  alterarQuantidade2(produto: iProduto, delta: number) {
+    produto.qtdVendidas = Math.max(1, produto.qtdVendidas + delta);
+    this.calcularTotal();
+  }
+
+  removerProduto(produto: iItensVd) {
+    this.vendedores.forEach(v => {
+      v.produtos = v.produtos.filter(p => p.idItensVd !== produto.idItensVd);
+    });
+    this.vendedores = this.vendedores.filter(v => v.produtos.length > 0);
+    this.calcularTotal();
+  }
+
+  calcularTotal() {
+    this.total = 0;
+    this.vendedores.forEach(v => {
+      v.produtos.forEach(p => {
+        if (p.highlighted) {
+          this.total += p.valVenda * p.qtdVendidas;
+        }
+      });
+    });
+  }
+
+  continuarCompra() {
+    const produtosSelecionados = this.vendedores
+      .flatMap(v => v.produtos)
+      .filter(p => p.highlighted);
+
+    console.log('Produtos para compra:', produtosSelecionados);
+    alert(`Você está comprando ${produtosSelecionados.length} produto(s).`);
+  }
 
 }
