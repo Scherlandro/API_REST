@@ -7,7 +7,8 @@ import {iVendas} from "../../interfaces/vendas";
 import {PurchaseStateService} from "../../services/purchase-state.service";
 import {ProductService} from "../../services/product.service";
 import {iProduto} from "../../interfaces/product";
-import {Observable} from "rxjs";
+import {forkJoin, of} from "rxjs";
+import {catchError, map} from "rxjs/operators";
 
 @Component({
   selector: 'app-carrinho-de-compras',
@@ -43,7 +44,7 @@ export class CarrinhoDeComprasComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.itenSelecionado();
+    this.launchingPurchaseToShoppingCart();
     this.route.paramMap.subscribe(params => {
       console.log('Param do onit', params)
       const idVenda = params.get('id');
@@ -72,7 +73,7 @@ export class CarrinhoDeComprasComponent implements OnInit {
     });
   }
 
-  itenSelecionado(){ // launchingPurchaseToShoppingCart
+  launchingPurchaseToShoppingCart(){ // launchingPurchaseToShoppingCart
     this.purchaseState.getSaleOfSelectedProduct().subscribe(sale => {
       if (sale) {
         console.log('Detalhe de venda iniciada', sale)
@@ -112,7 +113,7 @@ export class CarrinhoDeComprasComponent implements OnInit {
 
 
 
-  carregarItensVenda(idVenda: string): void {
+  carregarItensVenda2(idVenda: string): void {
     this.itensVdService.listarItensVdPorCodVenda(idVenda).subscribe({
       next: (itens: iItensVd[]) => {
         this.venda.itensVd = itens;
@@ -160,17 +161,21 @@ export class CarrinhoDeComprasComponent implements OnInit {
   }
 
   alterarQuantidade(item: iItensVd, operacao: number): void {
-    item.qtdVendidas += operacao;
+
+    if (operacao !== 0) {
+      item.qtdVendidas += operacao;
+    }
+    // item.qtdVendidas += operacao;
 
     if (item.qtdVendidas < 1) {
       item.qtdVendidas = 1;
     }
 
     item.valorParcial = item.qtdVendidas * item.valVenda;
-
+    this.calcularTotais();
     // Atualizar item no backend
     this.itensVdService.editElement(item).subscribe({
-      next: () => this.calcularTotais(),
+     // next: () => this.calcularTotais(),
       error: (err) => console.error('Erro ao atualizar item:', err)
     });
   }
@@ -231,4 +236,55 @@ export class CarrinhoDeComprasComponent implements OnInit {
       });
     }
   }
+
+  carregarItensVenda(idVenda: string): void {
+    this.itensVdService.listarItensVdPorCodVenda(idVenda).subscribe({
+      next: (itens: iItensVd[]) => {
+        // Buscar imagem de cada item
+        const requisicoes = itens.map(item =>
+          this.prodService.getProdutoPorCod(item.codProduto).pipe(
+            map(prod => {
+              console.log('Item carregado', prod)
+              const produto = prod.body || prod;
+              item.fotoProduto = produto.fotoProduto
+                ? this.getImageUrl(produto.fotoProduto)
+                : 'assets/img/no-image.jpg';
+              return item;
+            }),
+            catchError(() => {
+              item.fotoProduto = 'assets/img/no-image.jpg';
+              return of(item);
+            })
+          )
+        );
+
+        forkJoin(requisicoes).subscribe({
+          next: (itensComImagem) => {
+            this.venda.itensVd = itensComImagem;
+            this.calcularTotais();
+            this.carregando = false;
+          },
+          error: (err) => {
+            console.error('Erro ao carregar imagens:', err);
+            this.venda.itensVd = itens; // fallback sem imagens
+            this.calcularTotais();
+            this.carregando = false;
+          }
+        });
+      },
+      error: (err) => {
+        this.erroCarregamento = 'Erro ao carregar os itens da venda';
+        this.carregando = false;
+        console.error(err);
+      }
+    });
+  }
+
+  getImageUrl(fotoProduto: string): string {
+    if (!fotoProduto) return 'assets/img/no-image.jpg';
+    return 'data:image/jpeg;base64,' + fotoProduto;
+  }
+
+
+
 }

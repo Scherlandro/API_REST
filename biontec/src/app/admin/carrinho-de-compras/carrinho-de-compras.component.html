@@ -1,4 +1,95 @@
 <div class="carrinho-container">
+  <h1 class="titulo-carrinho">
+    <i class="fas fa-shopping-cart"></i> Meu carrinho
+  </h1>
+
+  <!-- Estado de carregamento -->
+  <div *ngIf="carregando" class="estado carregando">
+    <i class="fas fa-spinner fa-spin"></i> Carregando seu carrinho...
+  </div>
+
+  <!-- Estado de erro -->
+  <div *ngIf="erroCarregamento" class="estado erro">
+    <i class="fas fa-exclamation-circle"></i> {{ erroCarregamento }}
+    <button (click)="ngOnInit()">Tentar novamente</button>
+  </div>
+
+  <!-- Carrinho vazio -->
+  <div *ngIf="!carregando && venda.itensVd.length === 0" class="carrinho-vazio">
+    <img src="assets/img/empty-cart.svg" alt="Carrinho vazio">
+    <p>Seu carrinho está vazio</p>
+    <button class="btn-continuar" routerLink="/produtos">Continuar comprando</button>
+  </div>
+
+  <!-- Lista de itens -->
+  <div class="conteudo-carrinho" *ngIf="!carregando && venda.itensVd.length > 0">
+    <div class="lista-itens">
+      <div *ngFor="let item of venda.itensVd; let i = index" class="item">
+        <img [src]="item.fotoProduto || 'assets/img/no-image.jpg'" alt="{{ item.descricao }}" class="item-img">
+        <img [src]="item.fotoProduto" alt="{{ item.descricao }}" class="item-img">
+
+        <div class="item-info">
+          <h3>{{ item.descricao }}</h3>
+          <span class="codigo">Cód: {{ item.codProduto }}</span>
+
+          <div class="quantidade">
+            <button (click)="alterarQuantidade(item, -1)">-</button>
+            <input type="number" [(ngModel)]="item.qtdVendidas" (change)="alterarQuantidade(item, 0)">
+            <button (click)="alterarQuantidade(item, 1)">+</button>
+          </div>
+        </div>
+
+        <div class="item-preco">
+          <span class="preco-unit">R$ {{ item.valVenda | number:'1.2-2' }}</span>
+          <span class="preco-total">R$ {{ item.valorParcial | number:'1.2-2' }}</span>
+          <button class="btn-remover" (click)="removerItem(i)">
+            <i class="fas fa-trash"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Resumo da compra -->
+    <div class="resumo">
+      <h3>Resumo da compra</h3>
+      <div class="linha">
+        <span>Subtotal</span>
+        <span>R$ {{ venda.subtotal | number:'1.2-2' }}</span>
+      </div>
+      <div class="linha desconto" *ngIf="parseFloat(venda.desconto) > 0">
+        <span>Desconto</span>
+        <span>- R$ {{ venda.desconto | number:'1.2-2' }}</span>
+      </div>
+      <div class="linha total">
+        <span>Total</span>
+        <span>R$ {{ venda.totalgeral | number:'1.2-2' }}</span>
+      </div>
+
+      <div class="pagamento">
+        <label>Forma de pagamento</label>
+        <select [(ngModel)]="venda.formasDePagamento">
+          <option>Cartão de Crédito</option>
+          <option>Boleto Bancário</option>
+          <option>Pix</option>
+          <option>Cartão de Débito</option>
+        </select>
+
+        <div *ngIf="venda.formasDePagamento === 'Cartão de Crédito'" class="parcelamento">
+          <label>Parcelas:</label>
+          <select [(ngModel)]="venda.qtdDeParcelas">
+            <option *ngFor="let p of [1,2,3,4,5,6,7,8,9,10]" [value]="p">
+              {{ p }}x de R$ {{ (parseFloat(venda.totalgeral) / p) | number:'1.2-2' }} sem juros
+            </option>
+          </select>
+        </div>
+      </div>
+
+      <button class="btn-finalizar" (click)="finalizarCompra()">Finalizar compra</button>
+    </div>
+  </div>
+</div>
+<!--
+<div class="carrinho-container">
   <div class="header">
     <h1><i class="fas fa-shopping-cart"></i> Meu carrinho</h1>
     <div class="steps">
@@ -8,12 +99,12 @@
     </div>
   </div>
 
-  <!-- Mensagem de carregamento -->
+  &lt;!&ndash; Mensagem de carregamento &ndash;&gt;
   <div *ngIf="carregando" class="carregando">
     <i class="fas fa-spinner fa-spin"></i> Carregando seu carrinho...
   </div>
 
-  <!-- Mensagem de erro -->
+  &lt;!&ndash; Mensagem de erro &ndash;&gt;
   <div *ngIf="erroCarregamento" class="erro-carregamento">
     <i class="fas fa-exclamation-triangle"></i> {{ erroCarregamento }}
     <button (click)="ngOnInit()">Tentar novamente</button>
@@ -92,3 +183,4 @@
     </div>
   </div>
 </div>
+-->

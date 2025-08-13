@@ -10,4 +10,5 @@ export interface iItensVd {
   qtdVendidas: number;
   valorParcial: number;
   dtRegistro: string;
+  fotoProduto: any;
 }
