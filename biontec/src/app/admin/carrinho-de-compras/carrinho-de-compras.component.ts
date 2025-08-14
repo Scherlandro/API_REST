@@ -89,22 +89,25 @@ export class CarrinhoDeComprasComponent implements OnInit {
     });
   }
 
-  launchingPurchaseToShoppingCart(){ // launchingPurchaseToShoppingCart
+  launchingPurchaseToShoppingCart(){
     this.purchaseState.getSaleOfSelectedProduct().subscribe(sale => {
       if (sale) {
         console.log('Detalhe de venda iniciada', sale)
-      //  this.loadProductDetails(sale);
+        this.loadProductDetails(sale[1]);
       }
     });
   }
 
 
   loadProductDetails(productId: number) {
-    this.prodService.getIdProduto(productId).subscribe({
+   // this.prodService.getIdProduto(productId).subscribe({
+     this.itensVdService.listarItensVdPorCodVenda(String(productId)).subscribe({
       next: (response) => {
         // Assumindo que a API retorna o produto diretamente ou em response.body
        // this.selectedProduct = response.body || response;
-        this.venda.itensVd = response.body || response;
+        //this.venda.itensVd = response.body || response;
+        this.venda.itensVd = response ;
+        console.log(' ITENS', response, String(productId))
         // Opcional: destacar o produto na lista
         if (this.venda.itensVd) {
           console.log('Detalhe dos ITENS', this.venda.itensVd)
