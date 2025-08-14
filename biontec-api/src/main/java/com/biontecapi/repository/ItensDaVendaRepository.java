@@ -45,6 +45,12 @@ public interface ItensDaVendaRepository extends JpaRepository<ItensDaVenda, Inte
             "on v.codevenda = i.codVenda and v.nomeCliente = ?1")
     List<ItensDaVendaDto> litarItemDaVendaPorCliente(@Param("nomeCliente") String nomeCliente);
 
+    @Query(value = " Select new com.biontecapi.dtos.ItensDaVendaDto(i.IdItensVd,i.codVenda,i.codProduto," +
+            " i.descricao, i.valCompra, i.valVenda, i.qtdVendidas, i.valorParcial, p.dtCadastro )" +
+            "from Produto p inner join ItensDaVenda i " +
+            "on i.IdItensVd = p.idProduto and p.codProduto = ?1 ")
+    List<ItensDaVendaDto> findItensVdByIdProduct(Integer id);
+
   /*  @Query("SELECT offer FROM OfferEntity offer " +
             "   JOIN offer.placeOwnership AS owner " +
             "   JOIN owner.place AS place " +

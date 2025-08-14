@@ -15,6 +15,8 @@ public interface ItensDaVendaService {
 
     List<ItensDaVendaDto> listarItensDaVdPorId(Integer id);
 
+    List<ItensDaVendaDto> listarItensVdPorIdProduto(Integer id);
+
     List<ItensDaVendaDto> ConsultarItensVdEntreDatas(String dtIni, String dtFinal);
 
     List<ItensDaVendaDto> litarItemDaVendaPorData(String dt);

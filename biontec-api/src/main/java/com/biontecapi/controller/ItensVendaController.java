@@ -43,6 +43,13 @@ public class ItensVendaController {
                 .collect(Collectors.toList()));
     }
 
+    @GetMapping(value = "/buscarPorIdProduct")
+    public ResponseEntity<List<ItensDaVendaDto>> ConsultarItensVdPorIdProd(@RequestParam(value = "id") Integer id) {
+        List<ItensDaVendaDto> list = itensDaVendaService.listarItensVdPorIdProduto(id);
+        return ResponseEntity.ok(list.stream().map(
+                e -> mapper.map(e, ItensDaVendaDto.class))
+                .collect(Collectors.toList()));
+    }
 
     @GetMapping(value = "/buscarPorIdVd")
     public ResponseEntity<List<ItensDaVendaDto>> ConsultarItensVdPorIdVd(@RequestParam(value = "id") Integer id) {
