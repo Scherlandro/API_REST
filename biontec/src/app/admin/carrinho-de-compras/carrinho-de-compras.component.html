@@ -16,13 +16,14 @@
       </div>
 
       <!-- Lista de produtos do vendedor -->
-      <div class="produto-item" *ngFor="let produto of vendedor.produtos">
+     <!-- <div class="produto-item" *ngFor="let produto of vendedor.produtos">-->
+      <div class="produto-item" *ngFor="let produto of selectedProduct">
         <input type="checkbox" [(ngModel)]="produto.highlighted" (change)="verificarSelecao()">
 
-        <img [src]="produto.fotoProduto" alt="{{ produto.descricao }}">
+        <img [src]="produto.fotoProduto" alt="{{ produto.nomeProduto }}">
 
         <div class="produto-info">
-          <span class="produto-nome">{{ produto.descricao }}</span>
+          <span class="produto-nome">{{ produto.nomeProduto }}</span>
           <a class="excluir" (click)="removerProduto(produto)">Excluir</a>
         </div>
 
@@ -33,8 +34,8 @@
         </div>
 
         <div class="preco">
-          <span *ngIf="produto.descPorUnidade" class="preco-antigo">R$ {{ produto.valVenda | number:'1.2-2' }}</span>
-          <span class="preco-atual">R$ {{ produto.valVenda | number:'1.2-2' }}</span>
+          <span *ngIf="produto.percentual" class="preco-antigo">R$ {{ produto.valorVenda | number:'1.2-2' }}</span>
+          <span class="preco-atual">R$ {{ produto.valorVenda | number:'1.2-2' }}</span>
         </div>
       </div>
     </div>

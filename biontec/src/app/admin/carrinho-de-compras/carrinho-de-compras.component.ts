@@ -28,7 +28,8 @@ export class CarrinhoDeComprasComponent implements OnInit {
   vendedores: Vendedor[] = [];
   total: number = 0;
 
-  selectedProduct: iProduto | null = null; // Alterado para armazenar o produto completo
+//  selectedProduct: iProduto | null = null; // Alterado para armazenar o produto completo
+  selectedProduct!: iProduto[]
   venda: iVendas = {
     idVenda: 0,
     idCliente: 0,
@@ -58,18 +59,19 @@ export class CarrinhoDeComprasComponent implements OnInit {
   ngOnInit(): void {
     this.launchingPurchaseToShoppingCart();
 
-
     this.carregarCarrinho();
     this.calcularTotal();
-    this.route.paramMap.subscribe(params => {
+
+/*    this.route.paramMap.subscribe(params => {
       console.log('Param do onit', params)
       const idVenda = params.get('id');
+      console.log('idVenda do ngOnInit', idVenda)
       if (idVenda) {
         this.carregarVenda(idVenda);
       } else {
         this.inicializarNovaVenda();
       }
-    });
+    });*/
   }
 
   carregarVenda(idVenda: string): void {
@@ -92,21 +94,32 @@ export class CarrinhoDeComprasComponent implements OnInit {
   launchingPurchaseToShoppingCart(){
     this.purchaseState.getSaleOfSelectedProduct().subscribe(sale => {
       if (sale) {
-        console.log('Detalhe de venda iniciada', sale)
+        console.log('Usuario e CodProduto', sale[0], sale[1])
+       // this.vendedores = sale;
         this.loadProductDetails(sale[1]);
+       /* this.vendedores.forEach(v => {
+          v.vendedor= sale[0];
+          v.selecionado = true;
+          v.produtos.forEach(p => {p.codProduto = sale[1] });
+        });*/
+        /*this.vendedores.forEach(v => {
+          v.vendedor.forEach(f=>{f.nomeFuncionario = sale[0]});
+          v.selecionado = true;
+          v.produtos.forEach(p => {p.codProduto = sale[1] });
+        });*/
+
       }
     });
   }
 
 
   loadProductDetails(productId: number) {
-   // this.prodService.getIdProduto(productId).subscribe({
-     this.itensVdService.listarItensVdPorCodVenda(String(productId)).subscribe({
+    this.prodService.getIdProduto(productId).subscribe({
+     //this.itensVdService.listarItensVdPorCodVenda(String(productId)).subscribe({
       next: (response) => {
         // Assumindo que a API retorna o produto diretamente ou em response.body
-       // this.selectedProduct = response.body || response;
+        this.selectedProduct = response.body || response;
         //this.venda.itensVd = response.body || response;
-        this.venda.itensVd = response ;
         console.log(' ITENS', response, String(productId))
         // Opcional: destacar o produto na lista
         if (this.venda.itensVd) {
@@ -179,7 +192,7 @@ export class CarrinhoDeComprasComponent implements OnInit {
     this.venda.totalgeral = total.toFixed(2);
   }
 
-  alterarQuantidade(item: iItensVd, operacao: number): void {
+  alterarQuantidade(item: iProduto, operacao: number): void {
 
     if (operacao !== 0) {
       item.qtdVendidas += operacao;
@@ -190,10 +203,11 @@ export class CarrinhoDeComprasComponent implements OnInit {
       item.qtdVendidas = 1;
     }
 
-    item.valorParcial = item.qtdVendidas * item.valVenda;
+    item.valorVenda = item.qtdVendidas * item.valorVenda;
     this.calcularTotais();
     // Atualizar item no backend
-    this.itensVdService.editElement(item).subscribe({
+    this.prodService.editElement(item).subscribe({
+   // this.itensVdService.editElement(item).subscribe({
      // next: () => this.calcularTotais(),
       error: (err) => console.error('Erro ao atualizar item:', err)
     });
@@ -376,9 +390,9 @@ export class CarrinhoDeComprasComponent implements OnInit {
     this.calcularTotal();
   }
 
-  removerProduto(produto: iItensVd) {
+  removerProduto(produto: iProduto) {
     this.vendedores.forEach(v => {
-      v.produtos = v.produtos.filter(p => p.idItensVd !== produto.idItensVd);
+      v.produtos = v.produtos.filter(p => p.idItensVd !== produto.idProduto);
     });
     this.vendedores = this.vendedores.filter(v => v.produtos.length > 0);
     this.calcularTotal();

@@ -3,7 +3,6 @@ import {CommonModule} from '@angular/common';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MatCalendar} from "@angular/material/datepicker";
 import {FormControl, FormGroup} from "@angular/forms";
-import {IUser} from "../../interfaces/user";
 import {DialogUsuarioComponent} from "../../shared/diolog_components/dialog-usuario/dialog-usuario.component";
 import {MensagemService} from "../../services/mensagem.service";
 import {Observable, of} from "rxjs";
@@ -57,14 +56,13 @@ export class DashboardComponent implements OnInit {
     this.selectedUser = this.authService.getUserName();
     console.log('logado com: ', this.selectedUser);
     this.listarProdutos();
-   // const productId = localStorage.getItem('selectedProductId');
     this.prodSelecionado();
   }
 
   prodSelecionado(){
     this.purchaseState.getSelectedProduct().subscribe(productId => {
       if (productId) {
-        console.log('productId', productId)
+        console.log('Id do produto selecionado', productId)
         this.loadProductDetails(productId);
       }
     });
@@ -75,12 +73,10 @@ export class DashboardComponent implements OnInit {
       next: (response) => {
         // Assumindo que a API retorna o produto diretamente ou em response.body
         this.selectedProduct = response.body || response;
-
         // Opcional: destacar o produto na lista
-        if (this.selectedProduct) {
+   /*     if (this.selectedProduct) {
           // Destaca o produto na lista
           this.highlightProductInList(this.selectedProduct.idProduto);
-
           // Rolagem automática para o produto destacado (opcional)
           setTimeout(() => {
             const element = document.querySelector('.highlighted');
@@ -88,7 +84,7 @@ export class DashboardComponent implements OnInit {
               element.scrollIntoView({ behavior: 'smooth', block: 'center' });
             }
           }, 500);
-        }
+        }*/
       },
       error: (err) => {
         console.error('Erro ao carregar produto:', err);
