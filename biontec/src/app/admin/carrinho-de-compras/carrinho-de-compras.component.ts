@@ -14,8 +14,8 @@ import {IFuncionario} from "../../interfaces/funcionario";
 interface Vendedor {
   vendedor: IFuncionario[];
   selecionado: boolean;
- // produtos: iProduto[];
-  produtos: iItensVd[];
+  produtos: iProduto[];
+ // produtos: iItensVd[];
 }
 
 @Component({
@@ -29,7 +29,8 @@ export class CarrinhoDeComprasComponent implements OnInit {
   total: number = 0;
 
 //  selectedProduct: iProduto | null = null; // Alterado para armazenar o produto completo
-  selectedProduct!: iProduto[]
+  selectedProduct!: iProduto[];
+  highlighted = true;
   venda: iVendas = {
     idVenda: 0,
     idCliente: 0,
@@ -94,15 +95,11 @@ export class CarrinhoDeComprasComponent implements OnInit {
   launchingPurchaseToShoppingCart(){
     this.purchaseState.getSaleOfSelectedProduct().subscribe(sale => {
       if (sale) {
-        console.log('Usuario e CodProduto', sale[0], sale[1])
-       // this.vendedores = sale;
+        console.log('Usuario e CodProduto', sale[0], sale[1]);
+        this.vendedores = sale;
         this.loadProductDetails(sale[1]);
-       /* this.vendedores.forEach(v => {
-          v.vendedor= sale[0];
-          v.selecionado = true;
-          v.produtos.forEach(p => {p.codProduto = sale[1] });
-        });*/
-        /*this.vendedores.forEach(v => {
+        this.carregarVenda(sale[1])
+            /*this.vendedores.forEach(v => {
           v.vendedor.forEach(f=>{f.nomeFuncionario = sale[0]});
           v.selecionado = true;
           v.produtos.forEach(p => {p.codProduto = sale[1] });
@@ -117,23 +114,25 @@ export class CarrinhoDeComprasComponent implements OnInit {
     this.prodService.getIdProduto(productId).subscribe({
      //this.itensVdService.listarItensVdPorCodVenda(String(productId)).subscribe({
       next: (response) => {
-        // Assumindo que a API retorna o produto diretamente ou em response.body
-        this.selectedProduct = response.body || response;
-        //this.venda.itensVd = response.body || response;
-        console.log(' ITENS', response, String(productId))
-        // Opcional: destacar o produto na lista
-        if (this.venda.itensVd) {
-          console.log('Detalhe dos ITENS', this.venda.itensVd)
-          // Destaca o produto na lista
-         // this.highlightProductInList(this.selectedProduct.idProduto);
+        if(response) {
+          this.highlighted = true;
+          // Assumindo que a API retorna o produto diretamente ou em response.body
+          this.selectedProduct = response.body || response;
+          //this.venda.itensVd = response.body || response;
+          console.log(' ITENS', this.highlighted, this.selectedProduct)
+          // Opcional: destacar o produto na lista
+          if (this.venda.itensVd) {
+            // Destaca o produto na lista
+            // this.highlightProductInList(this.selectedProduct.idProduto);
 
-          // Rolagem automática para o produto destacado (opcional)
-          setTimeout(() => {
-            const element = document.querySelector('.highlighted');
-            if (element) {
-              element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            }
-          }, 500);
+            // Rolagem automática para o produto destacado (opcional)
+            setTimeout(() => {
+              const element = document.querySelector('.highlighted');
+              if (element) {
+                element.scrollIntoView({behavior: 'smooth', block: 'center'});
+              }
+            }, 500);
+          }
         }
       },
       error: (err) => {
@@ -319,8 +318,10 @@ export class CarrinhoDeComprasComponent implements OnInit {
   }
 
   carregarCarrinho() {
-    this.vendedores = [
-   /*   {
+    this.selectedProduct;
+   // this.vendedores
+    /*= [
+     {
         id: 1,
         nome: 'Loja A',
         selecionado: false,
@@ -359,8 +360,8 @@ export class CarrinhoDeComprasComponent implements OnInit {
             selecionado: false
           }
         ]
-      }*/
-    ];
+      }
+    ];*/
   }
 
   toggleTodos() {
@@ -378,7 +379,7 @@ export class CarrinhoDeComprasComponent implements OnInit {
   }
 
   verificarSelecao() {
-    this.selecionarTodos = this.vendedores.every(v => v.produtos.every(p => p.highlighted));
+    this.selecionarTodos = this.vendedores.every(v => v.produtos.every(p => p.highlighted = this.highlighted));
     this.vendedores.forEach(v => {
       v.selecionado = v.produtos.every(p => p.highlighted);
     });
@@ -392,7 +393,7 @@ export class CarrinhoDeComprasComponent implements OnInit {
 
   removerProduto(produto: iProduto) {
     this.vendedores.forEach(v => {
-      v.produtos = v.produtos.filter(p => p.idItensVd !== produto.idProduto);
+      v.produtos = v.produtos.filter(p => p.idProduto !== produto.idProduto);
     });
     this.vendedores = this.vendedores.filter(v => v.produtos.length > 0);
     this.calcularTotal();
@@ -403,7 +404,7 @@ export class CarrinhoDeComprasComponent implements OnInit {
     this.vendedores.forEach(v => {
       v.produtos.forEach(p => {
         if (p.highlighted) {
-          this.total += p.valVenda * p.qtdVendidas;
+          this.total += p.valorVenda * p.qtdVendidas;
         }
       });
     });
