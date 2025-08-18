@@ -12,14 +12,14 @@
     <div class="grupo-vendedor" *ngFor="let vendedor of vendedores">
       <div class="vendedor-header">
         <input type="checkbox" [(ngModel)]="vendedor.selecionado" (change)="toggleVendedor(vendedor)">
-        <span class="nome-vendedor">{{ vendedor.vendedor[0].nomeFuncionario }}</span>
+        <span class="nome-vendedor">{{ vendedor.vendedor }}</span>
       </div>
 
       <!-- Lista de produtos do vendedor -->
-     <!-- <div class="produto-item" *ngFor="let produto of vendedor.produtos">-->
-      <div class="produto-item" *ngFor="let produto of selectedProduct">
-        <input type="checkbox" [(ngModel)]="highlighted" (change)="verificarSelecao()">
-
+     <div class="produto-item" *ngFor="let produto of vendedor.produtos">
+    <!--  <div class="produto-item" *ngFor="let produto of selectedProduct">
+         <input type="checkbox" [(ngModel)]="produto.selecionado" (change)="verificarSelecao()">-->
+       <input type="checkbox" [(ngModel)]="highlighted" (change)="verificarSelecao()">
         <img [src]="produto.fotoProduto" alt="{{ produto.nomeProduto }}">
 
         <div class="produto-info">
@@ -29,13 +29,13 @@
 
         <div class="quantidade">
           <button (click)="alterarQuantidade(produto, -1)">-</button>
-          <span>{{ produto.qtdVendidas }}</span>
+          <span>{{ produto.qtdVendidas || 1 }}</span>
           <button (click)="alterarQuantidade(produto, 1)">+</button>
         </div>
 
         <div class="preco">
           <span *ngIf="produto.percentual" class="preco-antigo">R$ {{ produto.valorVenda | number:'1.2-2' }}</span>
-          <span class="preco-atual">R$ {{ produto.valorVenda | number:'1.2-2' }}</span>
+          <span class="preco-atual">R$ {{ (produto.valorVenda * (produto.qtdVendidas || 1)) | number:'1.2-2' }}</span>
         </div>
       </div>
     </div>

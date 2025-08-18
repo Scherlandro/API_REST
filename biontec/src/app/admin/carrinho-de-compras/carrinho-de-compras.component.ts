@@ -9,13 +9,11 @@ import {ProductService} from "../../services/product.service";
 import {iProduto} from "../../interfaces/product";
 import {forkJoin, of} from "rxjs";
 import {catchError, map} from "rxjs/operators";
-import {IFuncionario} from "../../interfaces/funcionario";
 
 interface Vendedor {
-  vendedor: IFuncionario[];
+  vendedor: string;
   selecionado: boolean;
   produtos: iProduto[];
- // produtos: iItensVd[];
 }
 
 @Component({
@@ -27,8 +25,6 @@ export class CarrinhoDeComprasComponent implements OnInit {
   selecionarTodos: boolean = false;
   vendedores: Vendedor[] = [];
   total: number = 0;
-
-//  selectedProduct: iProduto | null = null; // Alterado para armazenar o produto completo
   selectedProduct!: iProduto[];
   highlighted = true;
   venda: iVendas = {
@@ -75,6 +71,36 @@ export class CarrinhoDeComprasComponent implements OnInit {
     });*/
   }
 
+
+  launchingPurchaseToShoppingCart(){
+    this.purchaseState.getSaleOfSelectedProduct().subscribe(sale => {
+      if (sale && sale.length > 0) {
+        const produtosPorVendedor: {[key: string]: iProduto[]} = {};
+        sale.forEach((vetor:any) => {
+          if (vetor > 0) {
+            console.log('codprod', vetor)
+            this.loadProductDetails(vetor)
+          } else {
+            console.log('Usuario ->', vetor);
+          }
+          if (!produtosPorVendedor[vetor.vendedor]) {
+            console.log('ProdutosPorVdor ->', produtosPorVendedor);
+            produtosPorVendedor[vetor.vendedor] = [];
+          }
+          produtosPorVendedor[vetor.vendedor].push(vetor);
+        });
+        // Criar array de vendedores
+        this.vendedores = Object.keys(produtosPorVendedor).map(vendedorNome => ({
+          vendedor: vendedorNome,
+          selecionado: false,
+          produtos: produtosPorVendedor[vendedorNome]
+        }));
+        // Calcular total inicial
+        this.calcularTotal();
+      }
+    });
+  }
+
   carregarVenda(idVenda: string): void {
     this.carregando = true;
     this.erroCarregamento = null;
@@ -92,25 +118,9 @@ export class CarrinhoDeComprasComponent implements OnInit {
     });
   }
 
-  launchingPurchaseToShoppingCart(){
-    this.purchaseState.getSaleOfSelectedProduct().subscribe(sale => {
-      if (sale) {
-        console.log('Usuario e CodProduto', sale[0], sale[1]);
-        this.vendedores = sale;
-        this.loadProductDetails(sale[1]);
-        this.carregarVenda(sale[1])
-            /*this.vendedores.forEach(v => {
-          v.vendedor.forEach(f=>{f.nomeFuncionario = sale[0]});
-          v.selecionado = true;
-          v.produtos.forEach(p => {p.codProduto = sale[1] });
-        });*/
-
-      }
-    });
-  }
-
 
   loadProductDetails(productId: number) {
+    console.log('Entrando no produto', productId);
     this.prodService.getIdProduto(productId).subscribe({
      //this.itensVdService.listarItensVdPorCodVenda(String(productId)).subscribe({
       next: (response) => {
@@ -190,27 +200,24 @@ export class CarrinhoDeComprasComponent implements OnInit {
     const total = subtotal - desconto;
     this.venda.totalgeral = total.toFixed(2);
   }
+/*
 
   alterarQuantidade(item: iProduto, operacao: number): void {
-
     if (operacao !== 0) {
       item.qtdVendidas += operacao;
     }
-    // item.qtdVendidas += operacao;
-
     if (item.qtdVendidas < 1) {
       item.qtdVendidas = 1;
     }
-
     item.valorVenda = item.qtdVendidas * item.valorVenda;
     this.calcularTotais();
     // Atualizar item no backend
     this.prodService.editElement(item).subscribe({
-   // this.itensVdService.editElement(item).subscribe({
-     // next: () => this.calcularTotais(),
+      next: () => this.calcularTotais(),
       error: (err) => console.error('Erro ao atualizar item:', err)
     });
   }
+*/
 
   removerItem(index: number): void {
     const item = this.venda.itensVd[index];
@@ -365,17 +372,25 @@ export class CarrinhoDeComprasComponent implements OnInit {
   }
 
   toggleTodos() {
-    this.vendedores.forEach(v => {
+    this.vendedores.forEach(vendedor => {
+      vendedor.selecionado = this.selecionarTodos;
+    });
+
+   /* this.vendedores.forEach(v => {
       v.selecionado = this.selecionarTodos;
       v.produtos.forEach(p => p.highlighted = this.selecionarTodos);
     });
-    this.calcularTotal();
+    this.calcularTotal();*/
   }
 
   toggleVendedor(vendedor: Vendedor) {
-    vendedor.produtos.forEach(p => p.highlighted = vendedor.selecionado);
+    vendedor.selecionado = !vendedor.selecionado;
+    // Verificar se todos os vendedores estão selecionados
+    this.selecionarTodos = this.vendedores.every(v => v.selecionado);
+
+  /*  vendedor.produtos.forEach(p => p.highlighted = vendedor.selecionado);
     this.verificarSelecao();
-    this.calcularTotal();
+    this.calcularTotal();*/
   }
 
   verificarSelecao() {
@@ -386,28 +401,44 @@ export class CarrinhoDeComprasComponent implements OnInit {
     this.calcularTotal();
   }
 
-  alterarQuantidade2(produto: iProduto, delta: number) {
-    produto.qtdVendidas = Math.max(1, produto.qtdVendidas + delta);
+  alterarQuantidade(produto: iProduto, delta: number) {
+    produto.qtdVendidas = (produto.qtdVendidas || 1) + delta;
+    if (produto.qtdVendidas < 1) produto.qtdVendidas = 1;
+
+
+    // produto.qtdVendidas = Math.max(1, produto.qtdVendidas + delta);
     this.calcularTotal();
   }
 
   removerProduto(produto: iProduto) {
-    this.vendedores.forEach(v => {
+    this.vendedores.forEach(vendedor => {
+      vendedor.produtos = vendedor.produtos.filter(p => p !== produto);
+    });
+    // Remover vendedores sem produtos
+    this.vendedores = this.vendedores.filter(v => v.produtos.length > 0);
+
+  /*  this.vendedores.forEach(v => {
       v.produtos = v.produtos.filter(p => p.idProduto !== produto.idProduto);
     });
-    this.vendedores = this.vendedores.filter(v => v.produtos.length > 0);
+    this.vendedores = this.vendedores.filter(v => v.produtos.length > 0);*/
     this.calcularTotal();
   }
 
   calcularTotal() {
-    this.total = 0;
+    this.total = this.vendedores.reduce((acc, vendedor) => {
+      return acc + vendedor.produtos.reduce((sum, produto) => {
+        return sum + (produto.valorVenda * (produto.qtdVendidas || 1));
+      }, 0);
+    }, 0);
+
+   /* this.total = 0;
     this.vendedores.forEach(v => {
       v.produtos.forEach(p => {
         if (p.highlighted) {
           this.total += p.valorVenda * p.qtdVendidas;
         }
       });
-    });
+    });*/
   }
 
   continuarCompra() {
