@@ -24,6 +24,8 @@ interface Vendedor {
 export class CarrinhoDeComprasComponent implements OnInit {
   selecionarTodos: boolean = false;
   vendedores: Vendedor[] = [];
+  nomeVendedor = '';
+  matriz: {[key: number]: any} = {};
   total: number = 0;
   selectedProduct!: iProduto[];
   highlighted = true;
@@ -75,26 +77,16 @@ export class CarrinhoDeComprasComponent implements OnInit {
   launchingPurchaseToShoppingCart(){
     this.purchaseState.getSaleOfSelectedProduct().subscribe(sale => {
       if (sale && sale.length > 0) {
-        const produtosPorVendedor: {[key: string]: iProduto[]} = {};
         sale.forEach((vetor:any) => {
           if (vetor > 0) {
-            console.log('codprod', vetor)
             this.loadProductDetails(vetor)
           } else {
-            console.log('Usuario ->', vetor);
+            this.nomeVendedor = vetor
+            console.log('Vendedor ->', this.matriz,  this.nomeVendedor);
+            //matriz[vetor.vendedor] = [];
+            //this.matriz[0] = [];
           }
-          if (!produtosPorVendedor[vetor.vendedor]) {
-            console.log('ProdutosPorVdor ->', produtosPorVendedor);
-            produtosPorVendedor[vetor.vendedor] = [];
-          }
-          produtosPorVendedor[vetor.vendedor].push(vetor);
         });
-        // Criar array de vendedores
-        this.vendedores = Object.keys(produtosPorVendedor).map(vendedorNome => ({
-          vendedor: vendedorNome,
-          selecionado: false,
-          produtos: produtosPorVendedor[vendedorNome]
-        }));
         // Calcular total inicial
         this.calcularTotal();
       }
@@ -122,18 +114,19 @@ export class CarrinhoDeComprasComponent implements OnInit {
   loadProductDetails(productId: number) {
     console.log('Entrando no produto', productId);
     this.prodService.getIdProduto(productId).subscribe({
-     //this.itensVdService.listarItensVdPorCodVenda(String(productId)).subscribe({
       next: (response) => {
         if(response) {
           this.highlighted = true;
           // Assumindo que a API retorna o produto diretamente ou em response.body
-          this.selectedProduct = response.body || response;
-          //this.venda.itensVd = response.body || response;
-          console.log(' ITENS', this.highlighted, this.selectedProduct)
-          // Opcional: destacar o produto na lista
-          if (this.venda.itensVd) {
-            // Destaca o produto na lista
-            // this.highlightProductInList(this.selectedProduct.idProduto);
+          this.selectedProduct = response.body;
+
+          if (this.selectedProduct) {
+            // Criar array de vendedores
+           this.vendedores = [ {
+              vendedor: this.nomeVendedor,
+              selecionado: false,
+              produtos: this.selectedProduct
+            }];
 
             // Rolagem automática para o produto destacado (opcional)
             setTimeout(() => {
@@ -200,24 +193,7 @@ export class CarrinhoDeComprasComponent implements OnInit {
     const total = subtotal - desconto;
     this.venda.totalgeral = total.toFixed(2);
   }
-/*
 
-  alterarQuantidade(item: iProduto, operacao: number): void {
-    if (operacao !== 0) {
-      item.qtdVendidas += operacao;
-    }
-    if (item.qtdVendidas < 1) {
-      item.qtdVendidas = 1;
-    }
-    item.valorVenda = item.qtdVendidas * item.valorVenda;
-    this.calcularTotais();
-    // Atualizar item no backend
-    this.prodService.editElement(item).subscribe({
-      next: () => this.calcularTotais(),
-      error: (err) => console.error('Erro ao atualizar item:', err)
-    });
-  }
-*/
 
   removerItem(index: number): void {
     const item = this.venda.itensVd[index];
@@ -325,7 +301,6 @@ export class CarrinhoDeComprasComponent implements OnInit {
   }
 
   carregarCarrinho() {
-    this.selectedProduct;
    // this.vendedores
     /*= [
      {
