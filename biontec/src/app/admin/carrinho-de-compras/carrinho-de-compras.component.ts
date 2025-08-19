@@ -1,7 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {VendasService} from "../../services/vendas.service";
 import {ItensVdService} from "../../services/itens-vd.service";
-import {ActivatedRoute} from "@angular/router";
 import {iItensVd} from "../../interfaces/itens-vd";
 import {iVendas} from "../../interfaces/vendas";
 import {PurchaseStateService} from "../../services/purchase-state.service";
@@ -25,11 +24,10 @@ export class CarrinhoDeComprasComponent implements OnInit {
   selecionarTodos: boolean = false;
   vendedores: Vendedor[] = [];
   nomeVendedor = '';
-  matriz: {[key: number]: any} = {};
   total: number = 0;
   selectedProduct!: iProduto[];
   highlighted = true;
-  venda: iVendas = {
+    venda: iVendas = {
     idVenda: 0,
     idCliente: 0,
     nomeCliente: '',
@@ -51,93 +49,40 @@ export class CarrinhoDeComprasComponent implements OnInit {
     private purchaseState: PurchaseStateService,
     private vendasService: VendasService,
     private itensVdService: ItensVdService,
-    private prodService: ProductService,
-    private route: ActivatedRoute
+    private prodService: ProductService
   ) { }
 
   ngOnInit(): void {
     this.launchingPurchaseToShoppingCart();
-
     this.carregarCarrinho();
     this.calcularTotal();
-
-/*    this.route.paramMap.subscribe(params => {
-      console.log('Param do onit', params)
-      const idVenda = params.get('id');
-      console.log('idVenda do ngOnInit', idVenda)
-      if (idVenda) {
-        this.carregarVenda(idVenda);
-      } else {
-        this.inicializarNovaVenda();
-      }
-    });*/
   }
 
-
-  launchingPurchaseToShoppingCart(){
-    this.purchaseState.getSaleOfSelectedProduct().subscribe(sale => {
-      if (sale && sale.length > 0) {
-        sale.forEach((vetor:any) => {
-          if (vetor > 0) {
-            this.loadProductDetails(vetor)
-          } else {
-            this.nomeVendedor = vetor
-            console.log('Vendedor ->', this.matriz,  this.nomeVendedor);
-            //matriz[vetor.vendedor] = [];
-            //this.matriz[0] = [];
-          }
-        });
-        // Calcular total inicial
-        this.calcularTotal();
-      }
+  launchingPurchaseToShoppingCart() {
+    this.purchaseState.getSaleOfSelectedProduct().subscribe(vetor => {
+      if (vetor[0]) { this.nomeVendedor = vetor[0]; }
+      if (vetor[1]) { this.loadProductDetails(vetor[1]); }
+      this.calcularTotal();
     });
   }
-
-  carregarVenda(idVenda: string): void {
-    this.carregando = true;
-    this.erroCarregamento = null;
-
-    this.vendasService.getVendaPorCod(idVenda).subscribe({
-      next: (venda) => {
-        this.venda = venda;
-        this.carregarItensVenda(idVenda);
-      },
-      error: (err) => {
-        this.erroCarregamento = 'Erro ao carregar a venda';
-        this.carregando = false;
-        console.error(err);
-      }
-    });
-  }
-
 
   loadProductDetails(productId: number) {
-    console.log('Entrando no produto', productId);
     this.prodService.getIdProduto(productId).subscribe({
       next: (response) => {
-        if(response) {
-          this.highlighted = true;
-          // Assumindo que a API retorna o produto diretamente ou em response.body
-          this.selectedProduct = response.body;
+        if (response) {
+          this.carregando = true;
+          // Garantir que selectedProduct seja um array
+          this.selectedProduct = Array.isArray(response.body) ? response.body : [response.body];
 
-          if (this.selectedProduct) {
-            // Criar array de vendedores
-            this.vendedores = [ {
-              vendedor: this.nomeVendedor,
-              selecionado: false,
-              produtos: this.selectedProduct
-            }];
-            console.log('this.vendedores->', this.vendedores);
-            
-            // Rolagem automática para o produto destacado (opcional)
-            setTimeout(() => {
-              const element = document.querySelector('.highlighted');
-              if (element) {
-                element.scrollIntoView({behavior: 'smooth', block: 'center'});
-              }
-            }, 500);
-          }
+          // Rolagem automática para o produto destacado (opcional)
+          setTimeout(() => {
+            const element = document.querySelector('.highlighted');
+            if (element) {
+              element.scrollIntoView({behavior: 'smooth', block: 'center'});
+            }
+          }, 500);
         }
+        this.carregarVenda(this.highlighted);
       },
       error: (err) => {
         console.error('Erro ao carregar produto:', err);
@@ -145,8 +90,38 @@ export class CarrinhoDeComprasComponent implements OnInit {
     });
   }
 
+  carregarVenda(idVenda: any): void {
+    this.carregando = true;
+    this.erroCarregamento = null;
 
+    if (idVenda == true) {
+      if (this.selectedProduct) {
+        // Garantir que produtos seja um array
+        const produtosArray = Array.isArray(this.selectedProduct) ? this.selectedProduct : [this.selectedProduct];
+        // Criar array de vendedores
+        this.vendedores = [{
+          vendedor: this.nomeVendedor,
+          selecionado: false,
+          produtos: produtosArray
+        }];
 
+        console.log('this.vendedores->', this.vendedores);
+        this.calcularTotal();
+      }
+    } else {
+      this.vendasService.getVendaPorCod(idVenda).subscribe({
+        next: (venda) => {
+          this.venda = venda;
+          this.carregarItensVenda(idVenda);
+        },
+        error: (err) => {
+          this.erroCarregamento = 'Erro ao carregar a venda';
+          this.carregando = false;
+          console.error(err);
+        }
+      });
+    }
+  }
 
   carregarItensVenda2(idVenda: string): void {
     this.itensVdService.listarItensVdPorCodVenda(idVenda).subscribe({
@@ -164,7 +139,7 @@ export class CarrinhoDeComprasComponent implements OnInit {
   }
 
   inicializarNovaVenda(): void {
-    // Aqui inicializa uma nova venda com dados padrão
+    // Nova venda com dados padrão
     // ou carrega do localStorage se for um carrinho temporário
     this.venda = {
       idVenda: 0,
@@ -194,24 +169,6 @@ export class CarrinhoDeComprasComponent implements OnInit {
     const total = subtotal - desconto;
     this.venda.totalgeral = total.toFixed(2);
   }
-/*
-
-  alterarQuantidade(item: iProduto, operacao: number): void {
-    if (operacao !== 0) {
-      item.qtdVendidas += operacao;
-    }
-    if (item.qtdVendidas < 1) {
-      item.qtdVendidas = 1;
-    }
-    item.valorVenda = item.qtdVendidas * item.valorVenda;
-    this.calcularTotais();
-    // Atualizar item no backend
-    this.prodService.editElement(item).subscribe({
-      next: () => this.calcularTotais(),
-      error: (err) => console.error('Erro ao atualizar item:', err)
-    });
-  }
-*/
 
   removerItem(index: number): void {
     const item = this.venda.itensVd[index];
@@ -318,8 +275,66 @@ export class CarrinhoDeComprasComponent implements OnInit {
     return 'data:image/jpeg;base64,' + fotoProduto;
   }
 
+  toggleTodos() {
+    this.vendedores.forEach(vendedor => {
+      vendedor.selecionado = this.selecionarTodos;
+    });
+    this.calcularTotal();
+  }
+
+  toggleVendedor(vendedor: Vendedor) {
+    vendedor.selecionado = !vendedor.selecionado;
+    // Verificar se todos os vendedores estão selecionados
+    this.selecionarTodos = this.vendedores.every(v => v.selecionado);
+    this.calcularTotal();
+  }
+
+  verificarSelecao() {
+    this.selecionarTodos = this.vendedores.every(v => v.produtos.every(p => p.highlighted = this.highlighted));
+    this.vendedores.forEach(v => {
+      v.selecionado = v.produtos.every(p => p.highlighted);
+    });
+    this.calcularTotal();
+  }
+
+  alterarQuantidade(produto: iProduto, delta: number) {
+    produto.qtdVendidas = (produto.qtdVendidas || 1) + delta;
+    if (produto.qtdVendidas < 1) produto.qtdVendidas = 1;
+    // produto.qtdVendidas = Math.max(1, produto.qtdVendidas + delta);
+    this.calcularTotal();
+  }
+
+  removerProduto(produto: iProduto) {
+    this.vendedores.forEach(vendedor => {
+      vendedor.produtos = vendedor.produtos.filter(p => p !== produto);
+    });
+    // Remover vendedores sem produtos
+    this.vendedores = this.vendedores.filter(v => v.produtos.length > 0);
+     this.calcularTotal();
+  }
+
+  calcularTotal() {
+    this.total = this.vendedores.reduce((acc, vendedor) => {
+      return acc + vendedor.produtos.reduce((sum, produto) => {
+        const quantidade = produto.qtdVendidas || 1;
+        const valor = produto.valorVenda || 0;
+        return sum + (valor * quantidade);
+      }, 0);
+    }, 0);
+  }
+
+  continuarCompra() {
+    const produtosSelecionados = this.vendedores
+      .flatMap(v => v.produtos)
+      .filter(p => p.highlighted);
+
+    console.log('Produtos para compra:', produtosSelecionados);
+    alert(`Você está comprando ${produtosSelecionados.length} produto(s).`);
+  }
+
+
   carregarCarrinho() {
-   // this.vendedores
+    // this.vendedores
     /*= [
      {
         id: 1,
@@ -364,83 +379,6 @@ export class CarrinhoDeComprasComponent implements OnInit {
     ];*/
   }
 
-  toggleTodos() {
-    this.vendedores.forEach(vendedor => {
-      vendedor.selecionado = this.selecionarTodos;
-    });
 
-   /* this.vendedores.forEach(v => {
-      v.selecionado = this.selecionarTodos;
-      v.produtos.forEach(p => p.highlighted = this.selecionarTodos);
-    });
-    this.calcularTotal();*/
-  }
-
-  toggleVendedor(vendedor: Vendedor) {
-    vendedor.selecionado = !vendedor.selecionado;
-    // Verificar se todos os vendedores estão selecionados
-    this.selecionarTodos = this.vendedores.every(v => v.selecionado);
-
-  /*  vendedor.produtos.forEach(p => p.highlighted = vendedor.selecionado);
-    this.verificarSelecao();
-    this.calcularTotal();*/
-  }
-
-  verificarSelecao() {
-    this.selecionarTodos = this.vendedores.every(v => v.produtos.every(p => p.highlighted = this.highlighted));
-    this.vendedores.forEach(v => {
-      v.selecionado = v.produtos.every(p => p.highlighted);
-    });
-    this.calcularTotal();
-  }
-
-  alterarQuantidade(produto: iProduto, delta: number) {
-    produto.qtdVendidas = (produto.qtdVendidas || 1) + delta;
-    if (produto.qtdVendidas < 1) produto.qtdVendidas = 1;
-
-
-    // produto.qtdVendidas = Math.max(1, produto.qtdVendidas + delta);
-    this.calcularTotal();
-  }
-
-  removerProduto(produto: iProduto) {
-    this.vendedores.forEach(vendedor => {
-      vendedor.produtos = vendedor.produtos.filter(p => p !== produto);
-    });
-    // Remover vendedores sem produtos
-    this.vendedores = this.vendedores.filter(v => v.produtos.length > 0);
-
-  /*  this.vendedores.forEach(v => {
-      v.produtos = v.produtos.filter(p => p.idProduto !== produto.idProduto);
-    });
-    this.vendedores = this.vendedores.filter(v => v.produtos.length > 0);*/
-    this.calcularTotal();
-  }
-
-  calcularTotal() {
-    this.total = this.vendedores.reduce((acc, vendedor) => {
-      return acc + vendedor.produtos.reduce((sum, produto) => {
-        return sum + (produto.valorVenda * (produto.qtdVendidas || 1));
-      }, 0);
-    }, 0);
-
-   /* this.total = 0;
-    this.vendedores.forEach(v => {
-      v.produtos.forEach(p => {
-        if (p.highlighted) {
-          this.total += p.valorVenda * p.qtdVendidas;
-        }
-      });
-    });*/
-  }
-
-  continuarCompra() {
-    const produtosSelecionados = this.vendedores
-      .flatMap(v => v.produtos)
-      .filter(p => p.highlighted);
-
-    console.log('Produtos para compra:', produtosSelecionados);
-    alert(`Você está comprando ${produtosSelecionados.length} produto(s).`);
-  }
 
 }

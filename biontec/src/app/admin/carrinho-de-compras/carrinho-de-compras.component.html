@@ -17,12 +17,11 @@
 
       <!-- Lista de produtos do vendedor -->
        <div class="produto-item" *ngFor="let produto of  vendedor.produtos">
-         <!--   <div class="produto-item" *ngFor="let produto of vendedor.produtos">-->
-       <input type="checkbox" [(ngModel)]="vendedor.selecionado" (change)="verificarSelecao()">
+       <input type="checkbox" [(ngModel)]="carregando" (change)="verificarSelecao()">
       <img [src]="produto.fotoProduto" alt="{{ produto.nomeProduto }}">
 
         <div class="produto-info">
-         NomeProduto aqui=> <span class="produto-nome">{{ produto.nomeProduto }}</span>
+         <span class="produto-nome">{{ produto.nomeProduto }}</span>
           <a class="excluir" (click)="removerProduto(produto)">Excluir</a>
         </div>
 
