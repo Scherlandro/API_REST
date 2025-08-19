@@ -25,7 +25,7 @@ export class UserService {
   }
 
 
-  getUser(uid: string ): Observable<IUser[]>{
+  getUsuarioPorId(uid: string ): Observable<IUser[]>{
     return this._http.get<IUser[]>(this.baseUrl+'/'+uid)
   }
 
@@ -34,12 +34,13 @@ export class UserService {
       .pipe(map((res:IUser[])=> res));
   }
 
-  getUserByID(id:string){
-    return this._http.get<IUser[]>(this.baseUrl + id)
+  getUserByUserName(){
+    const user = localStorage.getItem('username')
+    //return JSON.parse(<string>user);
+    return this._http.get<IUser>(this.baseUrl + '/getUser/' + user)
       .pipe(
         first(),
         delay(2000),
-        // https://www.youtube.com/watch?v=gi0ZJ8-r6IM
         tap(DebugarUser => console.log(DebugarUser))
       );
   }

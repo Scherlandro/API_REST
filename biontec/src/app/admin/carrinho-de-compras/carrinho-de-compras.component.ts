@@ -8,6 +8,8 @@ import {ProductService} from "../../services/product.service";
 import {iProduto} from "../../interfaces/product";
 import {forkJoin, of} from "rxjs";
 import {catchError, map} from "rxjs/operators";
+import {IUser} from "../../interfaces/user";
+import {UserService} from "../../services/user.service";
 
 interface Vendedor {
   vendedor: string;
@@ -47,6 +49,8 @@ export class CarrinhoDeComprasComponent implements OnInit {
 
   constructor(
     private purchaseState: PurchaseStateService,
+  //  private usuario: IUser,
+    private userService: UserService,
     private vendasService: VendasService,
     private itensVdService: ItensVdService,
     private prodService: ProductService
@@ -59,6 +63,7 @@ export class CarrinhoDeComprasComponent implements OnInit {
   }
 
   launchingPurchaseToShoppingCart() {
+    console.log('Usuario completo', this.userService.getUserByUserName());
     this.purchaseState.getSaleOfSelectedProduct().subscribe(vetor => {
       if (vetor[0]) { this.nomeVendedor = vetor[0]; }
       if (vetor[1]) { this.loadProductDetails(vetor[1]); }

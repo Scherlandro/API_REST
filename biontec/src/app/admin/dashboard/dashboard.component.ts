@@ -18,6 +18,7 @@ import {ErrorDiologComponent} from "../../shared/diolog_components/error-diolog/
 import {TokenService} from "../../services/token.service";
 import {Router} from "@angular/router";
 import {AuthService} from "../../services/auth.service";
+import {IUser} from "../../interfaces/user";
 
 
 @Component({
@@ -57,6 +58,10 @@ export class DashboardComponent implements OnInit {
     console.log('logado com: ', this.selectedUser);
     this.listarProdutos();
     this.prodSelecionado();
+  }
+
+  getUsuarioDasessao(){
+
   }
 
   prodSelecionado(){

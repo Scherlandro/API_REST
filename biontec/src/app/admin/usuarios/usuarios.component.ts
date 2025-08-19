@@ -65,7 +65,7 @@ export class UsuariosComponent implements OnInit {
 
   consultarPorNome(nome: string) {
     if (this.usuarioControl.valid) {
-      this.userService.getUser(nome)
+      this.userService.getUsuarioPorId(nome)
         .pipe(catchError(error => {
           this.onError('Erro ao buscar usuário.')
           return of([])
