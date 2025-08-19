@@ -127,7 +127,8 @@ export class CarrinhoDeComprasComponent implements OnInit {
               selecionado: false,
               produtos: this.selectedProduct
             }];
-
+            console.log('this.vendedores->', this.vendedores);
+            
             // Rolagem automática para o produto destacado (opcional)
             setTimeout(() => {
               const element = document.querySelector('.highlighted');
