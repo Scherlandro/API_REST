@@ -57,18 +57,25 @@ export class CarrinhoDeComprasComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.launchingPurchaseToShoppingCart();
+   this.launchingPurchaseToShoppingCart();
     this.carregarCarrinho();
     this.calcularTotal();
   }
 
   launchingPurchaseToShoppingCart() {
-    console.log('Usuario completo', this.userService.getUserByUserName());
     this.purchaseState.getSaleOfSelectedProduct().subscribe(vetor => {
-      if (vetor[0]) { this.nomeVendedor = vetor[0]; }
+      //if (vetor[0]) { this.nomeVendedor = vetor[0]; }
+      if (vetor[0]) { this.consultarPorNome(vetor[0]); }
       if (vetor[1]) { this.loadProductDetails(vetor[1]); }
       this.calcularTotal();
     });
+  }
+
+  consultarPorNome(nome: string) {
+      this.userService.getUserByUserName(nome)
+        .subscribe((res:IUser) => {
+          this.nomeVendedor = res.name;
+        });
   }
 
   loadProductDetails(productId: number) {

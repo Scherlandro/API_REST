@@ -34,13 +34,11 @@ export class UserService {
       .pipe(map((res:IUser[])=> res));
   }
 
-  getUserByUserName(){
-    const user = localStorage.getItem('username')
-    //return JSON.parse(<string>user);
+  getUserByUserName(user:string){
     return this._http.get<IUser>(this.baseUrl + '/getUser/' + user)
       .pipe(
         first(),
-        delay(2000),
+        delay(10),
         tap(DebugarUser => console.log(DebugarUser))
       );
   }
