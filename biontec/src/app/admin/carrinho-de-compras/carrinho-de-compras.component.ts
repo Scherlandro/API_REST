@@ -122,7 +122,7 @@ export class CarrinhoDeComprasComponent implements OnInit {
 
           if (this.selectedProduct) {
             // Criar array de vendedores
-           this.vendedores = [ {
+            this.vendedores = [ {
               vendedor: this.nomeVendedor,
               selecionado: false,
               produtos: this.selectedProduct
@@ -193,7 +193,24 @@ export class CarrinhoDeComprasComponent implements OnInit {
     const total = subtotal - desconto;
     this.venda.totalgeral = total.toFixed(2);
   }
+/*
 
+  alterarQuantidade(item: iProduto, operacao: number): void {
+    if (operacao !== 0) {
+      item.qtdVendidas += operacao;
+    }
+    if (item.qtdVendidas < 1) {
+      item.qtdVendidas = 1;
+    }
+    item.valorVenda = item.qtdVendidas * item.valorVenda;
+    this.calcularTotais();
+    // Atualizar item no backend
+    this.prodService.editElement(item).subscribe({
+      next: () => this.calcularTotais(),
+      error: (err) => console.error('Erro ao atualizar item:', err)
+    });
+  }
+*/
 
   removerItem(index: number): void {
     const item = this.venda.itensVd[index];
