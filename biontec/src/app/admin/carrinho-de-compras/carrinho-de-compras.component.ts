@@ -64,7 +64,6 @@ export class CarrinhoDeComprasComponent implements OnInit {
 
   launchingPurchaseToShoppingCart() {
     this.purchaseState.getSaleOfSelectedProduct().subscribe(vetor => {
-      //if (vetor[0]) { this.nomeVendedor = vetor[0]; }
       if (vetor[0]) { this.consultarPorNome(vetor[0]); }
       if (vetor[1]) { this.loadProductDetails(vetor[1]); }
       this.calcularTotal();
@@ -85,7 +84,6 @@ export class CarrinhoDeComprasComponent implements OnInit {
           this.carregando = true;
           // Garantir que selectedProduct seja um array
           this.selectedProduct = Array.isArray(response.body) ? response.body : [response.body];
-
           // Rolagem automática para o produto destacado (opcional)
           setTimeout(() => {
             const element = document.querySelector('.highlighted');
