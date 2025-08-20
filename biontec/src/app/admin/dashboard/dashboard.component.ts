@@ -18,7 +18,6 @@ import {ErrorDiologComponent} from "../../shared/diolog_components/error-diolog/
 import {TokenService} from "../../services/token.service";
 import {Router} from "@angular/router";
 import {AuthService} from "../../services/auth.service";
-import {IUser} from "../../interfaces/user";
 
 
 @Component({
@@ -55,22 +54,13 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit(): void {
     this.selectedUser = this.authService.getUserName();
-    console.log('logado com: ', this.selectedUser);
     this.listarProdutos();
     this.prodSelecionado();
   }
 
-  getUsuarioDasessao(){
-
-  }
-
   prodSelecionado(){
     this.purchaseState.getSelectedProduct().subscribe(productId => {
-      if (productId) {
-        console.log('Id do produto selecionado', productId)
-        this.loadProductDetails(productId);
-      }
-    });
+      if (productId) {  this.loadProductDetails(productId);  }  });
   }
 
   loadProductDetails(productId: number) {

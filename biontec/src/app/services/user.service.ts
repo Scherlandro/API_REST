@@ -34,13 +34,13 @@ export class UserService {
       .pipe(map((res:IUser[])=> res));
   }
 
-  getUserByUserName(user:string){
+  getUserByUserName(user:string): Observable<IUser> {
     return this._http.get<IUser>(this.baseUrl + '/getUser/' + user)
-      .pipe(
-        first(),
-        delay(10),
-        tap(DebugarUser => console.log(DebugarUser))
-      );
+    /*   .pipe(
+       first(),
+     delay(100),
+       tap(DebugarUser => console.log(DebugarUser))
+      );*/
   }
 
   editarUsuario(user: IUser): Observable<IUser> {
