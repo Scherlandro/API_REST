@@ -18,9 +18,9 @@
       <!-- Lista de produtos do vendedor -->
        <div class="produto-item" *ngFor="let produto of  vendedor.produtos">
        <input type="checkbox" [(ngModel)]="carregando" (change)="verificarSelecao()">
-      <img [src]="produto.fotoProduto" alt="{{ produto.nomeProduto }}">
+         <img [src]="getImageUrl(produto.fotoProduto)" *ngIf="produto.fotoProduto">
 
-        <div class="produto-info">
+         <div class="produto-info">
          <span class="produto-nome">{{ produto.nomeProduto }}</span>
           <a class="excluir" (click)="removerProduto(produto)">Excluir</a>
         </div>
