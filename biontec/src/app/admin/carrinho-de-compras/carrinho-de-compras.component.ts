@@ -24,7 +24,8 @@ interface Vendedor {
 })
 export class CarrinhoDeComprasComponent implements OnInit {
   selecionarTodos: boolean = false;
-  vendedores: Vendedor[] = [];
+//  vendedores: Vendedor[] = [];
+  vendedores: iVendas[] = [];
   nomeVendedor = '';
   total: number = 0;
   selectedProduct!: iProduto[];
@@ -41,7 +42,8 @@ export class CarrinhoDeComprasComponent implements OnInit {
     totalgeral: "0",
     formasDePagamento: "Cartão de Crédito",
     qtdDeParcelas: 1,
-    itensVd: []
+    itensVd: [],
+      produtos:[]
   };
 
   carregando: boolean = true;
@@ -109,10 +111,26 @@ export class CarrinhoDeComprasComponent implements OnInit {
         // Garantir que produtos seja um array
         const produtosArray = Array.isArray(this.selectedProduct) ? this.selectedProduct : [this.selectedProduct];
         // Criar array de vendedores
-        this.vendedores = [{
+      /*  this.vendedores = [{
           vendedor: this.nomeVendedor,
           selecionado: false,
           produtos: produtosArray
+        }];*/
+        this.vendedores = [{
+          idVenda: 0,
+          idCliente: 0,
+          nomeCliente: '',
+          idFuncionario: 0,
+          nomeFuncionario: this.nomeVendedor,
+          dtVenda: new Date().toISOString(),
+          subtotal: "0",
+          desconto: "0",
+          totalgeral: "0",
+          formasDePagamento: "Cartão de Crédito",
+          qtdDeParcelas: 1,
+          itensVd: [],
+          produtos:produtosArray,
+          selecionado: false,
         }];
 
         console.log('this.vendedores->', this.vendedores);
@@ -163,7 +181,8 @@ export class CarrinhoDeComprasComponent implements OnInit {
       totalgeral: "0",
       formasDePagamento: "Cartão de Crédito",
       qtdDeParcelas: 1,
-      itensVd: []
+      itensVd: [],
+      produtos: []
     };
     this.carregando = false;
   }
@@ -171,7 +190,6 @@ export class CarrinhoDeComprasComponent implements OnInit {
   calcularTotais(): void {
     const subtotal = this.venda.itensVd.reduce((sum, item) => sum + item.valorParcial, 0);
     this.venda.subtotal = subtotal.toFixed(2);
-
     // Simulando desconto de 10% para compras acima de R$ 1000
     const desconto = subtotal > 1000 ? subtotal * 0.1 : 0;
     this.venda.desconto = desconto.toFixed(2);
@@ -292,7 +310,7 @@ export class CarrinhoDeComprasComponent implements OnInit {
     this.calcularTotal();
   }
 
-  toggleVendedor(vendedor: Vendedor) {
+  toggleVendedor(vendedor: iVendas) {
     vendedor.selecionado = !vendedor.selecionado;
     // Verificar se todos os vendedores estão selecionados
     this.selecionarTodos = this.vendedores.every(v => v.selecionado);
@@ -309,8 +327,8 @@ export class CarrinhoDeComprasComponent implements OnInit {
 
   alterarQuantidade(produto: iProduto, delta: number) {
     produto.qtdVendidas = (produto.qtdVendidas || 1) + delta;
-    if (produto.qtdVendidas < 1) produto.qtdVendidas = 1;
     // produto.qtdVendidas = Math.max(1, produto.qtdVendidas + delta);
+    if (produto.qtdVendidas < 1) produto.qtdVendidas = 1;
     this.calcularTotal();
   }
 

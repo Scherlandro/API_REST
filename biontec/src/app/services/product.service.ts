@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {Observable, of} from "rxjs/index";
 import {environment} from "../../environments/environment";
-import {delay, first, map} from "rxjs/operators";
+import {delay, first, map, tap} from "rxjs/operators";
 import {iProduto} from "../interfaces/product";
 
 @Injectable({
@@ -31,7 +31,9 @@ export class ProductService {
 
   getIdProduto(id: number): Observable<any> {
     return this._http.get(this.baseUrl + id)
-      .pipe(first(), delay(100));
+      .pipe(first(), delay(100),
+  /*  tap(debugar => console.log(debugar))*/
+      );
   }
 
   getProdutoPorCod(id: string): Observable<any> {

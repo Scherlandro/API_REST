@@ -35,12 +35,7 @@ export class UserService {
   }
 
   getUserByUserName(user:string): Observable<IUser> {
-    return this._http.get<IUser>(this.baseUrl + '/getUser/' + user)
-    /*   .pipe(
-       first(),
-     delay(100),
-       tap(DebugarUser => console.log(DebugarUser))
-      );*/
+    return this._http.get<IUser>(this.baseUrl + '/getUser/' + user);
   }
 
   editarUsuario(user: IUser): Observable<IUser> {

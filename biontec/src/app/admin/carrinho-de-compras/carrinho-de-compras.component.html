@@ -12,7 +12,7 @@
     <div class="grupo-vendedor" *ngFor="let vendedor of vendedores">
       <div class="vendedor-header">
         <input type="checkbox" [(ngModel)]="vendedor.selecionado" (change)="toggleVendedor(vendedor)">
-        <span class="nome-vendedor">{{ vendedor.vendedor }}</span>
+        <span class="nome-vendedor">{{ vendedor.nomeFuncionario }}</span>
       </div>
 
       <!-- Lista de produtos do vendedor -->

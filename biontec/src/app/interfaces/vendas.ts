@@ -1,4 +1,5 @@
 import {iItensVd} from "./itens-vd";
+import {iProduto} from "./product";
 
 export interface iVendas {
   idVenda: number,
@@ -12,10 +13,9 @@ export interface iVendas {
   totalgeral: string,
   formasDePagamento: string,
   qtdDeParcelas: number,
-  itensVd: iItensVd[]
- /*   updatedAt?: string,
-    createdAt?: string,
-    deletedAt?: null | string*/
+  itensVd: iItensVd[],
+  produtos: iProduto[],
+  selecionado?:boolean
 }
 
 export interface ISingleVendas {
