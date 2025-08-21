@@ -51,7 +51,6 @@ export class CarrinhoDeComprasComponent implements OnInit {
 
   constructor(
     private purchaseState: PurchaseStateService,
-  //  private usuario: IUser,
     private userService: UserService,
     private vendasService: VendasService,
     private itensVdService: ItensVdService,

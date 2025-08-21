@@ -102,7 +102,8 @@
           </mat-card-content>
 
           <mat-card-actions class="product-actions">
-            <button mat-raised-button color="primary" class="add-to-cart" [routerLink]="['/auth/login']">
+            <button mat-raised-button color="primary" class="add-to-cart"
+                    (click)="preparePurchase(produto.idProduto)">
               <mat-icon>add_shopping_cart</mat-icon>
               Comprar
             </button>

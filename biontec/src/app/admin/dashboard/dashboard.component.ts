@@ -186,11 +186,16 @@ export class DashboardComponent implements OnInit {
     this.router.navigate(['/admin/carrinho-de-compras']);
   }
 
+  preparePurchase(productId: number) {
+    this.purchaseState.startSaleOfSelectedProduct(this.selectedUser, productId);
+    this.router.navigate(['/admin/carrinho-de-compras']);
+  }
 
   clearHighlight() {
     this.selectedProduct = null;
     this.purchaseState.clearSelectedProduct();
     this.highlightProductInList(-1); // Passa um ID inválido para remover todos os destaques
   }
+
 
 }
