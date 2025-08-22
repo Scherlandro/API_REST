@@ -30,6 +30,8 @@ export class DashboardComponent implements OnInit {
   events = new FormControl();
   selectedProduct: iProduto | null = null; // Alterado para armazenar o produto completo
   selectedUser!: string; //= { id: 0, name: '',  username: '' };
+  cartProducts: iProduto[] = []; // Lista de produtos no carrinho
+
   mensagens!: Observable<string>;
   spiner = false;
   pageSize = 20;
@@ -56,7 +58,75 @@ export class DashboardComponent implements OnInit {
     this.selectedUser = this.authService.getUserName();
     this.listarProdutos();
     this.prodSelecionado();
+    this.loadCartProducts();
   }
+
+  // Carrega os produtos do carrinho
+  loadCartProducts() {
+    this.purchaseState.getSelectedProducts().subscribe(productIds => {
+     if (productIds && productIds.length > 0) {
+       // Carrega os detalhes de todos os produtos no carrinho
+        this.cartProducts = [];
+        productIds.forEach(id => {
+          this.prodService.getIdProduto(id).subscribe({
+            next: (response) => {
+              const product = response.body || response;
+              this.cartProducts.push(product);
+            },
+            error: (err) => {
+              console.error('Erro ao carregar produto:', err);
+            }
+          });
+        });
+      }
+    });
+  }
+
+  // Adiciona produto ao carrinho
+  addToCart(productId: number) {
+    this.purchaseState.addSelectedProduct(productId);
+    this.loadCartProducts(); // Atualiza a lista local
+  }
+
+  // Remove produto do carrinho
+  removeFromCart(productId: number) {
+    this.purchaseState.removeSelectedProduct(productId);
+    this.cartProducts = this.cartProducts.filter(p => p.idProduto !== productId);
+  }
+
+  // Verifica se o produto está no carrinho
+  isInCart(productId: number): boolean {
+    return this.purchaseState.isProductInCart(productId);
+  }
+
+  // Prepara a compra com todos os produtos do carrinho
+  preparePurchase() {
+    const productIds = this.purchaseState.getSelectedProducts(); // Isso retorna o BehaviorSubject value
+    const idsArray = this.purchaseState['selectedProductsIds'].value; // Acessando o value diretamente
+
+    if (idsArray.length > 0) {
+      this.purchaseState.startSaleOfSelectedProduct(this.selectedUser, idsArray);
+      this.router.navigate(['/admin/carrinho-de-compras']);
+    } else {
+      console.info('Nenhum produto no carrinho');
+      // Você pode mostrar uma mensagem para o usuário aqui
+    }
+  }
+
+
+  // Prepara compra de um produto específico (adiciona ao carrinho e vai para o carrinho)
+  prepareSinglePurchase(productId: number) {
+    this.addToCart(productId);
+    this.purchaseState.startSaleOfSelectedProduct(this.selectedUser, [productId]);
+    this.router.navigate(['/admin/carrinho-de-compras']);
+  }
+  /*
+    preparePurchase(productId: number) {
+      this.purchaseState.startSaleOfSelectedProduct(this.selectedUser, productId);
+      this.router.navigate(['/admin/carrinho-de-compras']);
+    }
+  */
+
 
   prodSelecionado(){
     this.purchaseState.getSelectedProduct().subscribe(productId => {
@@ -66,26 +136,14 @@ export class DashboardComponent implements OnInit {
   loadProductDetails(productId: number) {
     this.prodService.getIdProduto(productId).subscribe({
       next: (response) => {
-        // Assumindo que a API retorna o produto diretamente ou em response.body
         this.selectedProduct = response.body || response;
-        // Opcional: destacar o produto na lista
-   /*     if (this.selectedProduct) {
-          // Destaca o produto na lista
-          this.highlightProductInList(this.selectedProduct.idProduto);
-          // Rolagem automática para o produto destacado (opcional)
-          setTimeout(() => {
-            const element = document.querySelector('.highlighted');
-            if (element) {
-              element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            }
-          }, 500);
-        }*/
       },
       error: (err) => {
         console.error('Erro ao carregar produto:', err);
       }
     });
   }
+
   // Método para destacar o produto na lista
   highlightProductInList(productId: number) {
     // Remove o destaque de todos os produtos primeiro
@@ -182,14 +240,14 @@ export class DashboardComponent implements OnInit {
     if(userName == null || productId == null){
       console.info('Usuário ou produto nulo',  userName , productId)
     }
-    this.purchaseState.startSaleOfSelectedProduct(userName, productId);
+    var prodId:number[] =[];
+    for (const id of [productId]) {
+      prodId.push(...[id]);
+      }
+    this.purchaseState.startSaleOfSelectedProduct(userName, prodId);
     this.router.navigate(['/admin/carrinho-de-compras']);
   }
 
-  preparePurchase(productId: number) {
-    this.purchaseState.startSaleOfSelectedProduct(this.selectedUser, productId);
-    this.router.navigate(['/admin/carrinho-de-compras']);
-  }
 
   clearHighlight() {
     this.selectedProduct = null;

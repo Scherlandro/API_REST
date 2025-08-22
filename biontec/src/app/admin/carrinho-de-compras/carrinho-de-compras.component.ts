@@ -28,7 +28,9 @@ export class CarrinhoDeComprasComponent implements OnInit {
   vendedores: iVendas[] = [];
   nomeVendedor = '';
   total: number = 0;
-  selectedProduct!: iProduto[];
+  //selectedProduct!: iProduto[];
+  selectedProducts: iProduto[] = []; // Lista de produtos selecionados
+
   highlighted = true;
     venda: iVendas = {
     idVenda: 0,
@@ -58,13 +60,51 @@ export class CarrinhoDeComprasComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-   this.launchingPurchaseToShoppingCart();
-    this.carregarCarrinho();
+   this.launchingPurchaseToShoppingCarts();
     this.calcularTotal();
+  }
+
+
+  launchingPurchaseToShoppingCarts() {
+    this.purchaseState.getSaleOfSelectedProduct().subscribe(saleData => {
+
+      if (saleData && saleData.userName) {
+        this.consultarPorNome(saleData.userName);
+      }
+
+      if (saleData && saleData.productIds > 0) {
+        this.loadMultipleProductDetails(saleData.productIds);
+      }
+
+      this.calcularTotal();
+    });
+  }
+
+  // Carrega múltiplos produtos
+  loadMultipleProductDetails(productIds: number) {
+    this.carregando = true;
+    this.selectedProducts = [];
+
+    this.prodService.getIdProduto(productIds).subscribe({
+        next: (response) => {
+         const product = response.body || response;
+          this.selectedProducts.push(product);
+
+          if (this.selectedProducts.length > 0) {
+            this.carregando = false;
+            this.carregarVenda(this.highlighted);
+          }
+        },
+        error: (err) => {
+          console.error('Erro ao carregar produto:', err);
+          this.carregando = false;
+        }
+      });
   }
 
   launchingPurchaseToShoppingCart() {
     this.purchaseState.getSaleOfSelectedProduct().subscribe(vetor => {
+      console.log('Vetor atual', vetor);
       if (vetor[0]) { this.consultarPorNome(vetor[0]); }
       if (vetor[1]) { this.loadProductDetails(vetor[1]); }
       this.calcularTotal();
@@ -84,7 +124,7 @@ export class CarrinhoDeComprasComponent implements OnInit {
         if (response) {
           this.carregando = true;
           // Garantir que selectedProduct seja um array
-          this.selectedProduct = Array.isArray(response.body) ? response.body : [response.body];
+          this.selectedProducts = Array.isArray(response.body) ? response.body : [response.body];
           // Rolagem automática para o produto destacado (opcional)
           setTimeout(() => {
             const element = document.querySelector('.highlighted');
@@ -106,9 +146,10 @@ export class CarrinhoDeComprasComponent implements OnInit {
     this.erroCarregamento = null;
 
     if (idVenda == true) {
-      if (this.selectedProduct) {
+      if (this.selectedProducts) {
+        console.log('SelectedProducts. ', this.selectedProducts);
         // Garantir que produtos seja um array
-        const produtosArray = Array.isArray(this.selectedProduct) ? this.selectedProduct : [this.selectedProduct];
+        const produtosArray = Array.isArray(this.selectedProducts) ? this.selectedProducts : [this.selectedProducts];
         // Criar array de vendedores
       /*  this.vendedores = [{
           vendedor: this.nomeVendedor,
@@ -357,53 +398,6 @@ export class CarrinhoDeComprasComponent implements OnInit {
 
     console.log('Produtos para compra:', produtosSelecionados);
     alert(`Você está comprando ${produtosSelecionados.length} produto(s).`);
-  }
-
-
-  carregarCarrinho() {
-    // this.vendedores
-    /*= [
-     {
-        id: 1,
-        nome: 'Loja A',
-        selecionado: false,
-        produtos: [
-          {
-            id: 101,
-            nome: 'Mouse Gamer RGB',
-            imagem: 'https://via.placeholder.com/50',
-            preco: 120.00,
-            precoOriginal: 150.00,
-            desconto: true,
-            quantidade: 1,
-            selecionado: false
-          },
-          {
-            id: 102,
-            nome: 'Teclado Mecânico ABNT2',
-            imagem: 'https://via.placeholder.com/50',
-            preco: 250.00,
-            quantidade: 1,
-            selecionado: false
-          }
-        ]
-      },
-      {
-        id: 2,
-        nome: 'Loja B',
-        selecionado: false,
-        produtos: [
-          {
-            id: 201,
-            nome: 'Monitor Full HD 24"',
-            imagem: 'https://via.placeholder.com/50',
-            preco: 900.00,
-            quantidade: 1,
-            selecionado: false
-          }
-        ]
-      }
-    ];*/
   }
 
 
