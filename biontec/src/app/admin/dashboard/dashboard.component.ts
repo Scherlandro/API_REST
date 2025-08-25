@@ -104,7 +104,7 @@ export class DashboardComponent implements OnInit {
     this.purchaseState.setSelectedProduct(productId);
     //const productIds = this.purchaseState.getSelectedProducts(); // Isso retorna o BehaviorSubject value
     const idsArray = this.purchaseState['selectedProductsIds'].value; // Acessando o value diretamente
-    console.log('Vlor do idsArray'+1+ idsArray);
+    console.log('Vlor do idsArray', idsArray,'productId', productId);
     if (idsArray.length > 0) {
       this.purchaseState.startSaleOfSelectedProduct(this.selectedUser, idsArray);
       this.router.navigate(['/admin/carrinho-de-compras']);
