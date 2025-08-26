@@ -1,13 +1,10 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {CommonModule} from '@angular/common';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MatCalendar} from "@angular/material/datepicker";
 import {FormControl, FormGroup} from "@angular/forms";
-import {DialogUsuarioComponent} from "../../shared/diolog_components/dialog-usuario/dialog-usuario.component";
-import {MensagemService} from "../../services/mensagem.service";
 import {Observable, of} from "rxjs";
 import {NotificationMgsService} from "../../services/notification-mgs.service";
-import {MatPaginator, PageEvent} from "@angular/material/paginator";
+import { PageEvent} from "@angular/material/paginator";
 import {iProduto} from "../../interfaces/product";
 import {DomSanitizer, SafeUrl} from "@angular/platform-browser";
 import {ProductService} from "../../services/product.service";
@@ -29,8 +26,8 @@ import {AuthService} from "../../services/auth.service";
 export class DashboardComponent implements OnInit {
   events = new FormControl();
   selectedProduct: iProduto | null = null; // Alterado para armazenar o produto completo
-  selectedUser!: string; //= { id: 0, name: '',  username: '' };
-  cartProducts: iProduto[] = []; // Lista de produtos no carrinho
+  selectedUser!: string;
+  cartProducts: iProduto[] = [];
 
   mensagens!: Observable<string>;
   spiner = false;
@@ -121,14 +118,7 @@ export class DashboardComponent implements OnInit {
     this.purchaseState.startSaleOfSelectedProduct(this.selectedUser, [productId]);
     this.router.navigate(['/admin/carrinho-de-compras']);
   }
-  /*
-    preparePurchase(productId: number) {
-      this.purchaseState.startSaleOfSelectedProduct(this.selectedUser, productId);
-      this.router.navigate(['/admin/carrinho-de-compras']);
-    }
-  */
-
-
+ 
   prodSelecionado(){
     this.purchaseState.getSelectedProduct().subscribe(productId => {
       if (productId) {  this.loadProductDetails(productId);  }  });
