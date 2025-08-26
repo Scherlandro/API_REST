@@ -58,6 +58,22 @@ export class DashboardComponent implements OnInit {
     this.loadCartProducts();
   }
 
+  prodSelecionado(){
+    this.purchaseState.getSelectedProduct().subscribe(productId => {
+      if (productId) {  this.loadProductDetails(productId);  }  });
+  }
+
+  loadProductDetails(productId: number) {
+    this.prodService.getIdProduto(productId).subscribe({
+      next: (response) => {
+        this.selectedProduct = response.body || response;
+      },
+      error: (err) => {
+        console.error('Erro ao carregar produto:', err);
+      }
+    });
+  }
+
   // Carrega os produtos do carrinho
   loadCartProducts() {
     this.purchaseState.getSelectedProducts().subscribe(productIds => {
@@ -73,10 +89,7 @@ export class DashboardComponent implements OnInit {
             error: (err) => {
               console.error('Erro ao carregar produto:', err);
             }
-          });
-        });
-      }
-    });
+          });});}});
   }
 
   // Adiciona produto ao carrinho
@@ -107,10 +120,9 @@ export class DashboardComponent implements OnInit {
       this.router.navigate(['/admin/carrinho-de-compras']);
     } else {
       console.info('Nenhum produto no carrinho');
-      // Você pode mostrar uma mensagem para o usuário aqui
+      // Depois mostrar uma mensagem para o usuário aqui
     }
   }
-
 
   // Prepara compra de um produto específico (adiciona ao carrinho e vai para o carrinho)
   prepareSinglePurchase(productId: number) {
@@ -118,42 +130,20 @@ export class DashboardComponent implements OnInit {
     this.purchaseState.startSaleOfSelectedProduct(this.selectedUser, [productId]);
     this.router.navigate(['/admin/carrinho-de-compras']);
   }
- 
-  prodSelecionado(){
-    this.purchaseState.getSelectedProduct().subscribe(productId => {
-      if (productId) {  this.loadProductDetails(productId);  }  });
-  }
-
-  loadProductDetails(productId: number) {
-    this.prodService.getIdProduto(productId).subscribe({
-      next: (response) => {
-        this.selectedProduct = response.body || response;
-      },
-      error: (err) => {
-        console.error('Erro ao carregar produto:', err);
-      }
-    });
-  }
 
   // Método para destacar o produto na lista
   highlightProductInList(productId: number) {
     // Remove o destaque de todos os produtos primeiro
     this.products = this.products.map(p => ({
-      ...p,
-      highlighted: false
+      ...p,  highlighted: false
     }));
-
     // Aplica o destaque apenas ao produto selecionado
     this.products = this.products.map(p => {
       if (p.idProduto === productId) {
-        return {
-          ...p,
-          highlighted: true
-        };
+        return { ...p, highlighted: true   };
       }
       return p;
     });
-
     // Atualiza a lista filtrada e paginada
     this.produtosFiltrados = [...this.products];
     this.updatePagedProdutos();
