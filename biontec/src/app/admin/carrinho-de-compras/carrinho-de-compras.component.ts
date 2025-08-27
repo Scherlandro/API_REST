@@ -28,8 +28,7 @@ export class CarrinhoDeComprasComponent implements OnInit {
   vendedores: iVendas[] = [];
   nomeVendedor = '';
   total: number = 0;
-  //selectedProduct!: iProduto[];
-  selectedProducts: iProduto[] = []; // Lista de produtos selecionados
+  selectedProducts: iProduto[] = [];
 
   highlighted = true;
     venda: iVendas = {
