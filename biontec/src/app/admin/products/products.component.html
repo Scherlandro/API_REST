@@ -40,26 +40,20 @@
             </div>
           </div>
           <mat-card-content class="product-content">
-          <!--  <h3 class="product-title">{{produto.nomeProduto}}</h3>-->
             <div class="card-details">
             <div class="card-field"><strong>Código:</strong> {{produto.codProduto}}</div>
               <div class="card-field"><strong>Descrição:</strong> {{produto.nomeProduto}}</div>
-              <div class="card-field"><strong>Preço:</strong> {{produto.valorVenda | currency:'BRL'}}</div>
+                                                 <!-- {{produto.dtCadastro | date:'dd/MM/yyyy'}}-->
+              <div class="card-field"><strong>Cadastrado em:</strong> {{produto.dtCadastro }}</div>
+             <div class="card-field"><strong>Atualizado em:</strong> {{produto.ultimaAtualizacao }}</div>
 
               <div class="price-section">
+                <strong>Preço:</strong>
                 <span class="price">{{produto.valorVenda | currency: 'BRL'}}</span>
                 <span *ngIf="produto.qtdEstoque > 0" class="stock-available">Em estoque</span>
                 <span *ngIf="produto.qtdEstoque <= 0" class="stock-unavailable">Sem estoque</span>
               </div>
             </div>
-            <!--<div class="card-details">-->
-            <!--<mat-card-content>-->
-       <!--       <div class="card-field"><strong>Código:</strong> {{produto.codProduto}}</div>
-              <div class="card-field"><strong>Descrição:</strong> {{produto.nomeProduto}}</div>
-              <div class="card-field"><strong>Preço:</strong> {{produto.valorVenda | currency:'BRL'}}</div>
-              <div class="card-field"><strong>Estoque:</strong> {{produto.qtdEstoque}}</div>
-              <div class="card-field"><strong>Data:</strong> {{produto.dtCadastro | date:'dd/MM/yyyy'}}</div>
-       -->  <!--   </mat-card-content>-->
 
             <mat-card-actions class="card-actions">
               <button mat-icon-button class="edit" (click)="editarElement(produto)">

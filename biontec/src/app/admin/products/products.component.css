@@ -42,7 +42,7 @@
   width: 60%;
   display: flex;
   flex-direction: column;
-  padding: 15px;
+  padding: 5px;
   justify-content: space-between;
   min-width: max-content;
 }
@@ -55,7 +55,6 @@
 .card-actions {
   display: flex;
   justify-content: flex-start;
-  padding-top: 10px;
   align-items: center;
 }
 
@@ -121,17 +120,6 @@
 .colum-table{
   max-width: max-content;
 }
-/*
-
-.edit{
-  color: #041436;
-  cursor: pointer;
-}
-
-.delete{
-  color: #00ccff;
-}
-*/
 
 .button-add{
   max-width: 80px;
@@ -168,76 +156,6 @@
   overflow: hidden;
 }
 
-/*
-
-
-
-ui.grid {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-orient: horizontal;
-  -webkit-box-direction: normal;
-  -ms-flex-direction: row;
-  flex-direction: row;
-  -ms-flex-wrap: wrap;
-  flex-wrap: wrap;
-  -webkit-box-align: stretch;
-  -ms-flex-align: stretch;
-  align-items: stretch;
-  padding: 0;
-  margin: -1rem;
-}
-
-ui.grid > .row {
-  position: relative;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-orient: horizontal;
-  -webkit-box-direction: normal;
-  -ms-flex-direction: row;
-  flex-direction: row;
-  -ms-flex-wrap: wrap;
-  flex-wrap: wrap;
-  -webkit-box-pack: inherit;
-  -ms-flex-pack: inherit;
-  justify-content: inherit;
-  -webkit-box-align: stretch;
-  -ms-flex-align: stretch;
-  align-items: stretch;
-  width: 100% !important;
-  padding: 0;
-  padding-top: 1rem;
-  padding-bottom: 1rem;
-}
-
-
-.products-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 20px;
-  padding: 20px;
-}
-
-.product-card {
-  justify-content: center;
-  align-items: center;
-  transition: all 0.3s ease;
-  border-radius: 4px;
-  overflow: hidden;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
-}
-
-.product-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.12), 0 10px 10px rgba(0, 0, 0, 0.10);
-}
-
-.product-content {
-  padding: 16px;
-}
-*/
 .product-title {
   font-size: 14px;
   font-weight: 500;
@@ -292,8 +210,6 @@ ui.grid > .row {
 .add-to-cart {
   width: 100%;
 }
-
-
 /*
 ----------######cubo3D-------------------
 */
