@@ -27,6 +27,7 @@ export class ClientesComponent implements OnInit {
   displayedColumns: string[] = ['nomeCliente', 'pessoa', 'telefone', 'opicoes'];
   tbSourceClientes$: MatTableDataSource<ICliente>;
   tbData:any;
+  icliente!: ICliente;
   clienteControl = new FormControl();
   clienteFilted: ICliente[] = [];
   buscaDigitada: any;
@@ -155,6 +156,17 @@ export class ClientesComponent implements OnInit {
     });
   }
 
+  aplicaCssErro(cep: any) {
+    
+  }
+
+  verificaValidTouched(cep: any) {
+    
+  }
+
+  onSubmit(f: any) {
+    
+  }
 }
 
 

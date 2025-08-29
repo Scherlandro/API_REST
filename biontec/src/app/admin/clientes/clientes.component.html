@@ -69,7 +69,6 @@
   </mat-card-content>
 
 </div>
-
 <!--
 <form #f="ngForm" (ngSubmit)="onSubmit(f)" class="form-horizontal">
   <div class="form-group">
@@ -92,12 +91,12 @@
         </div>
 
     <div class="form-group">
-   <div class="col-md-3" [ngClass]="aplicaCssErro(cep)">
+   <div class="col-md-3" [ngClass]="aplicaCssErro(icliente.cep)">
         <label for="cep" class="control-label">CEP</label>
         <input type="text" class="form-control" id="cep" name="cep">
           ngModel required #cep="ngModel" (blur)="consultaCEP($event.target, f)">
 
-       <app-campo-control-erro [mostrarErro]="verificaValidTouched(cep)"
+       <app-campo-control-erro [mostrarErro]="verificaValidTouched(icliente.cep)"
           msgErro="CEP é obrigatório.">
         </app-campo-control-erro>
 
@@ -119,11 +118,13 @@
     </div>
 
   <button type="submit" class="btn btn-primary">Submit</button>
-       [disabled]="!f.valid">Submit</button>
+      <button [disabled]="!f.valid">Submit</button>
 
-    <app-form-debug [form]="f"></app-form-debug>
+    <button [form]="f"></button>
 
-    </form>
+    </div>
+    </form>-->
 
 
-  </body>  -->
+
+
