@@ -157,15 +157,15 @@ export class ClientesComponent implements OnInit {
   }
 
   aplicaCssErro(cep: any) {
-    
+    return null;
   }
 
   verificaValidTouched(cep: any) {
-    
+
   }
 
   onSubmit(f: any) {
-    
+
   }
 }
 
