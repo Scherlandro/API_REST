@@ -9,11 +9,6 @@ body {
   font-family: Roboto, "Helvetica Neue", sans-serif;
   width: auto;
   height: 100%;
-  /* background-image: -webkit-linear-gradient(top, #672dcc, #2980b9);
-   background-image: -moz-linear-gradient(top, #672dcc, #2980b9);
-   background-image: -ms-linear-gradient(top, #672dcc, #2980b9);
-   background-image: -o-linear-gradient(top, #672dcc, #2980b9);
-   background-image: linear-gradient(to bottom, #672dcc, #2980b9);*/
   background: radial-gradient(ellipse farthest-corner at right bottom, #FEDB37 0%, #FDB931 8%, #9f7928 30%, #8A6E2F 40%, transparent 80%),
   radial-gradient(ellipse farthest-corner at left top, #FFFFFF 0%, #FFFFAC 8%, #D1B464 25%, #5d4a1f 62.5%, #5d4a1f 100%);
   -webkit-border-radius: 20px;
@@ -144,5 +139,70 @@ body {
 
   60%, 100% {
     transform: rotate(360deg) translateY(-200%);
+  }
+}
+
+
+/*
+----------######cubo3D-------------------
+*/
+.cubo-main {
+  width: 170px;
+  height: 170px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  perspective: 1000px; /* melhora o efeito 3D */
+}
+
+.cubo {
+  width: 120px;
+  height: 120px;
+  position: relative;
+  transform-style: preserve-3d;
+  cursor: pointer;
+  transform-origin: center; /* Garante rotação centralizada */
+}
+
+.cubo:hover {
+  animation: giro 5s infinite linear;
+}
+
+.face-p {
+  position: absolute;
+  width: 140px;
+  height: 140px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 3px;
+  background: linear-gradient(50deg, #9f7928, #5d4a1f);
+  border: 3px solid #9f7928;
+  overflow: hidden;
+  box-sizing: border-box; /* Garante que a borda não aumente o tamanho */
+}
+
+.front-p {
+  transform: translateZ(70px); /* Metade da largura do cubo */
+}
+
+.back-p {
+  transform: translateZ(-70px) rotateY(180deg);
+}
+
+.right-p {
+  transform: translateX(70px) rotateY(90deg);
+}
+
+.left-p {
+  transform: translateX(-70px) rotateY(-90deg);
+}
+
+@keyframes giro {
+  0% {
+    transform: rotateY(0deg);
+  }
+  100% {
+    transform: rotateY(360deg);
   }
 }

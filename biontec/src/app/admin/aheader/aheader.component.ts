@@ -21,7 +21,6 @@ export class AheaderComponent implements OnInit {
 
   ngOnInit(): void {
     this.user = this.tokenService.getPayload();
-   // console.log(this.user)
   }
 
   logout(): void{
