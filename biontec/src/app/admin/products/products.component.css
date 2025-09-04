@@ -210,3 +210,27 @@
 .add-to-cart {
   width: 100%;
 }
+/*
+----------######cubo3D-------------------
+*/
+.cubo-main {
+  width: 170px;
+  height: 170px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  perspective: 1000px; /* melhora o efeito 3D */
+}
+
+.cubo {
+  width: 145px;
+  height: 145px;
+  position: relative;
+  transform-style: preserve-3d;
+  cursor: pointer;
+  transform-origin: center; /* Garante rotação centralizada */
+}
+
+.cubo:hover {
+  animation: giro 5s infinite linear;
+}
