@@ -1,0 +1,67 @@
+package com.biontecapi.controller;
+
+import com.biontecapi.model.Nfe;
+import com.biontecapi.model.ProcessamentoRequest;
+import com.biontecapi.repository.NfeRepository;
+import com.biontecapi.service.NfeService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.math.BigDecimal;
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/nfe")
+@CrossOrigin(origins = "http://localhost:4200")
+public class NfeController {
+
+    @Autowired
+    private NfeService nfeService;
+
+    @Autowired
+    private NfeRepository nfeRepository;
+
+    @PostMapping("/processar")
+    public ResponseEntity<String> processarNfe(@RequestBody ProcessamentoRequest request) {
+        try {
+            String resultado = nfeService.processarNfe(request.getIdNfe(), request.getUsuario());
+            return ResponseEntity.ok(resultado);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Erro ao processar NFe: " + e.getMessage());
+        }
+    }
+
+    @PostMapping("/processar-lote")
+    public ResponseEntity<String> processarLote(@RequestBody ProcessamentoRequest request) {
+        try {
+            String resultado = nfeService.processarLote(request.getDataReferencia(), request.getUsuario());
+            return ResponseEntity.ok(resultado);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Erro ao processar lote: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/pendentes")
+    public ResponseEntity<List<Nfe>> getNfesPendentes() {
+        try {
+            List<Nfe> nfesPendentes = nfeRepository.findByStatus("PENDENTE");
+            return ResponseEntity.ok(nfesPendentes);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+
+    @GetMapping("/calcular-imposto/{idNfe}")
+    public ResponseEntity<BigDecimal> calcularImposto(@PathVariable Long idNfe) {
+        try {
+            BigDecimal imposto = nfeService.calcularImposto(idNfe);
+            return ResponseEntity.ok(imposto);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+}

@@ -1,0 +1,47 @@
+<div class="container">
+  <h2>Gerenciamento de NF-e</h2>
+
+  <div class="row mb-3">
+    <div class="col">
+      <button class="btn btn-primary" (click)="carregarNfesPendentes()">Atualizar Lista</button>
+      <button class="btn btn-success ms-2" (click)="processarLote()">Processar Lote</button>
+    </div>
+    <div class="col">
+      <label>Data Referência:</label>
+      <input type="date" [(ngModel)]="dataReferencia" class="form-control">
+    </div>
+  </div>
+
+  <div *ngIf="resultadoProcessamento" class="alert alert-info">
+    {{ resultadoProcessamento }}
+  </div>
+
+  <h3>NF-es Pendentes</h3>
+  <table class="table table-striped">
+    <thead>
+    <tr>
+      <th>ID</th>
+      <th>Número</th>
+      <th>Série</th>
+      <th>Valor Total</th>
+      <th>Emitente</th>
+      <th>Data Emissão</th>
+      <th>Ações</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let nfe of nfesPendentes">
+      <td>{{ nfe.idNfe }}</td>
+      <td>{{ nfe.numero }}</td>
+      <td>{{ nfe.serie }}</td>
+      <td>R$ {{ nfe.valorTotal }}</td>
+      <td>{{ nfe.emitente }}</td>
+      <td>{{ nfe.dataEmissao | date:'dd/MM/yyyy' }}</td>
+      <td>
+        <button class="btn btn-sm btn-warning" (click)="processarNfe(nfe.idNfe)">Processar</button>
+        <button class="btn btn-sm btn-info ms-1" (click)="calcularImposto(nfe.idNfe)">Calcular Imposto</button>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>

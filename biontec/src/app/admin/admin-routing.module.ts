@@ -10,6 +10,7 @@ import {VendaComponent} from "./vendas/vendas.component";
 import {OrdemDeServiceComponent} from "./ordem-de-service/ordem-de-service.component";
 import {FuncionariosComponent} from "./funcionarios/funcionarios.component";
 import {CarrinhoDeComprasComponent} from "./carrinho-de-compras/carrinho-de-compras.component";
+import {NfeComponent} from "./nfe/nfe.component";
 
 const routes: Routes = [
   {
@@ -22,6 +23,7 @@ const routes: Routes = [
       {path: 'usuarios', component: UsuariosComponent},
       {path: 'produtos', component: ProductsComponent},
       {path: 'contabilidade', component: ContabilidadeComponent},
+      {path: 'nfe', component: NfeComponent},
       {path: 'carrinho-de-compras', component: CarrinhoDeComprasComponent},
       {path: 'vendas', component: VendaComponent},
       {path: 'os', component: OrdemDeServiceComponent},
