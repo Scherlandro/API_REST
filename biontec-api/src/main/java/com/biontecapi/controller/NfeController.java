@@ -37,6 +37,11 @@ public class NfeController {
     @PostMapping("/processar-lote")
     public ResponseEntity<String> processarLote(@RequestBody ProcessamentoRequest request) {
         try {
+            if (request == null || request.getDataReferencia() == null ||
+                    request.getUsuario() == null || request.getUsuario().trim().isEmpty()) {
+                return ResponseEntity.badRequest().body("Dados de entrada inválidos");
+            }
+
             String resultado = nfeService.processarLote(request.getDataReferencia(), request.getUsuario());
             return ResponseEntity.ok(resultado);
         } catch (Exception e) {

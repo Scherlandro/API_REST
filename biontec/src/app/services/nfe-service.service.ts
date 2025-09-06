@@ -15,10 +15,12 @@ export class NfeService {
   }
 
   processarLote(dataRef: Date, usuario: string): Observable<string> {
+    console.log('Processar Lote',usuario,dataRef, this.http.post<string>(`${this.apiUrl}/processar-lote`, { dataRef, usuario }))
     return this.http.post<string>(`${this.apiUrl}/processar-lote`, { dataRef, usuario });
   }
 
   getNfesPendentes(): Observable<any[]> {
+    console.log('Pendentes',this.http.get<any[]>(`${this.apiUrl}/pendentes`) )
     return this.http.get<any[]>(`${this.apiUrl}/pendentes`);
   }
 

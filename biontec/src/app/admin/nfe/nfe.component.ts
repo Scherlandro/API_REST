@@ -9,7 +9,7 @@ import {NfeService} from "../../services/nfe-service.service";
 export class NfeComponent {
   nfesPendentes: any[] = [];
   resultadoProcessamento: string = '';
-  usuario: string = 'usuario_sistema';
+  usuario: string = 'usuario_teste';
   dataReferencia: Date = new Date();
 
   constructor(private nfeService: NfeService) { }
@@ -33,6 +33,7 @@ export class NfeComponent {
       },
       error => this.resultadoProcessamento = `Erro: ${error.message}`
     );
+    console.log('this.resultadoProcessamento', this.resultadoProcessamento);
   }
 
   processarLote(): void {
