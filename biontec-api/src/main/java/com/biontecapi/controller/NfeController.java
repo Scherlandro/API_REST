@@ -20,8 +20,8 @@ public class NfeController {
     @Autowired
     private NfeService nfeService;
 
-    @Autowired
-    private NfeRepository nfeRepository;
+/*    @Autowired
+    private NfeRepository nfeRepository;*/
 
     @PostMapping("/processar")
     public ResponseEntity<String> processarNfe(@RequestBody ProcessamentoRequest request) {
@@ -36,7 +36,29 @@ public class NfeController {
 
     @PostMapping("/processar-lote")
     public ResponseEntity<String> processarLote(@RequestBody ProcessamentoRequest request) {
+
         try {
+            // Validações
+            if (request == null) {
+                return ResponseEntity.badRequest().body("Request não pode ser nulo");
+            }
+            if (request.getDataReferencia() == null) {
+                return ResponseEntity.badRequest().body("Data de referência é obrigatória");
+            }
+            if (request.getUsuario() == null || request.getUsuario().trim().isEmpty()) {
+                return ResponseEntity.badRequest().body("Usuário é obrigatório");
+            }
+
+            String resultado = nfeService.processarLote(request.getDataReferencia(), request.getUsuario());
+            return ResponseEntity.ok(resultado);
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Erro ao processar lote: " + e.getMessage());
+        }
+
+
+        /*        try {
             if (request == null || request.getDataReferencia() == null ||
                     request.getUsuario() == null || request.getUsuario().trim().isEmpty()) {
                 return ResponseEntity.badRequest().body("Dados de entrada inválidos");
@@ -47,13 +69,13 @@ public class NfeController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Erro ao processar lote: " + e.getMessage());
-        }
+        }*/
     }
 
     @GetMapping("/pendentes")
     public ResponseEntity<List<Nfe>> getNfesPendentes() {
         try {
-            List<Nfe> nfesPendentes = nfeRepository.findByStatus("PENDENTE");
+            List<Nfe> nfesPendentes = nfeService.buscarPorStatus("PENDENTE");
             return ResponseEntity.ok(nfesPendentes);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);

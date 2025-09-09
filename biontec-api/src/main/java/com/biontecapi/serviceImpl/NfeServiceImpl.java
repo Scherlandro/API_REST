@@ -1,6 +1,7 @@
 package com.biontecapi.serviceImpl;
 
 
+        import com.biontecapi.model.Nfe;
         import com.biontecapi.repository.NfeRepository;
         import com.biontecapi.service.NfeService;
         import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ package com.biontecapi.serviceImpl;
         import java.sql.Types;
         import java.util.Date;
         import java.util.HashMap;
+        import java.util.List;
         import java.util.Map;
 
 @Service
@@ -100,6 +102,11 @@ public class NfeServiceImpl implements NfeService {
         Map<String, Object> result = jdbcCall.execute(params);
         return (String) result.get("p_resultado");
     }*/
+
+    @Override
+    public List<Nfe> buscarPorStatus(String status){
+        return nfeRepository.findByStatus(status);
+    }
 
     @Override
     public BigDecimal calcularImposto(Long idNfe) {
