@@ -57,19 +57,6 @@ public class NfeController {
                     .body("Erro ao processar lote: " + e.getMessage());
         }
 
-
-        /*        try {
-            if (request == null || request.getDataReferencia() == null ||
-                    request.getUsuario() == null || request.getUsuario().trim().isEmpty()) {
-                return ResponseEntity.badRequest().body("Dados de entrada inválidos");
-            }
-
-            String resultado = nfeService.processarLote(request.getDataReferencia(), request.getUsuario());
-            return ResponseEntity.ok(resultado);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Erro ao processar lote: " + e.getMessage());
-        }*/
     }
 
     @GetMapping("/pendentes")
