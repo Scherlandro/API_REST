@@ -110,17 +110,6 @@ public class OrdemDeServicoController {
         return ResponseEntity.ok(service.listarOS());
     }
 
-
-      /*   @GetMapping("/{id}")
-    public OrdemDeServicoDTO getOrdemDeServico(@PathVariable Long id) {
-        Optional <OrdemDeServico> os = service.listarOSPorID(id);
-        return os.get().toDTO();
-    }
-
-        @PostMapping
-    public void create(@RequestBody OrdemDeServicoDTO dto) {
-        service.save(dto);
-    }*/
 }
 
 
