@@ -109,6 +109,12 @@ public class NfeServiceImpl implements NfeService {
     }
 
     @Override
+    public List<Nfe> nfeEmProcessamento() {
+        return nfeRepository.findAll();
+
+    }
+
+    @Override
     public BigDecimal calcularImposto(Long idNfe) {
         try {
             return jdbcTemplate.queryForObject(

@@ -9,5 +9,7 @@ import java.util.List;
 @Repository
 public interface NfeRepository extends JpaRepository<Nfe, Long> {
     List<Nfe> findByStatus(String status);
+    //SELECT * FROM nfe_log_processamento;
     List<Nfe> findByDataEmissaoAndStatus(Date dataEmissao, String status);
+
 }
