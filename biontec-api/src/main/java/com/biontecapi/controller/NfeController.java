@@ -2,7 +2,6 @@ package com.biontecapi.controller;
 
 import com.biontecapi.model.Nfe;
 import com.biontecapi.model.ProcessamentoRequest;
-import com.biontecapi.repository.NfeRepository;
 import com.biontecapi.service.NfeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -10,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
-import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -79,10 +77,10 @@ public class NfeController {
         }
     }
 
-    @GetMapping("/em-processo")
+    @GetMapping("/processadas")
     public ResponseEntity<List<Nfe>> processarNfe() {
         try {
-            List<Nfe> resultado = nfeService.nfeEmProcessamento();
+            List<Nfe> resultado = nfeService.nfesProcessadas("PROCESSADA");
             return ResponseEntity.ok(resultado);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);

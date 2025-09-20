@@ -1,24 +1,25 @@
 package com.biontecapi.serviceImpl;
 
 
-        import com.biontecapi.model.Nfe;
-        import com.biontecapi.repository.NfeRepository;
-        import com.biontecapi.service.NfeService;
-        import org.springframework.beans.factory.annotation.Autowired;
-        import org.springframework.jdbc.core.JdbcTemplate;
-        import org.springframework.jdbc.core.SqlOutParameter;
-        import org.springframework.jdbc.core.SqlParameter;
-        import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-        import org.springframework.jdbc.core.namedparam.SqlParameterSource;
-        import org.springframework.jdbc.core.simple.SimpleJdbcCall;
-        import org.springframework.stereotype.Service;
-        import javax.sql.DataSource;
-        import java.math.BigDecimal;
-        import java.sql.Types;
-        import java.util.Date;
-        import java.util.HashMap;
-        import java.util.List;
-        import java.util.Map;
+import com.biontecapi.model.Nfe;
+import com.biontecapi.repository.NfeRepository;
+import com.biontecapi.service.NfeService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.SqlOutParameter;
+import org.springframework.jdbc.core.SqlParameter;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcCall;
+import org.springframework.stereotype.Service;
+
+import javax.sql.DataSource;
+import java.math.BigDecimal;
+import java.sql.Types;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class NfeServiceImpl implements NfeService {
@@ -104,13 +105,13 @@ public class NfeServiceImpl implements NfeService {
     }*/
 
     @Override
-    public List<Nfe> buscarPorStatus(String status){
+    public List<Nfe> buscarPorStatus(String status) {
         return nfeRepository.findByStatus(status);
     }
 
     @Override
-    public List<Nfe> nfeEmProcessamento() {
-        return nfeRepository.findAll();
+    public List<Nfe> nfesProcessadas(String status) {
+        return nfeRepository.findByStatus(status);
 
     }
 
