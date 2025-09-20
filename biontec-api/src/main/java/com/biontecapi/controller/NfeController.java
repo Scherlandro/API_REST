@@ -78,7 +78,7 @@ public class NfeController {
     }
 
     @GetMapping("/processadas")
-    public ResponseEntity<List<Nfe>> processarNfe() {
+    public ResponseEntity<List<Nfe>> getNfeProcessadas() {
         try {
             List<Nfe> resultado = nfeService.nfesProcessadas("PROCESSADA");
             return ResponseEntity.ok(resultado);
