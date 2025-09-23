@@ -86,23 +86,6 @@ public class NfeServiceImpl implements NfeService {
     }
 
 
-  /*  public String processarLote(Date dataRef, String usuario) {
-        SimpleJdbcCall jdbcCall = new SimpleJdbcCall(jdbcTemplate)
-                .withCatalogName("pkg_nfe")
-                .withProcedureName("processar_lote")
-                .declareParameters(
-                        new SqlParameter("p_data_ref", Types.DATE),
-                        new SqlParameter("p_usuario", Types.VARCHAR),
-                        new SqlOutParameter("p_resultado", Types.VARCHAR)
-                );
-
-        Map<String, Object> params = new HashMap<>();
-        params.put("p_data_ref", dataRef);
-        params.put("p_usuario", usuario);
-
-        Map<String, Object> result = jdbcCall.execute(params);
-        return (String) result.get("p_resultado");
-    }*/
 
     @Override
     public List<Nfe> buscarPorStatus(String status) {
