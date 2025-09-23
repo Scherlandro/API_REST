@@ -12,6 +12,7 @@ public interface NfeService {
     String processarLote(Date dataRef, String usuario);
     List<Nfe> buscarPorStatus(String status);
     List<Nfe> nfesProcessadas(String status);
+    BigDecimal calcularAliquota(Long idNfe);
     BigDecimal calcularImposto(Long idNfe) ;
     String processarLoteAlternativo(Date dataRef, String usuario);
 

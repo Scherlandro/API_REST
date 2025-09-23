@@ -116,6 +116,11 @@ public class NfeServiceImpl implements NfeService {
     }
 
     @Override
+    public BigDecimal calcularAliquota(Long idNfe) {
+        return nfeRepository.calcularAliquota(idNfe);
+    }
+
+    @Override
     public BigDecimal calcularImposto(Long idNfe) {
         try {
             return jdbcTemplate.queryForObject(
