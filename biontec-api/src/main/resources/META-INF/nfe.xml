@@ -7,7 +7,7 @@
 
 <!--    <named-query name="nomeNamedQuery">
         <query>
-
+           SELECT * FROM nfe_log_processamento
         </query>
     </named-query>-->
 
