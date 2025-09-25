@@ -14,9 +14,7 @@ public interface NfeRepository extends JpaRepository<Nfe, Long> {
     List<Nfe> findByStatus(String status);
     //SELECT * FROM nfe_log_processamento;
 
-    @Query(value =  "select alq.aliquota, nf.valor_total,alq.uf_origem , alq.uf_destino " +
-            "FROM nfe_aliquotas_icms alq INNER JOIN nfe_notas_fiscais nf " +
-            " WHERE  alq.uf_destino ='AL' and nf.id_nfe = ?1 ")
+    @Query(name =  "Nfe.listarAliquotaIcms")
     BigDecimal calcularAliquota(@Param("id_nfe")Long id_infe);
 
     List<Nfe> findByDataEmissaoAndStatus(Date dataEmissao, String status);

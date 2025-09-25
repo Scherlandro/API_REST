@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-mappings
+        xmlns="http://java.sun.com/xml/ns/persistence/orm"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm http://java.sun.com/xml/ns/persistence/orm_3_0.xsd"
+        version="1.0">
+
+<!--    <named-query name="nomeNamedQuery">
+        <query>
+
+        </query>
+    </named-query>-->
+
+    <named-native-query name="Nfe.listarAliquotaIcms">
+        <query>
+            select alq.aliquota, nf.valor_total,alq.uf_origem , alq.uf_destino
+            FROM nfe_aliquotas_icms alq INNER JOIN nfe_notas_fiscais nf
+            WHERE  alq.uf_destino ='AL' and nf.id_nfe = :id_nfe
+        </query>
+    </named-native-query>
+
+</entity-mappings>

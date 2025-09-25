@@ -87,6 +87,16 @@ public class NfeController {
         }
     }
 
+    @GetMapping("/calcular-aliquota-icms/{idNfe}")
+    public ResponseEntity<BigDecimal> calcularAliquota(@PathVariable Long idNfe) {
+        try {
+            BigDecimal imposto = nfeService.calcularAliquota(idNfe);
+            return ResponseEntity.ok(imposto);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+
     @GetMapping("/calcular-imposto/{idNfe}")
     public ResponseEntity<BigDecimal> calcularImposto(@PathVariable Long idNfe) {
         try {
