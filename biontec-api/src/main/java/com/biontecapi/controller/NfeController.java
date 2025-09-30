@@ -67,7 +67,7 @@ public class NfeController {
                     .body("Erro ao processar lote: " + e.getMessage());
         }*/
     }
-    
+
     @GetMapping("/pendentes")
     public ResponseEntity<List<NfeDTO>> getNfesPendentes(){
 
@@ -80,10 +80,10 @@ public class NfeController {
     }
 
     @GetMapping("/processadas")
-    public ResponseEntity<List<Nfe>> getNfeProcessadas() {
+    public ResponseEntity<List<NfeDTO>> getNfeProcessadas() {
         try {
             List<Nfe> resultado = nfeService.nfesProcessadas("PROCESSADA");
-            return ResponseEntity.ok(resultado);
+            return ResponseEntity.ok(resultado.stream().map(Nfe::toDTO).toList());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
