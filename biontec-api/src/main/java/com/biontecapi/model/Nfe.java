@@ -1,6 +1,8 @@
 package com.biontecapi.model;
 
 
+import com.biontecapi.dtos.NfeDTO;
+
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -63,4 +65,10 @@ public class Nfe {
 
     public String getUsuarioProcessamento() { return usuarioProcessamento; }
     public void setUsuarioProcessamento(String usuarioProcessamento) { this.usuarioProcessamento = usuarioProcessamento; }
+
+    public NfeDTO toDTO() {
+        return new NfeDTO(idNfe, numero, serie, dataEmissao, valorTotal,
+                emitente, destinatario, status, dataProcessamento, usuarioProcessamento);
+    }
+
 }

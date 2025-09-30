@@ -1,5 +1,6 @@
 package com.biontecapi.controller;
 
+import com.biontecapi.dtos.NfeDTO;
 import com.biontecapi.model.Nfe;
 import com.biontecapi.model.ProcessamentoRequest;
 import com.biontecapi.service.NfeService;
@@ -67,11 +68,23 @@ public class NfeController {
         }*/
     }
 
-    @GetMapping("/pendentes")
+ /*   @GetMapping("/pendentes")
     public ResponseEntity<List<Nfe>> getNfesPendentes() {
+
         try {
             List<Nfe> nfesPendentes = nfeService.buscarPorStatus("PENDENTE");
             return ResponseEntity.ok(nfesPendentes);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }*/
+
+    @GetMapping("/pendentes")
+    public ResponseEntity<List<NfeDTO>> getNfesPendentes(){
+
+        try {
+            List<Nfe> nfesPendentes = nfeService.buscarPorStatus("PENDENTE");
+            return ResponseEntity.ok(nfesPendentes.stream().map(Nfe::toDTO).toList());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
