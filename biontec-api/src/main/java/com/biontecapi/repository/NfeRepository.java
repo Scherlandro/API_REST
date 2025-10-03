@@ -19,4 +19,6 @@ public interface NfeRepository extends JpaRepository<Nfe, Long> {
 
     List<Nfe> findByDataEmissaoAndStatus(Date dataEmissao, String status);
 
+    @Query(name = "Nfe.calcularImposto")
+    BigDecimal calcularImposto(Long idNfe);
 }

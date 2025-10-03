@@ -11,6 +11,12 @@
         </query>
     </named-query>-->
 
+    <named-native-query name="Nfe.calcularImposto">
+        <query>
+            SELECT calcular_imposto(:id_nfe)
+        </query>
+    </named-native-query>
+
     <named-native-query name="Nfe.listarAliquotaIcms">
         <query>
             select alq.aliquota, nf.valor_total,alq.uf_origem , alq.uf_destino

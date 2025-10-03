@@ -121,6 +121,9 @@ public class NfeServiceImpl implements NfeService {
     }
 
     @Override
+    public BigDecimal calcularImposto(Long idNfe) { return nfeRepository.calcularImposto(idNfe);}
+    /*
+    @Override
     public BigDecimal calcularImposto(Long idNfe) {
         try {
             return jdbcTemplate.queryForObject(
@@ -132,7 +135,8 @@ public class NfeServiceImpl implements NfeService {
             return BigDecimal.valueOf(-1);
         }
     }
-   /* public BigDecimal calcularImposto(Long idNfe) {
+    *** ----------------------- ***
+   public BigDecimal calcularImposto(Long idNfe) {
         return jdbcTemplate.queryForObject(
                 "SELECT pkg_nfe.calcular_imposto(?) FROM dual",
                 BigDecimal.class,
