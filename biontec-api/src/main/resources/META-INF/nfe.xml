@@ -13,7 +13,7 @@
 
     <named-native-query name="Nfe.calcularImposto">
         <query>
-            SELECT calcular_imposto(:id_nfe)
+            select calcular_imposto(:id_nfe)
         </query>
     </named-native-query>
 
