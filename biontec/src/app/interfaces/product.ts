@@ -14,6 +14,7 @@ export interface iProduto {
   valorVenda: number
   qtdEstoque: number
   estoqueMinimo?: number
+  qtdVd?:number
   qtdVendidas: number
   idFornecedor?: number
   idModelo?: number

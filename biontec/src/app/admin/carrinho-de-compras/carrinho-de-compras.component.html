@@ -27,13 +27,13 @@
 
         <div class="quantidade">
           <button (click)="alterarQuantidade(produto, -1)">-</button>
-          <span>{{ produto.qtdVendidas || 1 }}</span>
+          <span>{{ produto.qtdVd || 1 }}</span>
           <button (click)="alterarQuantidade(produto, 1)">+</button>
         </div>
 
         <div class="preco">
           <span *ngIf="produto.percentual" class="preco-antigo">R$ {{ produto.valorVenda | number:'1.2-2' }}</span>
-          <span class="preco-atual">R$ {{ (produto.valorVenda * (produto.qtdVendidas || 1)) | number:'1.2-2' }}</span>
+          <span class="preco-atual">R$ {{ (produto.valorVenda * (produto.qtdVd || 1)) | number:'1.2-2' }}</span>
         </div>
       </div>
     </div>

@@ -365,9 +365,10 @@ export class CarrinhoDeComprasComponent implements OnInit {
   }
 
   alterarQuantidade(produto: iProduto, delta: number) {
-    produto.qtdVendidas = (produto.qtdVendidas || 1) + delta;
+    let qtd = 1;
+    produto.qtdVd = (produto.qtdVd || 1) + delta;
     // produto.qtdVendidas = Math.max(1, produto.qtdVendidas + delta);
-    if (produto.qtdVendidas < 1) produto.qtdVendidas = 1;
+    if (produto.qtdVd < 1) produto.qtdVd = 1;
     this.calcularTotal();
   }
 
@@ -383,7 +384,7 @@ export class CarrinhoDeComprasComponent implements OnInit {
   calcularTotal() {
     this.total = this.vendedores.reduce((acc, vendedor) => {
       return acc + vendedor.produtos.reduce((sum, produto) => {
-        const quantidade = produto.qtdVendidas || 1;
+        const quantidade = produto.qtdVd || 1;
         const valor = produto.valorVenda || 0;
         return sum + (valor * quantidade);
       }, 0);
