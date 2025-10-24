@@ -12,8 +12,7 @@ import java.util.List;
 @Repository
 public interface NfeRepository extends JpaRepository<Nfe, Long> {
     List<Nfe> findByStatus(String status);
-    //;
-
+  
     @Query(name =  "Nfe.listarAliquotaIcms")
     BigDecimal calcularAliquota(@Param("id_nfe")Long id_infe);
 
