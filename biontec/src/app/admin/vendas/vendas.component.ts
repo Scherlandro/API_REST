@@ -36,6 +36,7 @@ export class VendaComponent implements OnInit {
   pageEvent!: PageEvent;
   displayedColumnsVd: string[] = ['nome_cliente','dt_venda','total_geral','opicao'];
   tbSourceVd$: MatTableDataSource<iVendas>;
+  tbSourceItensVd$: MatTableDataSource<iItensVd>;
   displayedColumns: string[] = ['codigo','descricao','preco','qtd','soma','data','imagem','opicoes'];
  // tbSourceItensDaVd$ :MatTableDataSource<iItensVd>;
   tbSourceItensDaVd$ :any;
@@ -46,6 +47,7 @@ export class VendaComponent implements OnInit {
   vendasFiltered: iVendas[]=[];
   vendas: iVendas[]=[];
   itensVdFiltered: iItensVd[]=[];
+  itensVd: iItensVd[]=[];
 
   constructor(
               private vendasService: VendasService,
@@ -54,6 +56,7 @@ export class VendaComponent implements OnInit {
   ) {
     this.tbSourceVd$ = new MatTableDataSource();
     this.tbSourceItensDaVd$ = new MatTableDataSource();
+    this.tbSourceItensVd$ = new MatTableDataSource();
   }
 
   ngOnInit(): void {
@@ -68,7 +71,9 @@ export class VendaComponent implements OnInit {
         return of([])
       }))
       .subscribe((data: iVendas[]) => {
+        console.log('Vendas --',data)
       this.tbSourceVd$.data = data;
+       console.log('ITENS ->', this.tbSourceItensVd$.data = data[0].itensVd);
       this.tbSourceVd$.paginator = this.paginator;
     });
   }
