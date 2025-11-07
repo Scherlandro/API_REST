@@ -38,16 +38,14 @@ export class VendaComponent implements OnInit {
   tbSourceVd$: MatTableDataSource<iVendas>;
   tbSourceItensVd$: MatTableDataSource<iItensVd>;
   displayedColumns: string[] = ['codigo','descricao','preco','qtd','soma','data','imagem','opicoes'];
- // tbSourceItensDaVd$ :MatTableDataSource<iItensVd>;
-  tbSourceItensDaVd$ :any;
 
   vendaControl = new FormControl();
   produtControl = new FormControl();
-  //listaItensVd: iItensVd[]=[];
   vendasFiltered: iVendas[]=[];
   vendas: iVendas[]=[];
   itensVdFiltered: iItensVd[]=[];
   itensVd: iItensVd[]=[];
+
 
   constructor(
               private vendasService: VendasService,
@@ -55,7 +53,6 @@ export class VendaComponent implements OnInit {
               private itensDaVdService: ItensVdService
   ) {
     this.tbSourceVd$ = new MatTableDataSource();
-    this.tbSourceItensDaVd$ = new MatTableDataSource();
     this.tbSourceItensVd$ = new MatTableDataSource();
   }
 
@@ -73,10 +70,10 @@ export class VendaComponent implements OnInit {
       .subscribe((data: iVendas[]) => {
         console.log('Vendas --',data)
       this.tbSourceVd$.data = data;
-        for (const dataKey in data) {
+    /*    for (const dataKey in data) {
           this.tbSourceItensVd$.data = data[dataKey].itensVd;
-          console.log('ITENS ->', this.tbSourceItensVd$.data);
-        }
+          console.log('Lista de Itens ->', this.tbSourceItensVd$.data);
+        }*/
       this.tbSourceVd$.paginator = this.paginator;
     });
   }
@@ -96,20 +93,19 @@ export class VendaComponent implements OnInit {
   }
 
   toggleRow(element: iVendas) {
-    //console.log('ID da venda selecionada ==> ', element.idVenda.toString());
+    console.log('ID da venda selecionada ==> ', element.idVenda.toString());
     this.itensDaVdService.listarItensVdPorCodVenda(element.idVenda.toString())
       .pipe(catchError(error => {
         this.onError('Erro ao buscar Itens da Venda!')
         return of([])
       }))
       .subscribe((data: iItensVd[]) => {
-      //  console.log('ItensVD ==> ', data);
-        this.tbSourceItensDaVd$.data = data;
+        this.tbSourceItensVd$.data = data;
         var soma = 0;
         for(var i =0;i<data.length;i++){
           soma+=data.map(i=>i.valorParcial)[i];
         }
-        console.log('ItensVD ',  this.tbSourceItensDaVd$.data );
+        console.log('ItensVD ',  this.tbSourceItensVd$.data , 'Soma ', soma);
       });
   }
 
@@ -137,15 +133,7 @@ export class VendaComponent implements OnInit {
       this.vendasFiltered = this.vendas;
     }
   }
-/*  changeItensVd(value: any){
-    if (value) {
-      this.itensVdFiltered = this.itensVdFiltered.filter(
-        i => i.descricao.toString()
-        .includes(value.toUpperCase()));
-    } else {
-      this.itensVdFiltered = this.itensVdFiltered;
-    }
-  }*/
+
 
   aplicarFiltro(valor: string) {
       valor = valor.trim().toLowerCase();
@@ -240,64 +228,5 @@ export class VendaComponent implements OnInit {
       }
     });
   }
-
-  /*
-  https://stackoverflow.com/questions/69717559/how-to-generate-and-display-nested-angular-material-table-dynamically
-  https://stackblitz.com/angular/eaajjobynjkl?file=src%2Fapp%2Ftable-expandable-rows-example.html
-
- listarItens(d:iVendas[], n:any){
-    d.map(a=>a.itensVd).forEach((e, i) => {  this.tbSourceItensDaVd$[i] = e   });
-         this.listaItensVd.forEach((a) => this.tbSourceItensDaVd$ = d.map(i=>i.itensVd).at(n) );
-          this.tbSourceItensDaVd$ = d.map(i=>i.itensVd).at(n);
-          this.tbSourceItensDaVd$ = this.listaItensVd.at(n);
-          this.tbSourceItensDaVd$ = this.listaItensVd.reduce((d:iItensVd) => {  return  d  });
-   for ( this.tbSourceItensDaVd$.data = its[n];   d.length < n   ; d[n] ) {  n ++  }
-
-  }
-
-  trash(id:number | undefined){
-      this.vendasService.trashSales(id).subscribe(
-        data => {   console.log(data)     this.ngOnInit()   })
-    }
-
-    untrash(id:number | undefined){
-      this.vendasService.untrashSales(id).subscribe(
-        data => {     console.log(data)    this.ngOnInit()   })
-    }
-
-  -------------------------------------
-  export interface Cart {
-     id: number,
-     userId: number,
-     date: string,
-     products: Array<{productId: number, quantity: number}>,
-     __v: number
- }
- -------------------------------------------------
-   carts!: Cart[];
-   displayedColumns: string[] = ['id','userId', 'date',  'products-id', 'products-quantity'];
-
-   constructor(
-     private cartsService: CartsService,
-     private route: ActivatedRoute
-   ) { }
-
-   ngOnInit(): void {
-     this.route.params.subscribe(response => this.cartsService.getCart(response.id)
-     .subscribe(response => this.carts = response)
-     );
-   }
-
-   toggleRow(element: { expanded: boolean; }) {
-   // Uncommnet to open only single row at once
-    ELEMENT_DATA.forEach(row => {
-      row.expanded = false;
-    })
-    element.expanded = !element.expanded
-  }
-
-
-   */
-
 
 }
