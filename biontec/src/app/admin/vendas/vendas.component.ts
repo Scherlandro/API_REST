@@ -5,7 +5,7 @@ import { MatDialog } from "@angular/material/dialog";
 import { MatPaginator, PageEvent } from "@angular/material/paginator";
 import { MatSort } from "@angular/material/sort";
 import { MatTable, MatTableDataSource } from "@angular/material/table";
-import { of } from "rxjs";
+import {expand, of} from "rxjs";
 import { catchError } from "rxjs/operators";
 import { DialogItensVdComponent } from "src/app/shared/diolog_components/dialog-itensvd/dialog-itensvd.component";
 import { iItensVd } from "../../interfaces/itens-vd";
@@ -70,10 +70,10 @@ export class VendaComponent implements OnInit {
       .subscribe((data: iVendas[]) => {
         console.log('Vendas --',data)
       this.tbSourceVd$.data = data;
-    /*    for (const dataKey in data) {
+        for (const dataKey in data) {
           this.tbSourceItensVd$.data = data[dataKey].itensVd;
           console.log('Lista de Itens ->', this.tbSourceItensVd$.data);
-        }*/
+        }
       this.tbSourceVd$.paginator = this.paginator;
     });
   }
@@ -92,37 +92,15 @@ export class VendaComponent implements OnInit {
     }
   }
 
-  toggleRow(element: iVendas) {
-    console.log('ID da venda selecionada ==> ', element.idVenda.toString());
-    this.itensDaVdService.listarItensVdPorCodVenda(element.idVenda.toString())
-      .pipe(catchError(error => {
-        this.onError('Erro ao buscar Itens da Venda!')
-        return of([])
-      }))
-      .subscribe((data: iItensVd[]) => {
-        this.tbSourceItensVd$.data = data;
-        var soma = 0;
-        for(var i =0;i<data.length;i++){
-          soma+=data.map(i=>i.valorParcial)[i];
-        }
-        console.log('ItensVD ',  this.tbSourceItensVd$.data , 'Soma ', soma);
-      });
+  toggleRow(element: any) {
+    var soma = 0;
+    for(var i =0;i<element.itensVd.length;i++){
+      soma+=element.itensVd.map((p:iItensVd)=>p.valorParcial)[i];
+    }
+    this.tbSourceItensVd$.data = element.itensVd;
+    console.log('ItensVD ',  this.tbSourceItensVd$.data , 'Soma ', soma);
+
   }
-
-  listarItensVdEntreDatas(){
-      this.itensDaVdService.getItensVdEntreDatas('06/04/2020', '13/04/2020')
-        .subscribe(   (data: iItensVd[]) => {
-       // this.tbSourceItensDaVd$ = data;
-      });
-    }
-
-    listarItensPorCodVenda(){
-      this.itensDaVdService.listarItensVdPorCodVenda('1')
-        .subscribe(   (data: iItensVd[]) => {
-       // this.tbSourceItensDaVd$.data = data;
-        console.log('Itens por Cod de venda-->', data);
-      });
-    }
 
   changeSales(value: any){
     if (value) {
