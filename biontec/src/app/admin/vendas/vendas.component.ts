@@ -66,10 +66,9 @@ export class VendaComponent implements OnInit {
   listarVenda() {
     this.spiner = true;
     this.vendasService.getAllSales()
-
       .pipe(first(), delay(5000),catchError(error => {
         if (error === 'Session Expired')
-          this.onError('Sua sessão expirou!');
+        this.onError('Sua sessão expirou!');
         this.tokenServer.clearTokenExpired();
         return of([])
       }))
@@ -99,6 +98,7 @@ export class VendaComponent implements OnInit {
     for (var i = 0; i < element.itensVd.length; i++) {
       soma += element.itensVd.map((p: iItensVd) => p.valorParcial)[i];
     }
+    element.totalgeral = soma;
     this.tbSourceItensVd$.data = element.itensVd;
     console.log('ItensVD ', this.tbSourceItensVd$.data, 'Soma ', soma);
 
