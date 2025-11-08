@@ -15,6 +15,8 @@ import {VendasService} from "../../services/vendas.service";
 import {DialogOpenSalesComponent} from "../../shared/diolog_components/dialog-open-sales/dialog-open-sales.component";
 import {ErrorDiologComponent} from "../../shared/diolog_components/error-diolog/error-diolog.component";
 import {TokenService} from "../../services/token.service";
+import {b2n} from "@kurkle/color";
+import {iProduto} from "../../interfaces/product";
 
 
 @Component({
@@ -31,6 +33,7 @@ import {TokenService} from "../../services/token.service";
 })
 export class VendaComponent implements OnInit {
   spiner = false;
+  isSearching= false;
 
   @ViewChild(MatTable) tableVendas!: MatTable<any>;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -52,8 +55,8 @@ export class VendaComponent implements OnInit {
   constructor(
     private tokenServer: TokenService,
     private vendasService: VendasService,
-    public dialog: MatDialog,
-    private itensDaVdService: ItensVdService
+    private itensVdService: ItensVdService,
+    public dialog: MatDialog
   ) {
     this.tbSourceVd$ = new MatTableDataSource();
     this.tbSourceItensVd$ = new MatTableDataSource();
@@ -66,7 +69,7 @@ export class VendaComponent implements OnInit {
   listarVenda() {
     this.spiner = true;
     this.vendasService.getAllSales()
-      .pipe(first(), delay(5000),catchError(error => {
+      .pipe(first(), delay(3000),catchError(error => {
         if (error === 'Session Expired')
         this.onError('Sua sessão expirou!');
         this.tokenServer.clearTokenExpired();
@@ -75,35 +78,68 @@ export class VendaComponent implements OnInit {
       .subscribe((data: iVendas[]) => {
         this.tbSourceVd$.data = data;
         this.tbSourceVd$.paginator = this.paginator;
+        this.vendas = data; // Armazena os dados originais
         this.spiner = false;
+        this.isSearching = false;
       });
   }
 
   consultarPorCliente(nome: string) {
-    if (this.vendaControl.valid) {
+    if (nome && nome.length >= 3) {
       this.vendasService.listarVdPorCliente(nome)
         .pipe(catchError(error => {
-          this.onError('Erro ao buscar Cliente!')
-          return of([])
+          this.onError('Erro ao buscar Cliente!');
+          this.spiner = false;
+          this.isSearching = false;
+          return of([]);
         }))
         .subscribe((result: iVendas[]) => {
           this.aplicarFiltro(nome);
           this.tbSourceVd$.data = result;
+          this.spiner = false;
+          this.isSearching = false;
         })
+    }
+  }
+  // Método para buscar quando Enter é pressionado
+  onSearchEnter() {
+    const searchValue = this.vendaControl.value;
+    if (searchValue && searchValue.length >= 3) {
+      this.spiner = true;
+      this.isSearching = true;
+      this.consultarPorCliente(searchValue);
+    } else if (!searchValue) {
+      // Se o input estiver vazio, recarrega a lista completa
+      this.listarVenda();
     }
   }
 
   toggleRow(element: any) {
-    var soma = 0;
-    for (var i = 0; i < element.itensVd.length; i++) {
-      soma += element.itensVd.map((p: iItensVd) => p.valorParcial)[i];
+    // Fechar todas as outras linhas expandidas
+    this.tbSourceVd$.data.forEach((item:any) => {
+      if (item !== element && item.isExpanded) {
+        item.isExpanded = false;
+      }
+    });
+    // Alternar o estado da linha clicada
+    element.isExpanded = !element.isExpanded;
+    // Se a linha foi expandida, carregar os dados
+    if (element.isExpanded) {
+      var soma = 0;
+      for (var i = 0; i < element.itensVd.length; i++) {
+        soma += element.itensVd.map((p: iItensVd) => p.valorParcial)[i];
+      }
+      element.totalgeral = soma;
+      this.tbSourceItensVd$.data = element.itensVd;
+      console.log('ItensVD ', this.tbSourceItensVd$.data, 'Soma ', soma);
     }
-    element.totalgeral = soma;
-    this.tbSourceItensVd$.data = element.itensVd;
-    console.log('ItensVD ', this.tbSourceItensVd$.data, 'Soma ', soma);
-
   }
 
+  changeSales(value: any) {
+    // Apenas filtro local em tempo real - sem spinner
+    this.aplicarFiltroLocal(value);
+  }
+/*
   changeSales(value: any) {
     if (value) {
       this.vendasFiltered = this.vendas.filter(
@@ -112,8 +148,19 @@ export class VendaComponent implements OnInit {
     } else {
       this.vendasFiltered = this.vendas;
     }
-  }
+  }*/
 
+  aplicarFiltroLocal(valor: string) {
+    if (valor && valor.length >= 3) {
+      const filterValue = valor.toLowerCase();
+      this.tbSourceVd$.data = this.vendas.filter(venda =>
+        venda.nomeCliente.toLowerCase().includes(filterValue)
+      );
+    } else if (!valor) {
+      // Se não há valor, mostra todos os dados
+      this.tbSourceVd$.data = this.vendas;
+    }
+  }
 
   aplicarFiltro(valor: string) {
     valor = valor.trim().toLowerCase();
@@ -157,21 +204,21 @@ export class VendaComponent implements OnInit {
 
     console.log("Evento de dialogRef", dialogRef)
 
-    /*  dialogRef.afterClosed().subscribe(result => {
+     /* dialogRef.afterClosed().subscribe(result => {
         if (result !== undefined) {
-          if (this.tbSourceItensDaVd$.data
-            .map(p => p.id).includes(result.id)) {
-            this.itensDaVdService.getItensVdEntreDatas(result)
-              .subscribe((data: IProduto) => {
-                const index = this.tbSourceItensDaVd$.data
-                  .findIndex(p => p.id === data.id_produto);
-                this.tbSourceItensDaVd$.data[index] = data;
+          if (this.tbSourceItensVd$.data
+            .map(p => p.codProduto).includes(result.id)) {
+            this.itensVdService.getItensVdEntreDatas(result)
+              .subscribe((data: iProduto) => {
+                const index = this.tbSourceItensVd$.data
+                  .findIndex(p => p.codVenda === data.codProduto);
+                this.tbSourceItensVd$.data[index] = data;
                 this.tableVendas.renderRows();
               });
           } else {
-            this.itensDaVdService.createVd(result)
-              .subscribe((data: IProduto) => {
-                this.tbSourceItensDaVd$.data.push(result);
+            this.itensVdService.createVd(result)
+              .subscribe((data: iProduto) => {
+                this.tbSourceItensVd$.data.push(result);
                 this.tableVendas.renderRows();
               });
           }
@@ -180,7 +227,7 @@ export class VendaComponent implements OnInit {
   }
 
   openDilogVd(eventVd: iVendas) {
-    // console.log("Evento do  Dialog de vendas-", eventVd)
+
     const dialogRef = this.dialog.open(DialogOpenSalesComponent, {
       width: '300px',
       data: eventVd === null ? {

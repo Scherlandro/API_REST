@@ -1,23 +1,7 @@
 <div>
   <mat-card class="mat-card-table">
 
-    <mat-toolbar class="head-table-vd body">
-      <h3> Vendas </h3>
-      <button class="button-add" (click)="openDilogVd(vendaControl.value)">
-        <mat-icon>add</mat-icon>
-      </button>
-      <input class="input-table-vd" type="text" placeholder=" Digite a consulta" matInput
-             [formControl]="vendaControl"
-             (keypress)="changeSales(vendaControl.value)"
-             (keydown)="listarVenda()"
-             (ngModelChange)="consultarPorCliente(vendaControl.value)" />
-
-      <button class="button-search-vd body"> Search</button>
-
-    </mat-toolbar>
-
-
-    <div class="spinner-container">
+    <div class="spinner-container" *ngIf="spiner">
       <aside>
         <div *ngIf="spiner " class="spinner">
           <div></div>
@@ -29,17 +13,29 @@
       </aside>
     </div>
 
+    <mat-toolbar class="head-table-vd body">
+      <h3> Vendas </h3>
+      <button class="button-add" (click)="openDilogVd(vendaControl.value)">
+        <mat-icon>add</mat-icon>
+      </button>
+      <input class="input-table-vd" type="text" placeholder=" Digite a consulta" matInput
+             [formControl]="vendaControl"
+             (keyup.enter)="onSearchEnter()"
+             (keyup)="changeSales(vendaControl.value)"
+             (keydown)="listarVenda()"
+             (keyup.backspace)="listarVenda()"
+      />
+
+      <button class="button-search-vd body" (click)="onSearchEnter()"> Search</button>
+
+    </mat-toolbar>
+
 
     <table mat-table class="mdc-data-table__table body" [dataSource]="tbSourceVd$" multiTemplateDataRows>
 
 
       <tr mat-header-row *matHeaderRowDef="displayedColumnsVd"></tr>
 
-      <!--<ng-container class="table-head-data" matColumnDef="{{column}}" *ngFor="let column of displayedColumnsVd">
-           <mat-header-cell  *matHeaderCellDef> {{column}} </mat-header-cell>
-           <mat-cell  *matCellDef="let element"> {{element[column]}} </mat-cell>
-         </ng-container>
-    -->
       <ng-container matColumnDef="nome_cliente">
         <th mat-header-cell *matHeaderCellDef> Cliente</th>
         <td mat-cell *matCellDef="let elementVd"> {{elementVd.nomeCliente}} </td>
@@ -147,9 +143,8 @@
       <tr mat-row *matRowDef="let boss; columns: displayedColumnsVd;"
           class="example-element-row"
           [class.example-expanded-row]="boss.isExpanded"
-          (click)="boss.isExpanded = !boss.isExpanded; toggleRow(boss)">
+          (click)="toggleRow(boss)">
       </tr>
-
 
       <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
 
