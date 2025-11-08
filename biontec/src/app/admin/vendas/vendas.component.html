@@ -16,7 +16,22 @@
 
     </mat-toolbar>
 
+
+    <div class="spinner-container">
+      <aside>
+        <div *ngIf="spiner " class="spinner">
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+        </div>
+      </aside>
+    </div>
+
+
     <table mat-table class="mdc-data-table__table body" [dataSource]="tbSourceVd$" multiTemplateDataRows>
+
 
       <tr mat-header-row *matHeaderRowDef="displayedColumnsVd"></tr>
 

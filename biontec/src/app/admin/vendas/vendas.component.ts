@@ -1,19 +1,20 @@
-import { animate, state, style, transition, trigger } from "@angular/animations";
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormControl } from "@angular/forms";
-import { MatDialog } from "@angular/material/dialog";
-import { MatPaginator, PageEvent } from "@angular/material/paginator";
-import { MatSort } from "@angular/material/sort";
-import { MatTable, MatTableDataSource } from "@angular/material/table";
-import {expand, of} from "rxjs";
-import { catchError } from "rxjs/operators";
-import { DialogItensVdComponent } from "src/app/shared/diolog_components/dialog-itensvd/dialog-itensvd.component";
-import { iItensVd } from "../../interfaces/itens-vd";
-import { iVendas } from "../../interfaces/vendas";
-import { ItensVdService } from "../../services/itens-vd.service";
-import { VendasService } from "../../services/vendas.service";
-import { DialogOpenSalesComponent } from "../../shared/diolog_components/dialog-open-sales/dialog-open-sales.component";
-import { ErrorDiologComponent } from "../../shared/diolog_components/error-diolog/error-diolog.component";
+import {animate, state, style, transition, trigger} from "@angular/animations";
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {FormControl} from "@angular/forms";
+import {MatDialog} from "@angular/material/dialog";
+import {MatPaginator, PageEvent} from "@angular/material/paginator";
+import {MatSort} from "@angular/material/sort";
+import {MatTable, MatTableDataSource} from "@angular/material/table";
+import {expand, of, timeout} from "rxjs";
+import {catchError, delay, first} from "rxjs/operators";
+import {DialogItensVdComponent} from "src/app/shared/diolog_components/dialog-itensvd/dialog-itensvd.component";
+import {iItensVd} from "../../interfaces/itens-vd";
+import {iVendas} from "../../interfaces/vendas";
+import {ItensVdService} from "../../services/itens-vd.service";
+import {VendasService} from "../../services/vendas.service";
+import {DialogOpenSalesComponent} from "../../shared/diolog_components/dialog-open-sales/dialog-open-sales.component";
+import {ErrorDiologComponent} from "../../shared/diolog_components/error-diolog/error-diolog.component";
+import {TokenService} from "../../services/token.service";
 
 
 @Component({
@@ -29,28 +30,30 @@ import { ErrorDiologComponent } from "../../shared/diolog_components/error-diolo
   ],
 })
 export class VendaComponent implements OnInit {
+  spiner = false;
 
   @ViewChild(MatTable) tableVendas!: MatTable<any>;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   pageEvent!: PageEvent;
-  displayedColumnsVd: string[] = ['nome_cliente','dt_venda','total_geral','opicao'];
+  displayedColumnsVd: string[] = ['nome_cliente', 'dt_venda', 'total_geral', 'opicao'];
   tbSourceVd$: MatTableDataSource<iVendas>;
   tbSourceItensVd$: MatTableDataSource<iItensVd>;
-  displayedColumns: string[] = ['codigo','descricao','preco','qtd','soma','data','imagem','opicoes'];
+  displayedColumns: string[] = ['codigo', 'descricao', 'preco', 'qtd', 'soma', 'data', 'imagem', 'opicoes'];
 
   vendaControl = new FormControl();
   produtControl = new FormControl();
-  vendasFiltered: iVendas[]=[];
-  vendas: iVendas[]=[];
-  itensVdFiltered: iItensVd[]=[];
-  itensVd: iItensVd[]=[];
+  vendasFiltered: iVendas[] = [];
+  vendas: iVendas[] = [];
+  itensVdFiltered: iItensVd[] = [];
+  itensVd: iItensVd[] = [];
 
 
   constructor(
-              private vendasService: VendasService,
-              public dialog: MatDialog,
-              private itensDaVdService: ItensVdService
+    private tokenServer: TokenService,
+    private vendasService: VendasService,
+    public dialog: MatDialog,
+    private itensDaVdService: ItensVdService
   ) {
     this.tbSourceVd$ = new MatTableDataSource();
     this.tbSourceItensVd$ = new MatTableDataSource();
@@ -58,19 +61,23 @@ export class VendaComponent implements OnInit {
 
   ngOnInit(): void {
     this.listarVenda();
-   }
-
+  }
 
   listarVenda() {
+    this.spiner = true;
     this.vendasService.getAllSales()
-      .pipe(catchError(error => {
-        this.onError('Erro ao buscar Vendas!')
+
+      .pipe(first(), delay(5000),catchError(error => {
+        if (error === 'Session Expired')
+          this.onError('Sua sessão expirou!');
+        this.tokenServer.clearTokenExpired();
         return of([])
       }))
       .subscribe((data: iVendas[]) => {
-      this.tbSourceVd$.data = data;
-      this.tbSourceVd$.paginator = this.paginator;
-    });
+        this.tbSourceVd$.data = data;
+        this.tbSourceVd$.paginator = this.paginator;
+        this.spiner = false;
+      });
   }
 
   consultarPorCliente(nome: string) {
@@ -89,19 +96,19 @@ export class VendaComponent implements OnInit {
 
   toggleRow(element: any) {
     var soma = 0;
-    for(var i =0;i<element.itensVd.length;i++){
-      soma+=element.itensVd.map((p:iItensVd)=>p.valorParcial)[i];
+    for (var i = 0; i < element.itensVd.length; i++) {
+      soma += element.itensVd.map((p: iItensVd) => p.valorParcial)[i];
     }
     this.tbSourceItensVd$.data = element.itensVd;
-    console.log('ItensVD ',  this.tbSourceItensVd$.data , 'Soma ', soma);
+    console.log('ItensVD ', this.tbSourceItensVd$.data, 'Soma ', soma);
 
   }
 
-  changeSales(value: any){
+  changeSales(value: any) {
     if (value) {
       this.vendasFiltered = this.vendas.filter(
         vd => vd.nomeCliente.toString()
-        .includes(value.toUpperCase()));
+          .includes(value.toUpperCase()));
     } else {
       this.vendasFiltered = this.vendas;
     }
@@ -109,8 +116,8 @@ export class VendaComponent implements OnInit {
 
 
   aplicarFiltro(valor: string) {
-      valor = valor.trim().toLowerCase();
-      this.tbSourceVd$.filter = valor;
+    valor = valor.trim().toLowerCase();
+    this.tbSourceVd$.filter = valor;
   }
 
   onError(errrorMsg: string) {
@@ -120,60 +127,60 @@ export class VendaComponent implements OnInit {
   }
 
 
-  openDilogItenVd(eventVd: iItensVd){
+  openDilogItenVd(eventVd: iItensVd) {
     console.log("Dados do elementoDialog", eventVd)
     const dialogRef = this.dialog.open(DialogItensVdComponent, {
       width: '300px',
       data: eventVd === null ? {
         idItensVd: null,
-        codProduto: ' ' ,
-        codVenda: ' ' ,
-        descricao: ' ' ,
-        dtRegistro: ' ' ,
+        codProduto: ' ',
+        codVenda: ' ',
+        descricao: ' ',
+        dtRegistro: ' ',
         qtdVendidas: null,
         valCompra: null,
         valVenda: null,
         valorParcial: null,
       } : {
-        idItensVd: eventVd.idItensVd ,
-        codProduto: eventVd.codProduto ,
-        codVenda: eventVd.codVenda ,
-        descricao: eventVd.descricao ,
-        dtRegistro: eventVd.dtRegistro ,
-        qtdVendidas: eventVd.qtdVendidas ,
-        valCompra: eventVd.valCompra ,
-        valVenda: eventVd.valVenda ,
-        valorParcial: eventVd.valorParcial ,
+        idItensVd: eventVd.idItensVd,
+        codProduto: eventVd.codProduto,
+        codVenda: eventVd.codVenda,
+        descricao: eventVd.descricao,
+        dtRegistro: eventVd.dtRegistro,
+        qtdVendidas: eventVd.qtdVendidas,
+        valCompra: eventVd.valCompra,
+        valVenda: eventVd.valVenda,
+        valorParcial: eventVd.valorParcial,
       }
 
     });
 
     console.log("Evento de dialogRef", dialogRef)
 
-  /*  dialogRef.afterClosed().subscribe(result => {
-      if (result !== undefined) {
-        if (this.tbSourceItensDaVd$.data
-          .map(p => p.id).includes(result.id)) {
-          this.itensDaVdService.getItensVdEntreDatas(result)
-            .subscribe((data: IProduto) => {
-              const index = this.tbSourceItensDaVd$.data
-                .findIndex(p => p.id === data.id_produto);
-              this.tbSourceItensDaVd$.data[index] = data;
-              this.tableVendas.renderRows();
-            });
-        } else {
-          this.itensDaVdService.createVd(result)
-            .subscribe((data: IProduto) => {
-              this.tbSourceItensDaVd$.data.push(result);
-              this.tableVendas.renderRows();
-            });
+    /*  dialogRef.afterClosed().subscribe(result => {
+        if (result !== undefined) {
+          if (this.tbSourceItensDaVd$.data
+            .map(p => p.id).includes(result.id)) {
+            this.itensDaVdService.getItensVdEntreDatas(result)
+              .subscribe((data: IProduto) => {
+                const index = this.tbSourceItensDaVd$.data
+                  .findIndex(p => p.id === data.id_produto);
+                this.tbSourceItensDaVd$.data[index] = data;
+                this.tableVendas.renderRows();
+              });
+          } else {
+            this.itensDaVdService.createVd(result)
+              .subscribe((data: IProduto) => {
+                this.tbSourceItensDaVd$.data.push(result);
+                this.tableVendas.renderRows();
+              });
+          }
         }
-      }
-    });*/
+      });*/
   }
 
   openDilogVd(eventVd: iVendas) {
-   // console.log("Evento do  Dialog de vendas-", eventVd)
+    // console.log("Evento do  Dialog de vendas-", eventVd)
     const dialogRef = this.dialog.open(DialogOpenSalesComponent, {
       width: '300px',
       data: eventVd === null ? {
@@ -185,7 +192,7 @@ export class VendaComponent implements OnInit {
         desconto: null,
         totalgeral: null,
         formasDePagamento: "",
-        qtdDeParcelas:null,
+        qtdDeParcelas: null,
       } : {
         idVenda: eventVd.idVenda,
         dtVenda: eventVd.dtVenda,
@@ -196,7 +203,7 @@ export class VendaComponent implements OnInit {
         desconto: eventVd.desconto,
         totalgeral: eventVd.totalgeral,
         formasDePagamento: eventVd.formasDePagamento,
-        qtdDeParcelas:eventVd.qtdDeParcelas,
+        qtdDeParcelas: eventVd.qtdDeParcelas,
 
       }
     });
