@@ -23,7 +23,7 @@
              (keyup.enter)="onSearchEnter()"
              (keyup)="changeSales(vendaControl.value)"
              (keydown)="listarVenda()"
-             (keyup.backspace)="listarVenda()"
+             (keyup.backspace)="changeSales(vendaControl.value)"
       />
 
       <button class="button-search-vd body" (click)="onSearchEnter()"> Search</button>
@@ -149,7 +149,9 @@
       <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
 
       <tr class="mat-row" *matNoDataRow>
-        <td class="mat-cell" colspan="3"></td>
+        <td class="mat-cell" colspan="4">
+          <strong> Nenhum resultado encontrado para a busca.</strong>
+        </td>
       </tr>
     </table>
 
