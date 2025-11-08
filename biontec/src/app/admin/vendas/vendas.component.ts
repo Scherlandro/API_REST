@@ -68,12 +68,7 @@ export class VendaComponent implements OnInit {
         return of([])
       }))
       .subscribe((data: iVendas[]) => {
-        console.log('Vendas --',data)
       this.tbSourceVd$.data = data;
-        for (const dataKey in data) {
-          this.tbSourceItensVd$.data = data[dataKey].itensVd;
-          console.log('Lista de Itens ->', this.tbSourceItensVd$.data);
-        }
       this.tbSourceVd$.paginator = this.paginator;
     });
   }
