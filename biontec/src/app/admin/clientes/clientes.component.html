@@ -9,7 +9,8 @@
       </button>
 
           <input class="input-table" type="text" placeholder="Digite a busca" matInput
-                 [formControl]="clienteControl" (keydown)="listarClientes()"
+                 [formControl]="clienteControl"
+                 (keydown)="listarClientes()"
                  (keyup)="aplicarFiltro(clienteControl.value)"
                  [matAutocomplete]="auto"/>
           <mat-error

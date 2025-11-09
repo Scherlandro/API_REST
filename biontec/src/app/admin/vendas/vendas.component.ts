@@ -46,8 +46,6 @@ export class VendaComponent implements OnInit {
 
   vendaControl = new FormControl();
   produtControl = new FormControl();
-  vendasFiltered: iVendas[] = [];
-  vendas: iVendas[] = [];
   itensVdFiltered: iItensVd[] = [];
   itensVd: iItensVd[] = [];
 
@@ -78,40 +76,8 @@ export class VendaComponent implements OnInit {
       .subscribe((data: iVendas[]) => {
         this.tbSourceVd$.data = data;
         this.tbSourceVd$.paginator = this.paginator;
-        this.vendas = data; // Armazena os dados originais
         this.spiner = false;
-        this.isSearching = false;
       });
-  }
-
-  consultarPorCliente(nome: string) {
-    if (nome && nome.length >= 3) {
-      this.vendasService.listarVdPorCliente(nome)
-        .pipe(catchError(error => {
-          this.onError('Erro ao buscar Cliente!');
-          this.spiner = false;
-          this.isSearching = false;
-          return of([]);
-        }))
-        .subscribe((result: iVendas[]) => {
-          this.aplicarFiltro(nome);
-          this.tbSourceVd$.data = result;
-          this.spiner = false;
-          this.isSearching = false;
-        })
-    }
-  }
-  // Método para buscar quando Enter é pressionado
-  onSearchEnter() {
-    const searchValue = this.vendaControl.value;
-    if (searchValue && searchValue.length >= 3) {
-      this.spiner = true;
-      this.isSearching = true;
-      this.consultarPorCliente(searchValue);
-    } else if (!searchValue) {
-      // Se o input estiver vazio, recarrega a lista completa
-      this.listarVenda();
-    }
   }
 
   toggleRow(element: any) {
@@ -131,34 +97,6 @@ export class VendaComponent implements OnInit {
       }
       element.totalgeral = soma;
       this.tbSourceItensVd$.data = element.itensVd;
-      console.log('ItensVD ', this.tbSourceItensVd$.data, 'Soma ', soma);
-    }
-  }
-
-  changeSales(value: any) {
-    // Apenas filtro local em tempo real - sem spinner
-    this.aplicarFiltroLocal(value);
-  }
-/*
-  changeSales(value: any) {
-    if (value) {
-      this.vendasFiltered = this.vendas.filter(
-        vd => vd.nomeCliente.toString()
-          .includes(value.toUpperCase()));
-    } else {
-      this.vendasFiltered = this.vendas;
-    }
-  }*/
-
-  aplicarFiltroLocal(valor: string) {
-    if (valor && valor.length >= 3) {
-      const filterValue = valor.toLowerCase();
-      this.tbSourceVd$.data = this.vendas.filter(venda =>
-        venda.nomeCliente.toLowerCase().includes(filterValue)
-      );
-    } else if (!valor) {
-      // Se não há valor, mostra todos os dados
-      this.tbSourceVd$.data = this.vendas;
     }
   }
 
@@ -172,7 +110,6 @@ export class VendaComponent implements OnInit {
       data: errrorMsg
     });
   }
-
 
   openDilogItenVd(eventVd: iItensVd) {
     console.log("Dados do elementoDialog", eventVd)
@@ -199,11 +136,8 @@ export class VendaComponent implements OnInit {
         valVenda: eventVd.valVenda,
         valorParcial: eventVd.valorParcial,
       }
-
     });
-
     console.log("Evento de dialogRef", dialogRef)
-
      /* dialogRef.afterClosed().subscribe(result => {
         if (result !== undefined) {
           if (this.tbSourceItensVd$.data
@@ -220,10 +154,7 @@ export class VendaComponent implements OnInit {
               .subscribe((data: iProduto) => {
                 this.tbSourceItensVd$.data.push(result);
                 this.tableVendas.renderRows();
-              });
-          }
-        }
-      });*/
+              }); }  } });         */
   }
 
   openDilogVd(eventVd: iVendas) {
@@ -251,9 +182,7 @@ export class VendaComponent implements OnInit {
         totalgeral: eventVd.totalgeral,
         formasDePagamento: eventVd.formasDePagamento,
         qtdDeParcelas: eventVd.qtdDeParcelas,
-
-      }
-    });
+      } });
   }
 
 }

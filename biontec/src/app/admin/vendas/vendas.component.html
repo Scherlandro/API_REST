@@ -20,13 +20,10 @@
       </button>
       <input class="input-table-vd" type="text" placeholder=" Digite a consulta" matInput
              [formControl]="vendaControl"
-             (keyup.enter)="onSearchEnter()"
-             (keyup)="changeSales(vendaControl.value)"
              (keydown)="listarVenda()"
-             (keyup.backspace)="changeSales(vendaControl.value)"
-      />
-
-      <button class="button-search-vd body" (click)="onSearchEnter()"> Search</button>
+             (keyup)="aplicarFiltro(vendaControl.value)"/>
+      
+      <button class="button-search-vd body" > Search</button>
 
     </mat-toolbar>
 
@@ -150,13 +147,18 @@
 
       <tr class="mat-row" *matNoDataRow>
         <td class="mat-cell" colspan="4">
-          <strong> Nenhum resultado encontrado para a busca.</strong>
+          <span *ngIf="vendaControl.value && vendaControl.value.length >= 3">
+            Nenhum resultado encontrado para "{{vendaControl.value}}"
+          </span>
+          <span *ngIf="!vendaControl.value || vendaControl.value.length === 0">
+          <strong >  Nenhum dado disponível </strong>
+          </span>
         </td>
       </tr>
     </table>
 
 
-    <mat-paginator [length]="100"
+    <mat-paginator [length]="tbSourceVd$.data?.length || 0"
                    [pageSize]="5"
                    [pageSizeOptions]="[5, 10, 25, 100]"
                    (page)="pageEvent = $event"
