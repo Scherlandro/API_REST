@@ -64,6 +64,13 @@ export class VendaComponent implements OnInit {
     this.listarVenda();
   }
 
+  formatarDadosVendas(vendas: iVendas[]): iVendas[] {
+    return vendas.map(venda => ({
+      ...venda,
+      totalgeral: this.formatarReal(venda.totalgeral)
+    }));
+  }
+
   listarVenda() {
     this.spiner = true;
     this.vendasService.getAllSales()
@@ -74,7 +81,8 @@ export class VendaComponent implements OnInit {
         return of([])
       }))
       .subscribe((data: iVendas[]) => {
-        this.tbSourceVd$.data = data;
+        const dadosFormatados = this.formatarDadosVendas(data);
+        this.tbSourceVd$.data = dadosFormatados;
         this.tbSourceVd$.paginator = this.paginator;
         this.spiner = false;
       });
@@ -96,9 +104,30 @@ export class VendaComponent implements OnInit {
         soma += element.itensVd.map((p: iItensVd) => p.valorParcial)[i];
       }
       element.totalgeral = soma;
-      this.tbSourceItensVd$.data = element.itensVd;
+      element.totalgeral = this.formatarReal(soma);
+      this.tbSourceItensVd$.data = element.itensVd.map((item: iItensVd) => ({
+        ...item,
+        // Formata os valores individuais
+        valVenda: this.formatarReal(item.valVenda),
+        valorParcial: this.formatarReal(item.valorParcial)
+      }));
     }
   }
+
+  // Método para formatar valores para Real brasileiro
+  formatarReal(valor: number | string): string {
+    // Converte para número se for string
+    const numero = typeof valor === 'string' ? parseFloat(valor) : valor;
+
+    // Formata para Real brasileiro
+    return numero.toLocaleString('pt-BR', {
+      style: 'currency',
+      currency: 'BRL',
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    });
+  }
+
 
   aplicarFiltro(valor: string) {
     valor = valor.trim().toLowerCase();

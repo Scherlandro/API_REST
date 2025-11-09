@@ -20,28 +20,30 @@ import { ErrorComponent } from './utils/error/error.component';
 import { TokenInterceptorProvider} from "./services/interceptors/token.interceptor";
 import {MatRippleModule} from "@angular/material/core";
 import {PublicModule} from "./public/public.module";
+import {CurrencyBrlPipe} from "./utils/CurrencyBrlPipe ";
 
 
 @NgModule({
   declarations: [
     AppComponent,
-    ErrorComponent
+    ErrorComponent,
+    CurrencyBrlPipe
 
   ],
-    imports: [
-        BrowserModule,
-        AppRouting,
-        HttpClientModule,
-        BrowserAnimationsModule,
-        AppMaterialModule,
-        ReactiveFormsModule,
-        FormsModule,
-        MatSidenavModule,
-        MatPaginatorModule,
-        MatSortModule,
-        MatProgressBarModule,
-        MatRippleModule,
-        PublicModule
+  imports: [
+    BrowserModule,
+    AppRouting,
+    HttpClientModule,
+    BrowserAnimationsModule,
+    AppMaterialModule,
+    ReactiveFormsModule,
+    FormsModule,
+    MatSidenavModule,
+    MatPaginatorModule,
+    MatSortModule,
+    MatProgressBarModule,
+    MatRippleModule,
+    PublicModule
 
     ],
   providers: [AuthService, AuthGuard, BaseService,TokenInterceptorProvider ],

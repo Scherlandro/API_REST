@@ -22,7 +22,7 @@
              [formControl]="vendaControl"
              (keydown)="listarVenda()"
              (keyup)="aplicarFiltro(vendaControl.value)"/>
-      
+
       <button class="button-search-vd body" > Search</button>
 
     </mat-toolbar>
@@ -45,7 +45,7 @@
 
       <ng-container matColumnDef="total_geral">
         <th mat-header-cell *matHeaderCellDef> Total</th>
-        <td mat-cell *matCellDef="let elementVd"> {{elementVd.totalgeral}} </td>
+        <td mat-cell *matCellDef="let elementVd"> {{elementVd.totalgeral }} </td>
       </ng-container>
 
       <ng-container matColumnDef="opicao">
