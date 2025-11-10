@@ -1,3 +1,7 @@
+.body-vd{
+  background-color: rgba(96, 30, 160, 0);
+}
+
 .table-head-data{
   width: fit-content;
   height: 1%;
@@ -7,7 +11,7 @@
   background-image: linear-gradient( #8438ee, #34db85);
 }
 
- .mdc-data-table__table {
+ .expanding-table {
    min-width: 100%;
    height: 50px;
    background-color: rgba(51, 33, 83, 0.07);
@@ -111,6 +115,9 @@ tr.example-detail-row {
 .example-element-detail {
   overflow: hidden;
   display: flex;
+}
+.example-element-detail:hover{
+  background: rgba(226, 236, 104, 0.75);
 }
 
 

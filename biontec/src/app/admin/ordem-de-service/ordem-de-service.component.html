@@ -1,7 +1,7 @@
 <div>
-  <mat-card class="mat-card-table">
+  <mat-card-content >
 
-    <mat-toolbar class="head-table-vd body">
+    <mat-toolbar class="head-table-os body">
       <h3> Ordens de Serviços </h3>
       <button class="button-add" (click)="openDilogOS()">
         <mat-icon>add</mat-icon>
@@ -12,11 +12,11 @@
              (keydown)="loadOrders()"
              (ngModelChange)="consultarPorCliente(OSControl.value)" />
 
-      <button class="button-search-vd body"> Search</button>
+      <button class="button-search-os body"> Search</button>
 
     </mat-toolbar>
 
-    <table mat-table class="mdc-data-table__table body" [dataSource]="tbSourceOS$" multiTemplateDataRows>
+    <table mat-table class="expanding-table-os body" [dataSource]="tbSourceOS$" multiTemplateDataRows>
 
       <tr mat-header-row *matHeaderRowDef="displayedColumns0S"></tr>
 
@@ -158,6 +158,6 @@
                    aria-label="Select page"
                    class="button-gradient body">
     </mat-paginator>
-  </mat-card>
+  </mat-card-content>
 </div>
 

@@ -2,20 +2,6 @@
   background-color: rgba(96, 30, 160, 0);
 }
 
-.mat-card-table{
-  width: auto;
-  height: auto;
-  display: grid;
-  padding: 15px;
-  background: linear-gradient(145deg, rgba(205, 184, 232, 0.45), rgba(155, 127, 213, 0.34));
-  box-shadow:  20px 20px 60px #b2acc4,
-  -20px -20px 60px #3d5257;
-  color: #1a2b15;
-  -webkit-border-radius: 20px;
-  -moz-border-radius: 20px;
-  border-radius: 10px;
-}
-
 .head-table{
   border-radius: 15px;
   background-color: rgba(51, 33, 83, 0.07);
@@ -87,11 +73,11 @@
   border-radius: 20px;
 }
 .componet-gradient:hover {
-  background-image: -webkit-linear-gradient(top, #8438ee, #34db85);
-  background-image: -moz-linear-gradient(top, #8438ee, #34db85);
-  background-image: -ms-linear-gradient(top, #8438ee, #34db85);
-  background-image: -o-linear-gradient(top, #8438ee, #34db85);
-  background-image: linear-gradient(to bottom, #8438ee, #34db85);
+  background-image: -webkit-linear-gradient(top, rgba(132, 56, 238, 0.51), rgba(52, 219, 133, 0.57));
+  background-image: -moz-linear-gradient(top, rgba(132, 56, 238, 0.54), rgba(52, 219, 133, 0.49));
+  background-image: -ms-linear-gradient(top, rgba(132, 56, 238, 0.58), rgba(52, 219, 133, 0.49));
+  background-image: -o-linear-gradient(top, rgba(132, 56, 238, 0.56), rgba(52, 219, 133, 0.51));
+  background-image: linear-gradient(to bottom, rgba(132, 56, 238, 0.58), rgba(52, 219, 133, 0.54));
 }
 
 .loading-spinner{

@@ -1,5 +1,5 @@
 <div>
-  <mat-card class="mat-card-table">
+  <mat-card-content >
 
     <div class="spinner-container" *ngIf="spiner">
       <aside>
@@ -28,7 +28,7 @@
     </mat-toolbar>
 
 
-    <table mat-table class="mdc-data-table__table body" [dataSource]="tbSourceVd$" multiTemplateDataRows>
+    <table mat-table class="expanding-table body" [dataSource]="tbSourceVd$" multiTemplateDataRows>
 
 
       <tr mat-header-row *matHeaderRowDef="displayedColumnsVd"></tr>
@@ -71,7 +71,7 @@
         <th mat-cell *matCellDef="let elemento" [attr.colspan]="displayedColumnsVd.length">
           <div class="example-element-detail" [@detailExpand]="elemento.isExpanded ? 'expanded' : 'collapsed'">
 
-            <table mat-table class="mdc-data-table__table" [dataSource]="tbSourceItensVd$">
+            <table mat-table class="expanding-table" [dataSource]="tbSourceItensVd$">
 
              <tr mat-row *matRowDef=" let row; columns: displayedColumns;"></tr>
               <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
@@ -158,14 +158,13 @@
     </table>
 
 
-    <mat-paginator [length]="tbSourceVd$.data?.length || 0"
-                   [pageSize]="5"
+    <mat-paginator [pageSize]="5"
                    [pageSizeOptions]="[5, 10, 25, 100]"
                    (page)="pageEvent = $event"
                    aria-label="Select page"
                    class="button-gradient body">
     </mat-paginator>
-  </mat-card>
+  </mat-card-content>
 </div>
 
 

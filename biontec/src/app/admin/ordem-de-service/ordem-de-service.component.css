@@ -7,7 +7,21 @@
   background-image: linear-gradient( #8438ee, #34db85);
 }
 
-.mdc-data-table__table {
+.mat-card-table{
+  width: auto;
+  height: auto;
+  display: grid;
+  padding: 15px;
+  background: linear-gradient(145deg, rgba(205, 184, 232, 0.45), rgba(155, 127, 213, 0.34));
+  box-shadow:  20px 20px 60px #b2acc4,
+  -20px -20px 60px #3d5257;
+  color: #1a2b15;
+  -webkit-border-radius: 20px;
+  -moz-border-radius: 20px;
+  border-radius: 10px;
+}
+
+.expanding-table-os {
   min-width: 100%;
   height: 50px;
   background-color: rgba(51, 33, 83, 0.07);
@@ -52,7 +66,7 @@
   border-radius: 20px;
 }
 
-.button-search-vd {
+.button-search-os {
   width: 100%;
   min-width: 50px;
   height: 35px;
@@ -87,7 +101,7 @@
   width: 20%;
 }
 
-.head-table-vd{
+.head-table-os{
   border-radius: 15px;
   background-color: rgba(51, 33, 83, 0.07);
   color: #0f2102;
