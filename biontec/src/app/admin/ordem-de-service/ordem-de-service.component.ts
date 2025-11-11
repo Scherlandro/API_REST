@@ -20,6 +20,7 @@ import {DialogOpenOsComponent} from "../../shared/diolog_components/dialog-open-
 import {DialogItensOSComponent} from "../../shared/diolog_components/dialog-itens-os/dialog-itens-os.component";
 import {TokenService} from "../../services/token.service";
 import {NotificationMgsService} from "../../services/notification-mgs.service";
+import {iItensVd} from "../../interfaces/itens-vd";
 
 
 @Component({
@@ -171,22 +172,38 @@ export class OrdemDeServiceComponent {
     }
   }
 
-  toggleRow(element: iServiceOrder) {
+  toggleRow(element: any) {
     console.log('ID da O.S selecionada ==> ', element.idOS.toString());
-    this.itensOs.listarItensOSPorCodOS(element.idOS.toString())
+    this.tbSourceOS$.data.forEach((item:any) => {
+      if (item !== element && item.isExpanded) {
+        item.isExpanded = false;
+      }
+    });
+    // Alternar o estado da linha clicada
+    element.isExpanded = !element.isExpanded;
+    // Se a linha foi expandida, carregar os dados
+    if (element.isExpanded) {
+      var soma = 0;
+      for (var i = 0; i < element.itensVd.length; i++) {
+        soma += element.itensVd.map((p: iItensVd) => p.valorParcial)[i];
+      }
+      element.totalgeral = soma;
+      element.totalgeral = this.formatarReal(soma);
+      this.tbSourceItensDaOS$.data = element.itensVd.map((item: iItensVd) => ({
+        ...item,
+        // Formata os valores individuais
+        valVenda: this.formatarReal(item.valVenda),
+        valorParcial: this.formatarReal(item.valorParcial)
+      }));
+    }
+  /*  this.itensOs.listarItensOSPorCodOS(element.idOS.toString())
       .pipe(catchError(error => {
         this.onError('Erro ao buscar Itens da O.S!')
         return of([])
       }))
       .subscribe((data: iItensOS[]) => {
-        console.log('ItensOS ==> ', data);
         this.tbSourceItensDaOS$.data = data;
-        var soma = 0;
-        for (var i = 0; i < data.length; i++) {
-          soma += data.map(i => i.valor_parcial)[i];
-        }
-        console.log('ItensOS somados', soma);
-      });
+      });*/
   }
 
   get subServices(): FormArray {
@@ -287,4 +304,18 @@ export class OrdemDeServiceComponent {
   formatarData(dataString: string): Date {
     return new Date(dataString);
   }
+  // Método para formatar valores para Real brasileiro
+  formatarReal(valor: number | string): string {
+    // Converte para número se for string
+    const numero = typeof valor === 'string' ? parseFloat(valor) : valor;
+
+    // Formata para Real brasileiro
+    return numero.toLocaleString('pt-BR', {
+      style: 'currency',
+      currency: 'BRL',
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    });
+  }
+
 }

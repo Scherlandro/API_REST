@@ -70,7 +70,7 @@
         <th mat-cell *matCellDef="let elemento" [attr.colspan]="displayedColumns0S.length">
           <div class="example-element-detail" [@detailExpand]="elemento.isExpanded ? 'expanded' : 'collapsed'">
 
-            <table mat-table class="mdc-data-table__table" [dataSource]="tbSourceItensDaOS$">
+            <table mat-table class="expanding-table-os" [dataSource]="tbSourceItensDaOS$">
 
               <tr mat-row *matRowDef=" let row; columns: displayedColumns;"></tr>
               <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
@@ -139,9 +139,8 @@
       <tr mat-row *matRowDef="let boss; columns: displayedColumns0S;"
           class="example-element-row"
           [class.example-expanded-row]="boss.isExpanded"
-          (click)="boss.isExpanded = !boss.isExpanded; toggleRow(boss)">
+          (click)="toggleRow(boss)">
       </tr>
-
 
       <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
 
