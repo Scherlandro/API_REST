@@ -98,6 +98,7 @@ export class UsuariosComponent implements OnInit {
       }
     });
 
+    console.log("Evento de dialogRef", dialogRef)
     dialogRef.afterClosed().subscribe(result => {
       if (result !== undefined) {
         if (this.tbSourceUsuarios$.data

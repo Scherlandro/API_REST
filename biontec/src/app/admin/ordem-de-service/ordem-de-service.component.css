@@ -32,20 +32,6 @@
   width: fit-content;
 }
 
-.componet-gradient {
-  min-width: 120px;
-  width: auto;
-  height: 50px;
-  background-color: rgba(51, 33, 83, 0.07);
-  -webkit-border-radius: 20px;
-  -moz-border-radius: 20px;
-  border-radius: 20px;
-}
-
-.componet-gradient:hover {
-  background-image: linear-gradient( #e2efec, #7e758e);
-}
-
 .button-update {
   width: auto;
   height: 35px;
@@ -81,13 +67,29 @@
   overflow: hidden;
 }
 
+.button-add-item {
+  min-width: 40px;
+  width: auto;
+  height: 35px;
+  background-color: rgba(51, 33, 83, 0.07);
+  -webkit-border-radius: 14px;
+  -moz-border-radius: 14px;
+  border-radius: 14px;
+
+}
+
+.button-add-item:hover {
+  background-image: linear-gradient( #e2efec, #7e758e);
+}
+
+
 .button-delete {
   width: auto;
   height: 35px;
   background-color: rgba(51, 33, 83, 0.07);
-  -webkit-border-radius: 20px;
-  -moz-border-radius: 20px;
-  border-radius: 20px;
+  -webkit-border-radius: 14px;
+  -moz-border-radius: 14px;
+  border-radius: 14px;
 }
 
 .button-delete:hover {

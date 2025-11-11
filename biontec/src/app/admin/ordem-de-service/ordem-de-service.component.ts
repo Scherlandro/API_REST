@@ -31,6 +31,7 @@ import {iItensVd} from "../../interfaces/itens-vd";
 export class OrdemDeServiceComponent {
 
   @ViewChild(MatTable) tableOS!: MatTable<any>;
+  @ViewChild(MatTable) tableItensOS!: MatTable<any>;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   pageEvent!: PageEvent;
@@ -40,7 +41,7 @@ export class OrdemDeServiceComponent {
   clienteSelecionado: ICliente | null = null;
   tbSourceOS$: MatTableDataSource<iServiceOrder>;
   displayedColumns0S = ['Nome', 'Data', 'Status', 'Total', 'Opicões'];
-  tbSourceItensDaOS$: any;
+  tbSourceItensDaOS$: MatTableDataSource<iItensOS>;
   displayedColumns: string[] = ['codigo', 'descricao', 'preco', 'qtd', 'soma', 'data', 'imagem', 'opicoes'];
   loadEmployees: any;
 
@@ -278,8 +279,8 @@ export class OrdemDeServiceComponent {
 
   }
 
-  openDilogItenOS(eventOS: any) {
-    // console.log("Dados do elementoDialog", eventVd)
+  openDilogItenOS(eventOS: iItensOS) {
+    console.log("Dados do elementoDialog", eventOS)
     const dialogRef = this.dialog.open(DialogItensOSComponent, {
       width: '300px',
       data: eventOS === null ? {
@@ -288,13 +289,37 @@ export class OrdemDeServiceComponent {
         valor_venda: '',
         qtd_vendidas: ''
       } : {
-        cod_os: eventOS.cod_os,
+        cod_os: eventOS.code_os,
         descricao: eventOS.descricao,
         valor_venda: eventOS.valor_venda,
         qtd_vendidas: eventOS.qtd_vendidas,
 
       }
     });
+
+     dialogRef.afterClosed().subscribe(result => {
+       console.log("Evento de dialogRef", dialogRef)
+       if (result !== undefined) {
+        if (this.tbSourceItensDaOS$.data
+          .map(p => p.id_itens_os).includes(result.id_itens_os)) {
+          this.itensOs.editItem(result)
+            .subscribe((data: iItensOS) => {
+              const index = this.tbSourceItensDaOS$.data
+                .findIndex(p => p.id_itens_os === data.id_itens_os);
+              this.tbSourceItensDaOS$.data[index] = data;
+              this.tableItensOS.renderRows();
+            });
+        } else {
+          this.itensOs.adicionarItem(result)
+            .subscribe((data: iItensOS) => {
+              this.tbSourceItensDaOS$.data.push(result);
+              this.tableItensOS.renderRows();
+            });
+        }
+      }
+    });
+
+
   }
 
   formatter(value: number): string {

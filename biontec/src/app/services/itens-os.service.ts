@@ -28,6 +28,7 @@ export class ItensOsService {
   }
 
   adicionarItem(element: iItensOS): Observable<iItensOS> {
+    console.log("ItenOs chegou no service", element)
     return this._http.post<iItensOS>(this.baseUrl+'salvar',element);
   }
 
