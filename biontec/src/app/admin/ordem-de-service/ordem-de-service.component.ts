@@ -21,6 +21,7 @@ import {DialogItensOSComponent} from "../../shared/diolog_components/dialog-iten
 import {TokenService} from "../../services/token.service";
 import {NotificationMgsService} from "../../services/notification-mgs.service";
 import {iItensVd} from "../../interfaces/itens-vd";
+import {iProduto} from "../../interfaces/product";
 
 
 @Component({
@@ -284,15 +285,16 @@ export class OrdemDeServiceComponent {
     const dialogRef = this.dialog.open(DialogItensOSComponent, {
       width: '300px',
       data: eventOS === null ? {
-        cod_os: null,
+        cod0S: null,
+        idItensDaOS: null,
         descricao: '',
-        valor_venda: '',
-        qtd_vendidas: ''
+        precoDeVenda: '',
+        quantidade: '',
       } : {
-        cod_os: eventOS.code_os,
+        cod0S: eventOS.cod0S,
         descricao: eventOS.descricao,
-        valor_venda: eventOS.valor_venda,
-        qtd_vendidas: eventOS.qtd_vendidas,
+        precoDeVenda: eventOS.precoDeVenda,
+        quantidade: eventOS.quantidade,
 
       }
     });
@@ -301,11 +303,11 @@ export class OrdemDeServiceComponent {
        console.log("Evento dialogRef", dialogRef, 'Result', result)
        if (result !== undefined) {
         if (this.tbSourceItensDaOS$.data
-          .map(p => p.id_itens_os).includes(result.id_itens_os)) {
+          .map(p => p.idItensDaOS).includes(result.id_itens_os)) {
           this.itensOs.editItem(result)
             .subscribe((data: iItensOS) => {
               const index = this.tbSourceItensDaOS$.data
-                .findIndex(p => p.id_itens_os === data.id_itens_os);
+                .findIndex(p => p.idItensDaOS === data.idItensDaOS);
               this.tbSourceItensDaOS$.data[index] = data;
               this.tableItensOS.renderRows();
             });

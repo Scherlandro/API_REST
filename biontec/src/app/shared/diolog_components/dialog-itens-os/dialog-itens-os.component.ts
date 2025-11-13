@@ -1,12 +1,13 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
-import { iItensVd } from 'src/app/interfaces/itens-vd';
 import { ItensVdService } from 'src/app/services/itens-vd.service';
 import {iProduto} from "../../../interfaces/product";
 import {FormControl, Validators} from "@angular/forms";
 import {catchError} from "rxjs/operators";
 import {Observable, of,pipe} from "rxjs";
 import {ProductService} from "../../../services/product.service";
+import {iItensOS} from "../../../interfaces/itens-os";
+import {ItensOsService} from "../../../services/itens-os.service";
 
 @Component({
   selector: 'app-dialog-editor-itens-os',
@@ -22,8 +23,9 @@ export class DialogItensOSComponent implements OnInit {
 
   constructor(
     @Inject(MAT_DIALOG_DATA)
-    public itensVd: iItensVd,
+    public itensOS: iItensOS,
     public dialogRef: MatDialogRef<DialogItensOSComponent>,
+    public itensOsService:ItensOsService,
     public itensVdService: ItensVdService,
     private prodService: ProductService,
   ) {
@@ -32,12 +34,20 @@ export class DialogItensOSComponent implements OnInit {
 
 
   ngOnInit(): void {
+    if(!this.itensOS){
+      this.itensOS = {} as iItensOS;
+    }
+    if(this.itensOS.prod){
+      this.itensOS.prod = {} as iProduto;
+    }
     this.listarProdutos();
-    if (this.itensVd.idItensVd != null) {
+    this.isChange = !!this.itensOS.prod.idProduto;
+   // if (this.produto.idProduto != null) {
+   /* if (this.itensOS.prod.idProduto != null) {
       this.isChange = true;
     } else {
       this.isChange = false;
-    }
+    }*/
   }
 
   listarProdutos() {
@@ -47,8 +57,10 @@ export class DialogItensOSComponent implements OnInit {
         return of([])
       }))
       .subscribe((rest: iProduto[]) => {
-        this.produtoFiltered= rest;
+        console.log("Lista de prod",  this.produtoFiltered.forEach(()=> rest))
         this.products = rest;
+        this.produtoFiltered= rest;
+
       });
   }
 /*
@@ -81,7 +93,7 @@ export class DialogItensOSComponent implements OnInit {
   }
 
   save():void{
-    this.itensVdService.createElements(this.itensVd);
+    this.itensOsService.adicionarItem(this.itensOS);
   }
 
   formatter(value: number): string {

@@ -1,14 +1,15 @@
+import {iProduto} from "./product";
+import {iServiceOrder} from "./service-order";
 
 
 export interface iItensOS {
 
-  id_itens_os?: number;
-  code_os?: string;
-  cod_produtos: string;
+  idItensDaOS?: number;
+  cod0S: iServiceOrder;
+  prod: iProduto;
   descricao: string;
-  valor_compra?: number;
-  valor_venda: number;
-  qtd_vendidas: number;
-  valor_parcial: number;
+  precoDeVenda: number;
+  quantidade: number;
+  total: number;
 }
 
