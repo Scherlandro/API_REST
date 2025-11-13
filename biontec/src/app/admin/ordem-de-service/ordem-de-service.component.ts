@@ -298,7 +298,7 @@ export class OrdemDeServiceComponent {
     });
 
      dialogRef.afterClosed().subscribe(result => {
-       console.log("Evento de dialogRef", dialogRef)
+       console.log("Evento dialogRef", dialogRef, 'Result', result)
        if (result !== undefined) {
         if (this.tbSourceItensDaOS$.data
           .map(p => p.id_itens_os).includes(result.id_itens_os)) {
