@@ -1,6 +1,6 @@
 package com.biontecapi.service;
 
-import com.biontecapi.dtos.ItenDaOSDto;
+import com.biontecapi.dtos.ItensDoServicoDTO;
 import com.biontecapi.dtos.OrdemDeServicoDTO;
 import com.biontecapi.model.OrdemDeServico;
 
@@ -24,7 +24,7 @@ public interface OrdemDeServicoService {
     OrdemDeServico atualizarOS(Long id, OrdemDeServicoDTO dto);
 
 
-    OrdemDeServico addItemNaOS(Long osID, ItenDaOSDto itemDto);
+    OrdemDeServico addItemNaOS(Long osID, ItensDoServicoDTO itemDto);
 
     OrdemDeServico removerItemDaOS(Long serviceOrderId, Long itemId);
 

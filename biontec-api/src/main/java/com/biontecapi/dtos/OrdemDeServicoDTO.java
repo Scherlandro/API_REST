@@ -1,8 +1,6 @@
 package com.biontecapi.dtos;
 
 import com.biontecapi.Enum.Status;
-import com.biontecapi.dtos.ItenDaOSDto;
-import com.biontecapi.model.Cliente;
 import com.biontecapi.model.Funcionario;
 import com.biontecapi.model.ItensDoServico;
 

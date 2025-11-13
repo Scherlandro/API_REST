@@ -6,34 +6,40 @@
 
   <mat-form-field appearance="fill">
     <mat-label>Código da OS</mat-label>
-    <input matInput [(ngModel)]="itensOS.cod0S">
+    <input matInput [(ngModel)]="itensOS.codOS">
   </mat-form-field>
-
-    <mat-form-field appearance="fill">
-      <mat-label>ID</mat-label>
-      <input matInput [(ngModel)]="itensOS.idItensDaOS">
-    </mat-form-field>
-
 
   <mat-form-field appearance="fill">
-    <mat-label>Códico do Produto</mat-label>
-    <input matInput [(ngModel)]="itensOS.prod.codProduto">
+    <mat-label>ID</mat-label>
+    <input matInput [(ngModel)]="itensOS.idItensDaOS">
   </mat-form-field>
 
-
-  <h1>Descrição do item</h1>
+  <!-- Campo Autocomplete -->
   <mat-form-field class="example-full-width" *ngIf="produtoFiltered.length">
-    <mat-label>Adicione o Item</mat-label>
-    <input type="text"
-           placeholder="Digite o item"
-           matInput
-           [formControl]="produtoControl"
-           [matAutocomplete]="auto"
-           (keyup)="changeProduto(produtoControl.value)"/>
-    <mat-error>Campo Obrigatório não preenchido.</mat-error>
+    <mat-label>Produto</mat-label>
+    <input
+      type="text"
+      matInput
+      placeholder="Digite o nome do produto"
+      [formControl]="produtoControl"
+      [matAutocomplete]="auto"
+      (keyup)="changeProduto(produtoControl.value)"
+    />
+    <mat-error>Campo obrigatório.</mat-error>
+
     <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayPd">
-      <mat-option [value]="produto" *ngFor="let produto of produtoFiltered " >{{displayPd(produto)}}</mat-option>
-      </mat-autocomplete>
+      <mat-option
+        *ngFor="let produto of produtoFiltered"
+        [value]="produto"
+      >
+        {{ produto.nomeProduto }}
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Código do Produto</mat-label>
+    <input matInput [value]="itensOS.prod?.codProduto" disabled>
   </mat-form-field>
 
   <mat-form-field appearance="fill">
@@ -41,23 +47,24 @@
     <input matInput [(ngModel)]="itensOS.descricao">
   </mat-form-field>
 
-    <mat-form-field appearance="fill">
-      <mat-label>Preço de Compra</mat-label>
-      <input matInput  [value]="formatter(itensOS.precoDeVenda)" >
-    </mat-form-field>
-
   <mat-form-field appearance="fill">
-    <mat-label>Quantidade </mat-label>
-    <input matInput type="number" matInput [(ngModel)]="itensOS.quantidade">
+    <mat-label>Preço de Venda</mat-label>
+    <input matInput [value]="formatter(itensOS.prod.valorVenda || 0)" disabled>
   </mat-form-field>
 
+  <!-- Campo Quantidade com validação -->
+  <mat-form-field appearance="fill">
+    <mat-label>Quantidade</mat-label>
+    <input matInput type="number" [(ngModel)]="itensOS.quantidade" [formControl]="quantidadeControl">
+    <mat-error *ngIf="quantidadeControl.hasError('required')">Campo obrigatório.</mat-error>
+    <mat-error *ngIf="quantidadeControl.hasError('min')">A quantidade mínima é 1.</mat-error>
+  </mat-form-field>
 
-<span>
-
-  <button mat-button *ngIf="isChange" [mat-dialog-close]="itensOS" cdkFocusInitial >Edit</button>
-  <button mat-button *ngIf="!isChange" [mat-dialog-close]="itensOS" cdkFocusInitial (click)="save()" >salvar</button>
-  <button mat-raised-button (click)="onCancel()">Cancel</button>
- </span>
-
+  <span>
+    <button mat-button *ngIf="isChange" [mat-dialog-close]="itensOS" cdkFocusInitial>Editar</button>
+    <button mat-button *ngIf="!isChange" [mat-dialog-close]="itensOS" cdkFocusInitial (click)="save()"
+            [disabled]="isSaveButtonDisabled()">Salvar</button>
+    <button mat-raised-button (click)="onCancel()">Cancelar</button>
+  </span>
 
 </div>

@@ -291,7 +291,7 @@ export class OrdemDeServiceComponent {
         precoDeVenda: '',
         quantidade: '',
       } : {
-        cod0S: eventOS.cod0S,
+        cod0S: eventOS.codOS,
         descricao: eventOS.descricao,
         precoDeVenda: eventOS.precoDeVenda,
         quantidade: eventOS.quantidade,

@@ -5,7 +5,7 @@ import {iServiceOrder} from "./service-order";
 export interface iItensOS {
 
   idItensDaOS?: number;
-  cod0S: iServiceOrder;
+  codOS: iServiceOrder;
   prod: iProduto;
   descricao: string;
   precoDeVenda: number;

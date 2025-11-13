@@ -4,9 +4,8 @@ package com.biontecapi.controller;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import jakarta.inject.Inject;
 
-import com.biontecapi.dtos.ItenDaOSDto;
+import com.biontecapi.dtos.ItensDoServicoDTO;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -71,7 +70,7 @@ public class OrdemDeServicoController {
     }
 
     @PostMapping("/{idOS}/items")
-    public ResponseEntity<OrdemDeServico> adicionarItem(@PathVariable Long idOS, @RequestBody ItenDaOSDto itemDto) {
+    public ResponseEntity<OrdemDeServico> adicionarItem(@PathVariable Long idOS, @RequestBody ItensDoServicoDTO itemDto) {
         return ResponseEntity.ok(service.addItemNaOS(idOS, itemDto));
     }
 

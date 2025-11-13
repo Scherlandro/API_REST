@@ -1,13 +1,12 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
+import { FormControl, Validators } from '@angular/forms';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { catchError, of } from 'rxjs';
 import { ItensVdService } from 'src/app/services/itens-vd.service';
-import {iProduto} from "../../../interfaces/product";
-import {FormControl, Validators} from "@angular/forms";
-import {catchError} from "rxjs/operators";
-import {Observable, of,pipe} from "rxjs";
-import {ProductService} from "../../../services/product.service";
-import {iItensOS} from "../../../interfaces/itens-os";
 import {ItensOsService} from "../../../services/itens-os.service";
+import {ProductService} from "../../../services/product.service";
+import {iProduto} from "../../../interfaces/product";
+import {iItensOS} from "../../../interfaces/itens-os";
 
 @Component({
   selector: 'app-dialog-editor-itens-os',
@@ -16,75 +15,76 @@ import {ItensOsService} from "../../../services/itens-os.service";
 })
 export class DialogItensOSComponent implements OnInit {
   isChange!: boolean;
-  produtoFiltered: iProduto[]=[];
-  products: iProduto[]=[];
+  produtoFiltered: iProduto[] = [];
+  products: iProduto[] = [];
   produtoControl: FormControl;
-
+  quantidadeControl: FormControl;
 
   constructor(
     @Inject(MAT_DIALOG_DATA)
     public itensOS: iItensOS,
     public dialogRef: MatDialogRef<DialogItensOSComponent>,
-    public itensOsService:ItensOsService,
-    public itensVdService: ItensVdService,
-    private prodService: ProductService,
+    private itensOsService: ItensOsService,
+    private itensVdService: ItensVdService,
+    private prodService: ProductService
   ) {
-    this.produtoControl = new FormControl(null, [Validators.required])
+    this.produtoControl = new FormControl(null, [Validators.required]);
+    this.quantidadeControl = new FormControl(null, [Validators.required, Validators.min(1)]); // Validação para quantidade
   }
 
 
   ngOnInit(): void {
-    if(!this.itensOS){
-      this.itensOS = {} as iItensOS;
-    }
-    if(this.itensOS.prod){
-      this.itensOS.prod = {} as iProduto;
-    }
+    // Garante que o objeto e subobjetos estejam inicializados
+    if (!this.itensOS) this.itensOS = {} as iItensOS;
+    if (!this.itensOS.prod) this.itensOS.prod = {} as iProduto;
+
     this.listarProdutos();
+
     this.isChange = !!this.itensOS.prod.idProduto;
-   // if (this.produto.idProduto != null) {
-   /* if (this.itensOS.prod.idProduto != null) {
-      this.isChange = true;
-    } else {
-      this.isChange = false;
-    }*/
+
+    if (this.itensOS.prod && this.itensOS.prod.nomeProduto) {
+      this.produtoControl.setValue(this.itensOS.prod);
+    }
+
+    this.produtoControl.valueChanges.subscribe((produto: iProduto | string | null) => {
+      if (produto && typeof produto !== 'string') {
+        this.itensOS.prod = produto;
+      }
+    });
   }
 
   listarProdutos() {
     this.prodService.getTodosProdutos()
-      .pipe(catchError(error => {
-        this.onError('Erro ao buscar produto.')
-        return of([])
-      }))
-      .subscribe((rest: iProduto[]) => {
-        console.log("Lista de prod",  this.produtoFiltered.forEach(()=> rest))
-        this.products = rest;
-        this.produtoFiltered= rest;
-
+      .pipe(
+        catchError(error => {
+          this.onError('Erro ao buscar produtos.');
+          console.error(error);
+          return of([]);
+        })
+      )
+      .subscribe((res: iProduto[]) => {
+        this.products = res;
+        this.produtoFiltered = res;
       });
   }
-/*
-
-  listarProdutosString() {
-    this.prodService.getAll()
-      .pipe(catchError(error => {
-        this.onError('Erro ao buscar produto.')
-        return of([])
-      }))
-      .subscribe((rest: any[]) => {
-        this.products = rest ;
-        this.produtoFiltered = rest;
-      });
-  }
-*/
 
 
-    displayPd(produto: iProduto): string {
+  displayPd(produto: iProduto): string {
     return produto ? produto.nomeProduto : '';
   }
 
+  changeProduto(value: string): void {
+    if (value) {
+      const val = value.toUpperCase();
+      this.produtoFiltered = this.products.filter(
+        p => p.nomeProduto.toUpperCase().includes(val)
+      );
+    } else {
+      this.produtoFiltered = this.products;
+    }
+  }
 
-  onError(message: string) {
+  onError(message: string): void {
     console.error(message);
   }
 
@@ -92,23 +92,21 @@ export class DialogItensOSComponent implements OnInit {
     this.dialogRef.close();
   }
 
-  save():void{
-    this.itensOsService.adicionarItem(this.itensOS);
+  save(): void {
+    if (this.produtoControl.valid && this.quantidadeControl.valid) {
+      this.itensOsService.adicionarItem(this.itensOS);
+    }
   }
 
   formatter(value: number): string {
-    return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
+    return new Intl.NumberFormat('pt-BR', {
+      style: 'currency', currency: 'BRL' }).format(value);
   }
 
-
-  changeProduto(value: any) {
-    if (value) {
-      this.produtoFiltered = this.products.filter(
-        produto => produto.nomeProduto.toUpperCase()
-          .includes(value.toUpperCase()));
-    } else {
-      this.produtoFiltered = this.products;
-    }
+  // Método que valida se o botão "Salvar" deve ser habilitado
+  isSaveButtonDisabled(): boolean {
+    return !(this.produtoControl.valid && this.quantidadeControl.valid);
   }
+
 }
 

@@ -2,7 +2,7 @@ package com.biontecapi.serviceImpl;
 
 
 import com.biontecapi.Enum.Status;
-import com.biontecapi.dtos.ItenDaOSDto;
+import com.biontecapi.dtos.ItensDoServicoDTO;
 import com.biontecapi.dtos.OrdemDeServicoDTO;
 import com.biontecapi.model.ItensDoServico;
 import com.biontecapi.model.OrdemDeServico;
@@ -107,7 +107,7 @@ public class OrdemDeServicoServiceImpl implements OrdemDeServicoService {
     }
 
     @Override
-    public OrdemDeServico addItemNaOS(Long osID, ItenDaOSDto itemDto) {
+    public OrdemDeServico addItemNaOS(Long osID, ItensDoServicoDTO itemDto) {
         OrdemDeServico order = osRepository.findById(osID).orElseThrow();
 
 
@@ -122,7 +122,7 @@ public class OrdemDeServicoServiceImpl implements OrdemDeServicoService {
         //newItem.setprodutoId(itemDto.produtoId());
         newItem.setIdItensDaOS(itemDto.idItensDaOS());
         newItem.setQuantidade(itemDto.quantidade());
-        newItem.setPrecoDeVenda(itemDto.precoDeVenda());
+        newItem.setValorUnitario(itemDto.precoDeVenda());
 
         //order.getSubservicos().add(newItem);
         itensDaOSRepository.save(newItem);
