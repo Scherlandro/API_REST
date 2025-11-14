@@ -9,23 +9,20 @@ import java.util.Optional;
 
 public interface ItensOSService {
 
-     ItensDoServico save(ItensDoServico ItensDoServico);
+    ItensDoServico saveOS(ItensDoServico ItensDoServico);
 
-     List<ItensDoServico> findAll();
+    List<ItensDoServico> findAll();
 
-     Optional<ItensDoServico> findById(Integer id);
+    Optional<ItensDoServico> findById(Integer id);
 
-     List<ItensDoServicoDTO> listarItensDaVdPorId(Integer id);
+    List<ItensDoServicoDTO> listarItensOSPorIdProduto(Integer id);
 
+    List<ItensDoServicoDTO> ConsultarItensOSEntreDatas(String dtIni, String dtFinal);
 
-     List<ItensDoServicoDTO> listarItensVdPorIdProduto(Integer id) ;
-     List<ItensDoServicoDTO> ConsultarItensVdEntreDatas(String dtIni, String dtFinal);
-
-   List<ItensDoServicoDTO> litarItemDaVendaPorData(String dt) ;
+    List<ItensDoServicoDTO> litarItensOSPorData(String dt);
 
 
-    List<ItensDoServicoDTO> litarItemDaVendaPorCliente(String nome)
-
+    List<ItensDoServicoDTO> litarItemOSPorCliente(String nome);
 
 
 }

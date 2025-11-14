@@ -2,6 +2,7 @@ package com.biontecapi.serviceImpl;
 
 import com.biontecapi.dtos.ItensDoServicoDTO;
 import com.biontecapi.model.ItensDoServico;
+import com.biontecapi.repository.ItensDaOSRepository;
 import com.biontecapi.service.ItensOSService;
 
 import javax.transaction.Transactional;
@@ -11,10 +12,10 @@ import java.util.Optional;
 public class ItensOSServiceImpl implements ItensOSService {
 
 
-    final ItensDoServicoRepository ItensDoServicoRepository;
+    final ItensDaOSRepository itensDaOSRepository;
 
-    public ItensOSServiceImpl(ItensDoServicoRepository repository) {
-        this.ItensDoServicoRepository = repository;
+    public ItensOSServiceImpl(ItensDaOSRepository repository) {
+        this.itensDaOSRepository = repository;
     }
 
 /*   public boolean existsIten(String item) { return ItensDoServicoRepository.existsItem(item);    }
@@ -22,41 +23,40 @@ public class ItensOSServiceImpl implements ItensOSService {
     */
 
     @Transactional
-    public ItensDoServico save(ItensDoServico ItensDoServico) {
-        return ItensDoServicoRepository.save(ItensDoServico);
+    public ItensDoServico saveOS(ItensDoServico ItensDoServico) {
+        return itensDaOSRepository.save(ItensDoServico);
     }
 
     @Override
     public List<ItensDoServico> findAll() {
-        return ItensDoServicoRepository.findAll();
+
+        return itensDaOSRepository.findAll();
     }
 
     @Override
-    public Optional<ItensDoServico> findById(Integer id) {
-        return ItensDoServicoRepository.findById(id);
+    public Optional<ItensDoServico> findById(Long id) {
+
+        return itensDaOSRepository.findById(id);
     }
 
     @Override
-    public List<ItensDoServicoDTO> listarItensDaVdPorId(Integer id){
-        return ItensDoServicoRepository.findItensVdById(id);
+    public List<ItensDoServicoDTO> listarItensOSPorIdProduto(Integer id) {
+        return itensDaOSRepository.findItensOSByIdProduct(id); }
+
+
+    @Override
+    public List<ItensDoServicoDTO> litarItensOSPorData(String dt) {
+        return itensDaOSRepository.litarItensOSPorData(dt);
     }
 
     @Override
-    public List<ItensDoServicoDTO> listarItensVdPorIdProduto(Integer id) { return ItensDoServicoRepository.findItensVdByIdProduct(id); }
-
-    @Override
-    public List<ItensDoServicoDTO> ConsultarItensVdEntreDatas(String dtIni, String dtFinal) {
-        return ItensDoServicoRepository.litarItemDaVendaEntreData(dtIni, dtFinal);
+    public List<ItensDoServicoDTO> ConsultarItensOSEntreDatas(String dtIni, String dtFinal) {
+        return itensDaOSRepository.litarItensOSEntreData(dtIni, dtFinal);
     }
 
     @Override
-    public List<ItensDoServicoDTO> litarItemDaVendaPorData(String dt) {
-        return ItensDoServicoRepository.litarItemDaVendaPorData(dt);
-    }
-
-    @Override
-    public List<ItensDoServicoDTO> litarItemDaVendaPorCliente(String nome) {
-        return ItensDoServicoRepository.litarItemDaVendaPorCliente(nome);
+    public List<ItensDoServicoDTO> litarItemOSPorCliente(String nome) {
+        return itensDaOSRepository.litarItensOSporCliente(nome);
     }
 
 
