@@ -1,3 +1,4 @@
+import {animate, state, style, transition, trigger} from "@angular/animations";
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {FormArray, FormBuilder, FormControl, FormGroup, NgForm, Validators} from "@angular/forms";
 import {catchError, delay} from "rxjs/operators";
@@ -5,7 +6,6 @@ import {Observable, of} from "rxjs";
 import {MatTable, MatTableDataSource} from "@angular/material/table";
 import {MatPaginator, PageEvent} from "@angular/material/paginator";
 import {MatSort} from "@angular/material/sort";
-import {animate, state, style, transition, trigger} from "@angular/animations";
 import {MatDialog} from "@angular/material/dialog";
 import {OrdemDeServicosService} from "../../services/ordem-de-servicos.service";
 import {iServiceOrder} from "../../interfaces/service-order";
@@ -21,15 +21,21 @@ import {DialogItensOSComponent} from "../../shared/diolog_components/dialog-iten
 import {TokenService} from "../../services/token.service";
 import {NotificationMgsService} from "../../services/notification-mgs.service";
 import {iItensVd} from "../../interfaces/itens-vd";
-import {iProduto} from "../../interfaces/product";
 
 
 @Component({
   selector: 'app-list-ordem-de-service',
   templateUrl: './ordem-de-service.component.html',
-  styleUrls: ['./ordem-de-service.component.css']
+  styleUrls: ['./ordem-de-service.component.css'],
+  animations: [
+    trigger('detailExpand', [
+      state('collapsed', style({height: '0px', minHeight: '0'})),
+      state('expanded', style({height: '*'})),
+      transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+    ]),
+  ],
 })
-export class OrdemDeServiceComponent {
+export class OrdemDeServiceComponent implements OnInit{
 
   @ViewChild(MatTable) tableOS!: MatTable<any>;
   @ViewChild(MatTable) tableItensOS!: MatTable<any>;
