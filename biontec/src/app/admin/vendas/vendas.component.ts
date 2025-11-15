@@ -89,6 +89,7 @@ export class VendaComponent implements OnInit {
   }
 
   toggleRow(element: any) {
+    console.log('ID da Venda selecionada ==> ', element.idVenda);
     // Fechar todas as outras linhas expandidas
     this.tbSourceVd$.data.forEach((item:any) => {
       if (item !== element && item.isExpanded) {

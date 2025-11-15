@@ -21,6 +21,7 @@ import {DialogItensOSComponent} from "../../shared/diolog_components/dialog-iten
 import {TokenService} from "../../services/token.service";
 import {NotificationMgsService} from "../../services/notification-mgs.service";
 import {iItensVd} from "../../interfaces/itens-vd";
+import {iProduto} from "../../interfaces/product";
 
 
 @Component({
@@ -181,7 +182,7 @@ export class OrdemDeServiceComponent implements OnInit{
   }
 
   toggleRow(element: any) {
-    console.log('ID da O.S selecionada ==> ', element.idOS.toString());
+    console.log('ID da O.S selecionada ==> ', element.id_os);
     this.tbSourceOS$.data.forEach((item:any) => {
       if (item !== element && item.isExpanded) {
         item.isExpanded = false;
@@ -286,22 +287,22 @@ export class OrdemDeServiceComponent implements OnInit{
 
   }
 
-  openDilogItenOS(eventOS: iItensOS) {
-     console.log("Dados do elementoDialog", eventOS.codOS)
+  openDilogItenOS(eventOS: any) {
+     console.log("Dados do elementoDialog", eventOS.id_os)
     const dialogRef = this.dialog.open(DialogItensOSComponent, {
       width: '300px',
       data: eventOS === null ? {
-        cod0S: null,
+        codOS: null,
         idItensDaOS: null,
         descricao: '',
         precoDeVenda: '',
         quantidade: '',
       } : {
-        cod0S: eventOS.codOS,
+        codOS: eventOS.id_os,
         descricao: eventOS.descricao,
         precoDeVenda: eventOS.precoDeVenda,
         quantidade: eventOS.quantidade,
-
+        total: eventOS.total
       }
     });
 

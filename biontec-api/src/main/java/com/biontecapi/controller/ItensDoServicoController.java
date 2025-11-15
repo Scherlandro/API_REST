@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/itensDaOS")
 public class ItensDoServicoController {
@@ -42,9 +42,7 @@ public class ItensDoServicoController {
     @GetMapping(path = "/all")
     public ResponseEntity<List<ItensDoServicoDTO>> listarItensDoServico() {
         List<ItensDoServico> list = itensOSService.findAll();
-        return ResponseEntity.ok(list.stream().map(
-                e -> mapper.map(e, ItensDoServicoDTO.class))
-                .collect(Collectors.toList()));
+        return ResponseEntity.ok(list.stream().map(ItensDoServico:: toDTO).toList());
     }
 
     @GetMapping(value = "/buscarPorCliente")

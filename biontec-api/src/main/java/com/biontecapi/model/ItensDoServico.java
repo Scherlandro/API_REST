@@ -1,5 +1,6 @@
 package com.biontecapi.model;
 
+import com.biontecapi.dtos.ItensDoServicoDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -39,6 +40,10 @@ import javax.persistence.*;
         @JoinColumn(name = "ordem_de_servico_id")
         private OrdemDeServico ordemDeServico;
 
+        public ItensDoServicoDTO toDTO(){
+            return new ItensDoServicoDTO(idItensDaOS,codOS,prod,
+                    codProduto,descricao,valorUnitario,quantidade,total);
+        }
 
 
     }
