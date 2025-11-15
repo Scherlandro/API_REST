@@ -15,20 +15,20 @@ import javax.persistence.*;
     public class ItensDoServico {
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
-        @Column(name = "id-itens-os")
+        @Column(name = "id_itens_os")
         private Long idItensDaOS;
 
         @ManyToOne
         @Transient
         private Produto prod;
 
-        @Column(name = "cod-os", length = 20)
+        @Column(name = "cod_os", length = 20)
         private String codOS;
         @Column(name = "cod_produtos",length = 20)
         private String codProduto;
         @Column(length = 60)
         private String descricao;
-        @Column(name = "valor-unitario",length = 20)
+        @Column(name = "valor_unitario",length = 20)
         private Double valorUnitario;
         @Column(name = "qtd", length = 5)
         private Integer quantidade;

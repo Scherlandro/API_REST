@@ -1,6 +1,5 @@
 package com.biontecapi.model;
 
-
 import com.biontecapi.Enum.Status;
 import com.biontecapi.dtos.OrdemDeServicoDTO;
 import lombok.AllArgsConstructor;
@@ -13,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "ordemDeServico")
+@Table(name = "ordem_de_servico")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
