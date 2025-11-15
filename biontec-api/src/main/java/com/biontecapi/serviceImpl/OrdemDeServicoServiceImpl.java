@@ -117,15 +117,15 @@ public class OrdemDeServicoServiceImpl implements OrdemDeServicoService {
             osRepository.findById(osID).orElseThrow();
         }
 
-        ItensDoServico newItem = new ItensDoServico();
-        // newItem.setOSId(serviceOrderId);
-        //newItem.setprodutoId(itemDto.produtoId());
+      /*  ItensDoServico newItem = new ItensDoServico();
+        newItem.setCodOS(String.valueOf(order.getId_os()));
+        newItem.setCodProduto(itemDto.codProduto());
         newItem.setIdItensDaOS(itemDto.idItensDaOS());
         newItem.setQuantidade(itemDto.quantidade());
-        newItem.setValorUnitario(itemDto.precoDeVenda());
+        newItem.setValorUnitario(itemDto.valorUnitario());
 
         //order.getSubservicos().add(newItem);
-        itensDaOSRepository.save(newItem);
+        itensDaOSRepository.save(newItem);*/
 
         // Recalcular total da OS
         calcularTotalDaOS(order);

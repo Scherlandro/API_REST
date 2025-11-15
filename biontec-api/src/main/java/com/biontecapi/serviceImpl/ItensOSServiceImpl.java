@@ -4,11 +4,14 @@ import com.biontecapi.dtos.ItensDoServicoDTO;
 import com.biontecapi.model.ItensDoServico;
 import com.biontecapi.repository.ItensDaOSRepository;
 import com.biontecapi.service.ItensOSService;
+import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
+@Service
+@Transactional
 public class ItensOSServiceImpl implements ItensOSService {
 
 
@@ -18,24 +21,18 @@ public class ItensOSServiceImpl implements ItensOSService {
         this.itensDaOSRepository = repository;
     }
 
-/*   public boolean existsIten(String item) { return ItensDoServicoRepository.existsItem(item);    }
-    public boolean existsByDisponibilidade(Boolean disponibilidade) { return ItensDoServicoRepository.existsByDisponibilidade(disponibilidade); }
-    */
-
-    @Transactional
+    @Override
     public ItensDoServico saveOS(ItensDoServico ItensDoServico) {
         return itensDaOSRepository.save(ItensDoServico);
     }
 
     @Override
     public List<ItensDoServico> findAll() {
-
         return itensDaOSRepository.findAll();
     }
 
     @Override
     public Optional<ItensDoServico> findById(Long id) {
-
         return itensDaOSRepository.findById(id);
     }
 
@@ -59,6 +56,8 @@ public class ItensOSServiceImpl implements ItensOSService {
         return itensDaOSRepository.litarItensOSporCliente(nome);
     }
 
-
+/*   public boolean existsIten(String item) { return ItensDoServicoRepository.existsItem(item);    }
+    public boolean existsByDisponibilidade(Boolean disponibilidade) { return ItensDoServicoRepository.existsByDisponibilidade(disponibilidade); }
+    */
 
 }

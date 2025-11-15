@@ -5,20 +5,38 @@ import com.biontecapi.model.ItensDoServico;
 import com.biontecapi.service.ItensOSService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
+
+@RestController
+@RequestMapping("/api/itensDaOS")
 public class ItensDoServicoController {
 
 
-    @Autowired
-    private ItensOSService itensOSService;
+    private final ItensOSService itensOSService;
+
     @Autowired
     private ModelMapper mapper;
+
+    public ItensDoServicoController(ItensOSService itensOSService){
+        this.itensOSService = itensOSService;
+    }
+
+     @PostMapping(path = "/salvar")
+        @ResponseStatus(HttpStatus.CREATED)
+        public ResponseEntity salvar(@RequestBody ItensDoServicoDTO itensDto) {
+         itensOSService.saveOS(mapper.map(itensDto, ItensDoServico.class));
+            Optional<ItensDoServico> itensOptional = itensOSService.findById(itensDto.idItensDaOS());
+            return ResponseEntity.ok(itensOptional.map(
+                    e-> mapper.map(e, ItensDoServicoDTO.class)).map( r->ResponseEntity.ok().body(r))
+                    .orElse(ResponseEntity.notFound().build()));
+        }
 
 
     @GetMapping(path = "/all")
@@ -31,7 +49,7 @@ public class ItensDoServicoController {
 
     @GetMapping(value = "/buscarPorCliente")
     public ResponseEntity<List<ItensDoServicoDTO>> ConsultarItensVdPorCliente(@RequestParam(name = "nome") String nome) {
-        List<ItensDoServicoDTO> list = itensOSService.litarItemDoServicoPorCliente(nome);
+        List<ItensDoServicoDTO> list = itensOSService.litarItemOSPorCliente(nome);
         return ResponseEntity.ok(list.stream().map(
                 e -> mapper.map(e, ItensDoServicoDTO.class))
                 .collect(Collectors.toList()));
@@ -47,7 +65,7 @@ public class ItensDoServicoController {
 
     @GetMapping(value = "/buscarPorIdOS")
     public ResponseEntity<List<ItensDoServicoDTO>> ConsultarItensVdPorIdVd(@RequestParam(value = "id") Integer id) {
-        List<ItensDoServicoDTO> list = itensOSService.listarItensDoServicoPorId(id);
+        List<ItensDoServicoDTO> list = itensOSService.listarItensOSPorIdProduto(id);
         return ResponseEntity.ok(list.stream().map(
                 e -> mapper.map(e, ItensDoServicoDTO.class))
                 .collect(Collectors.toList()));
@@ -55,7 +73,7 @@ public class ItensDoServicoController {
 
     @GetMapping(value = "/buscarPorData")
     public ResponseEntity<List<ItensDoServicoDTO>> ConsultarItensVdPorData(@RequestParam(name = "data") String data) {
-        List<ItensDoServicoDTO> list = itensOSService.litarItemDoServicoPorData(data);
+        List<ItensDoServicoDTO> list = itensOSService.litarItensOSPorData(data);
         return ResponseEntity.ok(list.stream().map(
                 e -> mapper.map(e, ItensDoServicoDTO.class))
                 .collect(Collectors.toList()));
