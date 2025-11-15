@@ -5,9 +5,9 @@ import {NgForm} from "@angular/forms";
 import {ConsultaCepService} from "../../../services/consulta-cep.service";
 
 @Component({
-  selector: 'app-dialog-editor',
-  templateUrl: './dialog-cliente.component.html',
-  styleUrls: ['./dialog-cliente.component.css']
+  selector: 'app-dialog-funcionario-editor',
+  templateUrl: './dialog-funcionario.component.html',
+  styleUrls: ['./dialog-funcionario.component.css']
 })
 export class DialogFuncionarioComponent implements OnInit {
  element!: ICliente;

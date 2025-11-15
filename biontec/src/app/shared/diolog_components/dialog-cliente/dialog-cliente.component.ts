@@ -5,7 +5,7 @@ import {NgForm} from "@angular/forms";
 import {ConsultaCepService} from "../../../services/consulta-cep.service";
 
 @Component({
-  selector: 'app-dialog-editor',
+  selector: 'app-dialog-cliente-editor',
   templateUrl: './dialog-cliente.component.html',
   styleUrls: ['./dialog-cliente.component.css']
 })

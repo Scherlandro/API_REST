@@ -281,7 +281,7 @@ export class OrdemDeServiceComponent {
   }
 
   openDilogItenOS(eventOS: iItensOS) {
-    console.log("Dados do elementoDialog", eventOS)
+     console.log("Dados do elementoDialog", eventOS.codOS)
     const dialogRef = this.dialog.open(DialogItensOSComponent, {
       width: '300px',
       data: eventOS === null ? {
