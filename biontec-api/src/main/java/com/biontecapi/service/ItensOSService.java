@@ -9,7 +9,9 @@ import java.util.Optional;
 
 public interface ItensOSService {
 
-    ItensDoServico saveOS(ItensDoServico ItensDoServico);
+    ItensDoServico saveItemOS(ItensDoServico ItensDoServico);
+
+    ItensDoServico updateItemOS(ItensDoServico ItensDoServico);
 
     List<ItensDoServico> findAll();
 
@@ -25,4 +27,5 @@ public interface ItensOSService {
     List<ItensDoServicoDTO> litarItemOSPorCliente(String nome);
 
 
+    boolean existsById(Long idItensDaOS);
 }

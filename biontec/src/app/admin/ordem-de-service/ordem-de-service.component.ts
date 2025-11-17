@@ -182,7 +182,7 @@ export class OrdemDeServiceComponent implements OnInit{
   }
 
   toggleRow(element: any) {
-    console.log('ID da O.S selecionada ==> ', element.id_os);
+    console.log('ID da O.S selecionada ==> ', element );
     this.tbSourceOS$.data.forEach((item:any) => {
       if (item !== element && item.isExpanded) {
         item.isExpanded = false;
@@ -193,12 +193,12 @@ export class OrdemDeServiceComponent implements OnInit{
     // Se a linha foi expandida, carregar os dados
     if (element.isExpanded) {
       var soma = 0;
-      for (var i = 0; i < element.itensVd.length; i++) {
-        soma += element.itensVd.map((p: iItensVd) => p.valorParcial)[i];
+      for (var i = 0; i < element.itensDoServicos.length; i++) {
+        soma += element.itensDoServicos.map((p: iItensVd) => p.valorParcial)[i];
       }
       element.totalgeral = soma;
       element.totalgeral = this.formatarReal(soma);
-      this.tbSourceItensDaOS$.data = element.itensVd.map((item: iItensVd) => ({
+      this.tbSourceItensDaOS$.data = element.itensDoServicos.map((item: iItensVd) => ({
         ...item,
         // Formata os valores individuais
         valVenda: this.formatarReal(item.valVenda),

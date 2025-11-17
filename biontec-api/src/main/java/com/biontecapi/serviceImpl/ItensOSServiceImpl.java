@@ -22,8 +22,13 @@ public class ItensOSServiceImpl implements ItensOSService {
     }
 
     @Override
-    public ItensDoServico saveOS(ItensDoServico ItensDoServico) {
-        return itensDaOSRepository.save(ItensDoServico);
+    public ItensDoServico saveItemOS(ItensDoServico itensDoServico) {
+        return itensDaOSRepository.save(itensDoServico);
+    }
+
+    @Override
+    public ItensDoServico updateItemOS(ItensDoServico itensDoServico) {
+        return itensDaOSRepository.save(itensDoServico);
     }
 
     @Override
@@ -56,8 +61,9 @@ public class ItensOSServiceImpl implements ItensOSService {
         return itensDaOSRepository.litarItensOSporCliente(nome);
     }
 
-/*   public boolean existsIten(String item) { return ItensDoServicoRepository.existsItem(item);    }
-    public boolean existsByDisponibilidade(Boolean disponibilidade) { return ItensDoServicoRepository.existsByDisponibilidade(disponibilidade); }
-    */
+    @Override
+    public boolean existsById(Long id) {
+        return itensDaOSRepository.existsById(id);
+    }
 
 }

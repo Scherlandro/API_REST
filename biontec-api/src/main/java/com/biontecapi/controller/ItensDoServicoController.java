@@ -10,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "*")
@@ -29,15 +28,19 @@ public class ItensDoServicoController {
     }
 
      @PostMapping(path = "/salvar")
-        @ResponseStatus(HttpStatus.CREATED)
+       /* @ResponseStatus(HttpStatus.CREATED)*/
         public ResponseEntity salvar(@RequestBody ItensDoServicoDTO itensDto) {
-         itensOSService.saveOS(mapper.map(itensDto, ItensDoServico.class));
-            Optional<ItensDoServico> itensOptional = itensOSService.findById(itensDto.idItensDaOS());
-            return ResponseEntity.ok(itensOptional.map(
-                    e-> mapper.map(e, ItensDoServicoDTO.class)).map( r->ResponseEntity.ok().body(r))
-                    .orElse(ResponseEntity.notFound().build()));
+                return ResponseEntity.status(HttpStatus.CREATED)
+                 .body(itensOSService.saveItemOS( mapper.map(itensDto, ItensDoServico.class))) ;
         }
-
+    @PutMapping("/{idItensDaOS}")
+    public ResponseEntity<ItensDoServico> atualizarOS(@PathVariable Long idItensDaOS, @RequestBody ItensDoServicoDTO itensDto) {
+             if (!itensOSService.existsById(idItensDaOS)) {
+                     return ResponseEntity.notFound().build();
+                  }
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(itensOSService.updateItemOS( mapper.map(itensDto, ItensDoServico.class))) ;
+    }
 
     @GetMapping(path = "/all")
     public ResponseEntity<List<ItensDoServicoDTO>> listarItensDoServico() {

@@ -64,6 +64,7 @@
     <button mat-button *ngIf="isChange" [mat-dialog-close]="itensOS" cdkFocusInitial>Editar</button>
     <button mat-button *ngIf="!isChange" [mat-dialog-close]="itensOS" cdkFocusInitial (click)="save()"
             [disabled]="isSaveButtonDisabled()">Salvar</button>
+
     <button mat-raised-button (click)="onCancel()">Cancelar</button>
   </span>
 
