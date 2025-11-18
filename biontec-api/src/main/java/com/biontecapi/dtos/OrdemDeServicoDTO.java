@@ -30,7 +30,7 @@ public record OrdemDeServicoDTO(
 
         Funcionario gestorId,
         Funcionario tecnicoEncarregadoId,
-        List<ItensDoServico> itensDoServicos
+        List<ItensDoServico> itensDoServico
 ) {
 
 }

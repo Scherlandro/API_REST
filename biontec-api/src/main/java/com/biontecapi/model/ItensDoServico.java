@@ -19,31 +19,39 @@ import javax.persistence.*;
         @Column(name = "id_itens_os")
         private Long idItensDaOS;
 
-        @ManyToOne
-        @Transient
-        private Produto prod;
+        @ManyToOne(fetch = FetchType.LAZY)
+        @JoinColumn(name = "cod_os")
+        private OrdemDeServico ordemDeServico;
 
-        @Column(name = "cod_os", length = 20)
-        private String codOS;
-        @Column(name = "cod_produtos",length = 20)
+        @Column(name = "cod_produtos", length = 20)
         private String codProduto;
+
         @Column(length = 60)
         private String descricao;
-        @Column(name = "valor_unitario",length = 20)
+
+        @Column(name = "valor_unitario", length = 20)
         private Double valorUnitario;
+
         @Column(name = "qtd", length = 5)
         private Integer quantidade;
+
         @Column(name = "total", length = 15)
         private Double total;
 
-        @ManyToOne
-        @JoinColumn(name = "ordem_de_servico_id")
-        private OrdemDeServico ordemDeServico;
+        // Método para calcular o total automaticamente
+       /* @PrePersist
+        @PreUpdate
+        public void calcularTotal() {
+            if (valorUnitario != null && quantidade != null) {
+                this.total = valorUnitario * quantidade;
+            }
+        }*/
 
-        public ItensDoServicoDTO toDTO(){
-            return new ItensDoServicoDTO(idItensDaOS,codOS,prod,
-                    codProduto,descricao,valorUnitario,quantidade,total);
+        public ItensDoServicoDTO toDTO() {
+            return new ItensDoServicoDTO(
+                    idItensDaOS,
+                    ordemDeServico != null ? ordemDeServico.getIdOs() : null, // Usa o ID da OS via relacionamento
+                    codProduto, descricao, valorUnitario, quantidade, total
+            );
         }
-
-
     }

@@ -22,6 +22,12 @@ public class ItensOSServiceImpl implements ItensOSService {
     }
 
     @Override
+    public boolean existsById(Long id) {
+        return itensDaOSRepository.existsById(id);
+    }
+
+
+    @Override
     public ItensDoServico saveItemOS(ItensDoServico itensDoServico) {
         return itensDaOSRepository.save(itensDoServico);
     }
@@ -59,11 +65,6 @@ public class ItensOSServiceImpl implements ItensOSService {
     @Override
     public List<ItensDoServicoDTO> litarItemOSPorCliente(String nome) {
         return itensDaOSRepository.litarItensOSporCliente(nome);
-    }
-
-    @Override
-    public boolean existsById(Long id) {
-        return itensDaOSRepository.existsById(id);
     }
 
 }

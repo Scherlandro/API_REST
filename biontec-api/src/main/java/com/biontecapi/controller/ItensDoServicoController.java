@@ -27,20 +27,34 @@ public class ItensDoServicoController {
         this.itensOSService = itensOSService;
     }
 
-     @PostMapping(path = "/salvar")
-       /* @ResponseStatus(HttpStatus.CREATED)*/
-        public ResponseEntity salvar(@RequestBody ItensDoServicoDTO itensDto) {
-                return ResponseEntity.status(HttpStatus.CREATED)
-                 .body(itensOSService.saveItemOS( mapper.map(itensDto, ItensDoServico.class))) ;
-        }
-    @PutMapping("/{idItensDaOS}")
+    @PostMapping("/salvar")
+    public ResponseEntity<?> salvar(@RequestBody ItensDoServicoDTO dto) {
+
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(itensOSService.saveItemOS(mapper.map(dto, ItensDoServico.class)));
+    }
+
+ /*   @PutMapping("/{idItensDaOS}")
     public ResponseEntity<ItensDoServico> atualizarOS(@PathVariable Long idItensDaOS, @RequestBody ItensDoServicoDTO itensDto) {
              if (!itensOSService.existsById(idItensDaOS)) {
                      return ResponseEntity.notFound().build();
                   }
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(itensOSService.updateItemOS( mapper.map(itensDto, ItensDoServico.class))) ;
+    }*/
+
+    @PutMapping("/{idItensDaOS}")
+    public ResponseEntity<ItensDoServico> atualizarOS( @PathVariable Long idItensDaOS,@RequestBody ItensDoServicoDTO itensDto) {
+        if (!itensOSService.existsById(idItensDaOS)) {
+            return ResponseEntity.notFound().build();
+        }
+        ItensDoServico entidade = mapper.map(itensDto, ItensDoServico.class);
+        entidade.setIdItensDaOS(idItensDaOS);
+
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(itensOSService.updateItemOS(entidade));
     }
+
 
     @GetMapping(path = "/all")
     public ResponseEntity<List<ItensDoServicoDTO>> listarItensDoServico() {

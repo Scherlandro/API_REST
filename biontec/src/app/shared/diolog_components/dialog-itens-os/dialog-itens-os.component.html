@@ -15,6 +15,7 @@
   </mat-form-field>
 
   <!-- Campo Autocomplete -->
+
   <mat-form-field class="example-full-width" *ngIf="produtoFiltered.length">
     <mat-label>Produto</mat-label>
     <input
@@ -39,25 +40,27 @@
 
   <mat-form-field appearance="fill">
     <mat-label>Código do Produto</mat-label>
-    <input matInput [value]="itensOS.prod.codProduto" disabled>
-  </mat-form-field>
-
-  <mat-form-field appearance="fill">
-    <mat-label>Descrição</mat-label>
-    <input matInput [(ngModel)]="itensOS.descricao">
+    <input matInput [value]="itensOS.codProd" disabled>
   </mat-form-field>
 
   <mat-form-field appearance="fill">
     <mat-label>Preço de Venda</mat-label>
-    <input matInput [value]="formatter(itensOS.prod.valorVenda || 0)" disabled>
+    <input matInput [value]="formatter(itensOS.precoDeVenda || 0)" disabled>
   </mat-form-field>
 
   <!-- Campo Quantidade com validação -->
   <mat-form-field appearance="fill">
     <mat-label>Quantidade</mat-label>
-    <input matInput type="number" [(ngModel)]="itensOS.quantidade" [formControl]="quantidadeControl">
+    <input matInput type="number" [(ngModel)]="itensOS.quantidade" [formControl]="quantidadeControl" (ngModelChange)="updateTotal()">
     <mat-error *ngIf="quantidadeControl.hasError('required')">Campo obrigatório.</mat-error>
     <mat-error *ngIf="quantidadeControl.hasError('min')">A quantidade mínima é 1.</mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Total</mat-label>
+    <input matInput [value]="formatter(itensOS.total)" disabled
+           [(ngModel)]="itensOS.total"
+    >
   </mat-form-field>
 
   <span>

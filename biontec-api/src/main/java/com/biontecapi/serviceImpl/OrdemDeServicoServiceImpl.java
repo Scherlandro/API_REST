@@ -111,12 +111,12 @@ public class OrdemDeServicoServiceImpl implements OrdemDeServicoService {
         OrdemDeServico order = osRepository.findById(osID).orElseThrow();
 
 
-        if (itemDto.prod().getIdProduto() != null) {
+       /* if (itemDto.idItensDaOS() != null) {
             productRepository.findById(itemDto.prod().getIdProduto()).orElseThrow();
         } else if (itemDto.idItensDaOS() != null) {
             osRepository.findById(osID).orElseThrow();
         }
-
+*/
       /*  ItensDoServico newItem = new ItensDoServico();
         newItem.setCodOS(String.valueOf(order.getId_os()));
         newItem.setCodProduto(itemDto.codProduto());

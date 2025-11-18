@@ -9,6 +9,8 @@ import java.util.Optional;
 
 public interface ItensOSService {
 
+    boolean existsById(Long idItensDaOS);
+
     ItensDoServico saveItemOS(ItensDoServico ItensDoServico);
 
     ItensDoServico updateItemOS(ItensDoServico ItensDoServico);
@@ -27,5 +29,4 @@ public interface ItensOSService {
     List<ItensDoServicoDTO> litarItemOSPorCliente(String nome);
 
 
-    boolean existsById(Long idItensDaOS);
 }

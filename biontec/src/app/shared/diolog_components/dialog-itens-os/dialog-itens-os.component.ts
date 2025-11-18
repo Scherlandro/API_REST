@@ -39,19 +39,41 @@ export class DialogItensOSComponent implements OnInit {
     if (!this.itensOS.prod) this.itensOS.prod = {} as iProduto;
 
     this.listarProdutos();
-
     this.isChange = !!this.itensOS.prod.idProduto;
 
+    // Se já houver um produto, preenche os campos
     if (this.itensOS.prod && this.itensOS.prod.nomeProduto) {
       this.produtoControl.setValue(this.itensOS.prod);
+      this.updateItemFields(this.itensOS.prod); // Atualiza os campos ao iniciar
     }
 
     this.produtoControl.valueChanges.subscribe((produto: iProduto | string | null) => {
       if (produto && typeof produto !== 'string') {
         this.itensOS.prod = produto;
+        this.updateItemFields(produto); // Atualiza os campos ao selecionar um produto
       }
     });
   }
+
+  // Função para atualizar os campos do itensOS com base no produto selecionado
+  updateItemFields(produto: iProduto) {
+    this.itensOS.codProd = produto.codProduto;
+    this.itensOS.descricao = produto.nomeProduto;
+    this.itensOS.precoDeVenda = produto.valorVenda;
+
+    // Atualiza o total com base na quantidade e preço de venda
+    this.updateTotal();
+  }
+
+  // Função para atualizar o total com base no preço de venda e quantidade
+  updateTotal() {
+    if (this.itensOS.precoDeVenda && this.itensOS.quantidade) {
+      this.itensOS.total = this.itensOS.precoDeVenda * this.itensOS.quantidade;
+    } else {
+      this.itensOS.total = 0;
+    }
+  }
+
 
   listarProdutos() {
     this.prodService.getTodosProdutos()
@@ -94,7 +116,8 @@ export class DialogItensOSComponent implements OnInit {
 
   save(): void {
     if (this.produtoControl.valid && this.quantidadeControl.valid) {
-      this.itensOsService.adicionarItem(this.itensOS);
+      const itens = this.itensOS;
+      this.itensOsService.adicionarItem(itens);
     }
   }
 

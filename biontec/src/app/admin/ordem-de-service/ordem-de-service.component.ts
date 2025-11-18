@@ -306,7 +306,7 @@ export class OrdemDeServiceComponent implements OnInit{
       }
     });
 
-     dialogRef.afterClosed().subscribe(result => {
+    /* dialogRef.afterClosed().subscribe(result => {
        console.log("Evento dialogRef", dialogRef, 'Result', result)
        if (result !== undefined) {
         if (this.tbSourceItensDaOS$.data
@@ -326,7 +326,7 @@ export class OrdemDeServiceComponent implements OnInit{
             });
         }
       }
-    });
+    });*/
 
 
   }

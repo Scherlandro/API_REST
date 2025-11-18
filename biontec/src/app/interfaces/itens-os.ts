@@ -6,7 +6,8 @@ export interface iItensOS {
 
   idItensDaOS?: number;
   codOS: iServiceOrder;
-  prod: iProduto;
+  prod?: iProduto;
+  codProd: string;
   descricao: string;
   precoDeVenda: number;
   quantidade: number;
