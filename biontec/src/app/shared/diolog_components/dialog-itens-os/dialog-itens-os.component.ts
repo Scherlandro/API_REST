@@ -37,7 +37,6 @@ export class DialogItensOSComponent implements OnInit {
     // Garante que o objeto e subobjetos estejam inicializados
     if (!this.itensOS) this.itensOS = {} as iItensOS;
     if (!this.itensOS.prod) this.itensOS.prod = {} as iProduto;
-
     this.listarProdutos();
     this.isChange = !!this.itensOS.prod.idProduto;
 
@@ -88,6 +87,7 @@ export class DialogItensOSComponent implements OnInit {
         this.products = res;
         this.produtoFiltered = res;
       });
+
   }
 
 

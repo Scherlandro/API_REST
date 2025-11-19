@@ -15,8 +15,7 @@
   </mat-form-field>
 
   <!-- Campo Autocomplete -->
-
-  <mat-form-field class="example-full-width" *ngIf="produtoFiltered.length">
+ <mat-form-field class="example-full-width" >
     <mat-label>Produto</mat-label>
     <input
       type="text"
@@ -29,12 +28,10 @@
     <mat-error>Campo obrigatório.</mat-error>
 
     <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayPd">
-      <mat-option
-        *ngFor="let produto of produtoFiltered"
-        [value]="produto"
-      >
+      <mat-option *ngFor="let produto of produtoFiltered" [value]="produto" >
         {{ produto.nomeProduto }}
       </mat-option>
+
     </mat-autocomplete>
   </mat-form-field>
 
