@@ -25,7 +25,6 @@ export class DialogItensOSComponent implements OnInit {
     public itensOS: iItensOS,
     public dialogRef: MatDialogRef<DialogItensOSComponent>,
     private itensOsService: ItensOsService,
-    private itensVdService: ItensVdService,
     private prodService: ProductService
   ) {
     this.produtoControl = new FormControl(null, [Validators.required]);
@@ -34,6 +33,7 @@ export class DialogItensOSComponent implements OnInit {
 
 
   ngOnInit(): void {
+    console.log('Valor do dialogRef ', this.dialogRef)
     // Garante que o objeto e subobjetos estejam inicializados
     if (!this.itensOS) this.itensOS = {} as iItensOS;
     if (!this.itensOS.prod) this.itensOS.prod = {} as iProduto;

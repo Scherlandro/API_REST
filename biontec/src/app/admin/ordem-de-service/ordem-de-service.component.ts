@@ -55,16 +55,16 @@ export class OrdemDeServiceComponent implements OnInit{
 
   OSControl = new FormControl();
 
-  form: FormGroup;
+  //form: FormGroup;
   clients: ICliente[] = [];
   employees: IFuncionario[] = [];
-  statusOptions = [
+/*  statusOptions = [
     'O.S em Andamento',
     'O.S Autorizada Aberta',
     'O.S Autorizada Fechada',
     'O.S Não Autorizada Aberta',
     'O.S Não Autorizada Fechada'
-  ];
+  ];*/
 
 
   searchForm = this.fb.group({
@@ -87,7 +87,7 @@ export class OrdemDeServiceComponent implements OnInit{
   ) {
     this.tbSourceOS$ = new MatTableDataSource();
     this.tbSourceItensDaOS$ = new MatTableDataSource();
-    this.form = this.fb.group({
+/*    this.form = this.fb.group({
       clientId: ['', Validators.required],
       technicianId: ['', Validators.required],
       status: ['O.S em Andamento', Validators.required],
@@ -98,7 +98,7 @@ export class OrdemDeServiceComponent implements OnInit{
       total: [0],
       remaining: [0],
       subServices: this.fb.array([])
-    });
+    });*/
   }
 
   ngOnInit() {
@@ -182,7 +182,7 @@ export class OrdemDeServiceComponent implements OnInit{
   }
 
   toggleRow(element: any) {
-    console.log('ID da O.S selecionada ==> ', element );
+  //  console.log('OS selecionada ==> ', element );
     this.tbSourceOS$.data.forEach((item:any) => {
       if (item !== element && item.isExpanded) {
         item.isExpanded = false;
@@ -196,7 +196,7 @@ export class OrdemDeServiceComponent implements OnInit{
       for (var i = 0; i < element.length; i++) {
         soma += element.map((p: iItensOS) => p.valorUnitario)[i];
       }
-      console.log('Element itensOS  ==> ', element.itensOS );
+     // console.log('Element itensOS  ==> ', element.itensOS );
       element.totalgeral = soma;
       element.totalgeral = this.formatarReal(soma);
       this.tbSourceItensDaOS$.data = element.itensOS.map((item: iItensOS) => ({
@@ -206,17 +206,9 @@ export class OrdemDeServiceComponent implements OnInit{
         total: this.formatarReal(item.total)
       }));
     }
-  /*  this.itensOs.listarItensOSPorCodOS(element.idOS.toString())
-      .pipe(catchError(error => {
-        this.onError('Erro ao buscar Itens da O.S!')
-        return of([])
-      }))
-      .subscribe((data: iItensOS[]) => {
-        this.tbSourceItensDaOS$.data = data;
-      });*/
   }
 
-  get subServices(): FormArray {
+/*  get subServices(): FormArray {
     return this.form.get('subServices') as FormArray;
   }
 
@@ -248,7 +240,7 @@ export class OrdemDeServiceComponent implements OnInit{
       );
     }
   }
-
+*/
   onError(errrorMsg: string) {
     this.dialog.open(ErrorDiologComponent, {
       data: errrorMsg
@@ -289,7 +281,7 @@ export class OrdemDeServiceComponent implements OnInit{
   }
 
   openDilogItenOS(eventOS: any) {
-     console.log("Dados do elementoDialog", eventOS.id_os)
+     console.log("Dados do elementoDialog", eventOS)
     const dialogRef = this.dialog.open(DialogItensOSComponent, {
       width: '300px',
       data: eventOS === null ? {
@@ -300,7 +292,7 @@ export class OrdemDeServiceComponent implements OnInit{
         valorUnitario: '',
         quantidade: '',
       } : {
-        codOS: eventOS.codOS,
+        codOS: eventOS.idOs,
         codProduto: eventOS.codProduto,
         descricao: eventOS.descricao,
         valorUnitario: eventOS.valorUnitario,
