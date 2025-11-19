@@ -75,9 +75,14 @@
               <tr mat-row *matRowDef=" let row; columns: displayedColumns;"></tr>
               <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
 
+              <ng-container matColumnDef="codOS">
+                <th mat-header-cell *matHeaderCellDef> ID OS </th>
+                <td mat-cell *matCellDef="let element"> {{element.codOS}} </td>
+              </ng-container>
+
               <ng-container matColumnDef="codigo">
                 <th mat-header-cell *matHeaderCellDef> Código</th>
-                <td mat-cell *matCellDef="let element"> {{element.cod_produtos}} </td>
+                <td mat-cell *matCellDef="let element"> {{element.codProduto}} </td>
               </ng-container>
 
               <ng-container matColumnDef="descricao">
@@ -87,22 +92,17 @@
 
               <ng-container matColumnDef="preco">
                 <th mat-header-cell *matHeaderCellDef> Preço</th>
-                <td mat-cell *matCellDef="let element"> {{element.valor_venda}} </td>
+                <td mat-cell *matCellDef="let element"> {{element.valorUnitario}} </td>
               </ng-container>
 
               <ng-container matColumnDef="qtd">
                 <th mat-header-cell *matHeaderCellDef> Qtd</th>
-                <td mat-cell *matCellDef="let element"> {{element.qtd_vendidas}} </td>
+                <td mat-cell *matCellDef="let element"> {{element.quantidade}} </td>
               </ng-container>
 
               <ng-container matColumnDef="soma">
                 <th mat-header-cell *matHeaderCellDef> Soma</th>
-                <td mat-cell *matCellDef="let element"> {{element.valor_parcial}} </td>
-              </ng-container>
-
-              <ng-container matColumnDef="data">
-                <th mat-header-cell *matHeaderCellDef> Data </th>
-                <td mat-cell *matCellDef="let element"> {{element.dt_venda}} </td>
+                <td mat-cell *matCellDef="let element"> {{element.total}} </td>
               </ng-container>
 
 

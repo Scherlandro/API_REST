@@ -50,7 +50,7 @@ export class OrdemDeServiceComponent implements OnInit{
   tbSourceOS$: MatTableDataSource<iServiceOrder>;
   displayedColumns0S = ['Nome', 'Data', 'Status', 'Total', 'Opicões'];
   tbSourceItensDaOS$: MatTableDataSource<iItensOS>;
-  displayedColumns: string[] = ['codigo', 'descricao', 'preco', 'qtd', 'soma', 'data', 'imagem', 'opicoes'];
+  displayedColumns: string[] = ['codOS','codigo', 'descricao', 'preco', 'qtd', 'soma', 'imagem', 'opicoes'];
   loadEmployees: any;
 
   OSControl = new FormControl();
@@ -193,16 +193,17 @@ export class OrdemDeServiceComponent implements OnInit{
     // Se a linha foi expandida, carregar os dados
     if (element.isExpanded) {
       var soma = 0;
-      for (var i = 0; i < element.itensDoServicos.length; i++) {
-        soma += element.itensDoServicos.map((p: iItensVd) => p.valorParcial)[i];
+      for (var i = 0; i < element.length; i++) {
+        soma += element.map((p: iItensOS) => p.valorUnitario)[i];
       }
+      console.log('Element itensOS  ==> ', element.itensOS );
       element.totalgeral = soma;
       element.totalgeral = this.formatarReal(soma);
-      this.tbSourceItensDaOS$.data = element.itensDoServicos.map((item: iItensVd) => ({
+      this.tbSourceItensDaOS$.data = element.itensOS.map((item: iItensOS) => ({
         ...item,
         // Formata os valores individuais
-        valVenda: this.formatarReal(item.valVenda),
-        valorParcial: this.formatarReal(item.valorParcial)
+        valorUnitario: this.formatarReal(item.valorUnitario),
+        total: this.formatarReal(item.total)
       }));
     }
   /*  this.itensOs.listarItensOSPorCodOS(element.idOS.toString())
@@ -294,13 +295,15 @@ export class OrdemDeServiceComponent implements OnInit{
       data: eventOS === null ? {
         codOS: null,
         idItensDaOS: null,
+        codProduto: '',
         descricao: '',
-        precoDeVenda: '',
+        valorUnitario: '',
         quantidade: '',
       } : {
-        codOS: eventOS.id_os,
+        codOS: eventOS.codOS,
+        codProduto: eventOS.codProduto,
         descricao: eventOS.descricao,
-        precoDeVenda: eventOS.precoDeVenda,
+        valorUnitario: eventOS.valorUnitario,
         quantidade: eventOS.quantidade,
         total: eventOS.total
       }

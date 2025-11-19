@@ -5,13 +5,14 @@ import com.biontecapi.model.Funcionario;
 import com.biontecapi.model.ItensDoServico;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
 
 public record OrdemDeServicoDTO(
         Long idOs,
         Integer clienteId,
         String nomeCliente,
-        Integer funcionarioId,
+        Integer idFuncionario,
 
         LocalDateTime dataDeEntrada,
         LocalDateTime ultimaAtualizacao,
@@ -28,9 +29,9 @@ public record OrdemDeServicoDTO(
         String cor,
         String observacao,
 
-        Funcionario gestorId,
-        Funcionario tecnicoEncarregadoId,
-        List<ItensDoServico> itensDoServico
+        Funcionario gestorDaOS,
+        Funcionario tecnicoEncarregado,
+        Collection<ItensDoServico> itensOS
 ) {
 
 }

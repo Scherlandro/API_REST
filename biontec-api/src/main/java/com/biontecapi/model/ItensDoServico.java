@@ -19,9 +19,9 @@ import javax.persistence.*;
         @Column(name = "id_itens_os")
         private Long idItensDaOS;
 
-        @ManyToOne(fetch = FetchType.LAZY)
-        @JoinColumn(name = "cod_os")
-        private OrdemDeServico ordemDeServico;
+
+        @Column(name = "cod_os")
+        private Long codOS;
 
         @Column(name = "cod_produtos", length = 20)
         private String codProduto;
@@ -47,11 +47,17 @@ import javax.persistence.*;
             }
         }*/
 
-        public ItensDoServicoDTO toDTO() {
+        public ItensDoServicoDTO toDTO(){
+            return new ItensDoServicoDTO(idItensDaOS,codOS,
+                    codProduto,descricao,valorUnitario,quantidade,total);
+        }
+
+       /*  public ItensDoServicoDTO toDTO() {
             return new ItensDoServicoDTO(
                     idItensDaOS,
-                    ordemDeServico != null ? ordemDeServico.getIdOs() : null, // Usa o ID da OS via relacionamento
+                    codOS != null ? codOS : null, // Usa o ID da OS via relacionamento
                     codProduto, descricao, valorUnitario, quantidade, total
             );
         }
+*/
     }

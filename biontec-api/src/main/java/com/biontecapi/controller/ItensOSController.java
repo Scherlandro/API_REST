@@ -2,6 +2,7 @@ package com.biontecapi.controller;
 
 import com.biontecapi.dtos.ItensDoServicoDTO;
 import com.biontecapi.model.ItensDoServico;
+import com.biontecapi.model.OrdemDeServico;
 import com.biontecapi.service.ItensOSService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,13 +10,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/itensDaOS")
-public class ItensDoServicoController {
+public class ItensOSController {
 
 
     private final ItensOSService itensOSService;
@@ -23,15 +26,14 @@ public class ItensDoServicoController {
     @Autowired
     private ModelMapper mapper;
 
-    public ItensDoServicoController(ItensOSService itensOSService){
+    public ItensOSController(ItensOSService itensOSService){
         this.itensOSService = itensOSService;
     }
 
     @PostMapping("/salvar")
-    public ResponseEntity<?> salvar(@RequestBody ItensDoServicoDTO dto) {
-
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(itensOSService.saveItemOS(mapper.map(dto, ItensDoServico.class)));
+    public ResponseEntity salvar(@RequestBody ItensDoServico item) {
+       return ResponseEntity.status(HttpStatus.CREATED)
+                .body(itensOSService.saveItemOS(item));
     }
 
  /*   @PutMapping("/{idItensDaOS}")

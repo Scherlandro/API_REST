@@ -57,9 +57,9 @@ export class DialogItensOSComponent implements OnInit {
 
   // Função para atualizar os campos do itensOS com base no produto selecionado
   updateItemFields(produto: iProduto) {
-    this.itensOS.codProd = produto.codProduto;
+    this.itensOS.codProduto = produto.codProduto;
     this.itensOS.descricao = produto.nomeProduto;
-    this.itensOS.precoDeVenda = produto.valorVenda;
+    this.itensOS.valorUnitario = produto.valorVenda;
 
     // Atualiza o total com base na quantidade e preço de venda
     this.updateTotal();
@@ -67,8 +67,8 @@ export class DialogItensOSComponent implements OnInit {
 
   // Função para atualizar o total com base no preço de venda e quantidade
   updateTotal() {
-    if (this.itensOS.precoDeVenda && this.itensOS.quantidade) {
-      this.itensOS.total = this.itensOS.precoDeVenda * this.itensOS.quantidade;
+    if (this.itensOS.valorUnitario && this.itensOS.quantidade) {
+      this.itensOS.total = this.itensOS.valorUnitario * this.itensOS.quantidade;
     } else {
       this.itensOS.total = 0;
     }

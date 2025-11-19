@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @Entity
@@ -52,8 +53,10 @@ public class OrdemDeServico {
     @JoinColumn(name = "tecnico_encarregado_id")
     private Funcionario tecnicoEncarregado;
 
-    @OneToMany(mappedBy = "ordemDeServico", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<ItensDoServico> itensDoServico = new ArrayList<>();
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "cod_os")
+    private Collection<ItensDoServico> itensOS;
+
 
     // Métodos auxiliares para sincronização bidirecional
   /*  public void adicionarItem(ItensDoServico item) {
@@ -70,7 +73,7 @@ public class OrdemDeServico {
                 idOs, idCliente, nomeCliente, idFuncionario, dataDeEntrada,
                 ultimaAtualizacao, status, subtotal, desconto, porConta, total, restante,
                 descricaoObj, numeracao, cor, observacao,
-                gestorDaOS, tecnicoEncarregado, itensDoServico
+                gestorDaOS, tecnicoEncarregado, itensOS
         );
     }
 }
