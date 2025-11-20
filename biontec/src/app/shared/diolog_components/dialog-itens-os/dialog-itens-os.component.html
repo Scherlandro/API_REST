@@ -27,11 +27,14 @@
       [formControl]="produtoControl"
       [matAutocomplete]="auto"
       (keyup)="changeProduto(produtoControl.value)"
+      (input)="filterProdutos($event)"
     />
-    <mat-error>Campo obrigatório.</mat-error>
+    <mat-error  *ngIf="produtoControl.hasError('required')" >Campo obrigatório.</mat-error>
 
     <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayPd">
-      <mat-option *ngFor="let produto of produtoFiltered" [value]="produto" >
+      <mat-option *ngFor="let produto of produtoFiltered"
+                  [value]="produto"
+                  (onSelectionChange)="onProdutoSelecionado(produto)" >
         {{ produto.nomeProduto }}
       </mat-option>
       <!--<input matInput [value]="itensOS.descricao" >-->
