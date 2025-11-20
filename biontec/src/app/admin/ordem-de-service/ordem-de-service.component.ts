@@ -52,20 +52,9 @@ export class OrdemDeServiceComponent implements OnInit{
   tbSourceItensDaOS$: MatTableDataSource<iItensOS>;
   displayedColumns: string[] = ['codOS','codigo', 'descricao', 'preco', 'qtd', 'soma', 'imagem', 'opicoes'];
   loadEmployees: any;
-
   OSControl = new FormControl();
-
-  //form: FormGroup;
   clients: ICliente[] = [];
   employees: IFuncionario[] = [];
-/*  statusOptions = [
-    'O.S em Andamento',
-    'O.S Autorizada Aberta',
-    'O.S Autorizada Fechada',
-    'O.S Não Autorizada Aberta',
-    'O.S Não Autorizada Fechada'
-  ];*/
-
 
   searchForm = this.fb.group({
     searchType: ['code'],
@@ -87,18 +76,6 @@ export class OrdemDeServiceComponent implements OnInit{
   ) {
     this.tbSourceOS$ = new MatTableDataSource();
     this.tbSourceItensDaOS$ = new MatTableDataSource();
-/*    this.form = this.fb.group({
-      clientId: ['', Validators.required],
-      technicianId: ['', Validators.required],
-      status: ['O.S em Andamento', Validators.required],
-      receiver: [''],
-      subtotal: [0],
-      discount: [0],
-      onAccount: [0],
-      total: [0],
-      remaining: [0],
-      subServices: this.fb.array([])
-    });*/
   }
 
   ngOnInit() {
@@ -119,11 +96,6 @@ export class OrdemDeServiceComponent implements OnInit{
         this.tbSourceOS$.data = result;
         this.tbSourceOS$.paginator = this.paginator;
       });
-  }
-
-  loadOrders2() {
-    this.osService.getAll().subscribe(
-      orders => this.orders = orders);
   }
 
   consultarPorCliente(nome: string) {
@@ -182,7 +154,6 @@ export class OrdemDeServiceComponent implements OnInit{
   }
 
   toggleRow(element: any) {
-  //  console.log('OS selecionada ==> ', element );
     this.tbSourceOS$.data.forEach((item:any) => {
       if (item !== element && item.isExpanded) {
         item.isExpanded = false;
@@ -208,39 +179,6 @@ export class OrdemDeServiceComponent implements OnInit{
     }
   }
 
-/*  get subServices(): FormArray {
-    return this.form.get('subServices') as FormArray;
-  }
-
-  addSubService() {
-    this.subServices.push(this.fb.group({
-      assignedTechnicianId: ['', Validators.required],
-      objectName: ['', Validators.required],
-      plate: [''],
-      color: [''],
-      observations: [''],
-      subtotal: [0],
-      brandId: [''],
-      modelId: [''],
-      carrier: [''],
-      carrierPhone: [''],
-      items: this.fb.array([])
-    }));
-  }
-
-  onSubmit() {
-    if (this.form.valid) {
-      this.osService.create(this.form.value).subscribe(
-        response => {
-          // handle success
-        },
-        error => {
-          // handle error
-        }
-      );
-    }
-  }
-*/
   onError(errrorMsg: string) {
     this.dialog.open(ErrorDiologComponent, {
       data: errrorMsg
@@ -293,6 +231,7 @@ export class OrdemDeServiceComponent implements OnInit{
         quantidade: '',
       } : {
         codOS: eventOS.idOs,
+        idItensDaOS: eventOS.idItensDaOS,
         codProduto: eventOS.codProduto,
         descricao: eventOS.descricao,
         valorUnitario: eventOS.valorUnitario,
@@ -322,8 +261,6 @@ export class OrdemDeServiceComponent implements OnInit{
         }
       }
     });*/
-
-
   }
 
   formatter(value: number): string {

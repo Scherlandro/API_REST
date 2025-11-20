@@ -7,6 +7,7 @@ import {ItensOsService} from "../../../services/itens-os.service";
 import {ProductService} from "../../../services/product.service";
 import {iProduto} from "../../../interfaces/product";
 import {iItensOS} from "../../../interfaces/itens-os";
+import {TokenService} from "../../../services/token.service";
 
 @Component({
   selector: 'app-dialog-editor-itens-os',
@@ -23,6 +24,7 @@ export class DialogItensOSComponent implements OnInit {
   constructor(
     @Inject(MAT_DIALOG_DATA)
     public itensOS: iItensOS,
+    private tokenServer: TokenService,
     public dialogRef: MatDialogRef<DialogItensOSComponent>,
     private itensOsService: ItensOsService,
     private prodService: ProductService
@@ -33,15 +35,15 @@ export class DialogItensOSComponent implements OnInit {
 
 
   ngOnInit(): void {
-    console.log('Valor do dialogRef ', this.dialogRef)
     // Garante que o objeto e subobjetos estejam inicializados
-    if (!this.itensOS) this.itensOS = {} as iItensOS;
+   if (!this.itensOS) this.itensOS = {} as iItensOS;
     if (!this.itensOS.prod) this.itensOS.prod = {} as iProduto;
+
     this.listarProdutos();
-    this.isChange = !!this.itensOS.prod.idProduto;
+    this.isChange = !!this.itensOS.prod?.idProduto;
 
     // Se já houver um produto, preenche os campos
-    if (this.itensOS.prod && this.itensOS.prod.nomeProduto) {
+    if (this.itensOS.prod && this.itensOS.prod?.nomeProduto) {
       this.produtoControl.setValue(this.itensOS.prod);
       this.updateItemFields(this.itensOS.prod); // Atualiza os campos ao iniciar
     }
@@ -76,10 +78,10 @@ export class DialogItensOSComponent implements OnInit {
 
   listarProdutos() {
     this.prodService.getTodosProdutos()
-      .pipe(
-        catchError(error => {
-          this.onError('Erro ao buscar produtos.');
-          console.error(error);
+      .pipe( catchError(error => {
+        if (error === 'Session Expired')
+        this.onError('Sua sessão expirou!');
+        this.tokenServer.clearTokenExpired();
           return of([]);
         })
       )
@@ -87,7 +89,6 @@ export class DialogItensOSComponent implements OnInit {
         this.products = res;
         this.produtoFiltered = res;
       });
-
   }
 
 

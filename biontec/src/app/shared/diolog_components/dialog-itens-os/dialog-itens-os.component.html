@@ -14,6 +14,11 @@
     <input matInput [(ngModel)]="itensOS.idItensDaOS">
   </mat-form-field>
 
+  <mat-form-field appearance="fill">
+    <mat-label>Código do Produto</mat-label>
+    <input matInput [value]="itensOS.codProduto" disabled>
+  </mat-form-field>
+
   <!-- Campo Autocomplete -->
  <mat-form-field class="example-full-width" >
     <mat-label>Produto</mat-label>
@@ -31,13 +36,10 @@
       <mat-option *ngFor="let produto of produtoFiltered" [value]="produto" >
         {{ produto.nomeProduto }}
       </mat-option>
+        <input matInput [value]="itensOS.descricao" disabled>
 
+     <!-- [(ngModel)]="itensOS.total"-->
     </mat-autocomplete>
-  </mat-form-field>
-
-  <mat-form-field appearance="fill">
-    <mat-label>Código do Produto</mat-label>
-    <input matInput [value]="itensOS.codProduto" disabled>
   </mat-form-field>
 
   <mat-form-field appearance="fill">
