@@ -1,7 +1,7 @@
 .nav-head {
   display: grid;
   padding-left: 10px;
-  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
   grid-template-rows: 1fr;
   grid-gap: 1px;
   height: 40px;

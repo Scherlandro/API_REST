@@ -65,7 +65,6 @@ export class DialogItensOSComponent implements OnInit {
     }
   }
 
-
   listarProdutos() {
     this.prodService.getTodosProdutos()
       .pipe( catchError(error => {
