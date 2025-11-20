@@ -2,7 +2,6 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { catchError, of } from 'rxjs';
-import { ItensVdService } from 'src/app/services/itens-vd.service';
 import {ItensOsService} from "../../../services/itens-os.service";
 import {ProductService} from "../../../services/product.service";
 import {iProduto} from "../../../interfaces/product";
@@ -17,13 +16,11 @@ import {TokenService} from "../../../services/token.service";
 export class DialogItensOSComponent implements OnInit {
   isChange!: boolean;
   produtoFiltered: iProduto[] = [];
-  products: iProduto[] = [];
   produtoControl: FormControl;
   quantidadeControl: FormControl;
 
   constructor(
-    @Inject(MAT_DIALOG_DATA)
-    public itensOS: iItensOS,
+    @Inject(MAT_DIALOG_DATA)  public itensOS: iItensOS,
     private tokenServer: TokenService,
     public dialogRef: MatDialogRef<DialogItensOSComponent>,
     private itensOsService: ItensOsService,
@@ -35,25 +32,20 @@ export class DialogItensOSComponent implements OnInit {
 
 
   ngOnInit(): void {
-    // Garante que o objeto e subobjetos estejam inicializados
-   if (!this.itensOS) this.itensOS = {} as iItensOS;
-    if (!this.itensOS.prod) this.itensOS.prod = {} as iProduto;
-
     this.listarProdutos();
-    this.isChange = !!this.itensOS.prod?.idProduto;
-
-    // Se já houver um produto, preenche os campos
-    if (this.itensOS.prod && this.itensOS.prod?.nomeProduto) {
-      this.produtoControl.setValue(this.itensOS.prod);
-      this.updateItemFields(this.itensOS.prod); // Atualiza os campos ao iniciar
-    }
-
-    this.produtoControl.valueChanges.subscribe((produto: iProduto | string | null) => {
-      if (produto && typeof produto !== 'string') {
-        this.itensOS.prod = produto;
+    this.produtoControl.valueChanges.subscribe((produto: string | iProduto ) => {
+      if (typeof produto === 'string') {
+        this.changeProduto(produto);
+      }else if(produto){
         this.updateItemFields(produto); // Atualiza os campos ao selecionar um produto
       }
     });
+
+    if (this.produtoFiltered.length) {
+      this.isChange = true;
+      this.produtoControl.setValue(this.produtoFiltered[0]);
+      this.updateItemFields(this.produtoFiltered[0]); // Atualiza os campos ao iniciar
+    }
   }
 
   // Função para atualizar os campos do itensOS com base no produto selecionado
@@ -61,9 +53,7 @@ export class DialogItensOSComponent implements OnInit {
     this.itensOS.codProduto = produto.codProduto;
     this.itensOS.descricao = produto.nomeProduto;
     this.itensOS.valorUnitario = produto.valorVenda;
-
-    // Atualiza o total com base na quantidade e preço de venda
-    this.updateTotal();
+    this.updateTotal(); // Atualiza o total
   }
 
   // Função para atualizar o total com base no preço de venda e quantidade
@@ -86,25 +76,23 @@ export class DialogItensOSComponent implements OnInit {
         })
       )
       .subscribe((res: iProduto[]) => {
-        this.products = res;
         this.produtoFiltered = res;
       });
-  }
-
-
-  displayPd(produto: iProduto): string {
-    return produto ? produto.nomeProduto : '';
   }
 
   changeProduto(value: string): void {
     if (value) {
       const val = value.toUpperCase();
-      this.produtoFiltered = this.products.filter(
+      this.produtoFiltered = this.produtoFiltered.filter(
         p => p.nomeProduto.toUpperCase().includes(val)
       );
     } else {
-      this.produtoFiltered = this.products;
+      this.listarProdutos();
     }
+  }
+
+  displayPd(produto: iProduto): string {
+    return produto ? produto.nomeProduto : '';
   }
 
   onError(message: string): void {

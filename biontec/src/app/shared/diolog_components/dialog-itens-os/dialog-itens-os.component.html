@@ -36,9 +36,7 @@
       <mat-option *ngFor="let produto of produtoFiltered" [value]="produto" >
         {{ produto.nomeProduto }}
       </mat-option>
-        <input matInput [value]="itensOS.descricao" disabled>
-
-     <!-- [(ngModel)]="itensOS.total"-->
+      <!--<input matInput [value]="itensOS.descricao" >-->
     </mat-autocomplete>
   </mat-form-field>
 
@@ -57,9 +55,7 @@
 
   <mat-form-field appearance="fill">
     <mat-label>Total</mat-label>
-    <input matInput [value]="formatter(itensOS.total)" disabled
-           [(ngModel)]="itensOS.total"
-    >
+    <input matInput [value]="formatter(itensOS.total)" disabled [(ngModel)]="itensOS.total" >
   </mat-form-field>
 
   <span>
