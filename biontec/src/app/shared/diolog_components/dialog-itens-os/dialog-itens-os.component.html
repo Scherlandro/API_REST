@@ -19,15 +19,15 @@
     <input matInput [value]="itensOS.codProduto" disabled>
   </mat-form-field>
 
-  <!-- Campo Autocomplete -->
+  <!-- Campo Autocomplete   (input)="filterProdutos($event)" -->
  <mat-form-field class="example-full-width" >
     <mat-label>Produto</mat-label>
     <input type="text"   matInput
       placeholder="Digite o nome do produto"
       [formControl]="produtoControl"
       [matAutocomplete]="auto"
-      (keyup)="changeProduto(produtoControl.value)"
       (input)="filterProdutos($event)"
+
     />
     <mat-error  *ngIf="produtoControl.hasError('required')" >Campo obrigatório.</mat-error>
 

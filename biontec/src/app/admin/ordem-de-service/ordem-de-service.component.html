@@ -8,9 +8,8 @@
       </button>
       <input class="input-table-vd" type="text" placeholder=" Digite a consulta" matInput
              [formControl]="OSControl"
-             (keypress)="changeOS(OSControl.value)"
              (keydown)="loadOrders()"
-             (ngModelChange)="consultarPorCliente(OSControl.value)" />
+             (keyup)="aplicarFiltro(OSControl.value)" />
 
       <button class="button-search-os body"  > Search</button>
 
@@ -117,14 +116,9 @@
               <ng-container matColumnDef="opicoes">
                 <th mat-header-cell *matHeaderCellDef> Opições</th>
                 <td mat-cell *matCellDef="let element">
-                  <button class="button-update"
-                          mat-row *matRowDef="let boss; columns: displayedColumns0S;"
-                          class="example-element-row"
-                          (click)="openDilogItenOS(boss)">
-
+                  <button class="button-update">
                     <mat-icon type="hidden" title="Editar Item" class="edit"
-
-                    > <!--  [routerLink]="['edit']" > --> edite
+                      (click)="openDilogItenOS(element)">
                     </mat-icon>
                   </button>
                   <button class="button-update" title="Remover Item">

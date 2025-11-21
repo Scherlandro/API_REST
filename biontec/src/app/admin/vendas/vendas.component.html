@@ -27,9 +27,7 @@
 
     </mat-toolbar>
 
-
     <table mat-table class="expanding-table body" [dataSource]="tbSourceVd$" multiTemplateDataRows>
-
 
       <tr mat-header-row *matHeaderRowDef="displayedColumnsVd"></tr>
 
@@ -120,8 +118,7 @@
                 <td mat-cell *matCellDef="let element">
                   <button class="button-update">
                     <mat-icon type="hidden" title="Editar Item" class="edit"
-                              (click)="openDilogItenVd(element)"
-                    > <!--  [routerLink]="['edit']" > --> edite
+                              (click)="openDilogItenVd(element)" >
                     </mat-icon>
                   </button>
                   <button class="button-update" title="Remover Item">

@@ -1,7 +1,7 @@
 import {animate, state, style, transition, trigger} from "@angular/animations";
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {FormArray, FormBuilder, FormControl, FormGroup, NgForm, Validators} from "@angular/forms";
-import {catchError, delay} from "rxjs/operators";
+import {catchError, delay, first} from "rxjs/operators";
 import {Observable, of} from "rxjs";
 import {MatTable, MatTableDataSource} from "@angular/material/table";
 import {MatPaginator, PageEvent} from "@angular/material/paginator";
@@ -85,7 +85,7 @@ export class OrdemDeServiceComponent implements OnInit{
 
   loadOrders() {
     this.osService.getAll()
-      .pipe(catchError(error => {
+      .pipe(first(), delay(1500),catchError(error => {
         if (error === 'Session Expired')
           this.onError('Sua sessão expirou!');
           this.tokenServer.clearTokenExpired();
@@ -239,6 +239,7 @@ export class OrdemDeServiceComponent implements OnInit{
         total: eventOS.total
       }
     });
+    console.log("Evento de dialogRef", dialogRef)
 
     /* dialogRef.afterClosed().subscribe(result => {
        console.log("Evento dialogRef", dialogRef, 'Result', result)
