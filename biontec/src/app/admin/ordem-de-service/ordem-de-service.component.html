@@ -1,6 +1,18 @@
 <div>
   <mat-card-content >
 
+    <div class="spinner-container" *ngIf="spiner">
+      <aside>
+        <div *ngIf="spiner " class="spinner">
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+        </div>
+      </aside>
+    </div>
+
     <mat-toolbar class="head-table-os body">
       <h3> Ordens de Serviços </h3>
       <button class="button-add" (click)="openDilogOS()">
@@ -11,7 +23,7 @@
              (keydown)="loadOrders()"
              (keyup)="aplicarFiltro(OSControl.value)" />
 
-      <button class="button-search-os body"  > Search</button>
+      <button class="button-search-os body" (keydown)="onSearch()"  > Search</button>
 
     </mat-toolbar>
 
@@ -143,7 +155,14 @@
       <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
 
       <tr class="mat-row" *matNoDataRow>
-        <td class="mat-cell" colspan="3"></td>
+        <td class="mat-cell" colspan="4">
+          <span *ngIf="OSControl.value && OSControl.value.length >= 3">
+            Nenhum resultado encontrado para "{{OSControl.value}}"
+          </span>
+          <span *ngIf="!OSControl.value || OSControl.value.length === 0">
+          <strong >  Nenhum dado disponível </strong>
+          </span>
+        </td>
       </tr>
     </table>
 

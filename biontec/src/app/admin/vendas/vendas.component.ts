@@ -74,7 +74,7 @@ export class VendaComponent implements OnInit {
   listarVenda() {
     this.spiner = true;
     this.vendasService.getAllSales()
-      .pipe(first(), delay(3000),catchError(error => {
+      .pipe(first(), delay(2000),catchError(error => {
         if (error === 'Session Expired')
         this.onError('Sua sessão expirou!');
         this.tokenServer.clearTokenExpired();

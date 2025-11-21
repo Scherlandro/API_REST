@@ -37,7 +37,7 @@ import {iProduto} from "../../interfaces/product";
   ],
 })
 export class OrdemDeServiceComponent implements OnInit{
-
+  spiner = false;
   @ViewChild(MatTable) tableOS!: MatTable<any>;
   @ViewChild(MatTable) tableItensOS!: MatTable<any>;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -51,10 +51,7 @@ export class OrdemDeServiceComponent implements OnInit{
   displayedColumns0S = ['Nome', 'Data', 'Status', 'Total', 'Opicões'];
   tbSourceItensDaOS$: MatTableDataSource<iItensOS>;
   displayedColumns: string[] = ['codOS','codigo', 'descricao', 'preco', 'qtd', 'soma', 'imagem', 'opicoes'];
-  loadEmployees: any;
   OSControl = new FormControl();
-  clients: ICliente[] = [];
-  employees: IFuncionario[] = [];
 
   searchForm = this.fb.group({
     searchType: ['code'],
@@ -70,9 +67,7 @@ export class OrdemDeServiceComponent implements OnInit{
     public notificationMsg:  NotificationMgsService,
     private itensOs: ItensOsService,
     private fb: FormBuilder,
-    public dialog: MatDialog,
-    private clienteService: ClienteService,
-    private employeeService: FuncionarioService
+    public dialog: MatDialog
   ) {
     this.tbSourceOS$ = new MatTableDataSource();
     this.tbSourceItensDaOS$ = new MatTableDataSource();
@@ -80,10 +75,10 @@ export class OrdemDeServiceComponent implements OnInit{
 
   ngOnInit() {
     this.loadOrders();
-    //  this.loadEmployees();
   }
 
   loadOrders() {
+    this.spiner = true;
     this.osService.getAll()
       .pipe(first(), delay(1500),catchError(error => {
         if (error === 'Session Expired')
@@ -95,21 +90,8 @@ export class OrdemDeServiceComponent implements OnInit{
         console.log('Lista de OSs ', result)
         this.tbSourceOS$.data = result;
         this.tbSourceOS$.paginator = this.paginator;
+        this.spiner = false;
       });
-  }
-
-  consultarPorCliente(nome: string) {
-    if (this.OSControl.valid) {
-      this.osService.search(nome)
-        .pipe(catchError(error => {
-          this.onError('Erro ao buscar Cliente!')
-          return of([])
-        }))
-        .subscribe((result: iServiceOrder[]) => {
-          this.aplicarFiltro(nome);
-          this.tbSourceOS$.data = result;
-        })
-    }
   }
 
   onSearch() {
@@ -130,16 +112,13 @@ export class OrdemDeServiceComponent implements OnInit{
         params.plate = formValue.searchTerm;
       }
     }
-
     if (formValue.status) {
       params.status = formValue.status;
     }
-
     if (formValue.startDate && formValue.endDate) {
       params.startDate = formValue.startDate;
       params.endDate = formValue.endDate;
     }
-
     return params;
   }
 
@@ -190,25 +169,12 @@ export class OrdemDeServiceComponent implements OnInit{
     this.tbSourceOS$.filter = valor;
   }
 
-  buscarClientes(filter: string = ''): Observable<ICliente[]> {
-    this.clienteFilted.map(c => {
-      this.clienteService.getTodosClientes();
-    });
-    return of(
-      this.clienteFilted.filter(cliente =>
-        cliente.nomeCliente.toLowerCase().includes(filter.toLowerCase())
-      )
-    ).pipe(delay(500));
-  }
-
   openDilogOS() {
-
     const dialogRef = this.dialog.open(DialogOpenOsComponent, {
       width: '280px',
       height: '300px',
       data: { /*  passar dados aqui se necessário */}
     });
-
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.clienteSelecionado = result;
@@ -240,28 +206,6 @@ export class OrdemDeServiceComponent implements OnInit{
       }
     });
     console.log("Evento de dialogRef", dialogRef)
-
-    /* dialogRef.afterClosed().subscribe(result => {
-       console.log("Evento dialogRef", dialogRef, 'Result', result)
-       if (result !== undefined) {
-        if (this.tbSourceItensDaOS$.data
-          .map(p => p.idItensDaOS).includes(result.id_itens_os)) {
-          this.itensOs.editItem(result)
-            .subscribe((data: iItensOS) => {
-              const index = this.tbSourceItensDaOS$.data
-                .findIndex(p => p.idItensDaOS === data.idItensDaOS);
-              this.tbSourceItensDaOS$.data[index] = data;
-              this.tableItensOS.renderRows();
-            });
-        } else {
-          this.itensOs.adicionarItem(result)
-            .subscribe((data: iItensOS) => {
-              this.tbSourceItensDaOS$.data.push(result);
-              this.tableItensOS.renderRows();
-            });
-        }
-      }
-    });*/
   }
 
   formatter(value: number): string {
