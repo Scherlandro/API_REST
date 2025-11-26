@@ -48,9 +48,9 @@ export class OrdemDeServiceComponent implements OnInit{
   clienteFilted: ICliente[] = [];
   clienteSelecionado: ICliente | null = null;
   tbSourceOS$: MatTableDataSource<iServiceOrder>;
-  displayedColumns0S = ['Nome', 'Data', 'Status', 'Total', 'Opicões'];
+  displayedColumns0S = ['Nome', 'Data', 'Status', 'Total', 'Opcoes'];
   tbSourceItensDaOS$: MatTableDataSource<iItensOS>;
-  displayedColumns: string[] = ['codOS','codigo', 'descricao', 'preco', 'qtd', 'soma', 'imagem', 'opicoes'];
+  displayedColumns: string[] = ['codOS','codigo', 'descricao', 'preco', 'qtd', 'soma', 'imagem', 'opcoes'];
   OSControl = new FormControl();
 
   searchForm = this.fb.group({
@@ -87,10 +87,10 @@ export class OrdemDeServiceComponent implements OnInit{
         return of([])
       })).subscribe(
       (result: iServiceOrder[]) => {
-        console.log('Lista de OSs ', result)
         this.tbSourceOS$.data = result;
         this.tbSourceOS$.paginator = this.paginator;
         this.spiner = false;
+        console.log('Listar itens ', this.tbSourceOS$)
       });
   }
 
@@ -185,7 +185,6 @@ export class OrdemDeServiceComponent implements OnInit{
   }
 
   openDilogItenOS(eventOS: any) {
-     console.log("Dados do elementoDialog", eventOS)
     const dialogRef = this.dialog.open(DialogItensOSComponent, {
       width: '300px',
       data: eventOS === null ? {
@@ -197,14 +196,17 @@ export class OrdemDeServiceComponent implements OnInit{
         quantidade: '',
       } : {
         codOS: eventOS.idOs,
-        idItensDaOS: eventOS.idItensDaOS,
+        idItensDaOS: null,
+        quantidade: 0,
+      /*  idItensDaOS: eventOS.idItensDaOS,
         codProduto: eventOS.codProduto,
         descricao: eventOS.descricao,
         valorUnitario: eventOS.valorUnitario,
         quantidade: eventOS.quantidade,
-        total: eventOS.total
+        total: eventOS.total*/
       }
     });
+    console.log("Dados do elementoDialog", eventOS)
     console.log("Evento de dialogRef", dialogRef)
   }
 

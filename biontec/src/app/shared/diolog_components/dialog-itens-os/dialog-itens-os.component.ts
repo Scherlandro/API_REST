@@ -41,19 +41,7 @@ export class DialogItensOSComponent implements OnInit {
       this.isChange = true;
       this.preencherCamposEdicao();
     }
-   /* this.produtoControl.valueChanges.subscribe((produto: string | iProduto ) => {
-      if (typeof produto === 'string') {
-        this.changeProduto(produto);
-      }else if(produto){
-        this.updateItemFields(produto); // Atualiza os campos ao selecionar um produto
-      }
-    });*/
 
-   /* if (this.produtoFiltered.length) {
-      this.isChange = true;
-      this.produtoControl.setValue(this.produtoFiltered[0]);
-      this.updateItemFields(this.produtoFiltered[0]); // Atualiza os campos ao iniciar
-    }*/
   }
 
 
@@ -115,8 +103,7 @@ export class DialogItensOSComponent implements OnInit {
     if (value) {
       const val = value.toUpperCase();
       this.produtoFiltered = this.produtoFiltered.filter(
-        p => p.nomeProduto.toUpperCase().includes(val)
-      );
+        p => p.nomeProduto.toUpperCase().includes(val) );
     } else {
       this.listarProdutos();
     }
@@ -137,7 +124,7 @@ export class DialogItensOSComponent implements OnInit {
   save(): void {
     if (this.produtoControl.valid && this.quantidadeControl.valid) {
       const itens ={ ...this.itensOS};
-      this.itensOsService.adicionarItem(itens);
+      this.itensOsService.adicionarItem(this.itensOS);
     }
   }
 
