@@ -32,7 +32,6 @@ public class ItensOSController {
 
     @PostMapping("/salvar")
     public ResponseEntity salvar(@RequestBody ItensDoServico item) {
-      System.out.println("Itens recebido"+ item);
        return ResponseEntity.status(HttpStatus.CREATED).body(itensOSService.saveItemOS(item));
     }
 
