@@ -20,8 +20,6 @@ import {DialogOpenOsComponent} from "../../shared/diolog_components/dialog-open-
 import {DialogItensOSComponent} from "../../shared/diolog_components/dialog-itens-os/dialog-itens-os.component";
 import {TokenService} from "../../services/token.service";
 import {NotificationMgsService} from "../../services/notification-mgs.service";
-import {iItensVd} from "../../interfaces/itens-vd";
-import {iProduto} from "../../interfaces/product";
 
 
 @Component({
@@ -90,7 +88,7 @@ export class OrdemDeServiceComponent implements OnInit{
         this.tbSourceOS$.data = result;
         this.tbSourceOS$.paginator = this.paginator;
         this.spiner = false;
-        console.log('Listar itens ', this.tbSourceOS$)
+        console.log('Listar itens ', result)
       });
   }
 
@@ -188,22 +186,22 @@ export class OrdemDeServiceComponent implements OnInit{
     const dialogRef = this.dialog.open(DialogItensOSComponent, {
       width: '300px',
       data: eventOS === null ? {
-        codOS: null,
         idItensDaOS: null,
+        codOS: null,
         codProduto: '',
         descricao: '',
         valorUnitario: '',
         quantidade: '',
       } : {
-        codOS: eventOS.idOs,
         idItensDaOS: null,
-        quantidade: 0,
-      /*  idItensDaOS: eventOS.idItensDaOS,
+        codOS: eventOS.idOs,
         codProduto: eventOS.codProduto,
         descricao: eventOS.descricao,
         valorUnitario: eventOS.valorUnitario,
-        quantidade: eventOS.quantidade,
-        total: eventOS.total*/
+        quantidade: 0,
+        total: eventOS.total
+      /*  idItensDaOS: eventOS.idItensDaOS,
+        quantidade: eventOS.quantidade,*/
       }
     });
     console.log("Dados do elementoDialog", eventOS)
