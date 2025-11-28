@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { catchError, of } from 'rxjs';
+import {catchError, of, Subject, takeUntil} from 'rxjs';
 import {ItensOsService} from "../../../services/itens-os.service";
 import {ProductService} from "../../../services/product.service";
 import {iProduto} from "../../../interfaces/product";
@@ -16,6 +16,7 @@ import {map, startWith} from "rxjs/operators";
 })
 export class DialogItensOSComponent implements OnInit {
   isChange!: boolean;
+  destroy$ = new Subject<void>();
   produtos: iProduto[] = [];
   produtoFiltered: iProduto[] = [];
   produtoControl: FormControl;
@@ -82,23 +83,23 @@ export class DialogItensOSComponent implements OnInit {
   }
 
 
-  filterProdutos(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    const valor = input.value;
+   filterProdutos(event: Event): void {
+     const input = event.target as HTMLInputElement;
+     const valor = input.value;
 
-    if (valor) {
-      this.produtoFiltered = this.filtrarProdutos(valor);
-    } else {
-      this.produtoFiltered = this.produtos.slice();
-    }
-  }
+     if (valor) {
+       this.produtoFiltered = this.filtrarProdutos(valor);
+     } else {
+       this.produtoFiltered = this.produtos.slice();
+     }
+   }
 
-  onProdutoSelecionado(produto: iProduto): void {
-    if (produto) {
-      this.updateItemFields(produto);
-    }
-  }
-
+     onProdutoSelecionado(produto: iProduto): void {
+       if (produto) {
+         this.updateItemFields(produto);
+       }
+     }
+  /*
   changeProduto(value: string): void {
     if (value) {
       const val = value.toUpperCase();
@@ -107,7 +108,7 @@ export class DialogItensOSComponent implements OnInit {
     } else {
       this.listarProdutos();
     }
-  }
+  }*/
 
   displayPd(produto: iProduto): string {
     return produto ? produto.nomeProduto : '';
@@ -121,10 +122,35 @@ export class DialogItensOSComponent implements OnInit {
     this.dialogRef.close();
   }
 
-  save(): void {
+
+  save(item: iItensOS) {
     if (this.produtoControl.valid && this.quantidadeControl.valid) {
-      const itens ={ ...this.itensOS};
-      this.itensOsService.adicionarItem(this.itensOS);
+
+      if (this.isChange && item.idItensDaOS) {
+        this.itensOsService.editItem(item)
+          .pipe(takeUntil(this.destroy$)
+          ).subscribe({
+          next: (i) => {
+            this.dialogRef.close(i);
+          },
+          error: (err) => {
+            this.onError('Erro ao atualizar a OS');
+            console.error(err);
+          }
+        });
+      } else {
+        this.itensOsService.adicionarItem(item).pipe(
+          takeUntil(this.destroy$)
+        ).subscribe({
+          next: (i) => {
+            this.dialogRef.close(i);
+          },
+          error: (err) => {
+            this.onError('Erro ao adicionar item');
+            console.error(err);
+          }
+        });
+      }
     }
   }
 

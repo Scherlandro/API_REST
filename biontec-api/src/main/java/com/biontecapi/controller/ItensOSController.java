@@ -32,8 +32,18 @@ public class ItensOSController {
 
     @PostMapping("/salvar")
     public ResponseEntity salvar(@RequestBody ItensDoServico item) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(itensOSService.saveItemOS(item));
+      System.out.println("Itens recebido"+ item);
+       return ResponseEntity.status(HttpStatus.CREATED).body(itensOSService.saveItemOS(item));
     }
+
+ /*   @PutMapping("/{idItensDaOS}")
+    public ResponseEntity<ItensDoServico> atualizarOS(@PathVariable Long idItensDaOS, @RequestBody ItensDoServicoDTO itensDto) {
+             if (!itensOSService.existsById(idItensDaOS)) {
+                     return ResponseEntity.notFound().build();
+                  }
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(itensOSService.updateItemOS( mapper.map(itensDto, ItensDoServico.class))) ;
+    }*/
 
     @PutMapping("/{idItensDaOS}")
     public ResponseEntity<ItensDoServico> atualizarOS( @PathVariable Long idItensDaOS,@RequestBody ItensDoServicoDTO itensDto) {
