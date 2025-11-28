@@ -23,7 +23,8 @@ export class DialogItensOSComponent implements OnInit {
   quantidadeControl: FormControl;
 
   constructor(
-    @Inject(MAT_DIALOG_DATA)  public itensOS: iItensOS,
+    @Inject(MAT_DIALOG_DATA)
+    public itensOS: iItensOS,
     private tokenServer: TokenService,
     public dialogRef: MatDialogRef<DialogItensOSComponent>,
     private itensOsService: ItensOsService,
@@ -36,7 +37,7 @@ export class DialogItensOSComponent implements OnInit {
 
   ngOnInit(): void {
     this.listarProdutos();
-    this.configurarAutocomplete();
+  //  this.configurarAutocomplete();
 
     if (this.itensOS.codProduto) {
       this.isChange = true;
@@ -61,6 +62,7 @@ export class DialogItensOSComponent implements OnInit {
         this.produtoFiltered = res;
       });
   }
+/*
 
   configurarAutocomplete(): void {
     // Configura o filtro em tempo real
@@ -81,14 +83,15 @@ export class DialogItensOSComponent implements OnInit {
       produto.nomeProduto.toLowerCase().includes(filterValue)
     );
   }
-
+*/
 
    filterProdutos(event: Event): void {
      const input = event.target as HTMLInputElement;
      const valor = input.value;
 
      if (valor) {
-       this.produtoFiltered = this.filtrarProdutos(valor);
+       this.produtoFiltered = this.produtos.filter(p =>
+         p.nomeProduto.toLowerCase().includes(valor.toLowerCase()));
      } else {
        this.produtoFiltered = this.produtos.slice();
      }
@@ -99,16 +102,6 @@ export class DialogItensOSComponent implements OnInit {
          this.updateItemFields(produto);
        }
      }
-  /*
-  changeProduto(value: string): void {
-    if (value) {
-      const val = value.toUpperCase();
-      this.produtoFiltered = this.produtoFiltered.filter(
-        p => p.nomeProduto.toUpperCase().includes(val) );
-    } else {
-      this.listarProdutos();
-    }
-  }*/
 
   displayPd(produto: iProduto): string {
     return produto ? produto.nomeProduto : '';

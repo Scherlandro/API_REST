@@ -15,20 +15,23 @@
 
   <mat-form-field appearance="fill">
     <mat-label>Email</mat-label>
-    <input matInput [(ngModel)]="iUser.username">
+    <input matInput [(ngModel)]="iUser.username" [formControl]="emailControl">
   </mat-form-field>
 
   <mat-form-field appearance="fill">
     <mat-label>Password</mat-label>
-    <input matInput [(ngModel)]="iUser.password">
+    <input matInput [(ngModel)]="iUser.password" [formControl]="passwordControl">
   </mat-form-field>
 
   <span>
-
-  <button mat-raised-button *ngIf="!isChange" [mat-dialog-close]="iUser" cdkFocusInitial >Create</button>
+ <button mat-button *ngIf="!isChange" [mat-dialog-close]="iUser" cdkFocusInitial (click)="save(iUser)"
+         [disabled]="isSaveButtonDisabled()">Create</button>
   <button mat-button *ngIf="isChange" [mat-dialog-close]="iUser" cdkFocusInitial >Edit</button>
   <button mat-raised-button (click)="onCancel()">Cancel</button>
  </span>
+
+
+
 
 
 </div>

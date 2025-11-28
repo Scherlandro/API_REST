@@ -35,15 +35,6 @@ public class ItensOSController {
        return ResponseEntity.status(HttpStatus.CREATED).body(itensOSService.saveItemOS(item));
     }
 
- /*   @PutMapping("/{idItensDaOS}")
-    public ResponseEntity<ItensDoServico> atualizarOS(@PathVariable Long idItensDaOS, @RequestBody ItensDoServicoDTO itensDto) {
-             if (!itensOSService.existsById(idItensDaOS)) {
-                     return ResponseEntity.notFound().build();
-                  }
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(itensOSService.updateItemOS( mapper.map(itensDto, ItensDoServico.class))) ;
-    }*/
-
     @PutMapping("/{idItensDaOS}")
     public ResponseEntity<ItensDoServico> atualizarOS( @PathVariable Long idItensDaOS,@RequestBody ItensDoServicoDTO itensDto) {
         if (!itensOSService.existsById(idItensDaOS)) {
@@ -99,10 +90,10 @@ public class ItensOSController {
     public ResponseEntity<List<ItensDoServicoDTO>> ConsultarItensVdEntreDatas(
             @RequestParam(name = "dtIni") String dtIni, @RequestParam(name = "dtFinal") String dtFinal) {
         List<ItensDoServicoDTO> list = itensOSService.ConsultarItensOSEntreDatas(dtIni, dtFinal);
-      /*  if(!list.isEmpty()){
+        if(!list.isEmpty()){
             return ResponseEntity.notFound().eTag("Não encontrado").build();
-            //   return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Registro não encontrado");
-        }else */
+           //  return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Registro não encontrado");
+        }else
         return ResponseEntity.ok(list.stream().map(
                 e -> mapper.map(e, ItensDoServicoDTO.class))
                 .collect(Collectors.toList()));
