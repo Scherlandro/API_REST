@@ -191,9 +191,9 @@ export class OrdemDeServiceComponent implements OnInit{
         codOS: eventOS.codOS,
         codProduto: eventOS.codProduto,
         descricao: eventOS.descricao,
-        valorUnitario: eventOS.valorUnitario,
+        valorUnitario: parseFloat(eventOS.valorUnitario.replace('R$','').trim()) || 0,
         quantidade: eventOS.quantidade,
-        total: eventOS.total
+        total: parseFloat(eventOS.total.replace('R$','').trim()) || 0,
       } : {
         idItensDaOS: null,
         codOS: eventOS.idOs,
@@ -204,14 +204,17 @@ export class OrdemDeServiceComponent implements OnInit{
         total: null
       }
     });
-    console.log("Dados do elementoDialog", eventOS)
-    console.log("Evento de dialogRef", dialogRef)
+    dialogRef.afterClosed().subscribe(()=>{
+
+      console.log("Dados do elementoDialog", eventOS.itensOS);
+    //  console.log("Evento de dialogRef", dialogRef)
+    })
   }
 
   formatter(value: number): string {
-    //<div>{{ formatter(iProdroduto.valor_venda) }}</div>
     return new Intl.NumberFormat('pt-BR', {style: 'currency', currency: 'BRL'}).format(value);
   }
+
   formatarData(dataString: string): Date {
     return new Date(dataString);
   }

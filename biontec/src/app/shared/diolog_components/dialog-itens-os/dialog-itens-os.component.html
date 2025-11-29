@@ -59,7 +59,7 @@
 
   <mat-form-field appearance="fill">
     <mat-label>Total</mat-label>
-    <input matInput [value]="formatter(itensOS.total)" disabled [(ngModel)]="itensOS.total" >
+    <input matInput [value]="formatter(itensOS.total || 0)" disabled [(ngModel)]="itensOS.total" >
   </mat-form-field>
 
   <span>
