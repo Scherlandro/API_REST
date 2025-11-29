@@ -52,12 +52,4 @@ import javax.persistence.*;
                     codProduto,descricao,valorUnitario,quantidade,total);
         }
 
-       /*  public ItensDoServicoDTO toDTO() {
-            return new ItensDoServicoDTO(
-                    idItensDaOS,
-                    codOS != null ? codOS : null, // Usa o ID da OS via relacionamento
-                    codProduto, descricao, valorUnitario, quantidade, total
-            );
-        }
-*/
     }

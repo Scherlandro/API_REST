@@ -191,7 +191,7 @@ export class OrdemDeServiceComponent implements OnInit{
         codProduto: '',
         descricao: '',
         valorUnitario: null,
-        quantidade: '',
+        quantidade: null,
         total: null
       } : {
         idItensDaOS: eventOS.idItensDaOS,

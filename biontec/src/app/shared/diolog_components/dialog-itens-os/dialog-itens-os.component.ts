@@ -176,8 +176,7 @@ export class DialogItensOSComponent implements OnInit {
 
 
   formatter(value: number): string {
-    return new Intl.NumberFormat('pt-BR', {
-      style: 'currency', currency: 'BRL' }).format(value);
+    return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
   }
 
   // Método que valida se o botão "Salvar" deve ser habilitado
