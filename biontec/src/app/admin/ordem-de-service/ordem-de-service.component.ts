@@ -183,17 +183,10 @@ export class OrdemDeServiceComponent implements OnInit{
   }
 
   openDilogItenOS(eventOS: any) {
+    console.log("IdItensOS", eventOS.itensOS)
     const dialogRef = this.dialog.open(DialogItensOSComponent, {
       width: '300px',
-      data: eventOS.idItensDaOS === null ? {
-        idItensDaOS: null,
-        codOS: eventOS.idOs,
-        codProduto: '',
-        descricao: '',
-        valorUnitario: null,
-        quantidade: null,
-        total: null
-      } : {
+      data: eventOS.itensOS === undefined ? {
         idItensDaOS: eventOS.idItensDaOS,
         codOS: eventOS.codOS,
         codProduto: eventOS.codProduto,
@@ -201,6 +194,14 @@ export class OrdemDeServiceComponent implements OnInit{
         valorUnitario: eventOS.valorUnitario,
         quantidade: eventOS.quantidade,
         total: eventOS.total
+      } : {
+        idItensDaOS: null,
+        codOS: eventOS.idOs,
+        codProduto: '',
+        descricao: '',
+        valorUnitario: null,
+        quantidade: null,
+        total: null
       }
     });
     console.log("Dados do elementoDialog", eventOS)

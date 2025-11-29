@@ -35,7 +35,7 @@ import javax.persistence.*;
         @Column(name = "qtd", length = 5)
         private Integer quantidade;
 
-        @Column(name = "total", length = 15)
+        @Column(name = "total", length = 30)
         private Double total;
 
         // Método para calcular o total automaticamente

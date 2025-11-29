@@ -133,6 +133,7 @@ export class ProductsComponent implements OnInit {
       }
     });
 
+    console.log("dialogRef", dialogRef)
 
     /* dialogRef.afterClosed().subscribe(result => {
        if (result !== undefined) {
