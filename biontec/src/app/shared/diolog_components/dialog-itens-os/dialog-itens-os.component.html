@@ -20,14 +20,13 @@
   </mat-form-field>
 
   <!-- Campo Autocomplete   (input)="filterProdutos($event)" -->
- <mat-form-field class="example-full-width" >
+ <mat-form-field class="example-full-width"   *ngIf="!isChange">
     <mat-label>Produto</mat-label>
     <input type="text"   matInput
       placeholder="Digite o nome do produto"
       [formControl]="produtoControl"
       [matAutocomplete]="auto"
       (input)="filterProdutos($event)"
-
     />
     <mat-error  *ngIf="produtoControl.hasError('required')" >Campo obrigatório.</mat-error>
 
@@ -37,8 +36,12 @@
                   (onSelectionChange)="onProdutoSelecionado(produto)" >
         {{ produto.nomeProduto }}
       </mat-option>
-
     </mat-autocomplete>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill"   *ngIf="isChange" >
+    <mat-label>Descrição</mat-label>
+  <input matInput [value]="itensOS.descricao" disabled  >
   </mat-form-field>
 
   <mat-form-field appearance="fill">
