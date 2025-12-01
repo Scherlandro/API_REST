@@ -67,4 +67,9 @@ public class ItensOSServiceImpl implements ItensOSService {
         return itensDaOSRepository.litarItensOSporCliente(nome);
     }
 
+    @Override
+    public void delete(Long id) {
+        itensDaOSRepository.deleteById(id);
+    }
+
 }

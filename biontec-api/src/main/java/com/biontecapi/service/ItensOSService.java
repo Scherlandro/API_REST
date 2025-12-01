@@ -25,8 +25,8 @@ public interface ItensOSService {
 
     List<ItensDoServicoDTO> litarItensOSPorData(String dt);
 
-
     List<ItensDoServicoDTO> litarItemOSPorCliente(String nome);
 
+    void delete(Long id);
 
 }

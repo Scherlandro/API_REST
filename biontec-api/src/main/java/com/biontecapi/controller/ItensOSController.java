@@ -99,7 +99,11 @@ public class ItensOSController {
                 .collect(Collectors.toList()));
     }
 
-
+    @DeleteMapping(path = "/delete/{idItensDaOS}")
+    public ResponseEntity excluir(@PathVariable("idItensDaOS") Integer id) {
+        itensOSService.delete(id);
+        return ResponseEntity.noContent().build();
+    }
 
 
 }
