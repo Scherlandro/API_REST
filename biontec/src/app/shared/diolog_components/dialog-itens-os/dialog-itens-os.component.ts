@@ -7,7 +7,6 @@ import {ProductService} from "../../../services/product.service";
 import {iProduto} from "../../../interfaces/product";
 import {iItensOS} from "../../../interfaces/itens-os";
 import {TokenService} from "../../../services/token.service";
-import {map, startWith} from "rxjs/operators";
 
 @Component({
   selector: 'app-dialog-editor-itens-os',

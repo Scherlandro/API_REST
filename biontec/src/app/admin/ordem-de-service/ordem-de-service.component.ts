@@ -1,8 +1,8 @@
 import {animate, state, style, transition, trigger} from "@angular/animations";
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {FormArray, FormBuilder, FormControl, FormGroup, NgForm, Validators} from "@angular/forms";
+import {FormBuilder, FormControl} from "@angular/forms";
 import {catchError, delay, first} from "rxjs/operators";
-import {Observable, of} from "rxjs";
+import { of} from "rxjs";
 import {MatTable, MatTableDataSource} from "@angular/material/table";
 import {MatPaginator, PageEvent} from "@angular/material/paginator";
 import {MatSort} from "@angular/material/sort";
@@ -20,6 +20,7 @@ import {DialogOpenOsComponent} from "../../shared/diolog_components/dialog-open-
 import {DialogItensOSComponent} from "../../shared/diolog_components/dialog-itens-os/dialog-itens-os.component";
 import {TokenService} from "../../services/token.service";
 import {NotificationMgsService} from "../../services/notification-mgs.service";
+
 
 
 @Component({
@@ -41,6 +42,8 @@ export class OrdemDeServiceComponent implements OnInit{
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   pageEvent!: PageEvent;
+  tbData: any;
+  ruwSelec: any;
 
   orders: iServiceOrder[] = [];
   clienteFilted: ICliente[] = [];
@@ -61,6 +64,7 @@ export class OrdemDeServiceComponent implements OnInit{
 
   constructor(
     private osService: OrdemDeServicosService,
+    private itensOsService: ItensOsService,
     private tokenServer: TokenService,
     public notificationMsg:  NotificationMgsService,
     private itensOs: ItensOsService,
@@ -209,6 +213,21 @@ export class OrdemDeServiceComponent implements OnInit{
       console.log("Dados do elementoDialog", eventOS.itensOS);
     //  console.log("Evento de dialogRef", dialogRef)
     })
+  }
+
+  deleteElement(item: iItensOS) {
+    this.notificationMsg.openConfirmDialog('Tem certeza em REMOVER este item ?')
+      .afterClosed().subscribe(res =>{
+      if(res){
+        this.itensOsService.deleteItensOS(item)
+          .subscribe((item) => {
+            this.tbData  = this.tbSourceItensDaOS$.data;
+            this.tbData.splice( this.ruwSelec,1);
+            this.tbSourceItensDaOS$.data = this.tbData;
+          });
+        this.notificationMsg.warn('! Deletado com sucesso!');
+      }
+    });
   }
 
   formatter(value: number): string {
