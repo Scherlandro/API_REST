@@ -4,7 +4,10 @@ import com.biontecapi.dtos.ItensDoServicoDTO;
 import com.biontecapi.model.ItensDoServico;
 import com.biontecapi.repository.ItensDaOSRepository;
 import com.biontecapi.service.ItensOSService;
+import org.springframework.data.crossstore.ChangeSetPersister;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -69,7 +72,11 @@ public class ItensOSServiceImpl implements ItensOSService {
 
     @Override
     public void delete(Long id) {
+        if (!itensDaOSRepository.existsById(id)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Item não encontrado");
+        }
         itensDaOSRepository.deleteById(id);
     }
+
 
 }

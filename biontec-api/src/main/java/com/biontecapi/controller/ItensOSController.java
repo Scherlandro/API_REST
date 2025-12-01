@@ -99,9 +99,9 @@ public class ItensOSController {
                 .collect(Collectors.toList()));
     }
 
-    @DeleteMapping(path = "/delete/{idItensDaOS}")
-    public ResponseEntity excluir(@PathVariable("idItensDaOS") Integer id) {
-        itensOSService.delete(id);
+    @DeleteMapping("/delete/{idItensDaOS}")
+    public ResponseEntity<Void> excluir(@PathVariable Long idItensDaOS) {
+        itensOSService.delete(idItensDaOS);
         return ResponseEntity.noContent().build();
     }
 
