@@ -126,10 +126,9 @@
               <ng-container matColumnDef="opcoes">
                 <th mat-header-cell *matHeaderCellDef> Opções</th>
                 <td mat-cell *matCellDef="let element">
-                  <button class="button-update">
-                    <mat-icon type="hidden" title="Editar Item" class="edit"
-                      (click)="openDilogItenOS(element)">
-                    </mat-icon>
+                  <button class="button-update"  title="Editar Item"
+                          (click)="openDilogItenOS(element)">
+                    <mat-icon>edit</mat-icon>
                   </button>
                   <button class="button-update" title="Remover Item"
                         (click)="deleteElement(element)">
