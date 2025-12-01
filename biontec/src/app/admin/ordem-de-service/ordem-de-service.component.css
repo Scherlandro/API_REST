@@ -41,6 +41,10 @@
   border-radius: 20px;
 }
 
+.button-update:hover {
+  background-image: linear-gradient( #e2efec, #7e758e);
+}
+
 .button-add{
   max-width: 100px;
   background-position:left ;
