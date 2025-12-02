@@ -187,7 +187,7 @@ export class OrdemDeServiceComponent implements OnInit{
   }
 
   openDilogItenOS(eventOS: any) {
-    console.log("IdItensOS", eventOS.itensOS)
+    console.log("IdItensOS", eventOS.itensOS, 'EventOS' , eventOS)
     const dialogRef = this.dialog.open(DialogItensOSComponent, {
       width: '300px',
       data: eventOS.itensOS === undefined ? {
