@@ -192,9 +192,9 @@ export class OrdemDeServiceComponent implements OnInit{
         codOS: eventOS.codOS,
         codProduto: eventOS.codProduto,
         descricao: eventOS.descricao,
-        valorUnitario: parseFloat(eventOS.valorUnitario.replace('R$','').trim()) || 0,
+        valorUnitario: parseFloat(eventOS.valorUnitario.replace('R$','').trim().replace(',','.')) || 0,
         quantidade: eventOS.quantidade,
-        total: parseFloat(eventOS.total.replace('R$','').trim()) || 0,
+        total: parseFloat(eventOS.total.replace('R$','').trim().replace(',','.')) || 0,
       } : {
         idItensDaOS: null,
         codOS: eventOS.idOs,
