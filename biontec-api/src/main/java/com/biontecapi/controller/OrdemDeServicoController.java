@@ -41,12 +41,10 @@ public class OrdemDeServicoController {
          return ResponseEntity.ok(os.stream().map(OrdemDeServico::toDTO).toList());
     }
 
-    @GetMapping(path = "/{id_os}")
-    public ResponseEntity findById(@PathVariable("id_os") Long idOS) {
+    @GetMapping(path = "/findOSById/{idOs}")
+    public ResponseEntity findById(@PathVariable("idOs") Long idOS) {
         Optional<OrdemDeServico> serv = service.listarOSPorID(idOS);
-        return ResponseEntity.ok(serv.map(
-                e -> mapper.map(e, OrdemDeServicoDTO.class)).map(r -> ResponseEntity.ok().body(r))//ResponseEntity::ok
-                .orElse(ResponseEntity.notFound().build()));
+        return ResponseEntity.ok(serv.stream().map(OrdemDeServico::toDTO).toList());
     }
 
     @GetMapping("/cliente/{id_cliente}")

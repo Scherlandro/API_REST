@@ -2,7 +2,7 @@ import {animate, state, style, transition, trigger} from "@angular/animations";
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {FormBuilder, FormControl} from "@angular/forms";
 import {catchError, delay, first} from "rxjs/operators";
-import { of} from "rxjs";
+import {of, takeUntil} from "rxjs";
 import {MatTable, MatTableDataSource} from "@angular/material/table";
 import {MatPaginator, PageEvent} from "@angular/material/paginator";
 import {MatSort} from "@angular/material/sort";
@@ -152,7 +152,7 @@ export class OrdemDeServiceComponent implements OnInit{
 
       element.totalgeral = soma;
       element.totalgeral = this.formatarReal(soma);
-      console.log('Valor soma', element);
+      console.log('Valor soma', element.totalgeral);
       this.tbSourceItensDaOS$.data = element.itensOS.map((item: iItensOS) => ({
         ...item,
         // Formata os valores individuais
@@ -234,18 +234,42 @@ export class OrdemDeServiceComponent implements OnInit{
     });
 
     dialogRef.afterClosed().subscribe((eventOS) => {
-   /*  if (itemEditadoOuAdicionado) {
-        // Se estiver editando um item existente
-        const index = eventOS.itensOS.findIndex((i:any) => i.idItensDaOS === itemEditadoOuAdicionado.idItensDaOS);
+      //console.log('AferClosed EventIOS', eventOS)
 
-        if (index >= 0) {
-          // Atualiza o item
-          eventOS.itensOS[index] = itemEditadoOuAdicionado;
-        } else {
-          // Adiciona o item
-          eventOS.itensOS.push(itemEditadoOuAdicionado);
+
+
+
+        // Verifica se os campos obrigatórios estão preenchidos
+        if (eventOS) {
+         const ordens =  this.osService.getById(eventOS.codOS);
+          console.log('AferClosed ordens, total', ordens,eventOS.total)
+         /*     this.osService.update(eventOS.idOS,...eventOS.total).pipe(
+          //  takeUntil(this.destroy$)
+          ).subscribe({
+            next: (osAtualizada) => {
+             // this.dialogRef.close(osAtualizada);
+            },
+            error: (err) => {
+              this.onError('Erro ao atualizar a OS');
+              console.error(err);
+            }
+          });*/
         }
-      }*/
+
+
+
+      /*  if (itemEditadoOuAdicionado) {
+           // Se estiver editando um item existente
+           const index = eventOS.itensOS.findIndex((i:any) => i.idItensDaOS === itemEditadoOuAdicionado.idItensDaOS);
+
+           if (index >= 0) {
+             // Atualiza o item
+             eventOS.itensOS[index] = itemEditadoOuAdicionado;
+           } else {
+             // Adiciona o item
+             eventOS.itensOS.push(itemEditadoOuAdicionado);
+           }
+         }*/
       // REPROCESSAR TOTAL
       this.recalcularTotalOS(eventOS);
     });

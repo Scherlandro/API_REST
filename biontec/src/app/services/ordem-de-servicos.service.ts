@@ -15,7 +15,7 @@ export class OrdemDeServicosService {
   }
 
   getById(id: number): Observable<iServiceOrder> {
-    return this.http.get<iServiceOrder>(`${this.baseUrl}/${id}`);
+    return this.http.get<iServiceOrder>(`${this.baseUrl}/findOSById/${id}`);
   }
 
   create(order: iServiceOrder): Observable<iServiceOrder> {
