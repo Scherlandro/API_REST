@@ -17,6 +17,7 @@ import {DialogOpenOsComponent} from "../../shared/diolog_components/dialog-open-
 import {DialogItensOSComponent} from "../../shared/diolog_components/dialog-itens-os/dialog-itens-os.component";
 import {TokenService} from "../../services/token.service";
 import {NotificationMgsService} from "../../services/notification-mgs.service";
+import { ChangeDetectorRef } from '@angular/core';
 
 
 
@@ -62,6 +63,7 @@ export class OrdemDeServiceComponent implements OnInit{
   constructor(
     private osService: OrdemDeServicosService,
     private itensOsService: ItensOsService,
+    private cdRef: ChangeDetectorRef,
     private tokenServer: TokenService,
     public notificationMsg:  NotificationMgsService,
     private itensOs: ItensOsService,
@@ -141,13 +143,16 @@ export class OrdemDeServiceComponent implements OnInit{
     element.isExpanded = !element.isExpanded;
     // Se a linha foi expandida, carregar os dados
     if (element.isExpanded) {
-      var soma = 0;
+    /*  var soma = 0;
       for (var i = 0; i < element.length; i++) {
         soma += element.map((p: iItensOS) => p.valorUnitario)[i];
-      }
-     // console.log('Element itensOS  ==> ', element.itensOS );
+      }*/
+      const soma = element.itensOS
+        .reduce((acc: number, item: iItensOS)=> acc + Number(item.total))
+
       element.totalgeral = soma;
       element.totalgeral = this.formatarReal(soma);
+      console.log('Valor soma', element);
       this.tbSourceItensDaOS$.data = element.itensOS.map((item: iItensOS) => ({
         ...item,
         // Formata os valores individuais
@@ -156,6 +161,28 @@ export class OrdemDeServiceComponent implements OnInit{
       }));
     }
   }
+
+  recalcularTotalOS(elementOS: any) {
+    console.log("recalcularTotalOS", elementOS.idOS, 'EventOS' , elementOS, 'Lengh',elementOS.itensOS.length)
+
+    if (!elementOS.idOS || elementOS.itensOS.length === 0) {
+      elementOS.totalGeralOS = 0;
+      elementOS.totalGeralOS = this.formatarReal(0);
+      return;
+    }
+
+    const soma = elementOS.itensOS.reduce((acc:number, item:any) => {
+      return acc + Number(item.total);
+    }, 0);
+
+    elementOS.totalGeralOS = soma;
+    elementOS.totalGeralOS = this.formatarReal(soma);
+
+    // força refresh visual
+    //this.tableOS.renderRows();
+    this.cdRef.detectChanges();
+  }
+
 
   onError(errrorMsg: string) {
     this.dialog.open(ErrorDiologComponent, {
@@ -205,11 +232,24 @@ export class OrdemDeServiceComponent implements OnInit{
         total: null
       }
     });
-    dialogRef.afterClosed().subscribe(()=>{
 
-      console.log("Dados do elementoDialog", eventOS.itensOS);
-    //  console.log("Evento de dialogRef", dialogRef)
-    })
+    dialogRef.afterClosed().subscribe((eventOS) => {
+   /*  if (itemEditadoOuAdicionado) {
+        // Se estiver editando um item existente
+        const index = eventOS.itensOS.findIndex((i:any) => i.idItensDaOS === itemEditadoOuAdicionado.idItensDaOS);
+
+        if (index >= 0) {
+          // Atualiza o item
+          eventOS.itensOS[index] = itemEditadoOuAdicionado;
+        } else {
+          // Adiciona o item
+          eventOS.itensOS.push(itemEditadoOuAdicionado);
+        }
+      }*/
+      // REPROCESSAR TOTAL
+      this.recalcularTotalOS(eventOS);
+    });
+
   }
 
   deleteElement(item: iItensOS) {
@@ -227,8 +267,23 @@ export class OrdemDeServiceComponent implements OnInit{
     });
   }
 
-  formatter(value: number): string {
-    return new Intl.NumberFormat('pt-BR', {style: 'currency', currency: 'BRL'}).format(value);
+  deleteElement2(item: iItensOS) {
+    this.notificationMsg.openConfirmDialog('Tem certeza em REMOVER este item ?')
+      .afterClosed().subscribe(res => {
+      if (res) {
+        this.itensOsService.deleteItensOS(item).subscribe(() => {
+          const elementOS: any = this.tbSourceOS$.data.find(os => os.idOS === item.codOS);
+          if (elementOS) {
+            elementOS.itensOS = elementOS.itensOS.filter((i:any) => i.idItensDaOS !== item.idItensDaOS);
+            this.recalcularTotalOS(elementOS);
+          }
+          this.tbData = this.tbSourceItensDaOS$.data;
+          this.tbData.splice(this.ruwSelec, 1);
+          this.tbSourceItensDaOS$.data = this.tbData;
+          this.notificationMsg.warn('! Deletado com sucesso!');
+        });
+      }
+    });
   }
 
   formatarData(dataString: string): Date {
@@ -238,6 +293,8 @@ export class OrdemDeServiceComponent implements OnInit{
   formatarReal(valor: number | string): string {
     // Converte para número se for string
     const numero = typeof valor === 'string' ? parseFloat(valor) : valor;
+
+  //  return new Intl.NumberFormat('pt-BR', {style: 'currency', currency: 'BRL'}).format(numero);
 
     // Formata para Real brasileiro
     return numero.toLocaleString('pt-BR', {
