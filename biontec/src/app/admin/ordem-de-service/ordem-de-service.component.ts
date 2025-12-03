@@ -91,7 +91,20 @@ export class OrdemDeServiceComponent implements OnInit{
         this.tbSourceOS$.data = result;
         this.tbSourceOS$.paginator = this.paginator;
         this.spiner = false;
-        console.log('Listar itens ', result)
+      });
+  }
+
+  listOrderById(id:any) {
+    this.osService.getById(id)
+      .pipe(first(), delay(1500),catchError(error => {
+        if (error === 'Session Expired')
+          this.onError('Sua sessão expirou!');
+          this.tokenServer.clearTokenExpired();
+        return of([])
+      })).subscribe(
+      (result: any) => {
+        console.log('Os por cod ', result)
+        return result;
       });
   }
 
@@ -241,7 +254,7 @@ export class OrdemDeServiceComponent implements OnInit{
 
         // Verifica se os campos obrigatórios estão preenchidos
         if (eventOS) {
-         const ordens =  this.osService.getById(eventOS.codOS);
+         const ordens =  this.listOrderById(eventOS.codOS);
           console.log('AferClosed ordens, total', ordens,eventOS.total)
          /*     this.osService.update(eventOS.idOS,...eventOS.total).pipe(
           //  takeUntil(this.destroy$)
@@ -271,7 +284,7 @@ export class OrdemDeServiceComponent implements OnInit{
            }
          }*/
       // REPROCESSAR TOTAL
-      this.recalcularTotalOS(eventOS);
+    //  this.recalcularTotalOS(eventOS);
     });
 
   }

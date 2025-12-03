@@ -1,6 +1,6 @@
-import { Component, Inject, OnInit } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import {Component, Inject, OnInit} from '@angular/core';
+import {FormControl, Validators} from '@angular/forms';
+import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import {catchError, of, Subject, takeUntil} from 'rxjs';
 import {ItensOsService} from "../../../services/itens-os.service";
 import {ProductService} from "../../../services/product.service";
@@ -36,23 +36,19 @@ export class DialogItensOSComponent implements OnInit {
 
   ngOnInit(): void {
     this.listarProdutos();
-  //  this.configurarAutocomplete();
-
     if (this.itensOS.codProduto) {
       this.isChange = true;
       this.preencherCamposEdicao();
     }
-
   }
-
 
   listarProdutos() {
     this.prodService.getTodosProdutos()
-      .pipe( catchError(error => {
-        if (error === 'Session Expired') {
-          this.onError('Sua sessão expirou!');
-          this.tokenServer.clearTokenExpired();
-        }
+      .pipe(catchError(error => {
+          if (error === 'Session Expired') {
+            this.onError('Sua sessão expirou!');
+            this.tokenServer.clearTokenExpired();
+          }
           return of([]);
         })
       )
@@ -61,46 +57,24 @@ export class DialogItensOSComponent implements OnInit {
         this.produtoFiltered = res;
       });
   }
-/*
 
-  configurarAutocomplete(): void {
-    // Configura o filtro em tempo real
-    this.produtoControl.valueChanges
-      .pipe(
-        startWith(''),
-        map(value => typeof value === 'string' ? value : value?.nomeProduto),
-        map(nome => nome ? this.filtrarProdutos(nome) : this.produtos.slice())
-      )
-      .subscribe(produtosFiltrados => {
-        this.produtoFiltered = produtosFiltrados;
-      });
+  filterProdutos(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const valor = input.value;
+
+    if (valor) {
+      this.produtoFiltered = this.produtos.filter(p =>
+        p.nomeProduto.toLowerCase().includes(valor.toLowerCase()));
+    } else {
+      this.produtoFiltered = this.produtos.slice();
+    }
   }
 
-  filtrarProdutos(nome: string): iProduto[] {
-    const filterValue = nome.toLowerCase();
-    return this.produtos.filter(produto =>
-      produto.nomeProduto.toLowerCase().includes(filterValue)
-    );
+  onProdutoSelecionado(produto: iProduto): void {
+    if (produto) {
+      this.updateItemFields(produto);
+    }
   }
-*/
-
-   filterProdutos(event: Event): void {
-     const input = event.target as HTMLInputElement;
-     const valor = input.value;
-
-     if (valor) {
-       this.produtoFiltered = this.produtos.filter(p =>
-         p.nomeProduto.toLowerCase().includes(valor.toLowerCase()));
-     } else {
-       this.produtoFiltered = this.produtos.slice();
-     }
-   }
-
-     onProdutoSelecionado(produto: iProduto): void {
-       if (produto) {
-         this.updateItemFields(produto);
-       }
-     }
 
   displayPd(produto: iProduto): string {
     return produto ? produto.nomeProduto : '';
@@ -113,7 +87,6 @@ export class DialogItensOSComponent implements OnInit {
   onCancel(): void {
     this.dialogRef.close();
   }
-
 
   save(item: iItensOS) {
     if (this.produtoControl.valid && this.quantidadeControl.valid) {
@@ -175,7 +148,7 @@ export class DialogItensOSComponent implements OnInit {
 
 
   formatter(value: number): string {
-    return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
+    return new Intl.NumberFormat('pt-BR', {style: 'currency', currency: 'BRL'}).format(value);
   }
 
   // Método que valida se o botão "Salvar" deve ser habilitado
