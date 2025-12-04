@@ -17,8 +17,7 @@ import {DialogOpenOsComponent} from "../../shared/diolog_components/dialog-open-
 import {DialogItensOSComponent} from "../../shared/diolog_components/dialog-itens-os/dialog-itens-os.component";
 import {TokenService} from "../../services/token.service";
 import {NotificationMgsService} from "../../services/notification-mgs.service";
-import { ChangeDetectorRef } from '@angular/core';
-
+import {ChangeDetectorRef} from '@angular/core';
 
 
 @Component({
@@ -33,7 +32,7 @@ import { ChangeDetectorRef } from '@angular/core';
     ]),
   ],
 })
-export class OrdemDeServiceComponent implements OnInit{
+export class OrdemDeServiceComponent implements OnInit {
   spiner = false;
   @ViewChild(MatTable) tableOS!: MatTable<any>;
   @ViewChild(MatTable) tableItensOS!: MatTable<any>;
@@ -49,7 +48,7 @@ export class OrdemDeServiceComponent implements OnInit{
   tbSourceOS$: MatTableDataSource<iServiceOrder>;
   displayedColumns0S = ['Nome', 'Data', 'Status', 'Total', 'Opcoes'];
   tbSourceItensDaOS$: MatTableDataSource<iItensOS>;
-  displayedColumns: string[] = ['codOS','codigo', 'descricao', 'preco', 'qtd', 'soma', 'imagem', 'opcoes'];
+  displayedColumns: string[] = ['codOS', 'codigo', 'descricao', 'preco', 'qtd', 'soma', 'imagem', 'opcoes'];
   OSControl = new FormControl();
 
   searchForm = this.fb.group({
@@ -65,7 +64,7 @@ export class OrdemDeServiceComponent implements OnInit{
     private itensOsService: ItensOsService,
     private cdRef: ChangeDetectorRef,
     private tokenServer: TokenService,
-    public notificationMsg:  NotificationMgsService,
+    public notificationMsg: NotificationMgsService,
     private itensOs: ItensOsService,
     private fb: FormBuilder,
     public dialog: MatDialog
@@ -81,10 +80,10 @@ export class OrdemDeServiceComponent implements OnInit{
   loadOrders() {
     this.spiner = true;
     this.osService.getAll()
-      .pipe(first(), delay(1500),catchError(error => {
+      .pipe(first(), delay(1500), catchError(error => {
         if (error === 'Session Expired')
           this.onError('Sua sessão expirou!');
-          this.tokenServer.clearTokenExpired();
+        this.tokenServer.clearTokenExpired();
         return of([])
       })).subscribe(
       (result: iServiceOrder[]) => {
@@ -94,12 +93,12 @@ export class OrdemDeServiceComponent implements OnInit{
       });
   }
 
-  listOrderById(id:any) {
+  listOrderById(id: any) {
     this.osService.getById(id)
-      .pipe(first(), delay(1500),catchError(error => {
+      .pipe(first(), delay(1500), catchError(error => {
         if (error === 'Session Expired')
           this.onError('Sua sessão expirou!');
-          this.tokenServer.clearTokenExpired();
+        this.tokenServer.clearTokenExpired();
         return of([])
       })).subscribe(
       (result: any) => {
@@ -147,7 +146,7 @@ export class OrdemDeServiceComponent implements OnInit{
   }
 
   toggleRow(element: any) {
-    this.tbSourceOS$.data.forEach((item:any) => {
+    this.tbSourceOS$.data.forEach((item: any) => {
       if (item !== element && item.isExpanded) {
         item.isExpanded = false;
       }
@@ -156,12 +155,12 @@ export class OrdemDeServiceComponent implements OnInit{
     element.isExpanded = !element.isExpanded;
     // Se a linha foi expandida, carregar os dados
     if (element.isExpanded) {
-    /*  var soma = 0;
-      for (var i = 0; i < element.length; i++) {
-        soma += element.map((p: iItensOS) => p.valorUnitario)[i];
-      }*/
+      /*  var soma = 0;
+        for (var i = 0; i < element.length; i++) {
+          soma += element.map((p: iItensOS) => p.valorUnitario)[i];
+        }*/
       const soma = element.itensOS
-        .reduce((acc: number, item: iItensOS)=> acc + Number(item.total))
+        .reduce((acc: number, item: iItensOS) => acc + Number(item.total))
 
       element.totalgeral = soma;
       element.totalgeral = this.formatarReal(soma);
@@ -176,7 +175,7 @@ export class OrdemDeServiceComponent implements OnInit{
   }
 
   recalcularTotalOS(elementOS: any) {
-    console.log("recalcularTotalOS", elementOS.idOS, 'EventOS' , elementOS, 'Lengh',elementOS.itensOS.length)
+    console.log("recalcularTotalOS", elementOS.idOS, 'EventOS', elementOS, 'Lengh', elementOS.itensOS.length)
 
     if (!elementOS.idOS || elementOS.itensOS.length === 0) {
       elementOS.totalGeralOS = 0;
@@ -184,7 +183,7 @@ export class OrdemDeServiceComponent implements OnInit{
       return;
     }
 
-    const soma = elementOS.itensOS.reduce((acc:number, item:any) => {
+    const soma = elementOS.itensOS.reduce((acc: number, item: any) => {
       return acc + Number(item.total);
     }, 0);
 
@@ -224,7 +223,7 @@ export class OrdemDeServiceComponent implements OnInit{
   }
 
   openDilogItenOS(eventOS: any) {
-    console.log("IdItensOS", eventOS.itensOS, 'EventOS' , eventOS)
+    console.log("IdItensOS", eventOS.itensOS, 'EventOS', eventOS)
     const dialogRef = this.dialog.open(DialogItensOSComponent, {
       width: '300px',
       data: eventOS.itensOS === undefined ? {
@@ -232,9 +231,9 @@ export class OrdemDeServiceComponent implements OnInit{
         codOS: eventOS.codOS,
         codProduto: eventOS.codProduto,
         descricao: eventOS.descricao,
-        valorUnitario: parseFloat(eventOS.valorUnitario.replace('R$','').trim().replace(',','.')) || 0,
+        valorUnitario: parseFloat(eventOS.valorUnitario.replace('R$', '').trim().replace(',', '.')) || 0,
         quantidade: eventOS.quantidade,
-        total: parseFloat(eventOS.total.replace('R$','').trim().replace(',','.')) || 0,
+        total: parseFloat(eventOS.total.replace('R$', '').trim().replace(',', '.')) || 0,
       } : {
         idItensDaOS: null,
         codOS: eventOS.idOs,
@@ -250,25 +249,33 @@ export class OrdemDeServiceComponent implements OnInit{
       //console.log('AferClosed EventIOS', eventOS)
 
 
+      // Verifica se os campos obrigatórios estão preenchidos
+      if (eventOS) {
+        const ordens = this.listOrderById(eventOS.codOS);
+        console.log('AferClosed ordens, total', ordens, eventOS.total)
 
+        /*
+           const order = this.os.find(o => o.codOS === eventOS.codOS);
+          if (order) {
+           this.orderControl.setValue(order);
+           this.updateOSFields(order);
+           }
+         */
 
-        // Verifica se os campos obrigatórios estão preenchidos
-        if (eventOS) {
-         const ordens =  this.listOrderById(eventOS.codOS);
-          console.log('AferClosed ordens, total', ordens,eventOS.total)
-         /*     this.osService.update(eventOS.idOS,...eventOS.total).pipe(
-          //  takeUntil(this.destroy$)
-          ).subscribe({
-            next: (osAtualizada) => {
-             // this.dialogRef.close(osAtualizada);
-            },
-            error: (err) => {
-              this.onError('Erro ao atualizar a OS');
-              console.error(err);
-            }
-          });*/
-        }
+        //----------------------------------------
 
+        /*     this.osService.update(eventOS.idOS,...eventOS.total).pipe(
+         //  takeUntil(this.destroy$)
+         ).subscribe({
+           next: (osAtualizada) => {
+            // this.dialogRef.close(osAtualizada);
+           },
+           error: (err) => {
+             this.onError('Erro ao atualizar a OS');
+             console.error(err);
+           }
+         });*/
+      }
 
 
       /*  if (itemEditadoOuAdicionado) {
@@ -284,19 +291,19 @@ export class OrdemDeServiceComponent implements OnInit{
            }
          }*/
       // REPROCESSAR TOTAL
-    //  this.recalcularTotalOS(eventOS);
+      //  this.recalcularTotalOS(eventOS);
     });
 
   }
 
   deleteElement(item: iItensOS) {
     this.notificationMsg.openConfirmDialog('Tem certeza em REMOVER este item ?')
-      .afterClosed().subscribe(res =>{
-      if(res){
+      .afterClosed().subscribe(res => {
+      if (res) {
         this.itensOsService.deleteItensOS(item)
           .subscribe((item) => {
-            this.tbData  = this.tbSourceItensDaOS$.data;
-            this.tbData.splice( this.ruwSelec,1);
+            this.tbData = this.tbSourceItensDaOS$.data;
+            this.tbData.splice(this.ruwSelec, 1);
             this.tbSourceItensDaOS$.data = this.tbData;
           });
         this.notificationMsg.warn('! Deletado com sucesso!');
@@ -311,7 +318,7 @@ export class OrdemDeServiceComponent implements OnInit{
         this.itensOsService.deleteItensOS(item).subscribe(() => {
           const elementOS: any = this.tbSourceOS$.data.find(os => os.idOS === item.codOS);
           if (elementOS) {
-            elementOS.itensOS = elementOS.itensOS.filter((i:any) => i.idItensDaOS !== item.idItensDaOS);
+            elementOS.itensOS = elementOS.itensOS.filter((i: any) => i.idItensDaOS !== item.idItensDaOS);
             this.recalcularTotalOS(elementOS);
           }
           this.tbData = this.tbSourceItensDaOS$.data;
@@ -326,12 +333,13 @@ export class OrdemDeServiceComponent implements OnInit{
   formatarData(dataString: string): Date {
     return new Date(dataString);
   }
+
   // Método para formatar valores para Real brasileiro
   formatarReal(valor: number | string): string {
     // Converte para número se for string
     const numero = typeof valor === 'string' ? parseFloat(valor) : valor;
 
-  //  return new Intl.NumberFormat('pt-BR', {style: 'currency', currency: 'BRL'}).format(numero);
+    //  return new Intl.NumberFormat('pt-BR', {style: 'currency', currency: 'BRL'}).format(numero);
 
     // Formata para Real brasileiro
     return numero.toLocaleString('pt-BR', {
