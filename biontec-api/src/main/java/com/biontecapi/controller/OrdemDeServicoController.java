@@ -23,7 +23,7 @@ import com.biontecapi.service.OrdemDeServicoService;
 public class OrdemDeServicoController {
 
     private final OrdemDeServicoService service;
-    private ModelMapper mapper;
+    private final ModelMapper mapper;
 
     @Autowired
     public OrdemDeServicoController(OrdemDeServicoService service, ModelMapper mapper) {
@@ -31,9 +31,6 @@ public class OrdemDeServicoController {
         this.mapper = mapper;
     }
 
-    public OrdemDeServicoController(OrdemDeServicoService service) {
-        this.service = service;
-    }
 
     @GetMapping
     public ResponseEntity<List<OrdemDeServico>> findAll() {
@@ -46,12 +43,6 @@ public class OrdemDeServicoController {
          return ResponseEntity.ok(os.stream().map(OrdemDeServico::toDTO).toList());
     }
 
-  /*  @GetMapping(path = "/findOSById/{idOs}")
-    public ResponseEntity findById(@PathVariable("idOs") Long idOS) {
-        Optional<OrdemDeServico> serv = service.listarOSPorID(idOS);
-        return ResponseEntity.ok(serv.stream().map(OrdemDeServico::toDTO).toList());
-    }
-*/
     @GetMapping(path = "/findOSById/{idOs}")
     public ResponseEntity<OrdemDeServicoDTO> findById(@PathVariable("idOs") Long idOS) {
         Optional<OrdemDeServico> serv = service.listarOSPorID(idOS);
@@ -61,7 +52,6 @@ public class OrdemDeServicoController {
         OrdemDeServicoDTO ordemDeServicoDTO = serv.get().toDTO();
         return ResponseEntity.ok(ordemDeServicoDTO);
     }
-
 
     @GetMapping("/cliente/{id_cliente}")
     public ResponseEntity<List<OrdemDeServico>> findOSPorIdClienteId(@PathVariable Integer idCliente) {
@@ -129,16 +119,7 @@ public class OrdemDeServicoController {
     }
 
 
-      /*   @GetMapping("/{id}")
-    public OrdemDeServicoDTO getOrdemDeServico(@PathVariable Long id) {
-        Optional <OrdemDeServico> os = service.listarOSPorID(id);
-        return os.get().toDTO();
-    }
 
-        @PostMapping
-    public void create(@RequestBody OrdemDeServicoDTO dto) {
-        service.save(dto);
-    }*/
 }
 
 

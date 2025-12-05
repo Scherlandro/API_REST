@@ -27,8 +27,7 @@ public class OrdemDeServicoServiceImpl implements OrdemDeServicoService {
     final FuncionarioRepository funcionarioRepository;
     final ItensDaOSRepository itensDaOSRepository;
     final ProdutoRepository productRepository;
-    @Autowired
-    private ModelMapper mapper;
+
 
     public OrdemDeServicoServiceImpl(OrdemDeServicosRepository osRepository,
                                      ClienteRepository clientRepository,
