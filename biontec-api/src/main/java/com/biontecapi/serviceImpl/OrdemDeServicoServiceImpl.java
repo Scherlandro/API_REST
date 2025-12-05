@@ -8,8 +8,11 @@ import com.biontecapi.model.ItensDoServico;
 import com.biontecapi.model.OrdemDeServico;
 import com.biontecapi.repository.*;
 import com.biontecapi.service.OrdemDeServicoService;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -24,6 +27,8 @@ public class OrdemDeServicoServiceImpl implements OrdemDeServicoService {
     final FuncionarioRepository funcionarioRepository;
     final ItensDaOSRepository itensDaOSRepository;
     final ProdutoRepository productRepository;
+    @Autowired
+    private ModelMapper mapper;
 
     public OrdemDeServicoServiceImpl(OrdemDeServicosRepository osRepository,
                                      ClienteRepository clientRepository,
@@ -37,6 +42,10 @@ public class OrdemDeServicoServiceImpl implements OrdemDeServicoService {
         this.productRepository = productRepository;
     }
 
+    @Override
+    public boolean existsById(Long id) {
+        return osRepository.existsById(id);
+    }
 
     @Override
     public List<OrdemDeServico> listarOS() {
@@ -67,7 +76,6 @@ public class OrdemDeServicoServiceImpl implements OrdemDeServicoService {
     @Override
     public OrdemDeServico criarOS(OrdemDeServicoDTO dto) {
         OrdemDeServico order = new OrdemDeServico();
-
         order.setIdCliente(dto.clienteId());
         order.setNomeCliente(dto.nomeCliente());
         order.setIdFuncionario(dto.idFuncionario());
@@ -75,21 +83,18 @@ public class OrdemDeServicoServiceImpl implements OrdemDeServicoService {
         order.setDataDeEntrada(LocalDateTime.now());
         order.setStatus(Status.OS_em_Andamento);
         return osRepository.save(order);
-
         /*
          order.setUserId(dto.userId());
         order.setTechnicianId(dto.technicianId());
         order.setDeviceDescription(dto.deviceDescription());
         order.setIssueDescription(dto.issueDescription());
          */
-
-
     }
 
-    @Override
+/*    @Override
     public OrdemDeServico atualizarOS(Long id, OrdemDeServicoDTO dto) {
         OrdemDeServico order = osRepository.findById(id).orElseThrow();
-            /*
+            *//*
               if (dto.technicianId() != null) {
             order.setTechnicianId(dto.technicianId());
         }
@@ -102,9 +107,15 @@ public class OrdemDeServicoServiceImpl implements OrdemDeServicoService {
         if (dto.status() != null) {
             order.setStatus(dto.status());
         }
-             */
+             *//*
         return osRepository.save(order);
+    }*/
+
+    @Override
+    public OrdemDeServico atualizarOS( OrdemDeServico os) {
+        return osRepository.save(os);
     }
+
 
     @Override
     public OrdemDeServico addItemNaOS(Long osID, ItensDoServicoDTO itemDto) {

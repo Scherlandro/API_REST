@@ -17,6 +17,8 @@ import com.biontecapi.dtos.OrdemDeServicoDTO;
 import com.biontecapi.model.OrdemDeServico;
 import com.biontecapi.service.OrdemDeServicoService;
 
+import javax.persistence.EntityNotFoundException;
+
 @RestController
 @RequestMapping("/api/service-orders")
 public class OrdemDeServicoController {
@@ -63,8 +65,13 @@ public class OrdemDeServicoController {
     }
 
     @PutMapping("/{idOS}")
-    public ResponseEntity<OrdemDeServico> atualizarOS(@PathVariable Long idOS, @RequestBody OrdemDeServicoDTO dto) {
-        return ResponseEntity.ok(service.atualizarOS(idOS, dto));
+    public ResponseEntity<OrdemDeServico> atualizarOS(@PathVariable Long idOS, @RequestBody OrdemDeServicoDTO osDto) {
+        if(!service.existsById(idOS)){
+            return ResponseEntity.notFound().build();
+        }
+        OrdemDeServico os  = mapper.map(osDto, OrdemDeServico.class);
+        os.setIdOs(idOS);
+        return ResponseEntity.status(HttpStatus.CREATED).body(service.atualizarOS(os));
     }
 
     @PostMapping("/{idOS}/items")

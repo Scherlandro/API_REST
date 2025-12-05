@@ -9,6 +9,8 @@ import java.util.Optional;
 
 public interface OrdemDeServicoService {
 
+    boolean existsById(Long id);
+
     List<OrdemDeServico> listarOS();
 
     Optional<OrdemDeServico> listarOSPorID(Long id);
@@ -21,7 +23,7 @@ public interface OrdemDeServicoService {
 
     OrdemDeServico criarOS(OrdemDeServicoDTO dto);
 
-    OrdemDeServico atualizarOS(Long id, OrdemDeServicoDTO dto);
+    OrdemDeServico atualizarOS(OrdemDeServico os);
 
 
     OrdemDeServico addItemNaOS(Long osID, ItensDoServicoDTO itemDto);

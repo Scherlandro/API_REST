@@ -56,7 +56,6 @@ body {
   width: 100vh;
 }
 
-
 .bt-icon .elementor-button-icon {
   font-size: 32px;
   margin-bottom: -100%;
@@ -65,6 +64,9 @@ body {
   border-radius: 20px;
 }
 
+.rating{
+  font-weight: 600;
+}
 
 /*    Spinner
 --------######------------*/

@@ -23,7 +23,8 @@ export class OrdemDeServicosService {
   }
 
   update(id: number, order: iServiceOrder): Observable<iServiceOrder> {
-    return this.http.put<iServiceOrder>(`${this.baseUrl}/${id}`, order);
+    console.log('Valor OS Atualizada', order);
+    return this.http.put<iServiceOrder>(`${this.baseUrl}/${id}`,order);
   }
 
   search(params: any): Observable<iServiceOrder[]> {

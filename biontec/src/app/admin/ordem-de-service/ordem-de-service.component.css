@@ -130,10 +130,6 @@
   background: rgba(0, 3, 10, 0.05);
 }
 
-.rating{
-  font-weight: 900;
-}
-
 tr.example-detail-row {
   height: 0;
 }

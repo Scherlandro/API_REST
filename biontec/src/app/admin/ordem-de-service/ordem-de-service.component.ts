@@ -2,7 +2,7 @@ import {animate, state, style, transition, trigger} from "@angular/animations";
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {FormBuilder, FormControl} from "@angular/forms";
 import {catchError, delay, first} from "rxjs/operators";
-import {of, takeUntil} from "rxjs";
+import {of, Subject, takeUntil, throwError} from "rxjs";
 import {MatTable, MatTableDataSource} from "@angular/material/table";
 import {MatPaginator, PageEvent} from "@angular/material/paginator";
 import {MatSort} from "@angular/material/sort";
@@ -18,6 +18,7 @@ import {DialogItensOSComponent} from "../../shared/diolog_components/dialog-iten
 import {TokenService} from "../../services/token.service";
 import {NotificationMgsService} from "../../services/notification-mgs.service";
 import {ChangeDetectorRef} from '@angular/core';
+import {error} from "@angular/compiler-cli/src/transformers/util";
 
 
 @Component({
@@ -34,6 +35,7 @@ import {ChangeDetectorRef} from '@angular/core';
 })
 export class OrdemDeServiceComponent implements OnInit {
   spiner = false;
+  destroy$ = new Subject<void>();
   @ViewChild(MatTable) tableOS!: MatTable<any>;
   @ViewChild(MatTable) tableItensOS!: MatTable<any>;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -93,19 +95,38 @@ export class OrdemDeServiceComponent implements OnInit {
       });
   }
 
-  listOrderById(id: any) {
-    this.osService.getById(id)
-      .pipe(first(), delay(1500), catchError(error => {
-        if (error === 'Session Expired')
-          this.onError('Sua sessão expirou!');
-        this.tokenServer.clearTokenExpired();
-        return of([])
-      })).subscribe(
-      (result: any) => {
-        console.log('Os por cod ', result)
-        return result;
+  listUpdateOS(id: any) {
+  this.osService.getById(id)
+      .pipe( first(), delay(200),
+        catchError(error => {
+          if (error.status === 401) {
+            this.onError('Sua sessão expirou!');
+            this.tokenServer.clearTokenExpired();
+          }
+          return throwError(() => error); // não retornar []
+        }))
+      .subscribe({ complete:()=> {  },
+        next: (result: iServiceOrder) => {
+          if (!result) {
+            this.onError("OS não encontrada!");
+            return;
+          }
+          console.log('OS atualizada', result);
+          this.osService.update(id, result).pipe(
+            takeUntil(this.destroy$)
+          )
+            .subscribe({
+              next: newOS => { console.log('Update OS', newOS);
+              },
+              error: err => {
+                this.onError('Erro ao atualizar a OS');
+                console.error(err);
+              }});
+        },
+        error: err => { console.error("Erro no GET", err); }
       });
   }
+
 
   onSearch() {
     const params = this.prepareSearchParams();
@@ -251,7 +272,7 @@ export class OrdemDeServiceComponent implements OnInit {
 
       // Verifica se os campos obrigatórios estão preenchidos
       if (eventOS) {
-        const ordens = this.listOrderById(eventOS.codOS);
+        const ordens = this.listUpdateOS(eventOS.codOS);
         console.log('AferClosed ordens, total', ordens, eventOS.total)
 
         /*
