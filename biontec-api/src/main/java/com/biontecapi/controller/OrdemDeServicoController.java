@@ -4,6 +4,7 @@ package com.biontecapi.controller;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import com.biontecapi.dtos.ItensDoServicoDTO;
 import org.modelmapper.ModelMapper;
@@ -17,16 +18,18 @@ import com.biontecapi.dtos.OrdemDeServicoDTO;
 import com.biontecapi.model.OrdemDeServico;
 import com.biontecapi.service.OrdemDeServicoService;
 
-import javax.persistence.EntityNotFoundException;
-
 @RestController
 @RequestMapping("/api/service-orders")
 public class OrdemDeServicoController {
 
-
     private final OrdemDeServicoService service;
-    @Autowired
     private ModelMapper mapper;
+
+    @Autowired
+    public OrdemDeServicoController(OrdemDeServicoService service, ModelMapper mapper) {
+        this.service = service;
+        this.mapper = mapper;
+    }
 
     public OrdemDeServicoController(OrdemDeServicoService service) {
         this.service = service;
@@ -43,11 +46,22 @@ public class OrdemDeServicoController {
          return ResponseEntity.ok(os.stream().map(OrdemDeServico::toDTO).toList());
     }
 
-    @GetMapping(path = "/findOSById/{idOs}")
+  /*  @GetMapping(path = "/findOSById/{idOs}")
     public ResponseEntity findById(@PathVariable("idOs") Long idOS) {
         Optional<OrdemDeServico> serv = service.listarOSPorID(idOS);
         return ResponseEntity.ok(serv.stream().map(OrdemDeServico::toDTO).toList());
     }
+*/
+    @GetMapping(path = "/findOSById/{idOs}")
+    public ResponseEntity<OrdemDeServicoDTO> findById(@PathVariable("idOs") Long idOS) {
+        Optional<OrdemDeServico> serv = service.listarOSPorID(idOS);
+        if (!serv.isPresent()) {
+            return ResponseEntity.notFound().build(); // Retorna 404 se não encontrar
+        }
+        OrdemDeServicoDTO ordemDeServicoDTO = serv.get().toDTO();
+        return ResponseEntity.ok(ordemDeServicoDTO);
+    }
+
 
     @GetMapping("/cliente/{id_cliente}")
     public ResponseEntity<List<OrdemDeServico>> findOSPorIdClienteId(@PathVariable Integer idCliente) {
@@ -66,10 +80,10 @@ public class OrdemDeServicoController {
 
     @PutMapping("/{idOS}")
     public ResponseEntity<OrdemDeServico> atualizarOS(@PathVariable Long idOS, @RequestBody OrdemDeServicoDTO osDto) {
-        if(!service.existsById(idOS)){
+        if (!service.existsById(idOS)) {
             return ResponseEntity.notFound().build();
         }
-        OrdemDeServico os  = mapper.map(osDto, OrdemDeServico.class);
+        OrdemDeServico os = mapper.map(osDto, OrdemDeServico.class);
         os.setIdOs(idOS);
         return ResponseEntity.status(HttpStatus.CREATED).body(service.atualizarOS(os));
     }
