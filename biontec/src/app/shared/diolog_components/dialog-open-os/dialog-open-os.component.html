@@ -21,10 +21,17 @@
     </mat-autocomplete>
   </mat-form-field>
 
-  <mat-form-field appearance="fill">
+  <!--<mat-form-field appearance="fill">
     <mat-label>Data</mat-label>
     <input matInput [(ngModel)]="os.dt_OS">
+  </mat-form-field>-->
+  <mat-form-field appearance="fill">
+    <mat-label>Data</mat-label>
+    <input matInput [matDatepicker]="picker" [(ngModel)]="os.dt_OS">
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker #picker></mat-datepicker>
   </mat-form-field>
+
 
   <mat-form-field class="example-full-width">
     <mat-label>Cliente</mat-label>
