@@ -178,8 +178,8 @@ export class DialogOpenOsComponent implements OnInit {
     os.dt_OS = dataAtual.toLocaleDateString('pt-BR');
 
   // Verifica se é uma edição ou criação nova
-   if (this.isChange && os.idOS) {
-      this.osServices.update(os.idOS,os).pipe(
+  /* if (this.isChange && os.idOS) {
+      this.osServices.update(os).pipe(
         takeUntil(this.destroy$)
       ).subscribe({
         next: (osAtualizada) => {
@@ -190,7 +190,7 @@ export class DialogOpenOsComponent implements OnInit {
           console.error(err);
         }
       });
-    } else {
+    } else {*/
       this.osServices.create(os).pipe(
         takeUntil(this.destroy$)
       ).subscribe({
@@ -202,7 +202,7 @@ export class DialogOpenOsComponent implements OnInit {
           console.error(err);
         }
       });
-    }
+    //}
   }
 
 

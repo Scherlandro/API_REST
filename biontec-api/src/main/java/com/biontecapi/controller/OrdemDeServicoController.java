@@ -31,7 +31,6 @@ public class OrdemDeServicoController {
         this.mapper = mapper;
     }
 
-
     @GetMapping
     public ResponseEntity<List<OrdemDeServico>> findAll() {
         return ResponseEntity.ok(service.listarOS());
@@ -68,15 +67,22 @@ public class OrdemDeServicoController {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.criarOS(dto));
     }
 
-    @PutMapping("/{idOS}")
-    public ResponseEntity<OrdemDeServico> atualizarOS(@PathVariable Long idOS, @RequestBody OrdemDeServicoDTO osDto) {
-        if (!service.existsById(idOS)) {
-            return ResponseEntity.notFound().build();
-        }
-        OrdemDeServico os = mapper.map(osDto, OrdemDeServico.class);
-        os.setIdOs(idOS);
-        return ResponseEntity.status(HttpStatus.CREATED).body(service.atualizarOS(os));
+    @PutMapping
+    public ResponseEntity<OrdemDeServico> atualizarOS(@RequestBody OrdemDeServicoDTO dto) {
+
+        OrdemDeServico os = service.listarOSPorID(dto.idOs())
+                .orElseThrow(() -> new RuntimeException("OS não encontrada"));
+
+        os.setNomeCliente(dto.nomeCliente());
+        os.setIdCliente(dto.clienteId());
+        os.setIdFuncionario(dto.idFuncionario());
+        os.setGestorDaOS(dto.gestorDaOS());
+        os.setStatus(dto.status());
+        os.setTotal(dto.total());
+
+        return ResponseEntity.ok(service.atualizarOS(os));
     }
+
 
     @PostMapping("/{idOS}/items")
     public ResponseEntity<OrdemDeServico> adicionarItem(@PathVariable Long idOS, @RequestBody ItensDoServicoDTO itemDto) {

@@ -95,39 +95,6 @@ export class OrdemDeServiceComponent implements OnInit {
       });
   }
 
-  listUpdateOS(id: any) {
-  this.osService.getById(id)
-      .pipe( first(), delay(200),
-        catchError(error => {
-          if (error.status === 401) {
-            this.onError('Sua sessão expirou!');
-            this.tokenServer.clearTokenExpired();
-          }
-          return throwError(() => error); // não retornar []
-        }))
-      .subscribe({ complete:()=> {  },
-        next: (result: iServiceOrder) => {
-          if (!result) {
-            this.onError("OS não encontrada!");
-            return;
-          }
-          console.log('OS atualizada', result);
-          this.osService.update(id, result).pipe(
-            takeUntil(this.destroy$)
-          )
-            .subscribe({
-              next: newOS => { console.log('Update OS', newOS);
-              },
-              error: err => {
-                this.onError('Erro ao atualizar a OS');
-                console.error(err);
-              }});
-        },
-        error: err => { console.error("Erro no GET", err); }
-      });
-  }
-
-
   onSearch() {
     const params = this.prepareSearchParams();
     this.osService.search(params).subscribe(orders => this.orders = orders);
@@ -265,57 +232,46 @@ export class OrdemDeServiceComponent implements OnInit {
         total: null
       }
     });
-
     dialogRef.afterClosed().subscribe((eventOS) => {
-      //console.log('AferClosed EventIOS', eventOS)
-
-
-      // Verifica se os campos obrigatórios estão preenchidos
       if (eventOS) {
-        const ordens = this.listUpdateOS(eventOS.codOS);
-        console.log('AferClosed ordens, total', ordens, eventOS.total)
-
-        /*
-           const order = this.os.find(o => o.codOS === eventOS.codOS);
-          if (order) {
-           this.orderControl.setValue(order);
-           this.updateOSFields(order);
-           }
-         */
-
-        //----------------------------------------
-
-        /*     this.osService.update(eventOS.idOS,...eventOS.total).pipe(
-         //  takeUntil(this.destroy$)
-         ).subscribe({
-           next: (osAtualizada) => {
-            // this.dialogRef.close(osAtualizada);
-           },
-           error: (err) => {
-             this.onError('Erro ao atualizar a OS');
-             console.error(err);
-           }
-         });*/
+        this.updateOS(eventOS);
       }
-
-
-      /*  if (itemEditadoOuAdicionado) {
-           // Se estiver editando um item existente
-           const index = eventOS.itensOS.findIndex((i:any) => i.idItensDaOS === itemEditadoOuAdicionado.idItensDaOS);
-
-           if (index >= 0) {
-             // Atualiza o item
-             eventOS.itensOS[index] = itemEditadoOuAdicionado;
-           } else {
-             // Adiciona o item
-             eventOS.itensOS.push(itemEditadoOuAdicionado);
-           }
-         }*/
-      // REPROCESSAR TOTAL
       //  this.recalcularTotalOS(eventOS);
     });
-
   }
+
+  updateOS(eventOS: any) {
+    console.log('OS para atulizar', eventOS);
+    this.osService.getById(eventOS.codOS)
+      .pipe( first(), delay(200),
+        catchError(error => {
+          if (error.status === 401) {
+            this.onError('Sua sessão expirou!');
+            this.tokenServer.clearTokenExpired();
+          }
+          return throwError(() => error); // não retornar []
+        }))
+      .subscribe({ complete:()=> {  },
+        next: (result: iServiceOrder) => {
+          if (!result) {
+            this.onError("OS não encontrada!");
+            return;
+          }
+          console.log('OS atualizada', result);
+          this.osService.update(result).pipe(
+            takeUntil(this.destroy$)
+          ).subscribe({
+            next: (newOS) => { console.log('Update OS', newOS); },
+            error: err => {
+              this.onError('Erro ao atualizar a OS');
+              console.error(err);
+            }});
+        },
+        error: err => { console.error("Erro no GET", err); }
+      });
+  }
+
+
 
   deleteElement(item: iItensOS) {
     this.notificationMsg.openConfirmDialog('Tem certeza em REMOVER este item ?')
