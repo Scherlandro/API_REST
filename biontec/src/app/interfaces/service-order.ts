@@ -1,4 +1,3 @@
-import {iItensOS} from "./itens-os";
 
 export interface iServiceOrder {
   idOS: number,
@@ -10,7 +9,7 @@ export interface iServiceOrder {
   status: string,
   subtotal: string,
   desconto: string,
-  totalGeralOS: string,
+  totalGeralOS: number,
   itensOS: any
 
 }

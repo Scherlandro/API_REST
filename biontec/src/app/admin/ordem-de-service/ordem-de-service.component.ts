@@ -95,6 +95,82 @@ export class OrdemDeServiceComponent implements OnInit {
       });
   }
 
+  openDilogOS() {
+    const dialogRef = this.dialog.open(DialogOpenOsComponent, {
+      width: '280px',
+      height: '300px',
+      data: { /* dados vázio */}
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.clienteSelecionado = result;
+      }
+    });
+  }
+
+  openDilogItenOS(eventOS: any) {
+    console.log("IdItensOS", eventOS.itensOS, 'EventOS', eventOS)
+    const osCompleta = eventOS;
+    const dialogRef = this.dialog.open(DialogItensOSComponent, {
+      width: '300px',
+      data: eventOS.itensOS === undefined ? {
+        idItensDaOS: eventOS.idItensDaOS,
+        codOS: eventOS.codOS,
+        codProduto: eventOS.codProduto,
+        descricao: eventOS.descricao,
+        valorUnitario: parseFloat(eventOS.valorUnitario.replace('R$', '').trim().replace(',', '.')) || 0,
+        quantidade: eventOS.quantidade,
+        total: parseFloat(eventOS.total.replace('R$', '').trim().replace(',', '.')) || 0,
+      } : {
+        idItensDaOS: null,
+        codOS: eventOS.idOs,
+        codProduto: '',
+        descricao: '',
+        valorUnitario: null,
+        quantidade: null,
+        total: null
+      }
+    });
+    dialogRef.afterClosed().subscribe((eventOS) => {
+      this.recalcularTotalOS(eventOS);
+      if (eventOS) {
+        console.log('OS RECALCULADA ', this.recalcularTotalOS)
+        this.updateOS(osCompleta);
+      }
+    });
+  }
+
+  updateOS(eventOS: iServiceOrder) {
+    console.log('OS para atulizar', eventOS);
+    this.osService.getById(eventOS.idOS)
+      .pipe( first(), delay(200),
+        catchError(error => {
+          if (error.status === 401) {
+            this.onError('Sua sessão expirou!');
+            this.tokenServer.clearTokenExpired();
+          }
+          return throwError(() => error); // não retornar []
+        }))
+      .subscribe({ complete:()=> {  },
+        next: (result: iServiceOrder) => {
+          console.log('OS atualizada', result);
+          if (!result) {
+            this.onError("OS não encontrada!");
+            return;
+          }
+          this.osService.update(result).pipe(
+            takeUntil(this.destroy$)
+          ).subscribe({
+            next: (newOS) => { console.log('Update OS', newOS); },
+            error: err => {
+              this.onError('Erro ao atualizar a OS');
+              console.error(err);
+            }});
+        },
+        error: err => { console.error("Erro no GET", err); }
+      });
+  }
+
   onSearch() {
     const params = this.prepareSearchParams();
     this.osService.search(params).subscribe(orders => this.orders = orders);
@@ -162,25 +238,25 @@ export class OrdemDeServiceComponent implements OnInit {
     }
   }
 
-  recalcularTotalOS(elementOS: any) {
-    console.log("recalcularTotalOS", elementOS.idOS, 'EventOS', elementOS, 'Lengh', elementOS.itensOS.length)
+  recalcularTotalOS(elementOS: iServiceOrder): iServiceOrder {
+    console.log("recalcularTotalOS", elementOS.idOS, 'EventOS', elementOS)
 
-    if (!elementOS.idOS || elementOS.itensOS.length === 0) {
+    if (!elementOS.idOS || elementOS.itensOS !== null) {
       elementOS.totalGeralOS = 0;
-      elementOS.totalGeralOS = this.formatarReal(0);
-      return;
+      elementOS.totalGeralOS = Number(this.formatarReal(0));
+      return elementOS;
     }
-
     const soma = elementOS.itensOS.reduce((acc: number, item: any) => {
       return acc + Number(item.total);
     }, 0);
 
     elementOS.totalGeralOS = soma;
-    elementOS.totalGeralOS = this.formatarReal(soma);
+    elementOS.totalGeralOS = Number(this.formatarReal(soma));
 
     // força refresh visual
     //this.tableOS.renderRows();
     this.cdRef.detectChanges();
+    return elementOS;
   }
 
 
@@ -194,84 +270,6 @@ export class OrdemDeServiceComponent implements OnInit {
     valor = valor.trim().toLowerCase();
     this.tbSourceOS$.filter = valor;
   }
-
-  openDilogOS() {
-    const dialogRef = this.dialog.open(DialogOpenOsComponent, {
-      width: '280px',
-      height: '300px',
-      data: { /* dados vázio */}
-    });
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.clienteSelecionado = result;
-        console.log('Cliente selecionado:', this.clienteSelecionado);
-      }
-    });
-
-  }
-
-  openDilogItenOS(eventOS: any) {
-    console.log("IdItensOS", eventOS.itensOS, 'EventOS', eventOS)
-    const dialogRef = this.dialog.open(DialogItensOSComponent, {
-      width: '300px',
-      data: eventOS.itensOS === undefined ? {
-        idItensDaOS: eventOS.idItensDaOS,
-        codOS: eventOS.codOS,
-        codProduto: eventOS.codProduto,
-        descricao: eventOS.descricao,
-        valorUnitario: parseFloat(eventOS.valorUnitario.replace('R$', '').trim().replace(',', '.')) || 0,
-        quantidade: eventOS.quantidade,
-        total: parseFloat(eventOS.total.replace('R$', '').trim().replace(',', '.')) || 0,
-      } : {
-        idItensDaOS: null,
-        codOS: eventOS.idOs,
-        codProduto: '',
-        descricao: '',
-        valorUnitario: null,
-        quantidade: null,
-        total: null
-      }
-    });
-    dialogRef.afterClosed().subscribe((eventOS) => {
-      if (eventOS) {
-        this.updateOS(eventOS);
-      }
-      //  this.recalcularTotalOS(eventOS);
-    });
-  }
-
-  updateOS(eventOS: any) {
-    console.log('OS para atulizar', eventOS);
-    this.osService.getById(eventOS.codOS)
-      .pipe( first(), delay(200),
-        catchError(error => {
-          if (error.status === 401) {
-            this.onError('Sua sessão expirou!');
-            this.tokenServer.clearTokenExpired();
-          }
-          return throwError(() => error); // não retornar []
-        }))
-      .subscribe({ complete:()=> {  },
-        next: (result: iServiceOrder) => {
-          if (!result) {
-            this.onError("OS não encontrada!");
-            return;
-          }
-          console.log('OS atualizada', result);
-          this.osService.update(result).pipe(
-            takeUntil(this.destroy$)
-          ).subscribe({
-            next: (newOS) => { console.log('Update OS', newOS); },
-            error: err => {
-              this.onError('Erro ao atualizar a OS');
-              console.error(err);
-            }});
-        },
-        error: err => { console.error("Erro no GET", err); }
-      });
-  }
-
-
 
   deleteElement(item: iItensOS) {
     this.notificationMsg.openConfirmDialog('Tem certeza em REMOVER este item ?')
