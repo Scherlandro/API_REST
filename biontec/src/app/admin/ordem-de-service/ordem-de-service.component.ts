@@ -226,9 +226,9 @@ export class OrdemDeServiceComponent implements OnInit {
       const soma = element.itensOS
         .reduce((acc: number, item: iItensOS) => acc + Number(item.total))
 
-      element.totalgeral = soma;
-      element.totalgeral = this.formatarReal(soma);
-      console.log('Valor soma', element.totalgeral);
+      element.totalGeralOS = soma;
+      element.totalGeralOS = this.formatarReal(soma);
+      console.log('Valor soma', element.totalGeralOS);
       this.tbSourceItensDaOS$.data = element.itensOS.map((item: iItensOS) => ({
         ...item,
         // Formata os valores individuais
@@ -240,17 +240,17 @@ export class OrdemDeServiceComponent implements OnInit {
 
   recalcularTotalOS(eventOS: iServiceOrder, eventItens: iItensOS): iServiceOrder {
 
-    if (!eventOS.idOS || eventOS.itensOS !== null) {
+    if (!eventOS.idOS || eventOS.itensOS == null) {
       eventOS.totalGeralOS = 0;
-      eventOS.totalGeralOS = Number(this.formatarReal(0));
+     // eventOS.totalGeralOS = Number(this.formatarReal(0));
       return eventOS;
     }
     const soma = eventOS.itensOS.reduce((acc: number, item: any) => {
-      return acc + Number(eventItens.total);
+      return acc + Number(item.total);
     }, 0);
 
     eventOS.totalGeralOS = soma;
-    eventOS.totalGeralOS = Number(this.formatarReal(soma));
+    //eventOS.totalGeralOS = Number(this.formatarReal(soma));
     console.log("recalcularTotalOS", eventOS)
     // força refresh visual
     //this.tableOS.renderRows();
@@ -309,19 +309,25 @@ export class OrdemDeServiceComponent implements OnInit {
   }
 
   // Método para formatar valores para Real brasileiro
-  formatarReal(valor: number | string): string {
-    // Converte para número se for string
-    const numero = typeof valor === 'string' ? parseFloat(valor) : valor;
+  formatarReal(valor: any): string {
+    if (valor === null || valor === undefined) return "R$ 0,00";
 
-    //  return new Intl.NumberFormat('pt-BR', {style: 'currency', currency: 'BRL'}).format(numero);
+    // Se vier string com "R$", espaços, pontos, vírgulas etc.
+    if (typeof valor === 'string') {
+      valor = valor
+        .replace(/[^\d,-]/g, '')   // remove tudo exceto números, vírgula e hífen
+        .replace(',', '.');        // troca vírgula por ponto
+    }
 
-    // Formata para Real brasileiro
+    const numero = parseFloat(valor);
+
+    if (isNaN(numero)) return "R$ 0,00";
+
     return numero.toLocaleString('pt-BR', {
       style: 'currency',
-      currency: 'BRL',
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2
+      currency: 'BRL'
     });
   }
+
 
 }
