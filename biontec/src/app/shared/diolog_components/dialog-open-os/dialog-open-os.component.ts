@@ -175,7 +175,7 @@ export class DialogOpenOsComponent implements OnInit {
 
     os.nomeCliente = cliente.nomeCliente;
     os.nomeFuncionario = funcionario.nomeFuncionario;
-    os.dt_OS = dataAtual.toLocaleDateString('pt-BR');
+    os.dataDeEntrada = dataAtual.toLocaleDateString('pt-BR');
 
   // Verifica se é uma edição ou criação nova
   /* if (this.isChange && os.idOS) {

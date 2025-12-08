@@ -132,9 +132,9 @@ export class OrdemDeServiceComponent implements OnInit {
       }
     });
     dialogRef.afterClosed().subscribe((eventOS) => {
-      this.recalcularTotalOS(eventOS);
+      this.recalcularTotalOS(osCompleta,eventOS);
       if (eventOS) {
-        console.log('OS RECALCULADA ', this.recalcularTotalOS)
+        console.log('OS RECALCULADA ', this.recalcularTotalOS(osCompleta,eventOS))
         this.updateOS(osCompleta);
       }
     });
@@ -238,25 +238,24 @@ export class OrdemDeServiceComponent implements OnInit {
     }
   }
 
-  recalcularTotalOS(elementOS: iServiceOrder): iServiceOrder {
-    console.log("recalcularTotalOS", elementOS.idOS, 'EventOS', elementOS)
+  recalcularTotalOS(eventOS: iServiceOrder, eventItens: iItensOS): iServiceOrder {
 
-    if (!elementOS.idOS || elementOS.itensOS !== null) {
-      elementOS.totalGeralOS = 0;
-      elementOS.totalGeralOS = Number(this.formatarReal(0));
-      return elementOS;
+    if (!eventOS.idOS || eventOS.itensOS !== null) {
+      eventOS.totalGeralOS = 0;
+      eventOS.totalGeralOS = Number(this.formatarReal(0));
+      return eventOS;
     }
-    const soma = elementOS.itensOS.reduce((acc: number, item: any) => {
-      return acc + Number(item.total);
+    const soma = eventOS.itensOS.reduce((acc: number, item: any) => {
+      return acc + Number(eventItens.total);
     }, 0);
 
-    elementOS.totalGeralOS = soma;
-    elementOS.totalGeralOS = Number(this.formatarReal(soma));
-
+    eventOS.totalGeralOS = soma;
+    eventOS.totalGeralOS = Number(this.formatarReal(soma));
+    console.log("recalcularTotalOS", eventOS)
     // força refresh visual
     //this.tableOS.renderRows();
     this.cdRef.detectChanges();
-    return elementOS;
+    return eventOS;
   }
 
 
@@ -294,7 +293,7 @@ export class OrdemDeServiceComponent implements OnInit {
           const elementOS: any = this.tbSourceOS$.data.find(os => os.idOS === item.codOS);
           if (elementOS) {
             elementOS.itensOS = elementOS.itensOS.filter((i: any) => i.idItensDaOS !== item.idItensDaOS);
-            this.recalcularTotalOS(elementOS);
+            this.recalcularTotalOS(elementOS, elementOS.itensOS);
           }
           this.tbData = this.tbSourceItensDaOS$.data;
           this.tbData.splice(this.ruwSelec, 1);

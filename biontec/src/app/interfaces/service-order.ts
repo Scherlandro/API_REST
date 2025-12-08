@@ -5,11 +5,18 @@ export interface iServiceOrder {
   nomeCliente: string,
   idFuncionario: number,
   nomeFuncionario: string,
-  dt_OS: string,
+  dataDeEntrada: string,
+  ultimaAtualizacao:string,
   status: string,
-  subtotal: string,
-  desconto: string,
+  subtotal: number,
+  desconto: number,
   totalGeralOS: number,
+  porConta:number,
+  restante:number,
   itensOS: any
-
+  /*
+  gestorDaOS:null
+  tecnicoEncarregado:null
+   */
 }
+

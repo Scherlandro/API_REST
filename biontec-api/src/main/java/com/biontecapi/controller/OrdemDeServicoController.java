@@ -78,7 +78,7 @@ public class OrdemDeServicoController {
         os.setIdFuncionario(dto.idFuncionario());
         os.setGestorDaOS(dto.gestorDaOS());
         os.setStatus(dto.status());
-        os.setTotal(dto.total());
+        os.setTotalGeralOS(dto.totalGeralOS());
 
         return ResponseEntity.ok(service.atualizarOS(os));
     }

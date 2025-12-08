@@ -37,13 +37,8 @@ public class OrdemDeServico {
     private Double subtotal;
     private Double desconto;
     private Double porConta;
-    private Double total;
+    private Double totalGeralOS;
     private Double restante;
-
-    private String descricaoObj;
-    private String numeracao;
-    private String cor;
-    private String observacao;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "gestor_id")
@@ -71,9 +66,8 @@ public class OrdemDeServico {
     public OrdemDeServicoDTO toDTO() {
         return new OrdemDeServicoDTO(
                 idOs, idCliente, nomeCliente, idFuncionario, dataDeEntrada,
-                ultimaAtualizacao, status, subtotal, desconto, porConta, total, restante,
-                descricaoObj, numeracao, cor, observacao,
-                gestorDaOS, tecnicoEncarregado, itensOS
+                ultimaAtualizacao, status, subtotal, desconto, porConta, totalGeralOS, restante,
+                    gestorDaOS, tecnicoEncarregado, itensOS
         );
     }
 }

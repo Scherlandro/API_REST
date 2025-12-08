@@ -21,13 +21,8 @@ public record OrdemDeServicoDTO(
         Double subtotal,
         Double desconto,
         Double porConta,
-        Double total,
+        Double totalGeralOS,
         Double restante,
-
-        String descricaoObj,
-        String numeracao,
-        String cor,
-        String observacao,
 
         Funcionario gestorDaOS,
         Funcionario tecnicoEncarregado,
