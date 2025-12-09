@@ -37,7 +37,7 @@ export class DialogOpenOsComponent implements OnInit {
     public funcionarioServices: FuncionarioService,
     public dialog: MatDialog,
     private clienteService: ClienteService,
-    @Inject(MAT_DIALOG_DATA) public data: any
+
   ) {
     this.verificarFuncionario();
     this.verificarCliente();
@@ -177,20 +177,6 @@ export class DialogOpenOsComponent implements OnInit {
     os.nomeFuncionario = funcionario.nomeFuncionario;
     os.dataDeEntrada = dataAtual.toLocaleDateString('pt-BR');
 
-  // Verifica se é uma edição ou criação nova
-  /* if (this.isChange && os.idOS) {
-      this.osServices.update(os).pipe(
-        takeUntil(this.destroy$)
-      ).subscribe({
-        next: (osAtualizada) => {
-          this.dialogRef.close(osAtualizada);
-        },
-        error: (err) => {
-          this.onError('Erro ao atualizar a OS');
-          console.error(err);
-        }
-      });
-    } else {*/
       this.osServices.create(os).pipe(
         takeUntil(this.destroy$)
       ).subscribe({
@@ -202,7 +188,6 @@ export class DialogOpenOsComponent implements OnInit {
           console.error(err);
         }
       });
-    //}
   }
 
 
@@ -214,7 +199,6 @@ export class DialogOpenOsComponent implements OnInit {
     this.voltar();
     this.dialogRef.close();
   }
-
 
   voltar(): void {
     if (this.etapa === 2) {
