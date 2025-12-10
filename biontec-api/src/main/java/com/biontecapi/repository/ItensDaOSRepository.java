@@ -21,11 +21,11 @@ public interface ItensDaOSRepository extends JpaRepository<ItensDoServico,Long> 
     List<ItensDoServicoDTO> findItensOSByIdProduct(Integer id);
 
     @Query(value = " Select i from OrdemDeServico o inner join ItensDoServico i "  +
-            "where o.idOs = i.codOS and o.dataDeEntrada = ?1 ")
+            "where o.idOS = i.codOS and o.dataDeEntrada = ?1 ")
     List<ItensDoServicoDTO> litarItensOSPorData(@Param("dataDeEntrada") String dataDeEntrada);
 
     @Query(value = " Select i from OrdemDeServico o inner join ItensDoServico i "  +
-            "on o.idOs = i.codOS  " +
+            "on o.idOS = i.codOS  " +
             "where STR_TO_DATE(o.dataDeEntrada,'%d/%m/%y')  BETWEEN STR_TO_DATE(:dtIni,'%d/%m/%y') AND STR_TO_DATE(:dtFinal,'%d/%m/%y') ")
     List<ItensDoServicoDTO> litarItensOSEntreData(@Param("dtIni") String dtIni, @Param("dtFinal") String dtFinal);
 
@@ -47,7 +47,7 @@ public interface ItensDaOSRepository extends JpaRepository<ItensDoServico,Long> 
 */
 
     @Query(value = " Select i from OrdemDeServico o inner join ItensDoServico i "  +
-            "on o.idOs = i.codOS and trim(o.nomeCliente) like ?1%")
+            "on o.idOS = i.codOS and trim(o.nomeCliente) like ?1%")
     List<ItensDoServicoDTO> litarItensOSporCliente(@Param("nomeCliente") String nomeCliente);
 
 

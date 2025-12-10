@@ -107,7 +107,68 @@ export class OrdemDeServiceComponent implements OnInit {
     });
   }
 
-  openDilogItenOS(eventOS: any) {
+  openDilogItenOS(eventOS: iServiceOrder) {
+    console.log("IdItensOS", eventOS.idOS, 'EventOS', eventOS)
+    const osCompleta = eventOS;
+    const dialogRef = this.dialog.open(DialogOpenOsComponent, {
+      data:  {
+        idOS: eventOS.idOS,
+        idCliente: eventOS.idCliente,
+        nomeCliente: eventOS.nomeCliente,
+        idFuncionario: eventOS.idFuncionario,
+        nomeFuncionario: eventOS.nomeFuncionario,
+        dataDeEntrada: eventOS.dataDeEntrada,
+        ultimaAtualizacao:eventOS.ultimaAtualizacao,
+        status: eventOS.status,
+        subtotal: eventOS.subtotal,
+        desconto: eventOS.desconto,
+        totalGeralOS: eventOS.totalGeralOS,
+        porConta:eventOS.porConta,
+        restante:eventOS.restante,
+        itensOS: eventOS.itensOS /*{
+          idItensDaOS: eventOS.itensOS.idItensDaOS,
+          codOS: eventOS.itensOS.codOS,
+          codProduto: eventOS.itensOS.codProduto,
+          descricao: eventOS.itensOS.descricao,
+          valorUnitario: parseFloat(eventOS.itensOS.valorUnitario.replace('R$', '').trim().replace(',', '.')) || 0,
+          quantidade: eventOS.itensOS.quantidade,
+          total: parseFloat(eventOS.itensOS.total.replace('R$', '').trim().replace(',', '.')) || 0,
+        }*/
+      }/* : {
+        idOS: eventOS.idOS,
+        idCliente: eventOS.idCliente,
+        nomeCliente: eventOS.nomeCliente,
+        idFuncionario: eventOS.idFuncionario,
+        nomeFuncionario: eventOS.nomeFuncionario,
+        dataDeEntrada: eventOS.dataDeEntrada,
+        ultimaAtualizacao:eventOS.ultimaAtualizacao,
+        status: eventOS.status,
+        subtotal: eventOS.subtotal,
+        desconto: eventOS.desconto,
+        totalGeralOS: eventOS.totalGeralOS,
+        porConta:eventOS.porConta,
+        restante:eventOS.restante,
+        itensOS: {
+          idItensDaOS: eventOS.itensOS.idItensDaOS,
+          codOS: eventOS.itensOS.codOS,
+          codProduto: eventOS.itensOS.codProduto,
+          descricao: eventOS.itensOS.descricao,
+          valorUnitario: parseFloat(eventOS.itensOS.valorUnitario.replace('R$', '').trim().replace(',', '.')) || 0,
+          quantidade: eventOS.itensOS.quantidade,
+          total: parseFloat(eventOS.itensOS.total.replace('R$', '').trim().replace(',', '.')) || 0,
+        }
+      }*/
+    });
+    dialogRef.afterClosed().subscribe((eventOS) => {
+      this.recalcularTotalOS(osCompleta,eventOS);
+      if (eventOS) {
+        console.log('OS RECALCULADA ', this.recalcularTotalOS(osCompleta,eventOS))
+        this.updateOS(osCompleta);
+      }
+    });
+  }
+
+ openDilogItenOS0(eventOS: any) {
     console.log("IdItensOS", eventOS.itensOS, 'EventOS', eventOS)
     const osCompleta = eventOS;
     const dialogRef = this.dialog.open(DialogItensOSComponent, {

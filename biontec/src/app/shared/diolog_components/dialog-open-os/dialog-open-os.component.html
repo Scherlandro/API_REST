@@ -7,7 +7,7 @@
 
     <mat-form-field appearance="fill">
       <mat-label>Código da OS</mat-label>
-      <input matInput [(ngModel)]="itensOS.codOS">
+      <input matInput [(ngModel)]="os.idOS">
     </mat-form-field>
 
     <mat-form-field class="example-full-width">
@@ -63,12 +63,12 @@
     <!-- Itens -->
     <mat-form-field>
       <mat-label>ID</mat-label>
-      <input matInput [(ngModel)]="itensOS.idItensDaOS">
+      <input matInput [(ngModel)]="os.itensOS.idItensDaOS">
     </mat-form-field>
 
     <mat-form-field>
       <mat-label>Código do Produto</mat-label>
-      <input matInput [value]="itensOS.codProduto" disabled>
+      <input matInput [value]="os.itensOS.codProduto" disabled>
     </mat-form-field>
 
     <!-- Campo Autocomplete   (input)="filterProdutos($event)" -->
@@ -90,18 +90,18 @@
 
     <mat-form-field appearance="fill" *ngIf="isChange">
       <mat-label>Descrição</mat-label>
-      <input matInput [value]="itensOS.descricao" disabled>
+      <input matInput [value]="os.itensOS.descricao" disabled>
     </mat-form-field>
 
     <mat-form-field>
       <mat-label>Preço Unitário</mat-label>
-      <input matInput [value]="formatter(itensOS.valorUnitario || 0)" disabled>
+      <input matInput [value]="formatter(os.itensOS.valorUnitario || 0)" disabled>
     </mat-form-field>
 
     <!-- Campo Quantidade com validação -->
     <mat-form-field>
       <mat-label>Quantidade</mat-label>
-      <input matInput type="number" [(ngModel)]="itensOS.quantidade" [formControl]="quantidadeControl"
+      <input matInput type="number" [(ngModel)]="os.itensOS.quantidade" [formControl]="quantidadeControl"
              (ngModelChange)="updateTotal()">
       <mat-error *ngIf="quantidadeControl.hasError('required')">Campo obrigatório.</mat-error>
       <mat-error *ngIf="quantidadeControl.hasError('min')">A quantidade mínima é 1.</mat-error>
@@ -109,7 +109,7 @@
 
     <mat-form-field appearance="fill">
       <mat-label>Total</mat-label>
-      <input matInput [value]="formatter(itensOS.total || 0)" disabled [(ngModel)]="itensOS.total">
+      <input matInput [value]="formatter(os.itensOS.total || 0)" disabled [(ngModel)]="itensOS.total">
     </mat-form-field>
 
     <!-- Itens da Ordem de Serviço -->

@@ -22,7 +22,7 @@ public class OrdemDeServico {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_os")
-    private Long idOs;
+    private Long idOS;
 
     private Integer idCliente;
     private String nomeCliente;
@@ -65,7 +65,7 @@ public class OrdemDeServico {
 
     public OrdemDeServicoDTO toDTO() {
         return new OrdemDeServicoDTO(
-                idOs, idCliente, nomeCliente, idFuncionario, dataDeEntrada,
+                idOS, idCliente, nomeCliente, idFuncionario, dataDeEntrada,
                 ultimaAtualizacao, status, subtotal, desconto, porConta, totalGeralOS, restante,
                     gestorDaOS, tecnicoEncarregado, itensOS
         );

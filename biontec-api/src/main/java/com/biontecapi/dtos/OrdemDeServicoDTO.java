@@ -9,7 +9,7 @@ import java.util.Collection;
 import java.util.List;
 
 public record OrdemDeServicoDTO(
-        Long idOs,
+        Long idOS,
         Integer clienteId,
         String nomeCliente,
         Integer idFuncionario,
