@@ -1,3 +1,139 @@
+<div class="div-os">
+
+  <mat-card class="container-box-os ">
+    <h1 *ngIf="!isChange" mat-dialog-title>Abrir Serviço</h1>
+    <h1 *ngIf="isChange" mat-dialog-title>Editar Serviço</h1>
+
+
+    <mat-form-field appearance="fill">
+      <mat-label>Código da OS</mat-label>
+      <input matInput [(ngModel)]="itensOS.codOS">
+    </mat-form-field>
+
+    <mat-form-field class="example-full-width">
+      <mat-label>Atendente</mat-label>
+      <input type="text"
+             placeholder="Atendente"
+             matInput
+             [formControl]="funcionarioControl"
+             [matAutocomplete]="auto"
+             (keypress)="listarFuncionario()"/>
+      <mat-error>Campo Obrigatório não preenchido.</mat-error>
+      <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFnFunc">
+        <mat-option *ngFor="let funcionario of funcionarioFilted | async" [value]="funcionario">
+          {{funcionario.nomeFuncionario}}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+
+    <!-- Data de Entrada -->
+    <mat-form-field appearance="fill">
+      <mat-label>Data</mat-label>
+      <input matInput [matDatepicker]="picker" [(ngModel)]="os.dataDeEntrada">
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+
+    <!-- Cliente -->
+    <mat-form-field class="example-full-width">
+      <mat-label>Cliente</mat-label>
+      <input type="text"
+             placeholder="Digite o Cliente"
+             matInput
+             [formControl]="clienteControl"
+             [matAutocomplete]="autcli"
+             (keyup)="listarClientes()"/>
+      <mat-error>Campo Obrigatório não preenchido.</mat-error>
+      <mat-autocomplete #autcli="matAutocomplete" [displayWith]="displayFn">
+        <mat-option *ngFor="let cliente of clientesFiltrados | async" [value]="cliente">
+          {{cliente.nomeCliente}}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+
+    <button mat-raised-button *ngIf="isChange" cdkFocusInitial (click)="save(os)">Salvar</button>
+    <button mat-button *ngIf="!isChange" cdkFocusInitial [mat-dialog-close]="osSelecionada"
+            (click)="save(os)">Savar OS
+    </button>
+    <button mat-raised-button (click)="onCancel()">Cancelar</button>
+
+  </mat-card>
+
+  <mat-card class="container-box-itens ">
+    <!-- Itens -->
+    <mat-form-field>
+      <mat-label>ID</mat-label>
+      <input matInput [(ngModel)]="itensOS.idItensDaOS">
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Código do Produto</mat-label>
+      <input matInput [value]="itensOS.codProduto" disabled>
+    </mat-form-field>
+
+    <!-- Campo Autocomplete   (input)="filterProdutos($event)" -->
+    <mat-form-field *ngIf="!isChange">
+      <mat-label>Produto</mat-label>
+      <input type="text" matInput placeholder="Digite o nome do produto"
+             [formControl]="produtoControl"
+             [matAutocomplete]="auto"
+             (input)="filterProdutos($event)"/>
+      <mat-error *ngIf="produtoControl.hasError('required')">Campo obrigatório.</mat-error>
+
+      <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayPd">
+        <mat-option *ngFor="let produto of produtoFiltered" [value]="produto"
+                    (onSelectionChange)="onProdutoSelecionado(produto)">
+          {{ produto.nomeProduto }}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" *ngIf="isChange">
+      <mat-label>Descrição</mat-label>
+      <input matInput [value]="itensOS.descricao" disabled>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Preço Unitário</mat-label>
+      <input matInput [value]="formatter(itensOS.valorUnitario || 0)" disabled>
+    </mat-form-field>
+
+    <!-- Campo Quantidade com validação -->
+    <mat-form-field>
+      <mat-label>Quantidade</mat-label>
+      <input matInput type="number" [(ngModel)]="itensOS.quantidade" [formControl]="quantidadeControl"
+             (ngModelChange)="updateTotal()">
+      <mat-error *ngIf="quantidadeControl.hasError('required')">Campo obrigatório.</mat-error>
+      <mat-error *ngIf="quantidadeControl.hasError('min')">A quantidade mínima é 1.</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Total</mat-label>
+      <input matInput [value]="formatter(itensOS.total || 0)" disabled [(ngModel)]="itensOS.total">
+    </mat-form-field>
+
+    <!-- Itens da Ordem de Serviço -->
+    <div mat-dialog-content> <!-- *ngIf="itensOS$.length > 0">-->
+      <div *ngFor="let item of itensOS$">
+        <div>{{ item.descricao }} - {{ formatter(item.total) }}</div>
+        <button mat-button (click)="removeItem(item)">Remover</button>
+      </div>
+      <!-- Adicionar Produto -->
+      <button mat-raised-button (click)="addItem()">
+        + item
+      </button>
+      <button mat-button *ngIf="isChange" [mat-dialog-close]="itensOS" cdkFocusInitial>Editar</button>
+      <button mat-button *ngIf="!isChange" [mat-dialog-close]="itensOS" cdkFocusInitial (click)="addItem()"
+              [disabled]="isSaveButtonDisabled()">Salvar
+      </button>
+    </div>
+
+  </mat-card>
+
+
+</div>
+
+<!--
 <div mat-dialog-content class="div-os">
 
   <h1 *ngIf="!isChange" mat-dialog-title>Abrir Serviço</h1>
@@ -55,3 +191,4 @@
 </div>
 
 
+-->

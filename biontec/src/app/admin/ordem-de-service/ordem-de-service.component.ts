@@ -97,8 +97,7 @@ export class OrdemDeServiceComponent implements OnInit {
 
   openDilogOS() {
     const dialogRef = this.dialog.open(DialogOpenOsComponent, {
-      width: '280px',
-      height: '300px',
+
       data: { /* dados vázio */}
     });
     dialogRef.afterClosed().subscribe(result => {
