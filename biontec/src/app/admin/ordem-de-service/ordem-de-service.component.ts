@@ -14,11 +14,9 @@ import {ItensOsService} from "../../services/itens-os.service";
 import {ErrorDiologComponent} from "../../shared/diolog_components/error-diolog/error-diolog.component";
 import {iItensOS} from "../../interfaces/itens-os";
 import {DialogOpenOsComponent} from "../../shared/diolog_components/dialog-open-os/dialog-open-os.component";
-import {DialogItensOSComponent} from "../../shared/diolog_components/dialog-itens-os/dialog-itens-os.component";
 import {TokenService} from "../../services/token.service";
 import {NotificationMgsService} from "../../services/notification-mgs.service";
 import {ChangeDetectorRef} from '@angular/core';
-import {error} from "@angular/compiler-cli/src/transformers/util";
 
 
 @Component({
@@ -90,6 +88,7 @@ export class OrdemDeServiceComponent implements OnInit {
       })).subscribe(
       (result: iServiceOrder[]) => {
         this.tbSourceOS$.data = result;
+        console.log('tbSourceos$ ', this.tbSourceOS$.data.map((i) => i.itensOS))
         this.tbSourceOS$.paginator = this.paginator;
         this.spiner = false;
       });
@@ -108,46 +107,23 @@ export class OrdemDeServiceComponent implements OnInit {
   }
 
   openDilogItenOS(eventOS: iServiceOrder) {
-    console.log("IdItensOS", eventOS.idOS, 'EventOS', eventOS)
+    console.log("itensOS", eventOS.itensOS, '------------> OS', eventOS)
     const osCompleta = eventOS;
     const dialogRef = this.dialog.open(DialogOpenOsComponent, {
-      data:  {
+      data: eventOS.itensOS.idItensDaOS === null ? {
         idOS: eventOS.idOS,
         idCliente: eventOS.idCliente,
         nomeCliente: eventOS.nomeCliente,
         idFuncionario: eventOS.idFuncionario,
         nomeFuncionario: eventOS.nomeFuncionario,
         dataDeEntrada: eventOS.dataDeEntrada,
-        ultimaAtualizacao:eventOS.ultimaAtualizacao,
+        ultimaAtualizacao: eventOS.ultimaAtualizacao,
         status: eventOS.status,
         subtotal: eventOS.subtotal,
         desconto: eventOS.desconto,
         totalGeralOS: eventOS.totalGeralOS,
-        porConta:eventOS.porConta,
-        restante:eventOS.restante,
-        itensOS: eventOS.itensOS /*{
-          idItensDaOS: eventOS.itensOS.idItensDaOS,
-          codOS: eventOS.itensOS.codOS,
-          codProduto: eventOS.itensOS.codProduto,
-          descricao: eventOS.itensOS.descricao,
-          valorUnitario: parseFloat(eventOS.itensOS.valorUnitario.replace('R$', '').trim().replace(',', '.')) || 0,
-          quantidade: eventOS.itensOS.quantidade,
-          total: parseFloat(eventOS.itensOS.total.replace('R$', '').trim().replace(',', '.')) || 0,
-        }*/
-      }/* : {
-        idOS: eventOS.idOS,
-        idCliente: eventOS.idCliente,
-        nomeCliente: eventOS.nomeCliente,
-        idFuncionario: eventOS.idFuncionario,
-        nomeFuncionario: eventOS.nomeFuncionario,
-        dataDeEntrada: eventOS.dataDeEntrada,
-        ultimaAtualizacao:eventOS.ultimaAtualizacao,
-        status: eventOS.status,
-        subtotal: eventOS.subtotal,
-        desconto: eventOS.desconto,
-        totalGeralOS: eventOS.totalGeralOS,
-        porConta:eventOS.porConta,
-        restante:eventOS.restante,
+        porConta: eventOS.porConta,
+        restante: eventOS.restante,
         itensOS: {
           idItensDaOS: eventOS.itensOS.idItensDaOS,
           codOS: eventOS.itensOS.codOS,
@@ -157,44 +133,35 @@ export class OrdemDeServiceComponent implements OnInit {
           quantidade: eventOS.itensOS.quantidade,
           total: parseFloat(eventOS.itensOS.total.replace('R$', '').trim().replace(',', '.')) || 0,
         }
-      }*/
-    });
-    dialogRef.afterClosed().subscribe((eventOS) => {
-      this.recalcularTotalOS(osCompleta,eventOS);
-      if (eventOS) {
-        console.log('OS RECALCULADA ', this.recalcularTotalOS(osCompleta,eventOS))
-        this.updateOS(osCompleta);
-      }
-    });
-  }
-
- openDilogItenOS0(eventOS: any) {
-    console.log("IdItensOS", eventOS.itensOS, 'EventOS', eventOS)
-    const osCompleta = eventOS;
-    const dialogRef = this.dialog.open(DialogItensOSComponent, {
-      width: '300px',
-      data: eventOS.itensOS === undefined ? {
-        idItensDaOS: eventOS.idItensDaOS,
-        codOS: eventOS.codOS,
-        codProduto: eventOS.codProduto,
-        descricao: eventOS.descricao,
-        valorUnitario: parseFloat(eventOS.valorUnitario.replace('R$', '').trim().replace(',', '.')) || 0,
-        quantidade: eventOS.quantidade,
-        total: parseFloat(eventOS.total.replace('R$', '').trim().replace(',', '.')) || 0,
       } : {
-        idItensDaOS: null,
-        codOS: eventOS.idOs,
-        codProduto: '',
-        descricao: '',
-        valorUnitario: null,
-        quantidade: null,
-        total: null
+        idOS: eventOS.idOS,
+        idCliente: eventOS.idCliente,
+        nomeCliente: eventOS.nomeCliente,
+        idFuncionario: eventOS.idFuncionario,
+        nomeFuncionario: eventOS.nomeFuncionario,
+        dataDeEntrada: eventOS.dataDeEntrada,
+        ultimaAtualizacao: eventOS.ultimaAtualizacao,
+        status: eventOS.status,
+        subtotal: eventOS.subtotal,
+        desconto: eventOS.desconto,
+        totalGeralOS: eventOS.totalGeralOS,
+        porConta: eventOS.porConta,
+        restante: eventOS.restante,
+        itensOS: {
+          idItensDaOS: eventOS.itensOS.idItensDaOS,
+          codOS: eventOS.itensOS.codOS,
+          codProduto: eventOS.itensOS.codProduto,
+          descricao: eventOS.itensOS.descricao,
+          valorUnitario: parseFloat(eventOS.itensOS.valorUnitario.replace('R$', '').trim().replace(',', '.')) || 0,
+          quantidade: eventOS.itensOS.quantidade,
+          total: parseFloat(eventOS.itensOS.total.replace('R$', '').trim().replace(',', '.')) || 0,
+        }
       }
     });
     dialogRef.afterClosed().subscribe((eventOS) => {
-      this.recalcularTotalOS(osCompleta,eventOS);
+      this.recalcularTotalOS(osCompleta, eventOS);
       if (eventOS) {
-        console.log('OS RECALCULADA ', this.recalcularTotalOS(osCompleta,eventOS))
+        console.log('OS RECALCULADA ', this.recalcularTotalOS(osCompleta, eventOS))
         this.updateOS(osCompleta);
       }
     });
@@ -203,7 +170,7 @@ export class OrdemDeServiceComponent implements OnInit {
   updateOS(eventOS: iServiceOrder) {
     console.log('OS para atulizar', eventOS);
     this.osService.getById(eventOS.idOS)
-      .pipe( first(), delay(200),
+      .pipe(first(), delay(200),
         catchError(error => {
           if (error.status === 401) {
             this.onError('Sua sessão expirou!');
@@ -211,7 +178,9 @@ export class OrdemDeServiceComponent implements OnInit {
           }
           return throwError(() => error); // não retornar []
         }))
-      .subscribe({ complete:()=> {  },
+      .subscribe({
+        complete: () => {
+        },
         next: (result: iServiceOrder) => {
           console.log('OS atualizada', result);
           if (!result) {
@@ -221,13 +190,18 @@ export class OrdemDeServiceComponent implements OnInit {
           this.osService.update(result).pipe(
             takeUntil(this.destroy$)
           ).subscribe({
-            next: (newOS) => { console.log('Update OS', newOS); },
+            next: (newOS) => {
+              console.log('Update OS', newOS);
+            },
             error: err => {
               this.onError('Erro ao atualizar a OS');
               console.error(err);
-            }});
+            }
+          });
         },
-        error: err => { console.error("Erro no GET", err); }
+        error: err => {
+          console.error("Erro no GET", err);
+        }
       });
   }
 
@@ -372,7 +346,7 @@ export class OrdemDeServiceComponent implements OnInit {
   formatarReal(valor: any): any {
     if (valor === null || valor === undefined) return "R$ 0,00";
     if (typeof valor === 'number') {
-      return valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+      return valor.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
     }
     if (typeof valor === 'string') {
       valor = valor
@@ -383,7 +357,7 @@ export class OrdemDeServiceComponent implements OnInit {
     const numero = parseFloat(valor);
     if (isNaN(numero)) return "R$ 0,00";
 
-    return numero.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+    return numero.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
   }
 
 }
