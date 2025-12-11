@@ -107,13 +107,17 @@ export class OrdemDeServiceComponent implements OnInit {
   }
 
   openDilogItenOS(eventOS: iServiceOrder, item?: any) {
-    console.log("itensOS", eventOS.itensOS, '------------> OS', eventOS)
+    const isEdit = !!item;
 
-    const isEdit = !!item;  // SE item existe → modo editar
-    const itens = isEdit ? item : {};
-
-    const valorUnitario = itens.valorUnitario ? parseFloat(itens.valorUnitario.replace('R$', '').trim().replace(',', '.')) : 0;
-    const total = itens.total ? parseFloat(itens.total.replace('R$', '').trim().replace(',', '.')) : 0;
+    const itens = isEdit ? item : {
+      idItensDaOS: null,
+      codOS: eventOS.idOS,
+      codProduto: '',
+      descricao: '',
+      valorUnitario: 0,
+      quantidade: 1,
+      total: 0
+    };
 
     const dialogRef = this.dialog.open(DialogOpenOsComponent, {
       data:  {
@@ -136,30 +140,24 @@ export class OrdemDeServiceComponent implements OnInit {
           codOS: itens.codOS || null,
           codProduto: itens.codProduto || null,
           descricao: itens.descricao || '',
-          valorUnitario,
+          valorUnitario: this.parseCurrency(eventOS.itensOS.valorUnitario),
           quantidade: itens.quantidade || 1,
-          total
+          total: this.parseCurrency(eventOS.itensOS.total)
         }
       }
     }
     );
 
-    console.log('Dados do Dialog', dialogRef.valueOf())
-
-    dialogRef.afterClosed().subscribe((dados) => {
+   dialogRef.afterClosed().subscribe((dados) => {
       if (dados) {
         this.recalcularTotalOS(eventOS, dados);
         this.updateOS(eventOS);
       }
+      if (dados && dados.item) {
+        console.log("Item retornado:", dados);
+      }
     });
 
- /*   dialogRef.afterClosed().subscribe((eventOS) => {
-      this.recalcularTotalOS(osCompleta, eventOS);
-      if (eventOS) {
-        console.log('OS RECALCULADA ', this.recalcularTotalOS(osCompleta, eventOS))
-        this.updateOS(osCompleta);
-      }
-    });*/
   }
 
   updateOS(eventOS: iServiceOrder) {
