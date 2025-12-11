@@ -23,6 +23,8 @@ type ServiceSearchMethod<T> = (nome: string) => Observable<T[]>;
 export class DialogOpenOsComponent implements OnInit {
   isChange = false;
   destroy$ = new Subject<void>();
+  os: iServiceOrder;
+  itensOS: iItensOS;
   osSelecionada!: iServiceOrder;
   funcionarioControl = new FormControl('', [Validators.required]);
   funcionarioFilted!: Observable<IFuncionario[]>;
@@ -40,9 +42,13 @@ export class DialogOpenOsComponent implements OnInit {
 
   constructor(
     @Inject(MAT_DIALOG_DATA)
-    public os: iServiceOrder,
-    @Inject(MAT_DIALOG_DATA)
-    public itensOS: iItensOS,
+    public data: {
+      modo: 'adicionar' | 'editar',
+      idOS: number,
+      nomeCliente: string,
+      nomeFuncionario: string,
+      itensOS: iItensOS
+    },
     public dialogRef: MatDialogRef<DialogOpenOsComponent>,
     public osServices: OrdemDeServicosService,
     public dialog: MatDialog,
@@ -51,42 +57,44 @@ export class DialogOpenOsComponent implements OnInit {
     private itensOsService: ItensOsService,
     private productService: ProductService
   ) {
-    if (this.os.idOS) {
-      this.isChange = true;
-     // this.itensOS = this.os.itensOS || [];
-    }
+
+    this.os = data as any;        // mantém compatibilidade com seu código existente
+    this.itensOS = data.itensOS;  // item selecionado (ou item vazio)
+
+    this.isChange = data.modo === 'editar';
+
     this.verificarFuncionario();
     this.verificarCliente();
-    this.produtoControl = new FormControl(null, [Validators.required]);
-    this.quantidadeControl = new FormControl(null, [Validators.required, Validators.min(1)]); // Validação para quantidade
 
+    this.produtoControl = new FormControl(null, [Validators.required]);
+    this.quantidadeControl = new FormControl(
+      this.itensOS.quantidade || 1,
+      [Validators.required, Validators.min(1)]
+    );
   }
+
 
   ngOnInit(): void {
     this.listarProdutos();
-    if (this.itensOS.codProduto) {
-      this.isChange = true;
-    //  this.preencherCamposEdicao();
+
+    // Se estiver no modo editar, já preenche o produto e quantidade
+    if (this.data.modo === 'editar') {
+      this.produtoControl.setValue({
+        nomeProduto: this.itensOS.descricao,
+        codProduto: this.itensOS.codProduto,
+        valorVenda: this.itensOS.valorUnitario
+      });
+
+      this.quantidadeControl.setValue(this.itensOS.quantidade);
     }
   }
+
 
   ngOnDestroy() {
    // this.destroy$.next();
     this.destroy$.complete();
   }
 
- /* listarClientes() {
-    this.clienteService.getClientePorNome(this.clienteControl.value).pipe(
-      takeUntil(this.destroy$)
-    ).subscribe();
-  }
-
-  listarFuncionario() {
-    this.funcionarioServices.getFuncionarioPorNome(this.funcionarioControl.value).pipe(
-      takeUntil(this.destroy$)
-    ).subscribe();
-  }
-*/
   listarProdutos() {
     this.productService.getTodosProdutos().pipe(
       catchError(() => {
@@ -99,28 +107,6 @@ export class DialogOpenOsComponent implements OnInit {
       this.produtoFiltered = produtos;
     });
   }
-/*
-
-  verificarCliente() {
-    this.clienteControl.valueChanges.pipe(
-      startWith(''),
-      debounceTime(300),
-      distinctUntilChanged(),
-      switchMap(value => this.clienteService.getClientePorNome(value)),
-      takeUntil(this.destroy$)
-    ).subscribe();
-  }
-
-  verificarFuncionario() {
-    this.funcionarioControl.valueChanges.pipe(
-      startWith(''),
-      debounceTime(300),
-      distinctUntilChanged(),
-      switchMap(value => this.funcionarioServices.getFuncionarioPorNome(value)),
-      takeUntil(this.destroy$)
-    ).subscribe();
-  }
-*/
 
   save(os: iServiceOrder) {
     if (this.clienteControl.invalid || this.funcionarioControl.invalid) {
@@ -160,6 +146,16 @@ export class DialogOpenOsComponent implements OnInit {
           }
         });
     }
+  }
+
+  salvarItem() {
+    this.itensOS.quantidade = this.quantidadeControl.value;
+    this.updateTotal();
+
+    this.dialogRef.close({
+      modo: this.data.modo,
+      item: this.itensOS
+    });
   }
 
   addItem() {
@@ -322,80 +318,6 @@ export class DialogOpenOsComponent implements OnInit {
       this.isChange = false;
     }
   }
-/*
-
-  save(os: iServiceOrder) {
-    // Verifica se os campos obrigatórios estão preenchidos
-    if (this.clienteControl.invalid || this.funcionarioControl.invalid) {
-      this.onError('Preencha todos os campos obrigatórios');
-      return;
-    }
-    const cliente: any = this.clienteControl.value ;
-    const funcionario:any = this.funcionarioControl.value ;
-    const dataAtual = new Date();
-
-    os.nomeCliente = cliente.nomeCliente;
-    os.nomeFuncionario = funcionario.nomeFuncionario;
-    os.dataDeEntrada = dataAtual.toLocaleDateString('pt-BR');
-
-  // Verifica se é uma edição ou criação nova
-  if (this.isChange) {
-      this.osServices.update(os).pipe( takeUntil(this.destroy$))
-        .subscribe({
-        next: (osAtualizada) => {
-          this.dialogRef.close(osAtualizada);
-        },
-        error: (err) => {
-          this.onError('Erro ao atualizar a OS');
-          console.error(err);
-        }
-      });
-    } else {
-      this.osServices.create(os).pipe(takeUntil(this.destroy$))
-        .subscribe({
-        next: (osCriada) => {
-          this.dialogRef.close(osCriada);
-        },
-        error: (err) => {
-          this.onError('Erro ao criar a OS');
-          console.error(err);
-        }
-      });
-    }
-  }
-*/
-
-  /*saveItem(item: iItensOS) {
-    if (this.produtoControl.valid && this.quantidadeControl.valid) {
-      if (this.isChange && item.idItensDaOS) {
-        // Editando um item existente
-        this.itensOsService.editItem(item).pipe(takeUntil(this.destroy$))
-          .subscribe({
-            next: (i) => {
-              this.dialogRef.close(i);  // Fecha o modal e envia os dados atualizados
-            },
-            error: (err) => {
-              this.onError('Erro ao atualizar o item');
-              console.error(err);
-            }
-          });
-      } else {
-        // Adicionando um novo item
-        this.itensOsService.adicionarItem(item).pipe(takeUntil(this.destroy$))
-          .subscribe({
-            next: (i) => {
-              this.dialogRef.close(i);  // Fecha o modal e envia o novo item
-            },
-            error: (err) => {
-              this.onError('Erro ao adicionar item');
-              console.error(err);
-            }
-          });
-      }
-    }
-  }
-
-*/
 
   onError(message: string) {
     console.error(message);
@@ -412,15 +334,13 @@ export class DialogOpenOsComponent implements OnInit {
     }
   }
 
-
   // Função para atualizar os campos do itensOS com base no produto selecionado
   updateItemFields(produto: iProduto) {
     this.itensOS.codProduto = produto.codProduto;
     this.itensOS.descricao = produto.nomeProduto;
     this.itensOS.valorUnitario = produto.valorVenda;
-    this.updateTotal(); // Atualiza o total
+    this.updateTotal();
   }
-
 
   // Função para atualizar o total com base no preço de venda e quantidade
   updateTotal() {

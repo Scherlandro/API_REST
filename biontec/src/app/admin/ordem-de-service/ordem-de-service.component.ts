@@ -115,8 +115,6 @@ export class OrdemDeServiceComponent implements OnInit {
     const valorUnitario = itens.valorUnitario ? parseFloat(itens.valorUnitario.replace('R$', '').trim().replace(',', '.')) : 0;
     const total = itens.total ? parseFloat(itens.total.replace('R$', '').trim().replace(',', '.')) : 0;
 
-    const osCompleta = eventOS;
-
     const dialogRef = this.dialog.open(DialogOpenOsComponent, {
       data:  {
         modo: isEdit ? 'editar' : 'adicionar',
@@ -143,14 +141,25 @@ export class OrdemDeServiceComponent implements OnInit {
           total
         }
       }
+    }
+    );
+
+    console.log('Dados do Dialog', dialogRef.valueOf())
+
+    dialogRef.afterClosed().subscribe((dados) => {
+      if (dados) {
+        this.recalcularTotalOS(eventOS, dados);
+        this.updateOS(eventOS);
+      }
     });
-    dialogRef.afterClosed().subscribe((eventOS) => {
+
+ /*   dialogRef.afterClosed().subscribe((eventOS) => {
       this.recalcularTotalOS(osCompleta, eventOS);
       if (eventOS) {
         console.log('OS RECALCULADA ', this.recalcularTotalOS(osCompleta, eventOS))
         this.updateOS(osCompleta);
       }
-    });
+    });*/
   }
 
   updateOS(eventOS: iServiceOrder) {
@@ -345,5 +354,25 @@ export class OrdemDeServiceComponent implements OnInit {
 
     return numero.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
   }
+
+  private parseCurrency(value: any): number {
+    if (value === null || value === undefined) return 0;
+
+    // Se já é número, retorna direto
+    if (typeof value === 'number') return value;
+
+    // Se é string, sanitiza
+    if (typeof value === 'string') {
+      return parseFloat(
+        value.replace('R$', '')
+          .replace('.', '')
+          .trim()
+          .replace(',', '.')
+      ) || 0;
+    }
+
+    return 0;
+  }
+
 
 }
