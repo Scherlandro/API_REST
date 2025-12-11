@@ -126,7 +126,7 @@
                 <th mat-header-cell *matHeaderCellDef> Opções</th>
                 <td mat-cell *matCellDef="let element">
                   <button class="button-update"  title="Editar Item"
-                          (click)="openDilogItenOS(elementOS)">
+                          (click)="openDilogItenOS(elementOS, element)">
                     <mat-icon>edit</mat-icon>
                   </button>
                   <button class="button-delete" title="Remover Item"

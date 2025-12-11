@@ -106,11 +106,20 @@ export class OrdemDeServiceComponent implements OnInit {
     });
   }
 
-  openDilogItenOS(eventOS: iServiceOrder) {
+  openDilogItenOS(eventOS: iServiceOrder, item?: any) {
     console.log("itensOS", eventOS.itensOS, '------------> OS', eventOS)
+
+    const isEdit = !!item;  // SE item existe → modo editar
+    const itens = isEdit ? item : {};
+
+    const valorUnitario = itens.valorUnitario ? parseFloat(itens.valorUnitario.replace('R$', '').trim().replace(',', '.')) : 0;
+    const total = itens.total ? parseFloat(itens.total.replace('R$', '').trim().replace(',', '.')) : 0;
+
     const osCompleta = eventOS;
+
     const dialogRef = this.dialog.open(DialogOpenOsComponent, {
-      data: eventOS.itensOS.idItensDaOS === null ? {
+      data:  {
+        modo: isEdit ? 'editar' : 'adicionar',
         idOS: eventOS.idOS,
         idCliente: eventOS.idCliente,
         nomeCliente: eventOS.nomeCliente,
@@ -125,36 +134,13 @@ export class OrdemDeServiceComponent implements OnInit {
         porConta: eventOS.porConta,
         restante: eventOS.restante,
         itensOS: {
-          idItensDaOS: eventOS.itensOS.idItensDaOS,
-          codOS: eventOS.itensOS.codOS,
-          codProduto: eventOS.itensOS.codProduto,
-          descricao: eventOS.itensOS.descricao,
-          valorUnitario: parseFloat(eventOS.itensOS.valorUnitario.replace('R$', '').trim().replace(',', '.')) || 0,
-          quantidade: eventOS.itensOS.quantidade,
-          total: parseFloat(eventOS.itensOS.total.replace('R$', '').trim().replace(',', '.')) || 0,
-        }
-      } : {
-        idOS: eventOS.idOS,
-        idCliente: eventOS.idCliente,
-        nomeCliente: eventOS.nomeCliente,
-        idFuncionario: eventOS.idFuncionario,
-        nomeFuncionario: eventOS.nomeFuncionario,
-        dataDeEntrada: eventOS.dataDeEntrada,
-        ultimaAtualizacao: eventOS.ultimaAtualizacao,
-        status: eventOS.status,
-        subtotal: eventOS.subtotal,
-        desconto: eventOS.desconto,
-        totalGeralOS: eventOS.totalGeralOS,
-        porConta: eventOS.porConta,
-        restante: eventOS.restante,
-        itensOS: {
-          idItensDaOS: eventOS.itensOS.idItensDaOS,
-          codOS: eventOS.itensOS.codOS,
-          codProduto: eventOS.itensOS.codProduto,
-          descricao: eventOS.itensOS.descricao,
-          valorUnitario: parseFloat(eventOS.itensOS.valorUnitario.replace('R$', '').trim().replace(',', '.')) || 0,
-          quantidade: eventOS.itensOS.quantidade,
-          total: parseFloat(eventOS.itensOS.total.replace('R$', '').trim().replace(',', '.')) || 0,
+          idItensDaOS: itens.idItensDaOS || null,
+          codOS: itens.codOS || null,
+          codProduto: itens.codProduto || null,
+          descricao: itens.descricao || '',
+          valorUnitario,
+          quantidade: itens.quantidade || 1,
+          total
         }
       }
     });
