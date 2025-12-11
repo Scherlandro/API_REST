@@ -114,14 +114,20 @@
 
     <!-- Itens da Ordem de Serviço -->
     <div mat-dialog-content> <!-- *ngIf="itensOS$.length > 0">-->
+
+      <button mat-button *ngIf="isChange" (click)="salvarItem()">Salvar Alterações</button>
+
+      <button mat-raised-button *ngIf="!isChange" (click)="addItem()" [disabled]="isSaveButtonDisabled()">
+        Salvar Item
+      </button>
+
       <div *ngFor="let item of itensOS$">
         <div>{{ item.descricao }} - {{ formatter(item.total) }}</div>
         <button mat-button (click)="removeItem(item)">Remover</button>
       </div>
       <!-- Adicionar Produto -->
-      <button mat-raised-button (click)="addItem()">
-        + item
-      </button>
+      <button mat-raised-button (click)="addItem()"> + item  </button>
+
       <button mat-button *ngIf="isChange" [mat-dialog-close]="itensOS" cdkFocusInitial>Editar</button>
       <button mat-button *ngIf="!isChange" [mat-dialog-close]="itensOS" cdkFocusInitial (click)="addItem()"
               [disabled]="isSaveButtonDisabled()">Salvar

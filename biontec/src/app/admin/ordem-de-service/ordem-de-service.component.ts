@@ -106,12 +106,12 @@ export class OrdemDeServiceComponent implements OnInit {
     });
   }
 
-  openDilogItenOS(eventOS: iServiceOrder, item?: any) {
+  openDilogItenOS(os: iServiceOrder, item?: any) {
     const isEdit = !!item;
 
     const itens = isEdit ? item : {
       idItensDaOS: null,
-      codOS: eventOS.idOS,
+      codOS: os.idOS,
       codProduto: '',
       descricao: '',
       valorUnitario: 0,
@@ -122,40 +122,46 @@ export class OrdemDeServiceComponent implements OnInit {
     const dialogRef = this.dialog.open(DialogOpenOsComponent, {
       data:  {
         modo: isEdit ? 'editar' : 'adicionar',
-        idOS: eventOS.idOS,
-        idCliente: eventOS.idCliente,
-        nomeCliente: eventOS.nomeCliente,
-        idFuncionario: eventOS.idFuncionario,
-        nomeFuncionario: eventOS.nomeFuncionario,
-        dataDeEntrada: eventOS.dataDeEntrada,
-        ultimaAtualizacao: eventOS.ultimaAtualizacao,
-        status: eventOS.status,
-        subtotal: eventOS.subtotal,
-        desconto: eventOS.desconto,
-        totalGeralOS: eventOS.totalGeralOS,
-        porConta: eventOS.porConta,
-        restante: eventOS.restante,
+        idOS: os.idOS,
+        idCliente: os.idCliente,
+        nomeCliente: os.nomeCliente,
+        idFuncionario: os.idFuncionario,
+        nomeFuncionario: os.nomeFuncionario,
+        dataDeEntrada: os.dataDeEntrada,
+        ultimaAtualizacao: os.ultimaAtualizacao,
+        status: os.status,
+        subtotal: os.subtotal,
+        desconto: os.desconto,
+        totalGeralOS: os.totalGeralOS,
+        porConta: os.porConta,
+        restante: os.restante,
         itensOS: {
           idItensDaOS: itens.idItensDaOS || null,
           codOS: itens.codOS || null,
           codProduto: itens.codProduto || null,
           descricao: itens.descricao || '',
-          valorUnitario: this.parseCurrency(eventOS.itensOS.valorUnitario),
+          valorUnitario: this.parseCurrency(os.itensOS.valorUnitario),
           quantidade: itens.quantidade || 1,
-          total: this.parseCurrency(eventOS.itensOS.total)
+          total: this.parseCurrency(os.itensOS.total)
         }
       }
     }
     );
 
-   dialogRef.afterClosed().subscribe((dados) => {
-      if (dados) {
-        this.recalcularTotalOS(eventOS, dados);
-        this.updateOS(eventOS);
-      }
-      if (dados && dados.item) {
-        console.log("Item retornado:", dados);
-      }
+   dialogRef.afterClosed().subscribe((result) => {
+     if(!result) return;
+     if(result.modo === 'adicionar'){
+       os.itensOS.push(result.item);
+     }
+     if(result.modo === 'editar'){
+       const idx = os.itensOS.findIndex(i=> i.idItensDaOS === result.item.idItensDaOS)
+       if(idx >= 0 ) os.itensOS[idx] = result.item;
+     }
+        this.recalcularTotalOS(os, result);
+        this.updateOS(os);
+
+        console.log("Item retornado:", result);
+
     });
 
   }

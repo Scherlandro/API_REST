@@ -42,12 +42,9 @@ export class DialogOpenOsComponent implements OnInit {
 
   constructor(
     @Inject(MAT_DIALOG_DATA)
-    public data: {
-      modo: 'adicionar' | 'editar',
-      idOS: number,
-      nomeCliente: string,
-      nomeFuncionario: string,
-      itensOS: iItensOS
+    public data: {  modo: 'adicionar' | 'editar';
+      os: iServiceOrder;
+      itensOS: iItensOS;
     },
     public dialogRef: MatDialogRef<DialogOpenOsComponent>,
     public osServices: OrdemDeServicosService,
@@ -78,12 +75,14 @@ export class DialogOpenOsComponent implements OnInit {
     this.listarProdutos();
 
     // Se estiver no modo editar, já preenche o produto e quantidade
-    if (this.data.modo === 'editar') {
-      this.produtoControl.setValue({
+    if (this.isChange) {
+     /* this.produtoControl.setValue({
         nomeProduto: this.itensOS.descricao,
         codProduto: this.itensOS.codProduto,
         valorVenda: this.itensOS.valorUnitario
-      });
+      });*/
+
+      this.produtoControl.disable();
 
       this.quantidadeControl.setValue(this.itensOS.quantidade);
     }
@@ -160,21 +159,33 @@ export class DialogOpenOsComponent implements OnInit {
 
   addItem() {
     const produtoSelecionado = this.produtoControl.value;
-    if (produtoSelecionado && this.produtoControl.valid) {
-  /*    const novoItem: iItensOS = {
-        idItensDaOS: this.os.itensOS.idItensDaOS,
-        codOS: this.os.idOS || 0,
-        descricao: produtoSelecionado.nomeProduto,
-        codProduto: produtoSelecionado.codProduto,
-        valorUnitario: produtoSelecionado.valorVenda,
-        quantidade: 1,
-        total: produtoSelecionado.valorVenda // Inicialmente, o total é apenas o valor unitário
-      };
-      console.log(novoItem);*/
-     // this.itensOS.push(novoItem);
-      this.produtoControl.reset(); // Limpa o campo após adicionar o item
+
+    if (!produtoSelecionado || this.produtoControl.invalid || this.quantidadeControl.invalid) {
+      this.onError("Selecione o produto e uma quantidade válida.");
+      return;
     }
+
+    const novoItem: iItensOS = {
+      idItensDaOS: 0, // item novo sempre inicia com 0
+      codOS: this.os.idOS ?? 0,
+      codProduto: String(produtoSelecionado.codProduto),
+      descricao: String(produtoSelecionado.nomeProduto),
+      valorUnitario: Number(produtoSelecionado.valorVenda),
+      quantidade: Number(this.quantidadeControl.value),
+      total: Number(produtoSelecionado.valorVenda) * Number(this.quantidadeControl.value)
+    };
+
+    // adiciona na lista
+    this.itensOS$.push(novoItem);
+
+    // limpa os campos
+    this.produtoControl.reset();
+    this.quantidadeControl.reset();
+
+    // feedback no console
+    console.log("Item adicionado:", novoItem);
   }
+
 
   removeItem(item: iItensOS) {
     const index = this.itensOS$.indexOf(item);
