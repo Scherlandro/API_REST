@@ -47,7 +47,7 @@ export class OrdemDeServiceComponent implements OnInit {
   clienteSelecionado: ICliente | null = null;
   tbSourceOS$: MatTableDataSource<iServiceOrder>;
   displayedColumns0S = ['Nome', 'Data', 'Status', 'Total', 'Opcoes'];
-  tbSourceItensDaOS$: MatTableDataSource<iItensOS>;
+ // tbSourceItensDaOS$: MatTableDataSource<iItensOS>;
   displayedColumns: string[] = ['codOS', 'codigo', 'descricao', 'preco', 'qtd', 'soma', 'imagem', 'opcoes'];
   OSControl = new FormControl();
 
@@ -70,7 +70,7 @@ export class OrdemDeServiceComponent implements OnInit {
     public dialog: MatDialog
   ) {
     this.tbSourceOS$ = new MatTableDataSource();
-    this.tbSourceItensDaOS$ = new MatTableDataSource();
+  // this.tbSourceItensDaOS$ = new MatTableDataSource();
   }
 
   ngOnInit() {
@@ -105,11 +105,13 @@ export class OrdemDeServiceComponent implements OnInit {
       }
     });
   }
+  openDilogItenOS(os: iServiceOrder, item?: iItensOS) {
 
-  openDilogItenOS(os: iServiceOrder, item?: any) {
     const isEdit = !!item;
+    const isNovaOS = !os.itensOS; // <= nova OS recém criada
 
-    const itens = isEdit ? item : {
+    // Objeto padrão seguro
+    const emptyItem: iItensOS = {
       idItensDaOS: 0,
       codOS: os?.idOS ?? 0,
       codProduto: "",
@@ -117,54 +119,68 @@ export class OrdemDeServiceComponent implements OnInit {
       valorUnitario: 0,
       quantidade: 1,
       total: 0
-    } as iItensOS;
+    };
+
+    // Item que realmente será enviado
+    const itens = isEdit
+      ? item
+      : emptyItem;   // novo item, seja nova OS ou OS existente
+
 
     const dialogRef = this.dialog.open(DialogOpenOsComponent, {
-      data:  {
+      data: {
+        modoNew: isNovaOS ? 'nova' : '' ,
         modo: isEdit ? 'editar' : 'adicionar',
-        idOS: os.idOS,
-        idCliente: os.idCliente,
-        nomeCliente: os.nomeCliente,
-        idFuncionario: os.idFuncionario,
-        nomeFuncionario: os.nomeFuncionario,
-        dataDeEntrada: os.dataDeEntrada,
-        ultimaAtualizacao: os.ultimaAtualizacao,
-        status: os.status,
-        subtotal: os.subtotal,
-        desconto: os.desconto,
-        totalGeralOS: os.totalGeralOS,
-        porConta: os.porConta,
-        restante: os.restante,
+
+        // dados da OS
+        idOS: os.idOS ?? 0,
+        idCliente: os.idCliente ?? null,
+        nomeCliente: os.nomeCliente ?? '',
+        idFuncionario: os.idFuncionario ?? null,
+        nomeFuncionario: os.nomeFuncionario ?? '',
+        dataDeEntrada: os.dataDeEntrada ?? null,
+        ultimaAtualizacao: os.ultimaAtualizacao ?? null,
+        status: os.status ?? '',
+        subtotal: os.subtotal ?? 0,
+        desconto: os.desconto ?? 0,
+        totalGeralOS: os.totalGeralOS ?? 0,
+        porConta: os.porConta ?? 0,
+        restante: os.restante ?? 0,
+
+        // --- itensOS completamente SEGURO ---
         itensOS: {
-          idItensDaOS: itens.idItensDaOS || null,
-          codOS: itens.codOS || null,
-          codProduto: itens.codProduto || null,
-          descricao: itens.descricao || '',
-          valorUnitario: this.parseCurrency(os.itensOS.valorUnitario),
-          quantidade: itens.quantidade || 1,
-          total: this.parseCurrency(os.itensOS.total)
+          idItensDaOS: itens.idItensDaOS ?? null,
+          codOS: itens.codOS ?? os?.idOS ?? null,
+          codProduto: itens.codProduto ?? null,
+          descricao: itens.descricao ?? '',
+          valorUnitario: itens.valorUnitario ?? 0,
+          quantidade: itens.quantidade ?? 1,
+          total: itens.total ?? 0
         }
       }
-    }
-    );
-
-   dialogRef.afterClosed().subscribe((result) => {
-     if(!result) return;
-     if(result.modo === 'adicionar'){
-       os.itensOS.push(result.item);
-     }
-     if(result.modo === 'editar'){
-       const idx = os.itensOS.findIndex((i:any)=> i.idItensDaOS === result.item.idItensDaOS)
-       if(idx >= 0 ) os.itensOS[idx] = result.item;
-     }
-        this.recalcularTotalOS(os, result);
-        this.updateOS(os);
-
-        console.log("Item retornado:", result);
-
     });
 
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (!result) return;
+
+      if (result.modo === 'adicionar') {
+        if (!os.itensOS) os.itensOS = []; // <= garante que existe
+        os.itensOS.push(result.item);
+      }
+
+      if (result.modo === 'editar') {
+        const idx = os.itensOS.findIndex((i: any) =>
+          i.idItensDaOS === result.item.idItensDaOS
+        );
+        if (idx >= 0) os.itensOS[idx] = result.item;
+      }
+
+      this.recalcularTotalOS(os, result);
+      this.updateOS(os);
+    });
   }
+
 
   updateOS(eventOS: iServiceOrder) {
     console.log('OS para atulizar', eventOS);
@@ -262,12 +278,12 @@ export class OrdemDeServiceComponent implements OnInit {
       element.totalGeralOS = soma;
       element.totalGeralOS = this.formatarReal(soma);
       console.log('Valor soma', element.totalGeralOS);
-      this.tbSourceItensDaOS$.data = element.itensOS.map((item: iItensOS) => ({
+     /* this.tbSourceItensDaOS$.data = element.itensOS.map((item: iItensOS) => ({
         ...item,
         // Formata os valores individuais
         valorUnitario: this.formatarReal(item.valorUnitario),
         total: this.formatarReal(item.total)
-      }));
+      }));*/
     }
   }
 
@@ -309,9 +325,9 @@ export class OrdemDeServiceComponent implements OnInit {
       if (res) {
         this.itensOsService.deleteItensOS(item)
           .subscribe((item) => {
-            this.tbData = this.tbSourceItensDaOS$.data;
+           // this.tbData = this.tbSourceItensDaOS$.data;
             this.tbData.splice(this.ruwSelec, 1);
-            this.tbSourceItensDaOS$.data = this.tbData;
+           // this.tbSourceItensDaOS$.data = this.tbData;
           });
         this.notificationMsg.warn('! Deletado com sucesso!');
       }
@@ -328,9 +344,9 @@ export class OrdemDeServiceComponent implements OnInit {
             elementOS.itensOS = elementOS.itensOS.filter((i: any) => i.idItensDaOS !== item.idItensDaOS);
             this.recalcularTotalOS(elementOS, elementOS.itensOS);
           }
-          this.tbData = this.tbSourceItensDaOS$.data;
+        //  this.tbData = this.tbSourceItensDaOS$.data;
           this.tbData.splice(this.ruwSelec, 1);
-          this.tbSourceItensDaOS$.data = this.tbData;
+         // this.tbSourceItensDaOS$.data = this.tbData;
           this.notificationMsg.warn('! Deletado com sucesso!');
         });
       }

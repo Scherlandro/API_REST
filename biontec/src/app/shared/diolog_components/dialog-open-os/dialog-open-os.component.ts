@@ -24,7 +24,8 @@ export class DialogOpenOsComponent implements  OnInit, OnDestroy  {
 
   destroy$ = new Subject<void>();
   os!: iServiceOrder;
-  itensOS!: iItensOS;
+  itensOS: iItensOS;
+  isNewOS = false;
   isChange = false; // TRUE = Editar item — FALSE = Adicionar item
   osSelecionada!: iServiceOrder;
   funcionarioControl = new FormControl('', [Validators.required]);
@@ -43,7 +44,9 @@ export class DialogOpenOsComponent implements  OnInit, OnDestroy  {
 
   constructor(
     @Inject(MAT_DIALOG_DATA)
-    public data: {  modo: 'adicionar' | 'editar';
+    public data: {
+      modoNew: 'nova' | '' ;
+      modo: 'adicionar' | 'editar';
       os: iServiceOrder;
       itensOS: iItensOS;
     },
@@ -55,18 +58,14 @@ export class DialogOpenOsComponent implements  OnInit, OnDestroy  {
     private itensOsService: ItensOsService,
     private productService: ProductService
   ) {
-
-    this.os = data as any;        // mantém compatibilidade com seu código existente
+    this.os = data as any;
     this.itensOS = data.itensOS;  // item selecionado (ou item vazio)
-
+    console.log('Valor do ItemsOS', this.itensOS)
     this.isChange = data.modo === 'editar';
-
-
-
+    this.isNewOS = data.modoNew === 'nova';
     this.produtoControl = new FormControl(null, [Validators.required]);
     this.quantidadeControl = new FormControl(
-      this.itensOS.quantidade || 1,
-      [Validators.required, Validators.min(1)]
+      this.itensOS?.quantidade || 1,      [Validators.required, Validators.min(1)]
     );
   }
 
