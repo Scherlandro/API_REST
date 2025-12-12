@@ -110,14 +110,14 @@ export class OrdemDeServiceComponent implements OnInit {
     const isEdit = !!item;
 
     const itens = isEdit ? item : {
-      idItensDaOS: null,
-      codOS: os.idOS,
-      codProduto: '',
-      descricao: '',
+      idItensDaOS: 0,
+      codOS: os?.idOS ?? 0,
+      codProduto: "",
+      descricao: "",
       valorUnitario: 0,
       quantidade: 1,
       total: 0
-    };
+    } as iItensOS;
 
     const dialogRef = this.dialog.open(DialogOpenOsComponent, {
       data:  {
@@ -154,7 +154,7 @@ export class OrdemDeServiceComponent implements OnInit {
        os.itensOS.push(result.item);
      }
      if(result.modo === 'editar'){
-       const idx = os.itensOS.findIndex(i=> i.idItensDaOS === result.item.idItensDaOS)
+       const idx = os.itensOS.findIndex((i:any)=> i.idItensDaOS === result.item.idItensDaOS)
        if(idx >= 0 ) os.itensOS[idx] = result.item;
      }
         this.recalcularTotalOS(os, result);

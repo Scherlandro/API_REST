@@ -1,4 +1,4 @@
-import {Component, Inject, OnInit} from '@angular/core';
+import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
 import {FormControl, Validators} from "@angular/forms";
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from "@angular/material/dialog";
 import { iServiceOrder } from 'src/app/interfaces/service-order';
@@ -20,11 +20,12 @@ type ServiceSearchMethod<T> = (nome: string) => Observable<T[]>;
   templateUrl: './dialog-open-os.component.html',
   styleUrls: ['./dialog-open-os.component.css']
 })
-export class DialogOpenOsComponent implements OnInit {
-  isChange = false;
+export class DialogOpenOsComponent implements  OnInit, OnDestroy  {
+
   destroy$ = new Subject<void>();
-  os: iServiceOrder;
-  itensOS: iItensOS;
+  os!: iServiceOrder;
+  itensOS!: iItensOS;
+  isChange = false; // TRUE = Editar item — FALSE = Adicionar item
   osSelecionada!: iServiceOrder;
   funcionarioControl = new FormControl('', [Validators.required]);
   funcionarioFilted!: Observable<IFuncionario[]>;
@@ -50,7 +51,7 @@ export class DialogOpenOsComponent implements OnInit {
     public osServices: OrdemDeServicosService,
     public dialog: MatDialog,
     private clienteService: ClienteService,
-    private funcionarioServices: FuncionarioService,
+    private funcionarioService: FuncionarioService,
     private itensOsService: ItensOsService,
     private productService: ProductService
   ) {
@@ -60,8 +61,7 @@ export class DialogOpenOsComponent implements OnInit {
 
     this.isChange = data.modo === 'editar';
 
-    this.verificarFuncionario();
-    this.verificarCliente();
+
 
     this.produtoControl = new FormControl(null, [Validators.required]);
     this.quantidadeControl = new FormControl(
@@ -73,6 +73,7 @@ export class DialogOpenOsComponent implements OnInit {
 
   ngOnInit(): void {
     this.listarProdutos();
+    this.setupAutocompleteFilters();
 
     // Se estiver no modo editar, já preenche o produto e quantidade
     if (this.isChange) {
@@ -94,6 +95,41 @@ export class DialogOpenOsComponent implements OnInit {
     this.destroy$.complete();
   }
 
+  // =============== AUTOCOMPLETE ==================
+  // ===============================================
+
+  setupAutocompleteFilters() {
+    this.funcionarioFilted = this.funcionarioControl.valueChanges.pipe(
+      startWith(''),
+      debounceTime(250),
+      distinctUntilChanged(),
+      switchMap(value =>
+        typeof value === 'string' && value.length >= 2
+          ? this.funcionarioService.getFuncionarioPorNome(value)
+          : of([])
+      ),
+      catchError(() => of([])),
+      takeUntil(this.destroy$)
+    );
+
+    this.clientesFiltrados = this.clienteControl.valueChanges.pipe(
+      startWith(''),
+      debounceTime(250),
+      distinctUntilChanged(),
+      switchMap(value =>
+        typeof value === 'string' && value.length >= 2
+          ? this.clienteService.getClientePorNome(value)
+          : of([])
+      ),
+      catchError(() => of([])),
+      takeUntil(this.destroy$)
+    );
+  }
+
+  selecionarCliente(): void {
+    this.dialogRef.close(this.clientes);
+  }
+
   listarProdutos() {
     this.productService.getTodosProdutos().pipe(
       catchError(() => {
@@ -105,6 +141,29 @@ export class DialogOpenOsComponent implements OnInit {
       this.produtos = produtos;
       this.produtoFiltered = produtos;
     });
+  }
+
+  filterProdutos(event: Event): void {
+    const valor = (event.target as HTMLInputElement).value.toLowerCase();
+    this.produtoFiltered = this.produtos.filter(p =>
+      p.nomeProduto.toLowerCase().includes(valor)
+    );
+  }
+
+  onProdutoSelecionado(produto: iProduto): void {
+    if (produto) {
+      this.itensOS.codProduto = produto.codProduto;
+      this.itensOS.descricao = produto.nomeProduto;
+      this.itensOS.valorUnitario = produto.valorVenda;
+      this.updateTotal();
+    }
+  }
+
+  // Atualiza total ao editar quantidade
+  updateTotal() {
+    const qtd = Number(this.itensOS.quantidade);
+    const valor = Number(this.itensOS.valorUnitario);
+    this.itensOS.total = qtd * valor || 0;
   }
 
   save(os: iServiceOrder) {
@@ -149,6 +208,11 @@ export class DialogOpenOsComponent implements OnInit {
 
   salvarItem() {
     this.itensOS.quantidade = this.quantidadeControl.value;
+
+    if (this.produtoControl.invalid || this.quantidadeControl.invalid) {
+      this.onError("Preencha todos os campos obrigatórios.");
+      return;
+    }
     this.updateTotal();
 
     this.dialogRef.close({
@@ -186,7 +250,6 @@ export class DialogOpenOsComponent implements OnInit {
     console.log("Item adicionado:", novoItem);
   }
 
-
   removeItem(item: iItensOS) {
     const index = this.itensOS$.indexOf(item);
     if (index >= 0) {
@@ -194,119 +257,11 @@ export class DialogOpenOsComponent implements OnInit {
     }
   }
 
-
- listarEntidade<T>(
-    control: FormControl,
-    serviceMethod: ServiceSearchMethod<T>,
-    errorMsg: string
-  ) {
-    if (control.valid) {
-      const value = control.value;
-      if (typeof value === 'string') {
-        serviceMethod(value).pipe(
-          takeUntil(this.destroy$)
-        ).subscribe({
-          complete(): void {
-          },
-          next: (result: T[]) => {
-            if (result.length > 0) {
-              this.etapa = 2;
-            } else {
-              this.onError(errorMsg);
-            }
-          },
-          error: (error: any) => {
-            if (error.status === 404) {
-              this.onError(`Erro ao buscar ${errorMsg}.`);
-            }
-          }
-        });
-      } else {
-        this.etapa = 2;
-      }
-    }
-  }
-
- listarClientes() {
-    this.listarEntidade<ICliente>(
-      this.clienteControl,
-      (nome: string) => this.clienteService.getClientePorNome(nome),
-      'Cliente não encontrado'
-    );
-  }
-
-  listarFuncionario() {
-    this.listarEntidade<IFuncionario>(
-      this.funcionarioControl,
-      (nome: string) => this.funcionarioServices.getFuncionarioPorNome(nome),
-      'Funcionario não encontrado'
-    );
-  }
-
-  verificarCliente() {
-    this.listarClientes();
-    this.clientesFiltrados = this.clienteControl.valueChanges.pipe(
-      startWith(''),
-      debounceTime(300),
-      distinctUntilChanged(),
-      switchMap(value => this.handleFilter(value, 'cliente')),
-      takeUntil(this.destroy$)
-    );
-  }
-
-  verificarFuncionario() {
-    this.listarFuncionario();
-    this.funcionarioFilted = this.funcionarioControl.valueChanges.pipe(
-      startWith(''),
-      debounceTime(300),
-      distinctUntilChanged(),
-      switchMap(value => this.handleFilter(value, 'funcionario')),
-      takeUntil(this.destroy$)
-    );
-  }
-
-  handleFilter(value: any, type: 'cliente' | 'funcionario'): Observable<any[]> {
-   if (typeof value === 'string' && value.length >= 2  ) {
-      return type === 'cliente'
-        ? this.clienteService.getClientePorNome(value).pipe(
-          catchError(() => {
-            console.error('Erro ao buscar clientes');
-            return of([]);
-          })
-        )
-        : this.funcionarioServices.getFuncionarioPorNome(value).pipe(
-        catchError(() => {
-          console.error('Erro ao buscar funcionarios');
-          return of([]);
-        })
-      )
-    }
-    return of([]);
-  }
-
-  filterProdutos(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    const valor = input.value;
-
-    if (valor) {
-      this.produtoFiltered = this.produtos.filter(p =>
-        p.nomeProduto.toLowerCase().includes(valor.toLowerCase()));
-    } else {
-      this.produtoFiltered = this.produtos.slice();
-    }
-  }
-
-  onProdutoSelecionado(produto: iProduto): void {
-    if (produto) {
-      this.updateItemFields(produto);
-    }
-  }
-
-  displayFn(cliente: ICliente): string {
+  displayCli(cliente: ICliente): string {
     return cliente ? cliente.nomeCliente : '';
   }
 
- displayFnFunc(func: IFuncionario): string {
+  displayFunc(func: IFuncionario): string {
     return func ? func.nomeFuncionario : '';
   }
 
@@ -316,10 +271,6 @@ export class DialogOpenOsComponent implements OnInit {
 
   onNoClick(): void {
     this.dialogRef.close();
-  }
-
-  selecionarCliente(): void {
-    this.dialogRef.close(this.clientes);
   }
 
   statusDaOS(){
@@ -342,23 +293,6 @@ export class DialogOpenOsComponent implements OnInit {
   voltar(): void {
     if (this.etapa === 2) {
       this.etapa = 1;
-    }
-  }
-
-  // Função para atualizar os campos do itensOS com base no produto selecionado
-  updateItemFields(produto: iProduto) {
-    this.itensOS.codProduto = produto.codProduto;
-    this.itensOS.descricao = produto.nomeProduto;
-    this.itensOS.valorUnitario = produto.valorVenda;
-    this.updateTotal();
-  }
-
-  // Função para atualizar o total com base no preço de venda e quantidade
-  updateTotal() {
-    if (this.itensOS.valorUnitario && this.itensOS.quantidade) {
-      this.itensOS.total = this.itensOS.valorUnitario * this.itensOS.quantidade;
-    } else {
-      this.itensOS.total = 0;
     }
   }
 
