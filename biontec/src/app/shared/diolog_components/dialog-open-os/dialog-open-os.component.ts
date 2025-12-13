@@ -73,6 +73,7 @@ export class DialogOpenOsComponent implements  OnInit, OnDestroy  {
   ngOnInit(): void {
     this.listarProdutos();
     this.setupAutocompleteFilters();
+    this.statusDaOS();
 
     // Se estiver no modo editar, já preenche o produto e quantidade
     if (this.isChange) {
@@ -273,10 +274,13 @@ export class DialogOpenOsComponent implements  OnInit, OnDestroy  {
   }
 
   statusDaOS(){
+    console.log('os.idOS NO STATUS', this.os.idOS)
     if (this.os.idOS != null) {
+      this.isNewOS = true;
       this.isChange = true;
     } else {
       this.isChange = false;
+      this.isNewOS = false;
     }
   }
 

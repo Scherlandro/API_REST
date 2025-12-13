@@ -95,17 +95,81 @@ export class OrdemDeServiceComponent implements OnInit {
   }
 
   openDilogOS() {
-    const dialogRef = this.dialog.open(DialogOpenOsComponent, {
+    const os: iServiceOrder = {
+      idOS: 0, idCliente: 0, idFuncionario: 0, nomeCliente: '', nomeFuncionario: '',
+      dataDeEntrada: '', ultimaAtualizacao: '', status: '', subtotal: 0,
+      desconto: 0, totalGeralOS: 0, porConta: 0, restante: 0, itensOS: undefined
+    };
 
-      data: { /* dados vázio */}
+    const itens: iItensOS = {
+      idItensDaOS: 0, codOS: os.idOS, codProduto: '', descricao: '', valorUnitario: 0,
+      quantidade: 1, total: 0
+    };
+
+    const dialogRef = this.dialog.open(DialogOpenOsComponent, {
+      data: {
+        modoNew: 'nova', modo: 'adicionar',
+        ...os,
+        itensOS: { ...itens, codOS: os.idOS }
+      }
     });
+
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.clienteSelecionado = result;
       }
     });
   }
+
   openDilogItenOS(os: iServiceOrder, item?: iItensOS) {
+    const isEdit = !!item;
+    const isNovaOS = !os.itensOS; // nova OS recém criada
+
+    const emptyItem: iItensOS = {
+      idItensDaOS: 0,
+      codOS: os.idOS ?? 0,
+      codProduto: '',
+      descricao: '',
+      valorUnitario: 0,
+      quantidade: 1,
+      total: 0
+    };
+
+    // Define o item a ser enviado (novo ou existente)
+    const itens = isEdit ? item : emptyItem;
+
+    const dialogRef = this.dialog.open(DialogOpenOsComponent, {
+      data: {
+        modoNew: isNovaOS ? 'nova' : '',
+        modo: isEdit ? 'editar' : 'adicionar',
+         ...os,
+        itensOS: { ...itens, codOS: os.idOS }
+      }
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (!result) return;
+
+      if (result.modo === 'adicionar') {
+        if (!os.itensOS) os.itensOS = []; // <= garante que existe
+        os.itensOS.push(result.item);
+      }
+
+      if (result.modo === 'editar') {
+        const idx = os.itensOS.findIndex((i: any) =>
+          i.idItensDaOS === result.item.idItensDaOS
+        );
+        if (idx >= 0) os.itensOS[idx] = result.item;
+      }
+
+      this.recalcularTotalOS(os, result);
+      this.updateOS(os);
+    });
+
+  }
+
+
+  openDilogItenOS2(os: iServiceOrder, item?: iItensOS) {
 
     const isEdit = !!item;
     const isNovaOS = !os.itensOS; // <= nova OS recém criada

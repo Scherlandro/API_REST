@@ -10,7 +10,7 @@
       <input matInput [(ngModel)]="os.idOS">
     </mat-form-field>
 
-    <mat-form-field *ngIf="isChange">
+    <mat-form-field *ngIf="!isNewOS">
       <mat-label>Atendente</mat-label>
       <input type="text"
              placeholder="Atendente"
@@ -26,7 +26,7 @@
       </mat-autocomplete>
     </mat-form-field>
 
-    <mat-form-field appearance="fill" >
+    <mat-form-field appearance="fill" *ngIf="isNewOS" >
       <mat-label>Atendente</mat-label>
       <input matInput [value]="os.nomeFuncionario" disabled>
     </mat-form-field>
@@ -40,7 +40,7 @@
     </mat-form-field>
 
     <!-- Cliente -->
-    <mat-form-field *ngIf="isChange">
+    <mat-form-field *ngIf="!isNewOS">
       <mat-label>Cliente</mat-label>
       <input type="text"
              placeholder="Digite o Cliente"
@@ -56,7 +56,7 @@
       </mat-autocomplete>
     </mat-form-field>
 
-    <mat-form-field appearance="fill" >
+    <mat-form-field appearance="fill"*ngIf="isNewOS" >
       <mat-label>Cliente</mat-label>
       <input matInput [value]="os.nomeCliente" disabled>
     </mat-form-field>
