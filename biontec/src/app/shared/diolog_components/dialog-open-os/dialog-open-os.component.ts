@@ -60,7 +60,7 @@ export class DialogOpenOsComponent implements  OnInit, OnDestroy  {
   ) {
     this.os = data as any;
     this.itensOS = data.itensOS;  // item selecionado (ou item vazio)
-    console.log('Valor do ItemsOS', this.itensOS)
+    console.log('Valor OS ', this.os)
     this.isChange = data.modo === 'editar';
     this.isNewOS = data.modoNew === 'nova';
     this.produtoControl = new FormControl(null, [Validators.required]);
@@ -86,6 +86,7 @@ export class DialogOpenOsComponent implements  OnInit, OnDestroy  {
       this.produtoControl.disable();
 
       this.quantidadeControl.setValue(this.itensOS.quantidade);
+      console.log('isChange', this.isChange, 'isNewOS', this.isNewOS);
     }
   }
 

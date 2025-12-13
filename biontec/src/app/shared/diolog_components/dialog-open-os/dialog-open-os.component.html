@@ -1,8 +1,8 @@
 <div class="div-os">
 
   <mat-card class="container-box-os ">
-    <h1 *ngIf="!isChange" mat-dialog-title>Abrir Serviço</h1>
-    <h1 *ngIf="isChange" mat-dialog-title>Editar Serviço</h1>
+    <h1 *ngIf="isNewOS" mat-dialog-title>Abrir Serviço</h1>
+    <h1 *ngIf="!isNewOS" mat-dialog-title>Editar Serviço</h1>
 
 
     <mat-form-field appearance="fill">

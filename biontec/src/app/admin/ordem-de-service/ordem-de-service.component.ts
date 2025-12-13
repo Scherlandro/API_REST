@@ -41,7 +41,6 @@ export class OrdemDeServiceComponent implements OnInit {
   pageEvent!: PageEvent;
   tbData: any;
   ruwSelec: any;
-
   orders: iServiceOrder[] = [];
   clienteFilted: ICliente[] = [];
   clienteSelecionado: ICliente | null = null;
@@ -88,7 +87,6 @@ export class OrdemDeServiceComponent implements OnInit {
       })).subscribe(
       (result: iServiceOrder[]) => {
         this.tbSourceOS$.data = result;
-        console.log('tbSourceos$ ', this.tbSourceOS$.data.map((i) => i.itensOS))
         this.tbSourceOS$.paginator = this.paginator;
         this.spiner = false;
       });
@@ -101,10 +99,11 @@ export class OrdemDeServiceComponent implements OnInit {
       desconto: 0, totalGeralOS: 0, porConta: 0, restante: 0, itensOS: undefined
     };
 
-    const itens: iItensOS = {
+    /*const itens: iItensOS = {
       idItensDaOS: 0, codOS: os.idOS, codProduto: '', descricao: '', valorUnitario: 0,
       quantidade: 1, total: 0
-    };
+    };*/
+    const itens: iItensOS = os.itensOS;
 
     const dialogRef = this.dialog.open(DialogOpenOsComponent, {
       data: {
@@ -134,7 +133,6 @@ export class OrdemDeServiceComponent implements OnInit {
       quantidade: 1,
       total: 0
     };
-
     // Define o item a ser enviado (novo ou existente)
     const itens = isEdit ? item : emptyItem;
 
@@ -167,84 +165,6 @@ export class OrdemDeServiceComponent implements OnInit {
     });
 
   }
-
-
-  openDilogItenOS2(os: iServiceOrder, item?: iItensOS) {
-
-    const isEdit = !!item;
-    const isNovaOS = !os.itensOS; // <= nova OS recém criada
-
-    // Objeto padrão seguro
-    const emptyItem: iItensOS = {
-      idItensDaOS: 0,
-      codOS: os?.idOS ?? 0,
-      codProduto: "",
-      descricao: "",
-      valorUnitario: 0,
-      quantidade: 1,
-      total: 0
-    };
-
-    // Item que realmente será enviado
-    const itens = isEdit
-      ? item
-      : emptyItem;   // novo item, seja nova OS ou OS existente
-
-
-    const dialogRef = this.dialog.open(DialogOpenOsComponent, {
-      data: {
-        modoNew: isNovaOS ? 'nova' : '' ,
-        modo: isEdit ? 'editar' : 'adicionar',
-
-        // dados da OS
-        idOS: os.idOS ?? 0,
-        idCliente: os.idCliente ?? null,
-        nomeCliente: os.nomeCliente ?? '',
-        idFuncionario: os.idFuncionario ?? null,
-        nomeFuncionario: os.nomeFuncionario ?? '',
-        dataDeEntrada: os.dataDeEntrada ?? null,
-        ultimaAtualizacao: os.ultimaAtualizacao ?? null,
-        status: os.status ?? '',
-        subtotal: os.subtotal ?? 0,
-        desconto: os.desconto ?? 0,
-        totalGeralOS: os.totalGeralOS ?? 0,
-        porConta: os.porConta ?? 0,
-        restante: os.restante ?? 0,
-
-        // --- itensOS completamente SEGURO ---
-        itensOS: {
-          idItensDaOS: itens.idItensDaOS ?? null,
-          codOS: itens.codOS ?? os?.idOS ?? null,
-          codProduto: itens.codProduto ?? null,
-          descricao: itens.descricao ?? '',
-          valorUnitario: itens.valorUnitario ?? 0,
-          quantidade: itens.quantidade ?? 1,
-          total: itens.total ?? 0
-        }
-      }
-    });
-
-
-    dialogRef.afterClosed().subscribe((result) => {
-      if (!result) return;
-
-      if (result.modo === 'adicionar') {
-        if (!os.itensOS) os.itensOS = []; // <= garante que existe
-        os.itensOS.push(result.item);
-      }
-
-      if (result.modo === 'editar') {
-        const idx = os.itensOS.findIndex((i: any) =>
-          i.idItensDaOS === result.item.idItensDaOS
-        );
-        if (idx >= 0) os.itensOS[idx] = result.item;
-      }
-
-      this.recalcularTotalOS(os, result);
-      this.updateOS(os);
-    });
-  }
-
 
   updateOS(eventOS: iServiceOrder) {
     console.log('OS para atulizar', eventOS);
