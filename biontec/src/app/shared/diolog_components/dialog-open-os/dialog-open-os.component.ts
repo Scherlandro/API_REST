@@ -276,12 +276,13 @@ export class DialogOpenOsComponent implements  OnInit, OnDestroy  {
 
   statusDaOS(){
     console.log('os.idOS NO STATUS', this.os.idOS)
-    if (this.os.idOS != null) {
+    if (this.os.idOS === 0) {
       this.isNewOS = true;
       this.isChange = true;
-    } else {
+    } if (this.os.idOS > 0 && this.dialogRef.componentInstance.data.modoNew === "") {
+      console.log('isNewOS NO ELSE',  this.isNewOS)
       this.isChange = false;
-      this.isNewOS = false;
+      this.isNewOS = true;
     }
   }
 
