@@ -139,7 +139,6 @@ export class PurchaseStateService {
     return this.startSellingSelectedProduct.asObservable();
   }
 
-
   addProduct(): void {
     this.total++;
     this.updateCart();
@@ -153,16 +152,5 @@ export class PurchaseStateService {
   private updateCart(): void {
     this.cartCount$.next(this.total);
   }
-
-/*
-  private getBaseCauculo(cart: any): any {
-    switch (cart) {
-      case this.total:
-        return this.total;
-      case this.cartCount$:
-        return this.cartCount$;
-    }
-  }
- */
 
 }

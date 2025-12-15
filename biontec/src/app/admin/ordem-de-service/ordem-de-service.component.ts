@@ -271,6 +271,17 @@ export class OrdemDeServiceComponent implements OnInit {
     }
   }
 
+
+/* getBaseCauculo(cart: any): any {
+      switch (cart) {
+        case this.total:
+          return this.total;
+        case this.cartCount$:
+          return this.cartCount$;
+      }
+    }
+ */
+
   recalcularTotalOS(eventOS: iServiceOrder, eventItens: iItensOS): iServiceOrder {
     // Verifica se a OS ou os itens estão vazios
     if (!eventOS.idOS || !eventOS.itensOS || eventOS.itensOS.length === 0) {

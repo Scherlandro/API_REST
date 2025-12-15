@@ -26,7 +26,6 @@ export class TokenService {
   }
 
   clearTokenExpired(): void{
-    //  https://stackoverflow.com/questions/60758154/how-to-check-if-jwt-token-is-expired-in-angular-8
     localStorage.removeItem('token')
     this.router.navigate(['auth'])
   }

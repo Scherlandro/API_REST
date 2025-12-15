@@ -36,10 +36,8 @@ export class AppComponent {
         this.display = true
       }
     );
-
-  //  this.user = this.tokenService.getPayload()
-
   }
+
   logout(){
     this.authService.logout();
   }
@@ -48,8 +46,6 @@ export class AppComponent {
     this.message = ''
     this.display = false
   }
-
-
 
   onScroll(e:any) {
     let scrollXs = this.deviceXs ? 55 : 73;
