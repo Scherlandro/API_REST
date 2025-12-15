@@ -13,6 +13,7 @@ public record OrdemDeServicoDTO(
         Integer clienteId,
         String nomeCliente,
         Integer idFuncionario,
+        String nomeFuncionario,
 
         LocalDateTime dataDeEntrada,
         LocalDateTime ultimaAtualizacao,

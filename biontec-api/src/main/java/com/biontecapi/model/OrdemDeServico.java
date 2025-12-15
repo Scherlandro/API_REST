@@ -27,6 +27,7 @@ public class OrdemDeServico {
     private Integer idCliente;
     private String nomeCliente;
     private Integer idFuncionario;
+    private String nomeFuncionario;
 
     private LocalDateTime dataDeEntrada;
     private LocalDateTime ultimaAtualizacao;
@@ -65,7 +66,7 @@ public class OrdemDeServico {
 
     public OrdemDeServicoDTO toDTO() {
         return new OrdemDeServicoDTO(
-                idOS, idCliente, nomeCliente, idFuncionario, dataDeEntrada,
+                idOS, idCliente, nomeCliente, idFuncionario,nomeFuncionario, dataDeEntrada,
                 ultimaAtualizacao, status, subtotal, desconto, porConta, totalGeralOS, restante,
                     gestorDaOS, tecnicoEncarregado, itensOS
         );
