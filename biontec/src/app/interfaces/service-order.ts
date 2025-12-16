@@ -1,3 +1,4 @@
+import {iItensOS} from "./itens-os";
 
 export interface iServiceOrder {
   idOS: number,

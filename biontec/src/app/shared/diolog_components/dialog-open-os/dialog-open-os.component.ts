@@ -25,8 +25,8 @@ export class DialogOpenOsComponent implements  OnInit, OnDestroy  {
   destroy$ = new Subject<void>();
   os!: iServiceOrder;
   itensOS: iItensOS;
-  isNewOS = false;
-  isChange = false; // TRUE = Editar item — FALSE = Adicionar item
+  isNewOS = true;
+  isChange = true; // TRUE = Editar item — FALSE = Adicionar item
   osSelecionada!: iServiceOrder;
   funcionarioControl = new FormControl('', [Validators.required]);
   funcionarioFilted!: Observable<IFuncionario[]>;
@@ -46,7 +46,7 @@ export class DialogOpenOsComponent implements  OnInit, OnDestroy  {
     @Inject(MAT_DIALOG_DATA)
     public data: {
       modoNew: 'nova' | '' ;
-      modo: 'adicionar' | 'editar';
+      modo:'editar' |'adicionar'  ;
       os: iServiceOrder;
       itensOS: iItensOS;
     },
@@ -61,8 +61,8 @@ export class DialogOpenOsComponent implements  OnInit, OnDestroy  {
     this.os = data as any;
     this.itensOS = data.itensOS;  // item selecionado (ou item vazio)
     console.log('Valor OS ', this.os)
-    this.isChange = data.modo === 'editar';
-    this.isNewOS = data.modoNew === 'nova';
+   /* this.isChange = data.modo === 'adicionar';
+    this.isNewOS = data.modoNew === 'nova';*/
     this.produtoControl = new FormControl(null, [Validators.required]);
     this.quantidadeControl = new FormControl(
       this.itensOS?.quantidade || 1,      [Validators.required, Validators.min(1)]
@@ -105,7 +105,7 @@ export class DialogOpenOsComponent implements  OnInit, OnDestroy  {
       debounceTime(250),
       distinctUntilChanged(),
       switchMap(value =>
-        typeof value === 'string' && value.length >= 2
+        typeof value === 'string' && value.length >= 1
           ? this.funcionarioService.getFuncionarioPorNome(value)
           : of([])
       ),
@@ -118,7 +118,7 @@ export class DialogOpenOsComponent implements  OnInit, OnDestroy  {
       debounceTime(250),
       distinctUntilChanged(),
       switchMap(value =>
-        typeof value === 'string' && value.length >= 2
+        typeof value === 'string' && value.length >= 1
           ? this.clienteService.getClientePorNome(value)
           : of([])
       ),
@@ -179,10 +179,12 @@ export class DialogOpenOsComponent implements  OnInit, OnDestroy  {
 
     os.nomeCliente = cliente.nomeCliente;
     os.nomeFuncionario = funcionario.nomeFuncionario;
-    os.dataDeEntrada = dataAtual.toLocaleDateString('pt-BR');
-    os.itensOS = this.itensOS;
+    os.dataDeEntrada = dataAtual.toISOString();
+    os.status = os.status || 'OS_em_Andamento'; // Ou qualquer valor válido do enum
+    os.itensOS = this.itensOS ;
 
-    if (this.isChange) {
+    if (!this.isChange) {
+   console.log('isChange no save ', this.isChange)
       this.osServices.update(os).pipe(takeUntil(this.destroy$))
         .subscribe({
           next: (osAtualizada) => {

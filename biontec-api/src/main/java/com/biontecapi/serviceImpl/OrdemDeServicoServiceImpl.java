@@ -78,7 +78,8 @@ public class OrdemDeServicoServiceImpl implements OrdemDeServicoService {
         order.setIdCliente(dto.clienteId());
         order.setNomeCliente(dto.nomeCliente());
         order.setIdFuncionario(dto.idFuncionario());
-        order.setGestorDaOS(dto.gestorDaOS());
+        order.setNomeFuncionario(dto.nomeFuncionario());
+       // order.setGestorDaOS(dto.gestorDaOS());
         order.setDataDeEntrada(LocalDateTime.now());
         order.setStatus(Status.OS_em_Andamento);
         return osRepository.save(order);

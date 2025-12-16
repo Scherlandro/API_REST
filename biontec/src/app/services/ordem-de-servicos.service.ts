@@ -19,6 +19,7 @@ export class OrdemDeServicosService {
   }
 
   create(order: iServiceOrder): Observable<iServiceOrder> {
+    console.log('Criando os', order);
     return this.http.post<iServiceOrder>(this.baseUrl, order);
   }
 

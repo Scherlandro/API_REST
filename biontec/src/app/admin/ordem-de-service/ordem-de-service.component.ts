@@ -46,7 +46,6 @@ export class OrdemDeServiceComponent implements OnInit {
   clienteSelecionado: ICliente | null = null;
   tbSourceOS$: MatTableDataSource<iServiceOrder>;
   displayedColumns0S = ['Nome', 'Data', 'Status', 'Total', 'Opcoes'];
- // tbSourceItensDaOS$: MatTableDataSource<iItensOS>;
   displayedColumns: string[] = ['codOS', 'codigo', 'descricao', 'preco', 'qtd', 'soma', 'imagem', 'opcoes'];
   OSControl = new FormControl();
 
@@ -69,7 +68,6 @@ export class OrdemDeServiceComponent implements OnInit {
     public dialog: MatDialog
   ) {
     this.tbSourceOS$ = new MatTableDataSource();
-  // this.tbSourceItensDaOS$ = new MatTableDataSource();
   }
 
   ngOnInit() {
@@ -93,16 +91,18 @@ export class OrdemDeServiceComponent implements OnInit {
   }
 
   openDilogOS() {
+
     const os: iServiceOrder = {
       idOS: 0, idCliente: 0, idFuncionario: 0, nomeCliente: '', nomeFuncionario: '',
       dataDeEntrada: '', ultimaAtualizacao: '', status: '', subtotal: 0,
-      desconto: 0, totalGeralOS: 0, porConta: 0, restante: 0, itensOS: undefined
+      desconto: 0, totalGeralOS: 0, porConta: 0, restante: 0,
+
+      itensOS : {
+        idItensDaOS: 0, codOS: 0, codProduto: '', descricao: '', valorUnitario: 0,
+        quantidade: 1, total: 0
+      }
     };
 
-    /*const itens: iItensOS = {
-      idItensDaOS: 0, codOS: os.idOS, codProduto: '', descricao: '', valorUnitario: 0,
-      quantidade: 1, total: 0
-    };*/
     const itens: iItensOS = os.itensOS;
 
     const dialogRef = this.dialog.open(DialogOpenOsComponent, {
@@ -262,25 +262,24 @@ export class OrdemDeServiceComponent implements OnInit {
       element.totalGeralOS = soma;
       element.totalGeralOS = this.formatarReal(soma);
       console.log('Valor soma', element.totalGeralOS);
-     /* this.tbSourceItensDaOS$.data = element.itensOS.map((item: iItensOS) => ({
-        ...item,
-        // Formata os valores individuais
-        valorUnitario: this.formatarReal(item.valorUnitario),
-        total: this.formatarReal(item.total)
-      }));*/
+      /* this.tbSourceItensDaOS$.data = element.itensOS.map((item: iItensOS) => ({
+         ...item,
+         // Formata os valores individuais
+         valorUnitario: this.formatarReal(item.valorUnitario),
+         total: this.formatarReal(item.total)
+       }));*/
     }
   }
 
-
-/* getBaseCauculo(cart: any): any {
-      switch (cart) {
-        case this.total:
-          return this.total;
-        case this.cartCount$:
-          return this.cartCount$;
-      }
-    }
- */
+  /*
+  getBaseCauculo(os: iServiceOrder, itens: iItensOS): any {
+    switch (os || itens) {
+      case os.itensOS.total:
+        return os.itensOS.total + itens.total;
+      case os:
+        return os.subtotal + itens.total;
+    } }
+  */
 
   recalcularTotalOS(eventOS: iServiceOrder, eventItens: iItensOS): iServiceOrder {
     // Verifica se a OS ou os itens estão vazios
@@ -320,9 +319,9 @@ export class OrdemDeServiceComponent implements OnInit {
       if (res) {
         this.itensOsService.deleteItensOS(item)
           .subscribe((item) => {
-           // this.tbData = this.tbSourceItensDaOS$.data;
+            // this.tbData = this.tbSourceItensDaOS$.data;
             this.tbData.splice(this.ruwSelec, 1);
-           // this.tbSourceItensDaOS$.data = this.tbData;
+            // this.tbSourceItensDaOS$.data = this.tbData;
           });
         this.notificationMsg.warn('! Deletado com sucesso!');
       }
@@ -339,9 +338,9 @@ export class OrdemDeServiceComponent implements OnInit {
             elementOS.itensOS = elementOS.itensOS.filter((i: any) => i.idItensDaOS !== item.idItensDaOS);
             this.recalcularTotalOS(elementOS, elementOS.itensOS);
           }
-        //  this.tbData = this.tbSourceItensDaOS$.data;
+          //  this.tbData = this.tbSourceItensDaOS$.data;
           this.tbData.splice(this.ruwSelec, 1);
-         // this.tbSourceItensDaOS$.data = this.tbData;
+          // this.tbSourceItensDaOS$.data = this.tbData;
           this.notificationMsg.warn('! Deletado com sucesso!');
         });
       }
