@@ -53,17 +53,6 @@ public class OrdemDeServico {
     @JoinColumn(name = "cod_os")
     private Collection<ItensDoServico> itensOS;
 
-
-    // Métodos auxiliares para sincronização bidirecional
-  /*  public void adicionarItem(ItensDoServico item) {
-        itensDoServico.add(item);
-        item.setOrdemDeServico(this);
-    }
-    public void removerItem(ItensDoServico item) {
-        itensDoServico.remove(item);
-        item.setOrdemDeServico(null);
-    }*/
-
     public OrdemDeServicoDTO toDTO() {
         return new OrdemDeServicoDTO(
                 idOS, idCliente, nomeCliente, idFuncionario,nomeFuncionario, dataDeEntrada,

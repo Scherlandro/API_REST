@@ -31,4 +31,8 @@ export class OrdemDeServicosService {
   search(params: any): Observable<iServiceOrder[]> {
     return this.http.get<iServiceOrder[]>(this.baseUrl + '/search', { params });
   }
+
+  delete(id: number): Observable<any> {
+    return this.http.delete<any>(`${this.baseUrl}/delete/${id}`);
+  }
 }

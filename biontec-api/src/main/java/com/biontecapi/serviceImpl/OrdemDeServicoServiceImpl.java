@@ -155,6 +155,11 @@ public class OrdemDeServicoServiceImpl implements OrdemDeServicoService {
         return osRepository.save(order);
     }
 
+    @Override
+    public void removerOS(Long id) {
+        osRepository.deleteById(id);
+    }
+
 
     @Override
     public OrdemDeServico concluirOS(Long idOS) {

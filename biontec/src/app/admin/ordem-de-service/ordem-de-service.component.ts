@@ -161,47 +161,8 @@ export class OrdemDeServiceComponent implements OnInit {
       }
 
       this.recalcularTotalOS(os, result);
-      this.updateOS(os);
+     // this.updateOS(os);
     });
-
-  }
-
-  updateOS(eventOS: iServiceOrder) {
-    console.log('OS para atulizar', eventOS);
-    this.osService.getById(eventOS.idOS)
-      .pipe(first(), delay(200),
-        catchError(error => {
-          if (error.status === 401) {
-            this.onError('Sua sessão expirou!');
-            this.tokenServer.clearTokenExpired();
-          }
-          return throwError(() => error); // não retornar []
-        }))
-      .subscribe({
-        complete: () => {
-        },
-        next: (result: iServiceOrder) => {
-          console.log('OS atualizada', result);
-          if (!result) {
-            this.onError("OS não encontrada!");
-            return;
-          }
-          this.osService.update(result).pipe(
-            takeUntil(this.destroy$)
-          ).subscribe({
-            next: (newOS) => {
-              console.log('Update OS', newOS);
-            },
-            error: err => {
-              this.onError('Erro ao atualizar a OS');
-              console.error(err);
-            }
-          });
-        },
-        error: err => {
-          console.error("Erro no GET", err);
-        }
-      });
   }
 
   onSearch() {
@@ -313,6 +274,23 @@ export class OrdemDeServiceComponent implements OnInit {
     this.tbSourceOS$.filter = valor;
   }
 
+  deleteOS(eventOS: iServiceOrder) {
+    console.log('OS para atulizar', eventOS);
+    this.notificationMsg.openConfirmDialog('Tem certeza em REMOVER esta OS ?')
+      .afterClosed().subscribe(res => {
+      if (res) {
+        this.osService.delete(eventOS.idOS).pipe(first(), delay(200),
+           )
+          .subscribe((item) => {
+            this.tbData.splice(this.ruwSelec, 1);
+          });
+        this.notificationMsg.warn('! Deletado com sucesso!');
+      }
+    });
+
+  }
+
+
   deleteElement(item: iItensOS) {
     this.notificationMsg.openConfirmDialog('Tem certeza em REMOVER este item ?')
       .afterClosed().subscribe(res => {
@@ -387,6 +365,5 @@ export class OrdemDeServiceComponent implements OnInit {
 
     return 0;
   }
-
 
 }

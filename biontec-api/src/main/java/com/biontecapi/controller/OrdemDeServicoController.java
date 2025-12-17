@@ -25,7 +25,6 @@ public class OrdemDeServicoController {
     private final OrdemDeServicoService service;
     private final ModelMapper mapper;
 
-    @Autowired
     public OrdemDeServicoController(OrdemDeServicoService service, ModelMapper mapper) {
         this.service = service;
         this.mapper = mapper;
@@ -124,7 +123,11 @@ public class OrdemDeServicoController {
         return ResponseEntity.ok(service.listarOS());
     }
 
-
+     @DeleteMapping(path = "/delete/{id}")
+    public ResponseEntity excluir(@PathVariable("id") Long id) {
+         service.removerOS(id);
+        return ResponseEntity.noContent().build();
+    }
 
 }
 

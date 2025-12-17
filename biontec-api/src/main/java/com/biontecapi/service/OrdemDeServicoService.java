@@ -30,5 +30,7 @@ public interface OrdemDeServicoService {
 
     OrdemDeServico removerItemDaOS(Long serviceOrderId, Long itemId);
 
+    void removerOS(Long id);
+
     OrdemDeServico concluirOS(Long idOS);
 }

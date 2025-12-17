@@ -82,8 +82,7 @@
       <input matInput [value]="os.itensOS.codProduto" disabled>
     </mat-form-field>
 
-    <!-- Campo Autocomplete   (input)="filterProdutos($event)" -->
-    <mat-form-field  >
+   <mat-form-field *ngIf="isChange" >
       <mat-label>Produto</mat-label>
       <input type="text" matInput placeholder="Digite o nome do produto"
              [formControl]="produtoControl"
