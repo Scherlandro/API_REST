@@ -61,15 +61,16 @@
       <input matInput [value]="os.nomeCliente" disabled>
     </mat-form-field>
 
-    <button mat-raised-button *ngIf="isChange" cdkFocusInitial (click)="save(os)">Salvar</button>
+    <button mat-raised-button *ngIf="isChange" cdkFocusInitial (click)="iniciarOS()">Iniciar OS</button>
     <button mat-button *ngIf="!isChange" cdkFocusInitial [mat-dialog-close]="osSelecionada"
             (click)="save(os)">Savar OS
     </button>
     <button mat-raised-button (click)="onCancel()">Cancelar</button>
 
+
   </mat-card>
 
-  <mat-card class="container-box-itens " *ngIf="isNewOS">
+  <mat-card class="container-box-itens " >
     <!-- Itens -->
     <mat-form-field>
       <mat-label>ID</mat-label>
@@ -82,7 +83,7 @@
     </mat-form-field>
 
     <!-- Campo Autocomplete   (input)="filterProdutos($event)" -->
-    <mat-form-field *ngIf="!isChange">
+    <mat-form-field  >
       <mat-label>Produto</mat-label>
       <input type="text" matInput placeholder="Digite o nome do produto"
              [formControl]="produtoControl"
@@ -98,7 +99,7 @@
       </mat-autocomplete>
     </mat-form-field>
 
-    <mat-form-field appearance="fill" *ngIf="isChange">
+    <mat-form-field appearance="fill" *ngIf="!isChange">
       <mat-label>Descrição</mat-label>
       <input matInput [value]="os.itensOS.descricao" disabled>
     </mat-form-field>
@@ -124,6 +125,8 @@
 
     <!-- Itens da Ordem de Serviço -->
     <div mat-dialog-content> <!-- *ngIf="itensOS$.length > 0">-->
+
+      <button mat-button *ngIf="isChange" (click)="save(os)">Salvar OS</button>
 
       <button mat-button *ngIf="isChange" (click)="salvarItem()">Salvar Alterações</button>
 

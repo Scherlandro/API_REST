@@ -68,7 +68,7 @@ public class OrdemDeServico {
         return new OrdemDeServicoDTO(
                 idOS, idCliente, nomeCliente, idFuncionario,nomeFuncionario, dataDeEntrada,
                 ultimaAtualizacao, status, subtotal, desconto, porConta, totalGeralOS, restante,
-                    gestorDaOS, tecnicoEncarregado, itensOS
+                    gestorDaOS, tecnicoEncarregado, toDTO().itensDoServicoDTO()
         );
     }
 }

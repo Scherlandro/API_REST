@@ -14,7 +14,7 @@ export interface iServiceOrder {
   totalGeralOS: number,
   porConta:number,
   restante:number,
-  itensOS: any
+  itensOS: [{}] | any
   /*
   gestorDaOS:null
   tecnicoEncarregado:null

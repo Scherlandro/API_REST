@@ -25,8 +25,8 @@ export class DialogOpenOsComponent implements  OnInit, OnDestroy  {
   destroy$ = new Subject<void>();
   os!: iServiceOrder;
   itensOS: iItensOS;
-  isNewOS = true;
-  isChange = true; // TRUE = Editar item — FALSE = Adicionar item
+  isNewOS : boolean;
+  isChange: boolean; // TRUE = Editar item — FALSE = Adicionar item
   osSelecionada!: iServiceOrder;
   funcionarioControl = new FormControl('', [Validators.required]);
   funcionarioFilted!: Observable<IFuncionario[]>;
@@ -61,8 +61,8 @@ export class DialogOpenOsComponent implements  OnInit, OnDestroy  {
     this.os = data as any;
     this.itensOS = data.itensOS;  // item selecionado (ou item vazio)
     console.log('Valor OS ', this.os)
-   /* this.isChange = data.modo === 'adicionar';
-    this.isNewOS = data.modoNew === 'nova';*/
+   this.isChange = data.modo === 'adicionar';
+    this.isNewOS = data.modoNew === 'nova';
     this.produtoControl = new FormControl(null, [Validators.required]);
     this.quantidadeControl = new FormControl(
       this.itensOS?.quantidade || 1,      [Validators.required, Validators.min(1)]
@@ -76,7 +76,7 @@ export class DialogOpenOsComponent implements  OnInit, OnDestroy  {
     this.statusDaOS();
 
     // Se estiver no modo editar, já preenche o produto e quantidade
-    if (this.isChange) {
+    if (!this.isChange) {
      /* this.produtoControl.setValue({
         nomeProduto: this.itensOS.descricao,
         codProduto: this.itensOS.codProduto,
@@ -167,6 +167,10 @@ export class DialogOpenOsComponent implements  OnInit, OnDestroy  {
     this.itensOS.total = qtd * valor || 0;
   }
 
+  iniciarOS(){
+    this.isSaveButtonDisabled();
+  }
+
   save(os: iServiceOrder) {
     if (this.clienteControl.invalid || this.funcionarioControl.invalid) {
       this.onError('Preencha todos os campos obrigatórios');
@@ -247,7 +251,7 @@ export class DialogOpenOsComponent implements  OnInit, OnDestroy  {
 
     // limpa os campos
     this.produtoControl.reset();
-    this.quantidadeControl.reset();
+    this.quantidadeControl.setValue(1);
 
     // feedback no console
     console.log("Item adicionado:", novoItem);
