@@ -74,7 +74,7 @@ public class OrdemDeServicoController {
     @PutMapping
     public ResponseEntity<OrdemDeServico> atualizarOS(@RequestBody OrdemDeServicoDTO dto) {
 
-        OrdemDeServico os = service.listarOSPorID(dto.idOS())
+      /*  OrdemDeServico os = service.listarOSPorID(dto.idOS())
                 .orElseThrow(() -> new RuntimeException("OS não encontrada"));
 
         os.setNomeCliente(dto.nomeCliente());
@@ -82,9 +82,9 @@ public class OrdemDeServicoController {
         os.setIdFuncionario(dto.idFuncionario());
         os.setGestorDaOS(dto.gestorDaOS());
         os.setStatus(dto.status());
-        os.setTotalGeralOS(dto.totalGeralOS());
+        os.setTotalGeralOS(dto.totalGeralOS());*/
 
-        return ResponseEntity.ok(service.atualizarOS(os));
+        return ResponseEntity.ok(service.atualizarOS(dto));
     }
 
 

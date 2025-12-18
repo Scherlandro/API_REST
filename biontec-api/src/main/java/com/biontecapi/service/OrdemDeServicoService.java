@@ -25,7 +25,7 @@ public interface OrdemDeServicoService {
 
     OrdemDeServico criarOS(OrdemDeServicoDTO dto);
 
-    OrdemDeServico atualizarOS(OrdemDeServico os);
+    OrdemDeServico atualizarOS(OrdemDeServicoDTO dto);
 
 
     OrdemDeServico addItemNaOS(Long osID, ItensDoServicoDTO itemDto);

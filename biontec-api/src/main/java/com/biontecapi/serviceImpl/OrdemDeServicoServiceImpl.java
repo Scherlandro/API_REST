@@ -87,42 +87,22 @@ public class OrdemDeServicoServiceImpl implements OrdemDeServicoService {
         return osRepository.save(order);
     }
 
-/*    @Override
-    public OrdemDeServico atualizarOS(Long id, OrdemDeServicoDTO dto) {
-        OrdemDeServico order = osRepository.findById(id).orElseThrow();
-            *//*
-              if (dto.technicianId() != null) {
-            order.setTechnicianId(dto.technicianId());
-        }
-        if (dto.deviceDescription() != null) {
-            order.setDeviceDescription(dto.deviceDescription());
-        }
-        if (dto.issueDescription() != null) {
-            order.setIssueDescription(dto.issueDescription());
-        }
-        if (dto.status() != null) {
-            order.setStatus(dto.status());
-        }
-             *//*
-        return osRepository.save(order);
-    }*/
-
     @Override
-    public OrdemDeServico atualizarOS( OrdemDeServico os) {
+    public OrdemDeServico atualizarOS(OrdemDeServicoDTO dto) {
 
-        OrdemDeServico order = osRepository.findById(os.getIdOS()).orElseThrow();
+        OrdemDeServico order = osRepository.findById(dto.idOS()).orElseThrow();
 
-       // OrdemDeServico order = new OrdemDeServico();
-        order.setIdCliente(order.getIdCliente());
-        order.setNomeCliente(order.getNomeCliente());
-        order.setIdFuncionario(order.getIdFuncionario());
-        order.setNomeFuncionario(order.getNomeFuncionario());
-        // order.setGestorDaOS(dto.gestorDaOS());
+        order.setIdCliente(dto.clienteId());
+        order.setNomeCliente(dto.nomeCliente());
+        order.setIdFuncionario(dto.idFuncionario());
+        order.setNomeFuncionario(dto.nomeFuncionario());
         order.setDataDeEntrada(LocalDateTime.now());
         order.setStatus(Status.OS_em_Andamento);
+        order.setDesconto(dto.desconto());
+        order.setSubtotal(dto.subtotal());
+
         order.setTotalGeralOS(calcularTotalDaOS(order));
 
-       // calcularTotalDaOS(order);
         return osRepository.save(order);
     }
 
@@ -176,8 +156,17 @@ public class OrdemDeServicoServiceImpl implements OrdemDeServicoService {
     }
 
     private double calcularTotalDaOS(OrdemDeServico order) {
-      return order.getItensOS().stream().mapToDouble(
-              item -> item.getValorUnitario() * item.getQuantidade()).sum();
+
+         double totalItens = order.getItensOS().stream()
+                .mapToDouble(item -> item.getValorUnitario() * item.getQuantidade())
+                .sum();
+
+        // Se tiver desconto, subtraímos
+        double totalComDesconto = totalItens - (order.getDesconto() != null ? order.getDesconto() : 0);
+
+        // Se tiver ao porConta, somar ou subtrair aqui
+        return totalComDesconto + (order.getPorConta() != null ? order.getPorConta() : 0);
     }
+
 
 }
