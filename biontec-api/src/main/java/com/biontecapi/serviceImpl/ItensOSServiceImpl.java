@@ -31,6 +31,11 @@ public class ItensOSServiceImpl implements ItensOSService {
 
 
     @Override
+    public Optional<ItensDoServico> findByCodOS(Long id){
+        return itensDaOSRepository.findById(id);
+    }
+
+    @Override
     public ItensDoServico saveItemOS(ItensDoServico itensDoServico) {
         return itensDaOSRepository.save(itensDoServico);
     }

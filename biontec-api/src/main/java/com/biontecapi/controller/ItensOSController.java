@@ -4,15 +4,13 @@ import com.biontecapi.dtos.ItensDoServicoDTO;
 import com.biontecapi.model.ItensDoServico;
 import com.biontecapi.model.OrdemDeServico;
 import com.biontecapi.service.ItensOSService;
+import com.biontecapi.service.OrdemDeServicoService;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "*")
@@ -22,18 +20,35 @@ public class ItensOSController {
 
 
     private final ItensOSService itensOSService;
+    private final OrdemDeServicoService osService;
+    private final ModelMapper mapper;
 
-    @Autowired
-    private ModelMapper mapper;
-
-    public ItensOSController(ItensOSService itensOSService){
+    public ItensOSController(ItensOSService itensOSService, OrdemDeServicoService osService, ModelMapper mapper){
         this.itensOSService = itensOSService;
+        this.osService = osService;
+        this.mapper = mapper;
     }
 
     @PostMapping("/salvar")
     public ResponseEntity salvar(@RequestBody ItensDoServico item) {
        return ResponseEntity.status(HttpStatus.CREATED).body(itensOSService.saveItemOS(item));
     }
+
+    @PostMapping("/itens")
+    public ResponseEntity<ItensDoServico> criarItem(@RequestBody ItensDoServicoDTO dto) {
+
+        OrdemDeServico os = osService.findById(dto.codOS())
+                .orElseThrow(() -> new RuntimeException("OS não encontrada"));
+
+        ItensDoServico item = new ItensDoServico();
+        item.setCodOS(os.getIdOS());
+        item.setDescricao(dto.descricao());
+        item.setQuantidade(dto.quantidade());
+        item.setValorUnitario(dto.valorUnitario());
+
+        return ResponseEntity.ok(itensOSService.saveItemOS(item));
+    }
+
 
     @PutMapping("/{idItensDaOS}")
     public ResponseEntity<ItensDoServico> atualizarOS( @PathVariable Long idItensDaOS,@RequestBody ItensDoServicoDTO itensDto) {

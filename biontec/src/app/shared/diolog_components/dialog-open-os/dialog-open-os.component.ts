@@ -63,7 +63,8 @@ export class DialogOpenOsComponent implements  OnInit, OnDestroy  {
     console.log('Valor OS ', this.os)
    this.isChange = data.modo === 'adicionar';
     this.isNewOS = data.modoNew === 'nova';
-    this.produtoControl = new FormControl(null, [Validators.required]);
+    this.produtoControl = new FormControl();
+   // this.produtoControl = new FormControl(null, [Validators.required]);
     this.quantidadeControl = new FormControl(
       this.itensOS?.quantidade || 1,      [Validators.required, Validators.min(1)]
     );
@@ -83,7 +84,7 @@ export class DialogOpenOsComponent implements  OnInit, OnDestroy  {
         valorVenda: this.itensOS.valorUnitario
       });*/
 
-      this.produtoControl.disable();
+    //  this.produtoControl.disable();
 
       this.quantidadeControl.setValue(this.itensOS.quantidade);
       console.log('isChange', this.isChange, 'isNewOS', this.isNewOS);
@@ -167,9 +168,45 @@ export class DialogOpenOsComponent implements  OnInit, OnDestroy  {
     this.itensOS.total = qtd * valor || 0;
   }
 
-  iniciarOS(){
-    this.isSaveButtonDisabled();
+  iniciarOS() {
+    if (this.clienteControl.invalid || this.funcionarioControl.invalid) {
+      this.onError('Preencha cliente e atendente');
+      return;
+    }
+
+    const cliente: any = this.clienteControl.value;
+    const funcionario: any = this.funcionarioControl.value;
+
+    const osParaCriar: iServiceOrder = {
+      idOS: 0,
+      idCliente: cliente.idCliente,
+      nomeCliente: cliente.nomeCliente,
+      idFuncionario: funcionario.idFuncionario,
+      nomeFuncionario: funcionario.nomeFuncionario,
+      dataDeEntrada: new Date().toISOString(),
+      ultimaAtualizacao: new Date().toISOString(),
+      status: 'OS_EM_ANDAMENTO',
+      subtotal: 0,
+      desconto: 0,
+      totalGeralOS: 0,
+      porConta: 0,
+      restante: 0,
+
+      // ✅ SEMPRE ARRAY
+      itensOS: []
+    };
+
+    this.osServices.create(osParaCriar).subscribe({
+      next: (osCriada) => {
+        // agora você TEM idOS
+        this.os = osCriada;
+        this.isChange = false;   // trava cliente/funcionário
+        this.isNewOS = true;     // libera itens
+      },
+      error: () => this.onError('Erro ao iniciar OS')
+    });
   }
+
 
   save(os: iServiceOrder) {
     if (this.clienteControl.invalid || this.funcionarioControl.invalid) {
@@ -247,7 +284,15 @@ export class DialogOpenOsComponent implements  OnInit, OnDestroy  {
     };
 
     // adiciona na lista
-    this.itensOS$.push(novoItem);
+   // this.itensOS$.push(novoItem);
+
+    this.itensOsService.adicionarItem(novoItem).subscribe({
+      next: () => {
+        this.os.itensOS.push(novoItem); // só para UI
+        this.updateTotal();
+      }
+    });
+
 
     // limpa os campos
     this.produtoControl.reset();
@@ -256,6 +301,12 @@ export class DialogOpenOsComponent implements  OnInit, OnDestroy  {
     // feedback no console
     console.log("Item adicionado:", novoItem);
   }
+
+  finalizarOS() {
+    this.os.status = 'FINALIZADA';
+    this.osServices.update(this.os).subscribe();
+  }
+
 
   removeItem(item: iItensOS) {
     const index = this.itensOS$.indexOf(item);

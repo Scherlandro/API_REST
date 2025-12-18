@@ -82,7 +82,7 @@
       <input matInput [value]="os.itensOS.codProduto" disabled>
     </mat-form-field>
 
-   <mat-form-field *ngIf="isChange" >
+   <mat-form-field  >
       <mat-label>Produto</mat-label>
       <input type="text" matInput placeholder="Digite o nome do produto"
              [formControl]="produtoControl"
@@ -98,7 +98,7 @@
       </mat-autocomplete>
     </mat-form-field>
 
-    <mat-form-field appearance="fill" *ngIf="!isChange">
+    <mat-form-field appearance="fill" *ngIf="isChange">
       <mat-label>Descrição</mat-label>
       <input matInput [value]="os.itensOS.descricao" disabled>
     </mat-form-field>

@@ -6,7 +6,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.biontecapi.Enum.Status;
 import com.biontecapi.dtos.ItensDoServicoDTO;
+import com.biontecapi.model.ItensDoServico;
+import com.biontecapi.service.ItensOSService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -25,7 +28,7 @@ public class OrdemDeServicoController {
     private final OrdemDeServicoService service;
     private final ModelMapper mapper;
 
-    public OrdemDeServicoController(OrdemDeServicoService service, ModelMapper mapper) {
+    public OrdemDeServicoController(OrdemDeServicoService service,  ModelMapper mapper) {
         this.service = service;
         this.mapper = mapper;
     }
@@ -63,6 +66,8 @@ public class OrdemDeServicoController {
 
     @PostMapping
     public ResponseEntity<OrdemDeServico> criarOS(@RequestBody OrdemDeServicoDTO dto) {
+      /*  OrdemDeServico salva = service.criarOS(dto);
+        return ResponseEntity.ok(salva);*/
         return ResponseEntity.status(HttpStatus.CREATED).body(service.criarOS(dto));
     }
 

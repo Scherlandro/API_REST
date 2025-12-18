@@ -19,6 +19,8 @@ public interface ItensOSService {
 
     Optional<ItensDoServico> findById(Long id);
 
+    Optional<ItensDoServico> findByCodOS(Long id);
+
     List<ItensDoServicoDTO> listarItensOSPorIdProduto(Integer id);
 
     List<ItensDoServicoDTO> ConsultarItensOSEntreDatas(String dtIni, String dtFinal);

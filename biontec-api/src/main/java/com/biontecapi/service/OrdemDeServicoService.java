@@ -11,6 +11,8 @@ public interface OrdemDeServicoService {
 
     boolean existsById(Long id);
 
+    Optional<OrdemDeServico> findById(Long id);
+
     List<OrdemDeServico> listarOS();
 
     Optional<OrdemDeServico> listarOSPorID(Long id);

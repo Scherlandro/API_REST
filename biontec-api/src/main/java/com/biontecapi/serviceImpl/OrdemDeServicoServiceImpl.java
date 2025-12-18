@@ -4,15 +4,11 @@ package com.biontecapi.serviceImpl;
 import com.biontecapi.Enum.Status;
 import com.biontecapi.dtos.ItensDoServicoDTO;
 import com.biontecapi.dtos.OrdemDeServicoDTO;
-import com.biontecapi.model.ItensDoServico;
 import com.biontecapi.model.OrdemDeServico;
 import com.biontecapi.repository.*;
 import com.biontecapi.service.OrdemDeServicoService;
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -47,6 +43,11 @@ public class OrdemDeServicoServiceImpl implements OrdemDeServicoService {
     }
 
     @Override
+    public Optional<OrdemDeServico> findById(Long id) {
+        return osRepository.findById(id);
+    }
+
+    @Override
     public List<OrdemDeServico> listarOS() {
         return osRepository.findAll();
     }
@@ -74,6 +75,7 @@ public class OrdemDeServicoServiceImpl implements OrdemDeServicoService {
 
     @Override
     public OrdemDeServico criarOS(OrdemDeServicoDTO dto) {
+
         OrdemDeServico order = new OrdemDeServico();
         order.setIdCliente(dto.clienteId());
         order.setNomeCliente(dto.nomeCliente());
@@ -83,12 +85,6 @@ public class OrdemDeServicoServiceImpl implements OrdemDeServicoService {
         order.setDataDeEntrada(LocalDateTime.now());
         order.setStatus(Status.OS_em_Andamento);
         return osRepository.save(order);
-        /*
-         order.setUserId(dto.userId());
-        order.setTechnicianId(dto.technicianId());
-        order.setDeviceDescription(dto.deviceDescription());
-        order.setIssueDescription(dto.issueDescription());
-         */
     }
 
 /*    @Override
@@ -113,7 +109,21 @@ public class OrdemDeServicoServiceImpl implements OrdemDeServicoService {
 
     @Override
     public OrdemDeServico atualizarOS( OrdemDeServico os) {
-        return osRepository.save(os);
+
+        OrdemDeServico order = osRepository.findById(os.getIdOS()).orElseThrow();
+
+       // OrdemDeServico order = new OrdemDeServico();
+        order.setIdCliente(order.getIdCliente());
+        order.setNomeCliente(order.getNomeCliente());
+        order.setIdFuncionario(order.getIdFuncionario());
+        order.setNomeFuncionario(order.getNomeFuncionario());
+        // order.setGestorDaOS(dto.gestorDaOS());
+        order.setDataDeEntrada(LocalDateTime.now());
+        order.setStatus(Status.OS_em_Andamento);
+        order.setTotalGeralOS(calcularTotalDaOS(order));
+
+       // calcularTotalDaOS(order);
+        return osRepository.save(order);
     }
 
 
@@ -121,21 +131,19 @@ public class OrdemDeServicoServiceImpl implements OrdemDeServicoService {
     public OrdemDeServico addItemNaOS(Long osID, ItensDoServicoDTO itemDto) {
         OrdemDeServico order = osRepository.findById(osID).orElseThrow();
 
-
        /* if (itemDto.idItensDaOS() != null) {
             productRepository.findById(itemDto.prod().getIdProduto()).orElseThrow();
         } else if (itemDto.idItensDaOS() != null) {
             osRepository.findById(osID).orElseThrow();
         }
-*/
-      /*  ItensDoServico newItem = new ItensDoServico();
+         ItensDoServico newItem = new ItensDoServico();
         newItem.setCodOS(String.valueOf(order.getId_os()));
         newItem.setCodProduto(itemDto.codProduto());
         newItem.setIdItensDaOS(itemDto.idItensDaOS());
         newItem.setQuantidade(itemDto.quantidade());
         newItem.setValorUnitario(itemDto.valorUnitario());
 
-        //order.getSubservicos().add(newItem);
+        order.getSubservicos().add(newItem);
         itensDaOSRepository.save(newItem);*/
 
         // Recalcular total da OS
@@ -147,10 +155,8 @@ public class OrdemDeServicoServiceImpl implements OrdemDeServicoService {
     public OrdemDeServico removerItemDaOS(Long serviceOrderId, Long itemId) {
 
         OrdemDeServico order = osRepository.findById(serviceOrderId).orElseThrow();
-
         // order.getItems().removeIf(item -> item.getId().equals(itemId));
         itensDaOSRepository.deleteById(itemId);
-
         calcularTotalDaOS(order);
         return osRepository.save(order);
     }
@@ -169,11 +175,9 @@ public class OrdemDeServicoServiceImpl implements OrdemDeServicoService {
         return osRepository.save(serviceOrder);
     }
 
-    private void calcularTotalDaOS(OrdemDeServico order) {
-      /*  double total = order.getItems().stream()
-                .mapToDouble(item -> item.getUnitPrice() * item.getQuantity())
-                .sum();
-        order.setTotalAmount(total);*/
+    private double calcularTotalDaOS(OrdemDeServico order) {
+      return order.getItensOS().stream().mapToDouble(
+              item -> item.getValorUnitario() * item.getQuantidade()).sum();
     }
 
 }
