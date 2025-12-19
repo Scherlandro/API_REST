@@ -7,12 +7,18 @@ import com.biontecapi.dtos.OrdemDeServicoDTO;
 import com.biontecapi.model.OrdemDeServico;
 import com.biontecapi.repository.*;
 import com.biontecapi.service.OrdemDeServicoService;
+import lombok.extern.java.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+
+import lombok.extern.slf4j.Slf4j;
+
 
 @Service
 @Transactional
@@ -24,6 +30,7 @@ public class OrdemDeServicoServiceImpl implements OrdemDeServicoService {
     final ItensDaOSRepository itensDaOSRepository;
     final ProdutoRepository productRepository;
 
+   private static Logger LOGGER = LoggerFactory.getLogger(OrdemDeServicoServiceImpl.class);
 
     public OrdemDeServicoServiceImpl(OrdemDeServicosRepository osRepository,
                                      ClienteRepository clientRepository,
@@ -164,6 +171,7 @@ public class OrdemDeServicoServiceImpl implements OrdemDeServicoService {
         // Se tiver desconto, subtraímos
         double totalComDesconto = totalItens - (order.getDesconto() != null ? order.getDesconto() : 0);
 
+       LOGGER.info("CALCULO TOTA::::>" + totalComDesconto + (order.getPorConta() != null ? order.getPorConta() : 0));
         // Se tiver ao porConta, somar ou subtrair aqui
         return totalComDesconto + (order.getPorConta() != null ? order.getPorConta() : 0);
     }
