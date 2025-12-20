@@ -10,7 +10,7 @@
       <input matInput [(ngModel)]="os.idOS" disabled>
     </mat-form-field>
 
-    <mat-form-field *ngIf="isNewOS" appearance="fill">
+    <mat-form-field *ngIf="!isNewOS" appearance="fill">
       <mat-label>Atendente</mat-label>
       <input type="text"
              placeholder="Atendente"
@@ -26,7 +26,7 @@
       </mat-autocomplete>
     </mat-form-field>
 
-    <mat-form-field appearance="fill" *ngIf="!isNewOS" >
+    <mat-form-field appearance="fill" *ngIf="isNewOS" >
       <mat-label>Atendente</mat-label>
       <input matInput [value]="os.nomeFuncionario" disabled>
     </mat-form-field>
@@ -39,13 +39,13 @@
       <mat-datepicker #picker></mat-datepicker>
     </mat-form-field>
 
-    <mat-form-field *ngIf="!isNewOS" appearance="fill">
+    <mat-form-field *ngIf="isNewOS" appearance="fill">
       <mat-label>Data</mat-label>
       <input matInput [value]="os.dataDeEntrada | date:'dd/MM/yyyy'" disabled>
     </mat-form-field>
 
     <!-- Cliente -->
-    <mat-form-field  *ngIf="isNewOS" appearance="fill">
+    <mat-form-field  *ngIf="!isNewOS" appearance="fill">
       <mat-label>Cliente</mat-label>
       <input type="text"
              placeholder="Digite o Cliente"
@@ -61,15 +61,19 @@
       </mat-autocomplete>
     </mat-form-field>
 
-    <mat-form-field appearance="fill"*ngIf="!isNewOS" >
+    <mat-form-field appearance="fill"*ngIf="isNewOS" >
       <mat-label>Cliente</mat-label>
       <input matInput [value]="os.nomeCliente" disabled>
     </mat-form-field>
 
     <button mat-raised-button *ngIf="isChange" cdkFocusInitial (click)="iniciarOS()">Iniciar OS</button>
-    <button mat-button *ngIf="!isChange" cdkFocusInitial [mat-dialog-close]="osSelecionada"
+
+    <button mat-button *ngIf="isChange" cdkFocusInitial [mat-dialog-close]="osSelecionada"
             (click)="save(os)">Savar OS
     </button>
+
+   <!-- <button mat-button *ngIf="isChange" (click)="save(os)">Salvar OS</button>-->
+
     <button mat-raised-button (click)="onCancel()">Cancelar</button>
 
 
@@ -87,7 +91,7 @@
       <input matInput [value]="os.itensOS.codProduto" disabled>
     </mat-form-field>
 
-   <mat-form-field *ngIf="!isChange" appearance="fill" >
+   <mat-form-field *ngIf="isChange" appearance="fill" >
       <mat-label>Produto</mat-label>
       <input type="text" matInput placeholder="Digite o nome do produto"
              [formControl]="produtoControl"
@@ -103,7 +107,7 @@
       </mat-autocomplete>
     </mat-form-field>
 
-    <mat-form-field *ngIf="isChange" appearance="fill">
+    <mat-form-field *ngIf="!isChange" appearance="fill">
       <mat-label>Descrição</mat-label>
       <input matInput [value]="os.itensOS.descricao" disabled>
     </mat-form-field>
@@ -130,25 +134,24 @@
     <!-- Itens da Ordem de Serviço -->
     <div mat-dialog-content> <!-- *ngIf="itensOS$.length > 0">-->
 
-      <button mat-button *ngIf="isChange" (click)="save(os)">Salvar OS</button>
 
-      <button mat-button *ngIf="isChange" (click)="salvarItem()">Salvar Alterações</button>
+     <!-- <button mat-button *ngIf="isChange" (click)="salvarItem()">Salvar Alterações</button>-->
 
       <button mat-raised-button *ngIf="!isChange" (click)="addItem()" [disabled]="isSaveButtonDisabled()">
-        Salvar Item
+        Adicionar Item
       </button>
 
-      <div *ngFor="let item of itensOS$">
+    <!--  <div *ngFor="let item of itensOS$">
         <div>{{ item.descricao }} - {{ formatter(item.total) }}</div>
         <button mat-button (click)="removeItem(item)">Remover</button>
       </div>
-      <!-- Adicionar Produto -->
+      &lt;!&ndash; Adicionar Produto &ndash;&gt;
       <button mat-raised-button (click)="addItem()"> + item  </button>
 
       <button mat-button *ngIf="isChange" [mat-dialog-close]="itensOS" cdkFocusInitial>Editar</button>
       <button mat-button *ngIf="!isChange" [mat-dialog-close]="itensOS" cdkFocusInitial (click)="addItem()"
               [disabled]="isSaveButtonDisabled()">Salvar
-      </button>
+      </button>-->
     </div>
 
   </mat-card>

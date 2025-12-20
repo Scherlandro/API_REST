@@ -204,10 +204,10 @@ export class DialogOpenOsComponent implements  OnInit, OnDestroy  {
 
 
   save(os: iServiceOrder) {
-    if (this.clienteControl.invalid || this.funcionarioControl.invalid) {
+  /*  if (this.clienteControl.invalid || this.funcionarioControl.invalid) {
       this.onError('Preencha todos os campos obrigatórios');
       return;
-    }
+    }*/
 
     const cliente: any = this.clienteControl.value;
     const funcionario: any = this.funcionarioControl.value;
@@ -280,21 +280,20 @@ export class DialogOpenOsComponent implements  OnInit, OnDestroy  {
 
     // adiciona na lista
    // this.itensOS$.push(novoItem);
+    console.log('NovoItem ->' , novoItem);
 
     this.itensOsService.adicionarItem(novoItem).subscribe({
       next: () => {
         this.os.itensOS.push(novoItem); // só para UI
-        this.updateTotal();
+        //this.updateTotal();
       }
     });
 
 
     // limpa os campos
-    this.produtoControl.reset();
-    this.quantidadeControl.setValue(1);
+   // this.produtoControl.reset();
+    //this.quantidadeControl.setValue(1);
 
-    // feedback no console
-    console.log("Item adicionado:", novoItem);
   }
 
   finalizarOS() {
