@@ -26,7 +26,7 @@ export class DialogOpenOsComponent implements  OnInit, OnDestroy  {
   os!: iServiceOrder;
   itensOS: iItensOS;
   isNewOS : boolean;
-  isChange: boolean; // TRUE = Editar item — FALSE = Adicionar item
+  isChange: boolean;
   osSelecionada!: iServiceOrder;
   funcionarioControl = new FormControl('', [Validators.required]);
   funcionarioFilted!: Observable<IFuncionario[]>;
@@ -45,7 +45,7 @@ export class DialogOpenOsComponent implements  OnInit, OnDestroy  {
   constructor(
     @Inject(MAT_DIALOG_DATA)
     public data: {
-      modoNew: 'nova' | '' ;
+      modoNew: 'adicionar' | 'editar' ;
       modo:'editar' |'adicionar'  ;
       os: iServiceOrder;
       itensOS: iItensOS;
@@ -62,7 +62,7 @@ export class DialogOpenOsComponent implements  OnInit, OnDestroy  {
     this.itensOS = data.itensOS;  // item selecionado (ou item vazio)
     console.log('Valor OS ', this.os)
    this.isChange = data.modo === 'adicionar';
-    this.isNewOS = data.modoNew === 'nova';
+    this.isNewOS = data.modoNew === 'editar';
     this.produtoControl = new FormControl();
    // this.produtoControl = new FormControl(null, [Validators.required]);
     this.quantidadeControl = new FormControl(
@@ -74,20 +74,15 @@ export class DialogOpenOsComponent implements  OnInit, OnDestroy  {
   ngOnInit(): void {
     this.listarProdutos();
     this.setupAutocompleteFilters();
-    this.statusDaOS();
+   // this.statusDaOS();
+    //this.isNewOS = this.isChange;
 
     // Se estiver no modo editar, já preenche o produto e quantidade
+    console.log('isChange', this.isChange, 'isNewOS', this.isNewOS);
+
     if (!this.isChange) {
-     /* this.produtoControl.setValue({
-        nomeProduto: this.itensOS.descricao,
-        codProduto: this.itensOS.codProduto,
-        valorVenda: this.itensOS.valorUnitario
-      });*/
-
     //  this.produtoControl.disable();
-
       this.quantidadeControl.setValue(this.itensOS.quantidade);
-      console.log('isChange', this.isChange, 'isNewOS', this.isNewOS);
     }
   }
 
@@ -330,18 +325,20 @@ export class DialogOpenOsComponent implements  OnInit, OnDestroy  {
   onNoClick(): void {
     this.dialogRef.close();
   }
+/*
 
   statusDaOS(){
     console.log('os.idOS NO STATUS', this.os.idOS)
     if (this.os.idOS === 0) {
       this.isNewOS = true;
       this.isChange = true;
-    } if (this.os.idOS > 0 && this.dialogRef.componentInstance.data.modoNew === "") {
+    } if (this.os.idOS > 0 && this.dialogRef.componentInstance.data.modoNew === "editar") {
       console.log('isNewOS NO ELSE',  this.isNewOS)
       this.isChange = false;
       this.isNewOS = true;
     }
   }
+*/
 
   onError(message: string) {
     console.error(message);

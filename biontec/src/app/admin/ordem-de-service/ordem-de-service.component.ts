@@ -107,7 +107,7 @@ export class OrdemDeServiceComponent implements OnInit {
 
     const dialogRef = this.dialog.open(DialogOpenOsComponent, {
       data: {
-        modoNew: 'nova', modo: 'adicionar',
+        modoNew: 'adicionar', modo: 'adicionar',
         ...os,
         itensOS: { ...itens, codOS: os.idOS }
       }
@@ -138,7 +138,7 @@ export class OrdemDeServiceComponent implements OnInit {
 
     const dialogRef = this.dialog.open(DialogOpenOsComponent, {
       data: {
-        modoNew: isNovaOS ? 'nova' : '',
+        modoNew: isNovaOS ? 'adicionar' : 'editar',
         modo: isEdit ? 'editar' : 'adicionar',
          ...os,
         itensOS: { ...itens, codOS: os.idOS }

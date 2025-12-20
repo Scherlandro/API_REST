@@ -1,8 +1,8 @@
 <div class="div-os">
 
   <mat-card class="container-box-os ">
-    <h1 *ngIf="isNewOS" mat-dialog-title>Abrir Serviço</h1>
-    <h1 *ngIf="!isNewOS" mat-dialog-title>Editar Serviço</h1>
+    <h1 *ngIf="isChange" mat-dialog-title>Abrir Serviço</h1>
+    <h1 *ngIf="!isChange" mat-dialog-title>Editar Serviço</h1>
 
 
     <mat-form-field appearance="fill">
@@ -10,7 +10,7 @@
       <input matInput [(ngModel)]="os.idOS" disabled>
     </mat-form-field>
 
-    <mat-form-field *ngIf="isChange">
+    <mat-form-field *ngIf="isNewOS" appearance="fill">
       <mat-label>Atendente</mat-label>
       <input type="text"
              placeholder="Atendente"
@@ -26,21 +26,26 @@
       </mat-autocomplete>
     </mat-form-field>
 
-    <mat-form-field appearance="fill" *ngIf="!isChange" >
+    <mat-form-field appearance="fill" *ngIf="!isNewOS" >
       <mat-label>Atendente</mat-label>
       <input matInput [value]="os.nomeFuncionario" disabled>
     </mat-form-field>
 
     <!-- Data de Entrada -->
-    <mat-form-field appearance="fill" >
+    <mat-form-field appearance="fill" *ngIf="!isNewOS" >
       <mat-label>Data</mat-label>
-      <input matInput [matDatepicker]="picker" [(ngModel)]="os.dataDeEntrada" *ngIf="isNewOS">
+      <input matInput [matDatepicker]="picker" [(ngModel)]="os.dataDeEntrada" >
       <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
       <mat-datepicker #picker></mat-datepicker>
     </mat-form-field>
 
+    <mat-form-field *ngIf="!isNewOS" appearance="fill">
+      <mat-label>Data</mat-label>
+      <input matInput [value]="os.dataDeEntrada | date:'dd/MM/yyyy'" disabled>
+    </mat-form-field>
+
     <!-- Cliente -->
-    <mat-form-field *ngIf="isChange">
+    <mat-form-field  *ngIf="isNewOS" appearance="fill">
       <mat-label>Cliente</mat-label>
       <input type="text"
              placeholder="Digite o Cliente"
@@ -56,7 +61,7 @@
       </mat-autocomplete>
     </mat-form-field>
 
-    <mat-form-field appearance="fill"*ngIf="!isChange" >
+    <mat-form-field appearance="fill"*ngIf="!isNewOS" >
       <mat-label>Cliente</mat-label>
       <input matInput [value]="os.nomeCliente" disabled>
     </mat-form-field>
@@ -74,7 +79,7 @@
     <!-- Itens -->
     <mat-form-field>
       <mat-label>ID</mat-label>
-      <input matInput [(ngModel)]="os.itensOS.idItensDaOS">
+      <input matInput [(ngModel)]="os.itensOS.idItensDaOS" disabled>
     </mat-form-field>
 
     <mat-form-field>
@@ -82,7 +87,7 @@
       <input matInput [value]="os.itensOS.codProduto" disabled>
     </mat-form-field>
 
-   <mat-form-field  >
+   <mat-form-field *ngIf="!isChange" appearance="fill" >
       <mat-label>Produto</mat-label>
       <input type="text" matInput placeholder="Digite o nome do produto"
              [formControl]="produtoControl"
@@ -98,7 +103,7 @@
       </mat-autocomplete>
     </mat-form-field>
 
-    <mat-form-field appearance="fill" *ngIf="isChange">
+    <mat-form-field *ngIf="isChange" appearance="fill">
       <mat-label>Descrição</mat-label>
       <input matInput [value]="os.itensOS.descricao" disabled>
     </mat-form-field>
