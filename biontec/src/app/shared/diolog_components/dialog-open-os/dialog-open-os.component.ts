@@ -204,10 +204,10 @@ export class DialogOpenOsComponent implements  OnInit, OnDestroy  {
 
 
   save(os: iServiceOrder) {
-  /*  if (this.clienteControl.invalid || this.funcionarioControl.invalid) {
+   if (this.clienteControl.invalid || this.funcionarioControl.invalid) {
       this.onError('Preencha todos os campos obrigatórios');
       return;
-    }*/
+    }
 
     const cliente: any = this.clienteControl.value;
     const funcionario: any = this.funcionarioControl.value;
@@ -245,7 +245,7 @@ export class DialogOpenOsComponent implements  OnInit, OnDestroy  {
     }
   }
 
-  salvarItem() {
+/*  salvarItem() {
     this.itensOS.quantidade = this.quantidadeControl.value;
 
     if (this.produtoControl.invalid || this.quantidadeControl.invalid) {
@@ -258,7 +258,7 @@ export class DialogOpenOsComponent implements  OnInit, OnDestroy  {
       modo: this.data.modo,
       item: this.itensOS
     });
-  }
+  }*/
 
   addItem() {
     const produtoSelecionado = this.produtoControl.value;
@@ -288,12 +288,9 @@ export class DialogOpenOsComponent implements  OnInit, OnDestroy  {
         //this.updateTotal();
       }
     });
-
-
     // limpa os campos
    // this.produtoControl.reset();
     //this.quantidadeControl.setValue(1);
-
   }
 
   finalizarOS() {

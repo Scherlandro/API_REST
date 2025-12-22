@@ -137,7 +137,7 @@
 
      <!-- <button mat-button *ngIf="isChange" (click)="salvarItem()">Salvar Alterações</button>-->
 
-      <button mat-raised-button *ngIf="!isChange" (click)="addItem()" [disabled]="isSaveButtonDisabled()">
+      <button mat-raised-button *ngIf="isNewOS" (click)="addItem()" [disabled]="isSaveButtonDisabled()">
         Adicionar Item
       </button>
 
