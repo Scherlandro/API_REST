@@ -245,21 +245,6 @@ export class DialogOpenOsComponent implements  OnInit, OnDestroy  {
     }
   }
 
-/*  salvarItem() {
-    this.itensOS.quantidade = this.quantidadeControl.value;
-
-    if (this.produtoControl.invalid || this.quantidadeControl.invalid) {
-      this.onError("Preencha todos os campos obrigatórios.");
-      return;
-    }
-    this.updateTotal();
-
-    this.dialogRef.close({
-      modo: this.data.modo,
-      item: this.itensOS
-    });
-  }*/
-
   addItem() {
     const produtoSelecionado = this.produtoControl.value;
 

@@ -66,15 +66,13 @@
       <input matInput [value]="os.nomeCliente" disabled>
     </mat-form-field>
 
-    <button mat-raised-button *ngIf="isChange" cdkFocusInitial (click)="iniciarOS()">Iniciar OS</button>
+ <!--   <button mat-raised-button *ngIf="isChange" cdkFocusInitial (click)="iniciarOS()">Iniciar OS</button>-->
 
     <button mat-button *ngIf="isChange" cdkFocusInitial [mat-dialog-close]="osSelecionada"
             (click)="save(os)">Savar OS
     </button>
 
-   <!-- <button mat-button *ngIf="isChange" (click)="save(os)">Salvar OS</button>-->
-
-    <button mat-raised-button (click)="onCancel()">Cancelar</button>
+    <button mat-button (click)="onCancel()">Cancelar</button>
 
 
   </mat-card>
@@ -134,8 +132,6 @@
     <!-- Itens da Ordem de Serviço -->
     <div mat-dialog-content> <!-- *ngIf="itensOS$.length > 0">-->
 
-
-     <!-- <button mat-button *ngIf="isChange" (click)="salvarItem()">Salvar Alterações</button>-->
 
       <button mat-raised-button *ngIf="isNewOS" (click)="addItem()" [disabled]="isSaveButtonDisabled()">
         Adicionar Item
