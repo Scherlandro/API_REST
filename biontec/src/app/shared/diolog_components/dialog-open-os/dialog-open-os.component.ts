@@ -74,10 +74,7 @@ export class DialogOpenOsComponent implements  OnInit, OnDestroy  {
   ngOnInit(): void {
     this.listarProdutos();
     this.setupAutocompleteFilters();
-   // this.statusDaOS();
-    //this.isNewOS = this.isChange;
-
-    // Se estiver no modo editar, já preenche o produto e quantidade
+    // Se estiver no modo editar, já prenche o produto e quantidade
     console.log('isChange', this.isChange, 'isNewOS', this.isNewOS);
 
     if (!this.isChange) {
