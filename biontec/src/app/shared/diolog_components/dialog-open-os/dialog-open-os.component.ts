@@ -270,6 +270,10 @@ export class DialogOpenOsComponent implements  OnInit, OnDestroy  {
         //this.updateTotal();
       }
     });
+
+    this.voltar();
+    this.dialogRef.close();
+
     // limpa os campos
    // this.produtoControl.reset();
     //this.quantidadeControl.setValue(1);
