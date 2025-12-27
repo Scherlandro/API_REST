@@ -202,35 +202,34 @@ export class OrdemDeServiceComponent implements OnInit {
       this.orders = this.orders;
     }
   }
-
   toggleRow(element: any) {
     this.tbSourceOS$.data.forEach((item: any) => {
       if (item !== element && item.isExpanded) {
         item.isExpanded = false;
       }
     });
+
     // Alternar o estado da linha clicada
     element.isExpanded = !element.isExpanded;
+
     // Se a linha foi expandida, carregar os dados
     if (element.isExpanded) {
-      /*  var soma = 0;
-        for (var i = 0; i < element.length; i++) {
-          soma += element.map((p: iItensOS) => p.valorUnitario)[i];
-        }*/
-      const soma = element.itensOS
-        .reduce((acc: number, item: iItensOS) => acc + Number(item.total))
+      // Verifique se existem itens na linha expandida
+      if (element.itensOS && Array.isArray(element.itensOS)) {
+        const soma = element.itensOS.reduce((acc: number, item: iItensOS) => {
+          // Garantir que 'item.total' seja um número válido
+          return acc + (Number(item.total) || 0);
+        }, 0);
 
-      element.totalGeralOS = soma;
-      element.totalGeralOS = this.formatarReal(soma);
-      console.log('Valor soma', element.totalGeralOS);
-      /* this.tbSourceItensDaOS$.data = element.itensOS.map((item: iItensOS) => ({
-         ...item,
-         // Formata os valores individuais
-         valorUnitario: this.formatarReal(item.valorUnitario),
-         total: this.formatarReal(item.total)
-       }));*/
+        // Atualizando o total geral da ordem de serviço
+        element.totalGeralOS = this.formatarReal(soma);
+        console.log('Valor soma', element.totalGeralOS);
+      } else {
+        console.log('Nenhum item disponível na linha expandida');
+      }
     }
   }
+
 
   /*
   getBaseCauculo(os: iServiceOrder, itens: iItensOS): any {
