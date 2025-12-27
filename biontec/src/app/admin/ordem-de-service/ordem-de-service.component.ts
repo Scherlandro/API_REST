@@ -202,6 +202,7 @@ export class OrdemDeServiceComponent implements OnInit {
       this.orders = this.orders;
     }
   }
+
   toggleRow(element: any) {
     this.tbSourceOS$.data.forEach((item: any) => {
       if (item !== element && item.isExpanded) {
@@ -224,12 +225,30 @@ export class OrdemDeServiceComponent implements OnInit {
         // Atualizando o total geral da ordem de serviço
         element.totalGeralOS = this.formatarReal(soma);
         console.log('Valor soma', element.totalGeralOS);
+
+        console.log('Valores da linha ==> ', element);
+        this.updateOS(element);
       } else {
         console.log('Nenhum item disponível na linha expandida');
       }
     }
   }
 
+
+  updateOS(os: iServiceOrder) {
+
+    this.osService.update(os)
+      .subscribe({
+        next: (osAtualizada) => {
+          this.tbData.close(osAtualizada);
+        },
+        error: (err) => {
+          this.onError('Erro ao atualizar a OS');
+          console.error(err);
+        }
+      });
+    //  this.tbData.splice(this.ruwSelec, 1);
+  }
 
   /*
   getBaseCauculo(os: iServiceOrder, itens: iItensOS): any {
