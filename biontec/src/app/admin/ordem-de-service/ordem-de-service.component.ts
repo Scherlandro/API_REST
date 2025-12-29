@@ -250,7 +250,24 @@ export class OrdemDeServiceComponent implements OnInit {
     //  this.tbData.splice(this.ruwSelec, 1);
   }
 
-  /*
+  salvarTotal(os: iServiceOrder) {
+    const payload = {
+      id: os.id,
+      totalGeralOS: os.totalGeralOS
+    };
+
+    this.osService.updateTotal(payload).subscribe({
+      next: () => {
+        console.log('Total atualizado com sucesso');
+      },
+      error: (err) => {
+        this.onError('Erro ao atualizar total da OS');
+        console.error(err);
+      }
+    });
+  }
+
+
   getBaseCauculo(os: iServiceOrder, itens: iItensOS): any {
     switch (os || itens) {
       case os.itensOS.total:
@@ -258,7 +275,7 @@ export class OrdemDeServiceComponent implements OnInit {
       case os:
         return os.subtotal + itens.total;
     } }
-  */
+
 
   recalcularTotalOS(eventOS: iServiceOrder, eventItens: iItensOS): iServiceOrder {
     // Verifica se a OS ou os itens estão vazios

@@ -28,6 +28,10 @@ export class OrdemDeServicosService {
     return this.http.put<iServiceOrder>(this.baseUrl, order);
   }
 
+  updateTotal(payload: { id: number; totalGeralOS: number }) {
+    return this.http.put(this.baseUrl`/${payload.id}/total`, payload);
+  }
+
   search(params: any): Observable<iServiceOrder[]> {
     return this.http.get<iServiceOrder[]>(this.baseUrl + '/search', { params });
   }
