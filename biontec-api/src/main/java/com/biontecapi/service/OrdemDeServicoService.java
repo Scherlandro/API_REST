@@ -4,6 +4,7 @@ import com.biontecapi.dtos.ItensDoServicoDTO;
 import com.biontecapi.dtos.OrdemDeServicoDTO;
 import com.biontecapi.model.OrdemDeServico;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,7 +27,6 @@ public interface OrdemDeServicoService {
     OrdemDeServico criarOS(OrdemDeServicoDTO dto);
 
     OrdemDeServico atualizarOS(OrdemDeServicoDTO dto);
-
 
     OrdemDeServico addItemNaOS(Long osID, ItensDoServicoDTO itemDto);
 

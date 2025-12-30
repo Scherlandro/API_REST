@@ -209,11 +209,8 @@ export class OrdemDeServiceComponent implements OnInit {
         item.isExpanded = false;
       }
     });
-
     // Alternar o estado da linha clicada
     element.isExpanded = !element.isExpanded;
-
-    // Se a linha foi expandida, carregar os dados
     if (element.isExpanded) {
       // Verifique se existem itens na linha expandida
       if (element.itensOS && Array.isArray(element.itensOS)) {
@@ -251,21 +248,15 @@ export class OrdemDeServiceComponent implements OnInit {
   }
 
   salvarTotal(os: iServiceOrder) {
-    const payload = {
-      id: os.id,
-      totalGeralOS: os.totalGeralOS
-    };
-
-    this.osService.updateTotal(payload).subscribe({
-      next: () => {
-        console.log('Total atualizado com sucesso');
-      },
-      error: (err) => {
+    this.osService.update(os).subscribe({
+      next: () => console.log('Total atualizado com sucesso'),
+      error: err => {
         this.onError('Erro ao atualizar total da OS');
         console.error(err);
       }
     });
   }
+
 
 
   getBaseCauculo(os: iServiceOrder, itens: iItensOS): any {

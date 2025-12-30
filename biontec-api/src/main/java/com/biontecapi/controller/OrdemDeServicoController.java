@@ -1,6 +1,7 @@
 package com.biontecapi.controller;
 
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -73,20 +74,16 @@ public class OrdemDeServicoController {
 
     @PutMapping
     public ResponseEntity<OrdemDeServico> atualizarOS(@RequestBody OrdemDeServicoDTO dto) {
-
-      /*  OrdemDeServico os = service.listarOSPorID(dto.idOS())
-                .orElseThrow(() -> new RuntimeException("OS não encontrada"));
-
-        os.setNomeCliente(dto.nomeCliente());
-        os.setIdCliente(dto.clienteId());
-        os.setIdFuncionario(dto.idFuncionario());
-        os.setGestorDaOS(dto.gestorDaOS());
-        os.setStatus(dto.status());
-        os.setTotalGeralOS(dto.totalGeralOS());*/
-
-        return ResponseEntity.ok(service.atualizarOS(dto));
+           return ResponseEntity.ok(service.atualizarOS(dto));
     }
 
+    @PatchMapping("/{id}/total")
+    public ResponseEntity<Void> atualizarTotal( @PathVariable Long id, @RequestBody Double total) {
+        OrdemDeServico os = service.findById(id).orElseThrow(() -> new RuntimeException("OS não encontrada"));
+        os.setTotalGeralOS(total);
+       // service.atualizarOS(os); // persiste a alteração
+        return ResponseEntity.noContent().build();
+    }
 
     @PostMapping("/{idOS}/items")
     public ResponseEntity<OrdemDeServico> adicionarItem(@PathVariable Long idOS, @RequestBody ItensDoServicoDTO itemDto) {
