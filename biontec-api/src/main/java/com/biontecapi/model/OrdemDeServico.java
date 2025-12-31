@@ -60,4 +60,20 @@ public class OrdemDeServico {
                     gestorDaOS, tecnicoEncarregado, toDTO().itensDoServicoDTO()
         );
     }
+
+    /*
+
+    public OrdemDeServicoDTO toDTO() {
+        return new OrdemDeServicoDTO(
+                idOS, idCliente, nomeCliente, idFuncionario, nomeFuncionario, dataDeEntrada,
+                ultimaAtualizacao, status, subtotal, desconto, porConta, totalGeralOS, restante,
+                gestorDaOS, tecnicoEncarregado, toDTOItensDoServico()
+        );
+    }
+
+    private List<ItensDoServicoDTO> toDTOItensDoServico() {
+        return itensOS.stream().map(ItensDoServico::toDTO).collect(Collectors.toList());
+    }
+
+     */
 }

@@ -221,6 +221,8 @@ export class OrdemDeServiceComponent implements OnInit {
 
         // Atualizando o total geral da ordem de serviço
         element.totalGeralOS = this.formatarReal(soma);
+
+        element.totalGeralOS = parseFloat(element.totalGeralOS.replace('R$', '').replace(',', '.'));
         console.log('Valor soma', element.totalGeralOS);
 
         console.log('Valores da linha ==> ', element);
