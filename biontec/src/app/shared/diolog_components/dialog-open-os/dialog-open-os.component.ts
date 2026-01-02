@@ -74,12 +74,24 @@ export class DialogOpenOsComponent implements  OnInit, OnDestroy  {
   ngOnInit(): void {
     this.listarProdutos();
     this.setupAutocompleteFilters();
-    // Se estiver no modo editar, já prenche o produto e quantidade
-    console.log('isChange', this.isChange, 'isNewOS', this.isNewOS);
-
+    if (this.itensOS && this.itensOS.quantidade) {
+      // emitEvent: false evita que o subscribe abaixo seja disparado desnecessariamente na inicialização
+      this.quantidadeControl.setValue(this.itensOS.quantidade, { emitEvent: false });
+    }
     if (!this.isChange) {
-    //  this.produtoControl.disable();
-      this.quantidadeControl.setValue(this.itensOS.quantidade);
+      // this.produtoControl.disable();
+    }
+
+    this.quantidadeControl.valueChanges.subscribe(novoValor => {
+      // Verifica se o valor é válido antes de atribuir
+      if (this.os?.itensOS) {
+        this.os.itensOS.quantidade = novoValor;
+        this.updateTotal();
+      }
+    });
+    // Se estiver editando, força o cálculo inicial do total
+    if (this.isChange) {
+      this.updateTotal();
     }
   }
 

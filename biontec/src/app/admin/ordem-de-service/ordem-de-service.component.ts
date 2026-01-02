@@ -192,6 +192,7 @@ export class OrdemDeServiceComponent implements OnInit {
     }
     return params;
   }
+/*
 
   changeOS(value: any) {
     if (value) {
@@ -202,6 +203,7 @@ export class OrdemDeServiceComponent implements OnInit {
       this.orders = this.orders;
     }
   }
+*/
 
   toggleRow(element: any) {
     this.tbSourceOS$.data.forEach((item: any) => {
@@ -239,7 +241,7 @@ export class OrdemDeServiceComponent implements OnInit {
     this.osService.update(os)
       .subscribe({
         next: (osAtualizada) => {
-          this.tbData.close(osAtualizada);
+          this.tbData?.close(osAtualizada);
         },
         error: (err) => {
           this.onError('Erro ao atualizar a OS');
@@ -334,7 +336,7 @@ export class OrdemDeServiceComponent implements OnInit {
     });
   }
 
-  deleteElement2(item: iItensOS) {
+/*  deleteElement2(item: iItensOS) {
     this.notificationMsg.openConfirmDialog('Tem certeza em REMOVER este item ?')
       .afterClosed().subscribe(res => {
       if (res) {
@@ -351,7 +353,7 @@ export class OrdemDeServiceComponent implements OnInit {
         });
       }
     });
-  }
+  }*/
 
   formatarData(dataString: string): Date {
     return new Date(dataString);
