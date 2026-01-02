@@ -33,6 +33,7 @@ public class ItensOSController {
     public ResponseEntity salvar(@RequestBody ItensDoServico item) {
        return ResponseEntity.status(HttpStatus.CREATED).body(itensOSService.saveItemOS(item));
     }
+/*
 
     @PostMapping("/itens")
     public ResponseEntity<ItensDoServico> criarItem(@RequestBody ItensDoServicoDTO dto) {
@@ -49,18 +50,51 @@ public class ItensOSController {
         return ResponseEntity.ok(itensOSService.saveItemOS(item));
     }
 
+*/
 
-    @PutMapping("/{idItensDaOS}")
-    public ResponseEntity<ItensDoServico> atualizarOS( @PathVariable Long idItensDaOS,@RequestBody ItensDoServicoDTO itensDto) {
-        if (!itensOSService.existsById(idItensDaOS)) {
+  /*  @PutMapping("/editar")
+    public ResponseEntity<ItensDoServico> atualizarOS( @RequestBody ItensDoServicoDTO itensDto) {
+        if (!itensOSService.existsById(itensDto.idItensDaOS())) {
             return ResponseEntity.notFound().build();
         }
         ItensDoServico entidade = mapper.map(itensDto, ItensDoServico.class);
-        entidade.setIdItensDaOS(idItensDaOS);
+      //  entidade.setIdItensDaOS(idItensDaOS);
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(itensOSService.updateItemOS(entidade));
     }
+
+    @PutMapping("/editar")
+    public ResponseEntity<ItensDoServico> atualizarOS(@RequestBody ItensDoServicoDTO itensDto) {
+        if (!itensOSService.existsById(itensDto.idItensDaOS())) {
+            return ResponseEntity.notFound().build();
+        }
+        // Busca a entidade existente para garantir que o Hibernate a rastreie (Managed State)
+        ItensDoServico entidade = mapper.map(itensDto, ItensDoServico.class);
+        // Força o ID do DTO na entidade mapeada
+        entidade.setIdItensDaOS(itensDto.idItensDaOS());
+        return ResponseEntity.ok(itensOSService.updateItemOS(entidade));
+    }
+*/
+  @PutMapping("/editar")
+  public ResponseEntity<?> atualizarOS(@RequestBody ItensDoServicoDTO itensDto) {
+      if (!itensOSService.existsById(itensDto.idItensDaOS())) {
+          return ResponseEntity.notFound().build();
+      }
+
+      // Em vez de usar apenas o mapper, garanta os campos principais
+      ItensDoServico entidade = mapper.map(itensDto, ItensDoServico.class);
+
+      // FORÇAR os valores do Record para a Entidade
+      entidade.setIdItensDaOS(itensDto.idItensDaOS());
+      entidade.setValorUnitario(itensDto.valorUnitario()); // Aqui o Record usa o nome do campo como método
+      entidade.setQuantidade(itensDto.quantidade());
+      entidade.setCodOS(itensDto.codOS());
+      entidade.setCodProduto(itensDto.codProduto());
+      entidade.setDescricao(itensDto.descricao());
+
+      return ResponseEntity.ok(itensOSService.updateItemOS(entidade));
+  }
 
 
     @GetMapping(path = "/all")

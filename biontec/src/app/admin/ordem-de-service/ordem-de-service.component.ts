@@ -146,23 +146,27 @@ export class OrdemDeServiceComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      if (!result) return;
+      console.log('RESULT DialogOpenOsComponent', result);});
+      /* if (!result) return;
 
-      if (result.modo === 'adicionar') {
-        if (!os.itensOS) os.itensOS = []; // <= garante que existe
-        os.itensOS.push(result.item);
-      }
+       if (result.modo === 'adicionar') {
+         console.log('RESULT para adicionar', result);
+         if (!os.itensOS) os.itensOS = []; // <= garante que existe
+         os.itensOS.push(result.item);
+       }
 
-      if (result.modo === 'editar') {
-        const idx = os.itensOS.findIndex((i: any) =>
-          i.idItensDaOS === result.item.idItensDaOS
-        );
-        if (idx >= 0) os.itensOS[idx] = result.item;
-      }
+       if (result.modo === 'editar') {
+         console.log('RESULT para editar', result);
+         const idx = os.itensOS.findIndex((i: any) =>
+           i.idItensDaOS === result.item.idItensDaOS
+         );
+         if (idx >= 0) os.itensOS[idx] = result.item;
+       }
 
-      this.recalcularTotalOS(os, result);
-     // this.updateOS(os);
-    });
+       console.log('RESULT finalizando', result);
+       this.recalcularTotalOS(os, result);
+      // this.updateOS(os);
+     });*/
   }
 
   onSearch() {
@@ -192,18 +196,6 @@ export class OrdemDeServiceComponent implements OnInit {
     }
     return params;
   }
-/*
-
-  changeOS(value: any) {
-    if (value) {
-      this.orders = this.orders.filter(
-        vd => vd.nomeCliente.toString()
-          .includes(value.toUpperCase()));
-    } else {
-      this.orders = this.orders;
-    }
-  }
-*/
 
   toggleRow(element: any) {
     this.tbSourceOS$.data.forEach((item: any) => {
@@ -237,7 +229,6 @@ export class OrdemDeServiceComponent implements OnInit {
 
 
   updateOS(os: iServiceOrder) {
-
     this.osService.update(os)
       .subscribe({
         next: (osAtualizada) => {
@@ -260,8 +251,6 @@ export class OrdemDeServiceComponent implements OnInit {
       }
     });
   }
-
-
 
   getBaseCauculo(os: iServiceOrder, itens: iItensOS): any {
     switch (os || itens) {

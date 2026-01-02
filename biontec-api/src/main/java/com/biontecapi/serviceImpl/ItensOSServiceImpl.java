@@ -40,10 +40,24 @@ public class ItensOSServiceImpl implements ItensOSService {
         return itensDaOSRepository.save(itensDoServico);
     }
 
+
     @Override
+    @Transactional // Garante a transação aberta
     public ItensDoServico updateItemOS(ItensDoServico itensDoServico) {
+        // Verifique se os valores base existem
+        if (itensDoServico.getValorUnitario() == null || itensDoServico.getQuantidade() == null) {
+            throw new IllegalArgumentException("Valor unitário e quantidade são obrigatórios para calcular o total.");
+        }
+        // Calcula manualmente antes de enviar ao Repository
+        Double totalCalculado = itensDoServico.getValorUnitario() * itensDoServico.getQuantidade();
+        System.out.println("TOTAL CALCULADO " + totalCalculado);
+        itensDoServico.setTotal(totalCalculado);
+
+        System.out.println("Salvando Item ID: " + itensDoServico.getIdItensDaOS() + " com Total: " + totalCalculado);
+
         return itensDaOSRepository.save(itensDoServico);
     }
+
 
     @Override
     public List<ItensDoServico> findAll() {

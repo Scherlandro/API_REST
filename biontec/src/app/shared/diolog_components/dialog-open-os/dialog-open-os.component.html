@@ -132,8 +132,11 @@
     <div mat-dialog-content> <!-- *ngIf="itensOS$.length > 0">-->
 
 
-      <button mat-raised-button *ngIf="isNewOS" (click)="addItem()" [disabled]="isSaveButtonDisabled()">
+      <button mat-raised-button *ngIf="!isNewOS || isChange" (click)="addItem()" [disabled]="isSaveButtonDisabled()">
         Adicionar Item
+      </button>
+      <button mat-raised-button *ngIf="!isChange" (click)="editarItem(itensOS)" [disabled]="isSaveButtonDisabled()">
+        Atualizar Item
       </button>
 
     <!--  <div *ngFor="let item of itensOS$">

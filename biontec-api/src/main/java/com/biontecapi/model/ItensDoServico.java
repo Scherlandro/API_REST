@@ -39,13 +39,13 @@ import javax.persistence.*;
         private Double total;
 
         // Método para calcular o total automaticamente
-       /* @PrePersist
+        @PrePersist
         @PreUpdate
         public void calcularTotal() {
             if (valorUnitario != null && quantidade != null) {
                 this.total = valorUnitario * quantidade;
             }
-        }*/
+        }
 
         public ItensDoServicoDTO toDTO(){
             return new ItensDoServicoDTO(idItensDaOS,codOS,

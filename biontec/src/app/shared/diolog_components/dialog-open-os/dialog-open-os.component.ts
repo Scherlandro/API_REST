@@ -256,12 +256,10 @@ export class DialogOpenOsComponent implements  OnInit, OnDestroy  {
 
   addItem() {
     const produtoSelecionado = this.produtoControl.value;
-
-    if (!produtoSelecionado || this.produtoControl.invalid || this.quantidadeControl.invalid) {
+    if ( this.produtoControl.invalid || this.quantidadeControl.invalid) {
       this.onError("Selecione o produto e uma quantidade válida.");
       return;
     }
-
     const novoItem: iItensOS = {
       idItensDaOS: 0, // item novo sempre inicia com 0
       codOS: this.os.idOS ?? 0,
@@ -271,24 +269,39 @@ export class DialogOpenOsComponent implements  OnInit, OnDestroy  {
       quantidade: Number(this.quantidadeControl.value),
       total: Number(produtoSelecionado.valorVenda) * Number(this.quantidadeControl.value)
     };
+    if(novoItem.idItensDaOS == 0){
+      this.itensOsService.adicionarItem(novoItem).subscribe({
+        next: () => {
+          this.os.itensOS.push(novoItem); // só para UI
+          //this.updateTotal();
+        }
+      });
 
-    // adiciona na lista
-   // this.itensOS$.push(novoItem);
-    console.log('NovoItem ->' , novoItem);
-
-    this.itensOsService.adicionarItem(novoItem).subscribe({
-      next: () => {
-        this.os.itensOS.push(novoItem); // só para UI
-        //this.updateTotal();
-      }
-    });
-
+    }
     this.voltar();
     this.dialogRef.close();
 
     // limpa os campos
    // this.produtoControl.reset();
     //this.quantidadeControl.setValue(1);
+  }
+
+  editarItem(itensOS: iItensOS) {
+    // Garanta que os nomes das propriedades aqui sejam exatamente iguais ao ItensDoServicoDTO.java
+    const dto = {
+      idItensDaOS: itensOS.idItensDaOS,
+      codOS: itensOS.codOS,
+      codProduto: itensOS.codProduto,
+      descricao: itensOS.descricao,
+      valorUnitario: itensOS.valorUnitario,
+      quantidade: itensOS.quantidade,
+      total: itensOS.valorUnitario * itensOS.quantidade // Envia calculado por segurança
+    };
+
+    this.itensOsService.editItem(dto).subscribe({
+      next: (res) => this.dialogRef.close(res),
+      error: (err) => console.error("Erro detalhado:", err)
+    });
   }
 
   finalizarOS() {
