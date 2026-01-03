@@ -205,26 +205,24 @@ export class OrdemDeServiceComponent implements OnInit {
     });
     // Alternar o estado da linha clicada
     element.isExpanded = !element.isExpanded;
-    if (element.isExpanded) {
-      // Verifique se existem itens na linha expandida
-      if (element.itensOS && Array.isArray(element.itensOS)) {
+
+      if (element.isExpanded && element.itensOS && Array.isArray(element.itensOS)) {
         const soma = element.itensOS.reduce((acc: number, item: iItensOS) => {
           // Garantir que 'item.total' seja um número válido
-          return acc + (Number(item.total) || 0);
+          const valorItem = typeof item.total === 'number' ? item.total : this.parseCurrency(item.total);
+          return acc + valorItem;
+          /* return acc + (Number(item.total) || 0);*/
         }, 0);
-
         // Atualizando o total geral da ordem de serviço
-        element.totalGeralOS = this.formatarReal(soma);
-
+       /* element.totalGeralOS = this.formatarReal(soma);
         element.totalGeralOS = parseFloat(element.totalGeralOS.replace('R$', '').replace(',', '.'));
-        console.log('Valor soma', element.totalGeralOS);
-
-        console.log('Valores da linha ==> ', element);
+       */
+        // 2. Arredonda para 2 casas decimais para evitar erros de precisão do JS
+        element.totalGeralOS = Math.round(soma * 100) / 100;
+        console.log('Total calculado (numérico):', element.totalGeralOS);
         this.updateOS(element);
-      } else {
-        console.log('Nenhum item disponível na linha expandida');
       }
-    }
+
   }
 
 
@@ -316,9 +314,7 @@ export class OrdemDeServiceComponent implements OnInit {
       if (res) {
         this.itensOsService.deleteItensOS(item)
           .subscribe((item) => {
-            // this.tbData = this.tbSourceItensDaOS$.data;
             this.tbData.splice(this.ruwSelec, 1);
-            // this.tbSourceItensDaOS$.data = this.tbData;
           });
         this.notificationMsg.warn('! Deletado com sucesso!');
       }
@@ -367,22 +363,21 @@ export class OrdemDeServiceComponent implements OnInit {
   }
 
   private parseCurrency(value: any): number {
-    if (value === null || value === undefined) return 0;
-
+    if (value === null || value === undefined || value === '') return 0;
     // Se já é número, retorna direto
     if (typeof value === 'number') return value;
 
-    // Se é string, sanitiza
-    if (typeof value === 'string') {
+    try {
       return parseFloat(
         value.replace('R$', '')
-          .replace('.', '')
+          .replace(/\./g, '') // Remove todos os pontos de milhar
+          .replace(',', '.')  // Troca a vírgula decimal por ponto
           .trim()
-          .replace(',', '.')
       ) || 0;
+    } catch {
+      return 0;
     }
 
-    return 0;
   }
 
 }
