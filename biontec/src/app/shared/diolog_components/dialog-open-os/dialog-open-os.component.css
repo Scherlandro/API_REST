@@ -15,6 +15,7 @@
   radial-gradient(ellipse farthest-corner at left top, rgba(255, 255, 255, 0) 0%, #FFFFAC 8%, #D1B464 25%, #5d4a1f 62.5%, #5d4a1f 100%);
   position: center;
   align-items: center;
+  height: fit-content;
 }
 
 .container-box-itens {

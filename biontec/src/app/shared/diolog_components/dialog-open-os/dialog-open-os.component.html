@@ -74,10 +74,11 @@
 
     <button mat-button (click)="onCancel()">Cancelar</button>
 
-
   </mat-card>
 
-  <mat-card class="container-box-itens " >
+
+
+  <mat-card  *ngIf="isNewOS || !isChange" class="container-box-itens " >
     <!-- Itens -->
     <mat-form-field>
       <mat-label>ID</mat-label>
