@@ -66,8 +66,6 @@
       <input matInput [value]="os.nomeCliente" disabled>
     </mat-form-field>
 
- <!--   <button mat-raised-button *ngIf="isChange" cdkFocusInitial (click)="iniciarOS()">Iniciar OS</button>-->
-
     <button mat-button *ngIf="isChange" cdkFocusInitial [mat-dialog-close]="osSelecionada"
             (click)="save(os)">Savar OS
     </button>
@@ -75,7 +73,6 @@
     <button mat-button (click)="onCancel()">Cancelar</button>
 
   </mat-card>
-
 
 
   <mat-card  *ngIf="isNewOS || !isChange" class="container-box-itens " >

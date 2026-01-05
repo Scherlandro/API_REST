@@ -205,10 +205,6 @@ export class OrdemDeServiceComponent implements OnInit {
           return acc + valorItem;
           /* return acc + (Number(item.total) || 0);*/
         }, 0);
-        // Atualizando o total geral da ordem de serviço
-       /* element.totalGeralOS = this.formatarReal(soma);
-        element.totalGeralOS = parseFloat(element.totalGeralOS.replace('R$', '').replace(',', '.'));
-       */
         // 2. Arredonda para 2 casas decimais para evitar erros de precisão do JS
         element.totalGeralOS = Math.round(soma * 100) / 100;
         console.log('Total calculado (numérico):', element.totalGeralOS);
@@ -312,25 +308,6 @@ export class OrdemDeServiceComponent implements OnInit {
       }
     });
   }
-
-/*  deleteElement2(item: iItensOS) {
-    this.notificationMsg.openConfirmDialog('Tem certeza em REMOVER este item ?')
-      .afterClosed().subscribe(res => {
-      if (res) {
-        this.itensOsService.deleteItensOS(item).subscribe(() => {
-          const elementOS: any = this.tbSourceOS$.data.find(os => os.idOS === item.codOS);
-          if (elementOS) {
-            elementOS.itensOS = elementOS.itensOS.filter((i: any) => i.idItensDaOS !== item.idItensDaOS);
-            this.recalcularTotalOS(elementOS, elementOS.itensOS);
-          }
-          //  this.tbData = this.tbSourceItensDaOS$.data;
-          this.tbData.splice(this.ruwSelec, 1);
-          // this.tbSourceItensDaOS$.data = this.tbData;
-          this.notificationMsg.warn('! Deletado com sucesso!');
-        });
-      }
-    });
-  }*/
 
   formatarData(dataString: string): Date {
     return new Date(dataString);

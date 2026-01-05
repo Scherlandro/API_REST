@@ -280,10 +280,9 @@ export class DialogOpenOsComponent implements  OnInit, OnDestroy  {
     }
     this.voltar();
     this.dialogRef.close();
-
-    // limpa os campos
-   // this.produtoControl.reset();
-    //this.quantidadeControl.setValue(1);
+    /* limpa os campos
+    this.produtoControl.reset();
+    this.quantidadeControl.setValue(1);*/
   }
 
   editarItem(itensOS: iItensOS) {
@@ -333,7 +332,6 @@ export class DialogOpenOsComponent implements  OnInit, OnDestroy  {
     this.dialogRef.close();
   }
 /*
-
   statusDaOS(){
     console.log('os.idOS NO STATUS', this.os.idOS)
     if (this.os.idOS === 0) {
