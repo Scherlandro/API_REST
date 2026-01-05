@@ -13,7 +13,6 @@ import { DialogUsuarioComponent } from "./diolog_components/dialog-usuario/dialo
 import {DialogFuncionarioComponent} from "./diolog_components/dialog-funcionario/dialog-funcionario.component";
 import {DialogClienteComponent} from "./diolog_components/dialog-cliente/dialog-cliente.component";
 import { ErrorDiologComponent } from "./diolog_components/error-diolog/error-diolog.component";
-import {DialogItensOSComponent} from "./diolog_components/dialog-itens-os/dialog-itens-os.component";
 
 
 @NgModule({
@@ -27,8 +26,7 @@ import {DialogItensOSComponent} from "./diolog_components/dialog-itens-os/dialog
     DialogProdutoComponent,
     DialogOpenSalesComponent,
     DialogOpenOsComponent,
-    DialogItensVdComponent,
-    DialogItensOSComponent
+    DialogItensVdComponent
   ],
   imports: [
     CommonModule,

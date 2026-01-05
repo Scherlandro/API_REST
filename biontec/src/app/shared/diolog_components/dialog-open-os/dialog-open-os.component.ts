@@ -60,11 +60,9 @@ export class DialogOpenOsComponent implements  OnInit, OnDestroy  {
   ) {
     this.os = data as any;
     this.itensOS = data.itensOS;  // item selecionado (ou item vazio)
-    console.log('Valor OS ', this.os)
    this.isChange = data.modo === 'adicionar';
     this.isNewOS = data.modoNew === 'editar';
     this.produtoControl = new FormControl();
-   // this.produtoControl = new FormControl(null, [Validators.required]);
     this.quantidadeControl = new FormControl(
       this.itensOS?.quantidade || 1,      [Validators.required, Validators.min(1)]
     );
@@ -77,9 +75,6 @@ export class DialogOpenOsComponent implements  OnInit, OnDestroy  {
     if (this.itensOS && this.itensOS.quantidade) {
       // emitEvent: false evita que o subscribe abaixo seja disparado desnecessariamente na inicialização
       this.quantidadeControl.setValue(this.itensOS.quantidade, { emitEvent: false });
-    }
-    if (!this.isChange) {
-      // this.produtoControl.disable();
     }
 
     this.quantidadeControl.valueChanges.subscribe(novoValor => {
@@ -165,7 +160,6 @@ export class DialogOpenOsComponent implements  OnInit, OnDestroy  {
     }
   }
 
-  // Atualiza total ao editar quantidade
   updateTotal() {
     const qtd = Number(this.itensOS.quantidade);
     const valor = Number(this.itensOS.valorUnitario);
@@ -195,17 +189,14 @@ export class DialogOpenOsComponent implements  OnInit, OnDestroy  {
       totalGeralOS: 0,
       porConta: 0,
       restante: 0,
-
-      // ✅ SEMPRE ARRAY
       itensOS: []
     };
 
     this.osServices.create(osParaCriar).subscribe({
       next: (osCriada) => {
-        // agora você TEM idOS
         this.os = osCriada;
-        this.isChange = false;   // trava cliente/funcionário
-        this.isNewOS = true;     // libera itens
+        this.isChange = false;
+        this.isNewOS = true;
       },
       error: () => this.onError('Erro ao iniciar OS')
     });
@@ -225,7 +216,7 @@ export class DialogOpenOsComponent implements  OnInit, OnDestroy  {
     os.nomeCliente = cliente.nomeCliente;
     os.nomeFuncionario = funcionario.nomeFuncionario;
     os.dataDeEntrada = dataAtual.toISOString();
-    os.status = os.status || 'OS_em_Andamento'; // Ou qualquer valor válido do enum
+    os.status = os.status || 'OS_em_Andamento';
     os.itensOS = this.itensOS ;
 
     if (!this.isChange) {
@@ -276,13 +267,11 @@ export class DialogOpenOsComponent implements  OnInit, OnDestroy  {
           //this.updateTotal();
         }
       });
-
     }
     this.voltar();
     this.dialogRef.close();
     /* limpa os campos
-    this.produtoControl.reset();
-    this.quantidadeControl.setValue(1);*/
+    this.produtoControl.reset();*/
   }
 
   editarItem(itensOS: iItensOS) {
