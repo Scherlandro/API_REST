@@ -48,8 +48,8 @@ import javax.persistence.*;
         }
 
         public ItensDoServicoDTO toDTO(){
-            return new ItensDoServicoDTO(idItensDaOS,codOS,
-                    codProduto,descricao,valorUnitario,quantidade,total);
+            return new ItensDoServicoDTO(this.idItensDaOS,this.codOS,
+                    this.codProduto,this.descricao,this.valorUnitario,this.quantidade, this.total);
         }
 
     }

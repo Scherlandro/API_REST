@@ -7,18 +7,14 @@ import com.biontecapi.dtos.OrdemDeServicoDTO;
 import com.biontecapi.model.OrdemDeServico;
 import com.biontecapi.repository.*;
 import com.biontecapi.service.OrdemDeServicoService;
-import lombok.extern.java.Log;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-
-import lombok.extern.slf4j.Slf4j;
 
 
 @Service
@@ -97,19 +93,11 @@ public class OrdemDeServicoServiceImpl implements OrdemDeServicoService {
     @Override
     public OrdemDeServico atualizarOS(OrdemDeServicoDTO dto) {
 
-        OrdemDeServico order = osRepository.findById(dto.idOS()).orElseThrow();
-
-        order.setIdCliente(dto.clienteId());
-        order.setNomeCliente(dto.nomeCliente());
-        order.setIdFuncionario(dto.idFuncionario());
-        order.setNomeFuncionario(dto.nomeFuncionario());
-        order.setDataDeEntrada(LocalDateTime.now());
+        OrdemDeServico order = osRepository.findById(dto.idOS())
+                .orElseThrow(() -> new RuntimeException("OS não encontrada"));
+        order.mapToDTO(dto);
         order.setStatus(Status.OS_em_Andamento);
-        order.setDesconto(dto.desconto());
-        order.setSubtotal(dto.subtotal());
-
         order.setTotalGeralOS(calcularTotalDaOS(order));
-
         return osRepository.save(order);
     }
 
@@ -117,23 +105,6 @@ public class OrdemDeServicoServiceImpl implements OrdemDeServicoService {
     @Override
     public OrdemDeServico addItemNaOS(Long osID, ItensDoServicoDTO itemDto) {
         OrdemDeServico order = osRepository.findById(osID).orElseThrow();
-
-       /* if (itemDto.idItensDaOS() != null) {
-            productRepository.findById(itemDto.prod().getIdProduto()).orElseThrow();
-        } else if (itemDto.idItensDaOS() != null) {
-            osRepository.findById(osID).orElseThrow();
-        }
-         ItensDoServico newItem = new ItensDoServico();
-        newItem.setCodOS(String.valueOf(order.getId_os()));
-        newItem.setCodProduto(itemDto.codProduto());
-        newItem.setIdItensDaOS(itemDto.idItensDaOS());
-        newItem.setQuantidade(itemDto.quantidade());
-        newItem.setValorUnitario(itemDto.valorUnitario());
-
-        order.getSubservicos().add(newItem);
-        itensDaOSRepository.save(newItem);*/
-
-        // Recalcular total da OS
         calcularTotalDaOS(order);
         return osRepository.save(order);
     }

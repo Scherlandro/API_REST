@@ -67,9 +67,7 @@ public class OrdemDeServicoController {
 
     @PostMapping
     public ResponseEntity<OrdemDeServico> criarOS(@RequestBody OrdemDeServicoDTO dto) {
-      /*  OrdemDeServico salva = service.criarOS(dto);
-        return ResponseEntity.ok(salva);*/
-        return ResponseEntity.status(HttpStatus.CREATED).body(service.criarOS(dto));
+         return ResponseEntity.status(HttpStatus.CREATED).body(service.criarOS(dto));
     }
 
     @PutMapping
@@ -77,11 +75,12 @@ public class OrdemDeServicoController {
            return ResponseEntity.ok(service.atualizarOS(dto));
     }
 
-    @PatchMapping("/{id}/total")
+   @PatchMapping("/{id}/total")
     public ResponseEntity<Void> atualizarTotal( @PathVariable Long id, @RequestBody Double total) {
-        OrdemDeServico os = service.findById(id).orElseThrow(() -> new RuntimeException("OS não encontrada"));
+        OrdemDeServico os = service.findById(id)
+                .orElseThrow(() -> new RuntimeException("OS não encontrada"));
         os.setTotalGeralOS(total);
-       // service.atualizarOS(os); // persiste a alteração
+        service.atualizarOS(os.toDTO());
         return ResponseEntity.noContent().build();
     }
 

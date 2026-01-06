@@ -55,25 +55,30 @@ public class OrdemDeServico {
 
     public OrdemDeServicoDTO toDTO() {
         return new OrdemDeServicoDTO(
-                idOS, idCliente, nomeCliente, idFuncionario,nomeFuncionario, dataDeEntrada,
-                ultimaAtualizacao, status, subtotal, desconto, porConta, totalGeralOS, restante,
-                    gestorDaOS, tecnicoEncarregado, toDTO().itensDoServicoDTO()
-        );
+                this.idOS, this.idCliente, this.nomeCliente, this.idFuncionario, this.nomeFuncionario,
+                this.dataDeEntrada, this.ultimaAtualizacao,this.status,this.subtotal,this.desconto,
+                this.porConta,this.totalGeralOS,this.restante,this.gestorDaOS,this.tecnicoEncarregado,
+                this.itensOS != null ? this.itensOS.stream()
+                        .map(ItensDoServico::toDTO).toList() : new ArrayList<>() );
     }
+
+    public void mapToDTO(OrdemDeServicoDTO dto) {
+        this.idCliente = dto.clienteId();
+        this.nomeCliente = dto.nomeCliente();
+        this.idFuncionario = dto.idFuncionario();
+        this.nomeFuncionario = dto.nomeFuncionario();
+        this.desconto = dto.desconto();
+        this.subtotal = dto.subtotal();
+        this.porConta = dto.porConta();
+        this.restante = dto.restante();
+        // A data de entrada e ID não são alterados aqui por segurança
+        this.ultimaAtualizacao = LocalDateTime.now();
+    }
+
 
     /*
-
-    public OrdemDeServicoDTO toDTO() {
-        return new OrdemDeServicoDTO(
-                idOS, idCliente, nomeCliente, idFuncionario, nomeFuncionario, dataDeEntrada,
-                ultimaAtualizacao, status, subtotal, desconto, porConta, totalGeralOS, restante,
-                gestorDaOS, tecnicoEncarregado, toDTOItensDoServico()
-        );
-    }
-
     private List<ItensDoServicoDTO> toDTOItensDoServico() {
         return itensOS.stream().map(ItensDoServico::toDTO).collect(Collectors.toList());
     }
-
      */
 }
