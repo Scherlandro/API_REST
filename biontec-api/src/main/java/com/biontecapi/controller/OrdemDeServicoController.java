@@ -1,18 +1,11 @@
 package com.biontecapi.controller;
 
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-
-import com.biontecapi.Enum.Status;
 import com.biontecapi.dtos.ItensDoServicoDTO;
-import com.biontecapi.model.ItensDoServico;
-import com.biontecapi.service.ItensOSService;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -94,10 +87,6 @@ public class OrdemDeServicoController {
         return ResponseEntity.ok(service.removerItemDaOS(idOS, itemId));
     }
 
-    @PostMapping("/{idOS}/concluirOS")
-    public ResponseEntity<OrdemDeServico> cuncluirOS(@PathVariable Long idOS) {
-        return ResponseEntity.ok(service.concluirOS(idOS));
-    }
 
     @GetMapping("/variasBuscaOS")
     public ResponseEntity<List<OrdemDeServico>> variasBuscasOS(

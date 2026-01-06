@@ -125,20 +125,10 @@ public class OrdemDeServicoServiceImpl implements OrdemDeServicoService {
     }
 
 
-    @Override
-    public OrdemDeServico concluirOS(Long idOS) {
-        OrdemDeServico serviceOrder = osRepository.findById(idOS).orElseThrow();
-        serviceOrder.setStatus(serviceOrder.getStatus());
-        // serviceOrder.setCompletionDate(LocalDateTime.now());
-        return osRepository.save(serviceOrder);
-    }
-
     private double calcularTotalDaOS(OrdemDeServico order) {
 
          double totalItens = order.getItensOS().stream()
-                .mapToDouble(item -> item.getValorUnitario() * item.getQuantidade())
-                .sum();
-
+                .mapToDouble(item -> item.getValorUnitario() * item.getQuantidade()).sum();
         // Se tiver desconto, subtraímos
         double totalComDesconto = totalItens - (order.getDesconto() != null ? order.getDesconto() : 0);
 

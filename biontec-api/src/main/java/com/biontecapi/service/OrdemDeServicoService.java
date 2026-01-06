@@ -34,5 +34,4 @@ public interface OrdemDeServicoService {
 
     void removerOS(Long id);
 
-    OrdemDeServico concluirOS(Long idOS);
 }
