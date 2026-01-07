@@ -32,6 +32,8 @@ export class DialogOpenOsComponent implements  OnInit, OnDestroy  {
   funcionarioFilted!: Observable<IFuncionario[]>;
   clientesFiltrados!: Observable<ICliente[]>;
   clienteControl = new FormControl('', [Validators.required]);
+  statusOsFiltrados!: Observable<any>;
+  statusOsControl = new FormControl('', [Validators.required]);
 
   produtos: iProduto[] = [];
   produtoFiltered: iProduto[] = [];
@@ -123,6 +125,18 @@ export class DialogOpenOsComponent implements  OnInit, OnDestroy  {
           : of([])
       ),
       catchError(() => of([])),
+      takeUntil(this.destroy$)
+    );
+
+    this.statusOsFiltrados = this.statusOsControl.valueChanges.pipe(
+      startWith(''), // Começa vazio para mostrar opções ao focar
+      debounceTime(200),
+      distinctUntilChanged(),
+      switchMap(value => {
+        // Se for objeto (selecionado), pegamos o valor string. Se nulo, string vazia.
+        const busca = typeof value === 'string' ? value : '';
+        return this.osServices.getStatus(busca);
+      }),
       takeUntil(this.destroy$)
     );
   }
@@ -307,6 +321,10 @@ export class DialogOpenOsComponent implements  OnInit, OnDestroy  {
 
   displayCli(cliente: ICliente): string {
     return cliente ? cliente.nomeCliente : '';
+  }
+
+  displayStatus(status: string): string {
+    return status ? status : '';
   }
 
   displayFunc(func: IFuncionario): string {

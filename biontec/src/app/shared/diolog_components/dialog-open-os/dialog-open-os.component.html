@@ -44,6 +44,11 @@
       <input matInput [value]="os.dataDeEntrada | date:'dd/MM/yyyy'" disabled>
     </mat-form-field>
 
+    <mat-form-field *ngIf="isNewOS" appearance="fill">
+      <mat-label>Data Corrente</mat-label>
+      <input matInput [value]="os.ultimaAtualizacao | date:'dd/MM/yyyy'" >
+    </mat-form-field>
+
     <!-- Cliente -->
     <mat-form-field  *ngIf="!isNewOS" appearance="fill">
       <mat-label>Cliente</mat-label>
@@ -64,6 +69,22 @@
     <mat-form-field appearance="fill"*ngIf="isNewOS" >
       <mat-label>Cliente</mat-label>
       <input matInput [value]="os.nomeCliente" disabled>
+    </mat-form-field>
+
+    <mat-form-field *ngIf="isNewOS" appearance="fill">
+      <mat-label>Status da OS</mat-label>
+      <input type="text"
+             placeholder="Status da OS"
+             matInput
+             [formControl]="statusOsControl"
+             [matAutocomplete]="autstatus"/>
+      <mat-error>Campo Obrigatório não preenchido.</mat-error>
+
+      <mat-autocomplete #autstatus="matAutocomplete" [displayWith]="displayStatus">
+        <mat-option *ngFor="let statusOs of statusOsFiltrados | async" [value]="statusOs">
+          {{statusOs}}
+        </mat-option>
+      </mat-autocomplete>
     </mat-form-field>
 
     <button mat-button *ngIf="isChange" cdkFocusInitial [mat-dialog-close]="osSelecionada"

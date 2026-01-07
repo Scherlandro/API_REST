@@ -1,5 +1,5 @@
 import {HttpClient} from "@angular/common/http";
-import {Observable} from "rxjs";
+import {Observable, of} from "rxjs";
 import {Injectable} from "@angular/core";
 import {iServiceOrder} from "../interfaces/service-order";
 import {environment} from "../../environments/environment";
@@ -33,5 +33,22 @@ export class OrdemDeServicosService {
 
   delete(id: number): Observable<any> {
     return this.http.delete<any>(`${this.baseUrl}/delete/${id}`);
+  }
+// No seu Service
+  getStatus(termo: string): Observable<string[]> {
+    const listaStatus = [
+      'OS em Andamento',
+      'OS Autorizada Aberta',
+      'OS Autorizada Fechada',
+      'OS Não Autorizada Aberta',
+      'OS Não Autorizada Fechada'
+    ];
+
+    // Filtra a lista localmente com base no que o usuário digitou
+    const filtrados = listaStatus.filter(s =>
+      s.toLowerCase().includes(termo.toLowerCase())
+    );
+
+    return of(filtrados); // Retorna como Observable
   }
 }
