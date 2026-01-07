@@ -129,12 +129,10 @@ export class DialogOpenOsComponent implements  OnInit, OnDestroy  {
     );
 
     this.statusOsFiltrados = this.statusOsControl.valueChanges.pipe(
-      startWith(''), // Começa vazio para mostrar opções ao focar
+      startWith(''),
       debounceTime(200),
       distinctUntilChanged(),
-      switchMap(value => {
-        // Se for objeto (selecionado), pegamos o valor string. Se nulo, string vazia.
-        const busca = typeof value === 'string' ? value : '';
+      switchMap(value => { const busca = typeof value === 'string' ? value : '';
         return this.osServices.getStatus(busca);
       }),
       takeUntil(this.destroy$)
@@ -289,7 +287,6 @@ export class DialogOpenOsComponent implements  OnInit, OnDestroy  {
   }
 
   editarItem(itensOS: iItensOS) {
-    // Garanta que os nomes das propriedades aqui sejam exatamente iguais ao ItensDoServicoDTO.java
     const dto = {
       idItensDaOS: itensOS.idItensDaOS,
       codOS: itensOS.codOS,
@@ -297,7 +294,7 @@ export class DialogOpenOsComponent implements  OnInit, OnDestroy  {
       descricao: itensOS.descricao,
       valorUnitario: itensOS.valorUnitario,
       quantidade: itensOS.quantidade,
-      total: itensOS.valorUnitario * itensOS.quantidade // Envia calculado por segurança
+      total: itensOS.valorUnitario * itensOS.quantidade
     };
 
     this.itensOsService.editItem(dto).subscribe({
@@ -338,19 +335,6 @@ export class DialogOpenOsComponent implements  OnInit, OnDestroy  {
   onNoClick(): void {
     this.dialogRef.close();
   }
-/*
-  statusDaOS(){
-    console.log('os.idOS NO STATUS', this.os.idOS)
-    if (this.os.idOS === 0) {
-      this.isNewOS = true;
-      this.isChange = true;
-    } if (this.os.idOS > 0 && this.dialogRef.componentInstance.data.modoNew === "editar") {
-      console.log('isNewOS NO ELSE',  this.isNewOS)
-      this.isChange = false;
-      this.isNewOS = true;
-    }
-  }
-*/
 
   onError(message: string) {
     console.error(message);

@@ -14,6 +14,20 @@ export class OrdemDeServicosService {
     return this.http.get<iServiceOrder[]>(this.baseUrl);
   }
 
+  getStatus(termo: string): Observable<string[]> {
+    const listaStatus = [
+      'OS em Andamento',
+      'OS Autorizada Aberta',
+      'OS Autorizada Fechada',
+      'OS Não Autorizada Aberta',
+      'OS Não Autorizada Fechada'
+    ];
+    const filtrados = listaStatus.filter(s =>
+      s.toLowerCase().includes(termo.toLowerCase())
+    );
+    return of(filtrados); // Retorna como Observable
+  }
+
   getById(id: number): Observable<iServiceOrder> {
     return this.http.get<iServiceOrder>(`${this.baseUrl}/findOSById/${id}`);
   }
@@ -34,21 +48,5 @@ export class OrdemDeServicosService {
   delete(id: number): Observable<any> {
     return this.http.delete<any>(`${this.baseUrl}/delete/${id}`);
   }
-// No seu Service
-  getStatus(termo: string): Observable<string[]> {
-    const listaStatus = [
-      'OS em Andamento',
-      'OS Autorizada Aberta',
-      'OS Autorizada Fechada',
-      'OS Não Autorizada Aberta',
-      'OS Não Autorizada Fechada'
-    ];
 
-    // Filtra a lista localmente com base no que o usuário digitou
-    const filtrados = listaStatus.filter(s =>
-      s.toLowerCase().includes(termo.toLowerCase())
-    );
-
-    return of(filtrados); // Retorna como Observable
-  }
 }
