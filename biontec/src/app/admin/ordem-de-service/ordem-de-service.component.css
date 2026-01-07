@@ -86,6 +86,19 @@
   background-image: linear-gradient( #e2efec, #7e758e);
 }
 
+.button-edite {
+  min-width: 40px;
+  width: auto;
+  height: 35px;
+  background-color: rgba(51, 33, 83, 0.07);
+  -webkit-border-radius: 14px;
+  -moz-border-radius: 14px;
+  border-radius: 14px;
+}
+
+.button-edite:hover {
+  background-image: linear-gradient( #e2efec, #758e7b);
+}
 
 .button-delete {
   width: auto;

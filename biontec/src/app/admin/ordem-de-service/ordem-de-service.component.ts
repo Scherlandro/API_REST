@@ -120,6 +120,11 @@ export class OrdemDeServiceComponent implements OnInit {
     });
   }
 
+  editarOS(elementOS: iServiceOrder) {
+    this.openDilogItenOS(elementOS);
+  }
+
+
   openDilogItenOS(os: iServiceOrder, item?: iItensOS) {
     const isEdit = !!item;
     const isNovaOS = !os.itensOS; // nova OS recém criada
@@ -212,7 +217,6 @@ export class OrdemDeServiceComponent implements OnInit {
       }
 
   }
-
 
   updateOS(os: iServiceOrder) {
     this.osService.update(os)
@@ -348,5 +352,6 @@ export class OrdemDeServiceComponent implements OnInit {
     }
 
   }
+
 
 }
