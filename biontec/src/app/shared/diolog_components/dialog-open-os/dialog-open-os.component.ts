@@ -215,35 +215,26 @@ export class DialogOpenOsComponent implements  OnInit, OnDestroy  {
   }
 
 
-  save(os: iServiceOrder) {
-   if (this.clienteControl.invalid || this.funcionarioControl.invalid) {
+  save(os: any) {
+    console.log('ClienteControl ', this.clienteControl.status , 'funcionario', this.funcionarioControl.invalid)
+ /*  if (this.clienteControl.invalid || this.funcionarioControl.invalid) {
       this.onError('Preencha todos os campos obrigatórios');
       return;
-    }
+    }*/
 
     const cliente: any = this.clienteControl.value;
     const funcionario: any = this.funcionarioControl.value;
     const dataAtual = new Date();
+    const statusOs: any = this.statusOsControl.value
 
     os.nomeCliente = cliente.nomeCliente;
     os.nomeFuncionario = funcionario.nomeFuncionario;
     os.dataDeEntrada = dataAtual.toISOString();
-    os.status = os.status || 'OS_em_Andamento';
+    os.status = statusOs ;
     os.itensOS = this.itensOS ;
+    console.log('STATUS',statusOs,'OS NO SALVE', os);
 
-    if (!this.isChange) {
-   console.log('isChange no save ', this.isChange)
-      this.osServices.update(os).pipe(takeUntil(this.destroy$))
-        .subscribe({
-          next: (osAtualizada) => {
-            this.dialogRef.close(osAtualizada);
-          },
-          error: (err) => {
-            this.onError('Erro ao atualizar a OS');
-            console.error(err);
-          }
-        });
-    } else {
+  if(os.modo === 'adicionar' && os.modoNew === 'adicionar') {
       this.osServices.create(os).pipe(takeUntil(this.destroy$))
         .subscribe({
           next: (osCriada) => {
@@ -251,6 +242,19 @@ export class DialogOpenOsComponent implements  OnInit, OnDestroy  {
           },
           error: (err) => {
             this.onError('Erro ao criar a OS');
+            console.error(err);
+          }
+        });
+    }
+    if (os.modo === 'editar' && os.modoNew === 'editar') {
+      console.log('isChange no save ', this.isChange)
+      this.osServices.update(os).pipe(takeUntil(this.destroy$))
+        .subscribe({
+          next: (osAtualizada) => {
+            this.dialogRef.close(osAtualizada);
+          },
+          error: (err) => {
+            this.onError('Erro ao atualizar a OS');
             console.error(err);
           }
         });

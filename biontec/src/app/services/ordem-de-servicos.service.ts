@@ -16,11 +16,11 @@ export class OrdemDeServicosService {
 
   getStatus(termo: string): Observable<string[]> {
     const listaStatus = [
-      'OS em Andamento',
-      'OS Autorizada Aberta',
-      'OS Autorizada Fechada',
-      'OS Não Autorizada Aberta',
-      'OS Não Autorizada Fechada'
+      'OS_em_Andamento',
+      'OS_Autorizada_Aberta',
+      'OS_Autorizada_Fechada',
+      'OS_Não_Autorizada_Aberta',
+      'OS_Não_Autorizada_Fechada'
     ];
     const filtrados = listaStatus.filter(s =>
       s.toLowerCase().includes(termo.toLowerCase())
