@@ -87,12 +87,13 @@
       </mat-autocomplete>
     </mat-form-field>
 
+    <div>
     <button mat-button *ngIf="isChange" cdkFocusInitial [mat-dialog-close]="osSelecionada"
             (click)="save(os)">Savar OS
     </button>
 
     <button mat-button (click)="onCancel()">Cancelar</button>
-
+    </div>
   </mat-card>
 
 
