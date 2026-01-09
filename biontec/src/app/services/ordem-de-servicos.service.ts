@@ -38,6 +38,7 @@ export class OrdemDeServicosService {
   }
 
   update( order: iServiceOrder): Observable<iServiceOrder> {
+  console.log('Chegou no service', order);
     return this.http.put<iServiceOrder>(this.baseUrl, order);
   }
 

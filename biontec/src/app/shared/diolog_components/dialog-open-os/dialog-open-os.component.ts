@@ -74,6 +74,9 @@ export class DialogOpenOsComponent implements  OnInit, OnDestroy  {
   ngOnInit(): void {
     this.listarProdutos();
     this.setupAutocompleteFilters();
+
+    this.clienteControl.setValue(this.os.nomeCliente);
+    this.funcionarioControl.setValue(this.os.nomeFuncionario);
     if (this.itensOS && this.itensOS.quantidade) {
       // emitEvent: false evita que o subscribe abaixo seja disparado desnecessariamente na inicialização
       this.quantidadeControl.setValue(this.itensOS.quantidade, { emitEvent: false });
@@ -227,12 +230,26 @@ export class DialogOpenOsComponent implements  OnInit, OnDestroy  {
     const dataAtual = new Date();
     const statusOs: any = this.statusOsControl.value
 
-    os.nomeCliente = cliente.nomeCliente;
-    os.nomeFuncionario = funcionario.nomeFuncionario;
-    os.dataDeEntrada = dataAtual.toISOString();
-    os.status = statusOs ;
-    os.itensOS = this.itensOS ;
-    console.log('STATUS',statusOs,'OS NO SALVE', os);
+    // ATENÇÃO: Se o autocomplete já tiver um objeto, pegamos a propriedade.
+    // Se o usuário não mudou nada, ou se o controle for apenas texto, tratamos aqui:
+
+    if (cliente && typeof cliente === 'object') {
+      os.idCliente = cliente.idCliente;
+      os.nomeCliente = cliente.nomeCliente;
+    }
+
+    if (funcionario && typeof funcionario === 'object') {
+      os.idFuncionario = funcionario.idFuncionario;
+      os.nomeFuncionario = funcionario.nomeFuncionario;
+    }
+
+    os.dataDeEntrada = os.dataDeEntrada || dataAtual.toISOString();
+    os.ultimaAtualizacao = dataAtual.toISOString();
+    os.status = typeof statusOs === 'object' ? statusOs : statusOs; // Ajuste conforme seu displayWith
+    os.itensOS = this.itensOS;
+
+    // Log para depuração antes de enviar
+    console.log('Objeto OS antes de enviar:', os);
 
   if(os.modo === 'adicionar' && os.modoNew === 'adicionar') {
       this.osServices.create(os).pipe(takeUntil(this.destroy$))
@@ -246,7 +263,7 @@ export class DialogOpenOsComponent implements  OnInit, OnDestroy  {
           }
         });
     }
-    if (os.modo === 'editar' && os.modoNew === 'editar') {
+    if (os.modo === 'adicionar' && os.modoNew === 'editar') {
       console.log('isChange no save ', this.isChange)
       this.osServices.update(os).pipe(takeUntil(this.destroy$))
         .subscribe({
