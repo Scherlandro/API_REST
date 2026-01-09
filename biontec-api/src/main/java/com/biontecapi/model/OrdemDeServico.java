@@ -1,6 +1,6 @@
 package com.biontecapi.model;
 
-import com.biontecapi.Enum.Status;
+import com.biontecapi.enuns.Status;
 import com.biontecapi.dtos.OrdemDeServicoDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,7 +10,6 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 @Entity
 @Table(name = "ordem_de_servico")

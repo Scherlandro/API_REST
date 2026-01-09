@@ -1,7 +1,7 @@
 package com.biontecapi.serviceImpl;
 
 
-import com.biontecapi.Enum.Status;
+import com.biontecapi.enuns.Status;
 import com.biontecapi.dtos.ItensDoServicoDTO;
 import com.biontecapi.dtos.OrdemDeServicoDTO;
 import com.biontecapi.model.OrdemDeServico;

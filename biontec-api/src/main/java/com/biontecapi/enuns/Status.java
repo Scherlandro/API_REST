@@ -1,4 +1,4 @@
-package com.biontecapi.Enum;
+package com.biontecapi.enuns;
 
 public enum Status {
     OS_em_Andamento,

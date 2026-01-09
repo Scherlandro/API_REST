@@ -1,12 +1,10 @@
 package com.biontecapi.dtos;
 
-import com.biontecapi.Enum.Status;
+import com.biontecapi.enuns.Status;
 import com.biontecapi.model.Funcionario;
-import com.biontecapi.model.ItensDoServico;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
-import java.util.List;
 
 public record OrdemDeServicoDTO(
         Long idOS,
