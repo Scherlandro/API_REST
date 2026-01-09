@@ -212,7 +212,6 @@ export class OrdemDeServiceComponent implements OnInit {
         }, 0);
         // 2. Arredonda para 2 casas decimais para evitar erros de precisão do JS
         element.totalGeralOS = Math.round(soma * 100) / 100;
-        console.log('Total calculado (numérico):', element.totalGeralOS);
         this.updateOS(element);
       }
 
