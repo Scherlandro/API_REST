@@ -32,7 +32,7 @@ public class OrdemDeServico {
     private LocalDateTime dataDeEntrada;
     private LocalDateTime ultimaAtualizacao;
 
-   // @Enumerated(EnumType.STRING)
+   @Enumerated(EnumType.STRING)
     private Status status;
 
     private Double subtotal;

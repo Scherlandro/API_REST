@@ -96,7 +96,7 @@ public class OrdemDeServicoServiceImpl implements OrdemDeServicoService {
         OrdemDeServico order = osRepository.findById(dto.idOS())
                 .orElseThrow(() -> new RuntimeException("OS não encontrada"));
         order.mapToDTO(dto);
-        order.setStatus(Status.OS_em_Andamento);
+        order.setStatus(dto.status());
         order.setTotalGeralOS(calcularTotalDaOS(order));
         return osRepository.save(order);
     }
