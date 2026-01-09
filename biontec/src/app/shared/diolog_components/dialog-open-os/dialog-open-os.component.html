@@ -44,10 +44,14 @@
       <input matInput [value]="os.dataDeEntrada | date:'dd/MM/yyyy'" disabled>
     </mat-form-field>
 
-    <mat-form-field *ngIf="isNewOS" appearance="fill">
+    <!-- Data de Corrente -->
+    <mat-form-field appearance="fill" *ngIf="isNewOS" >
       <mat-label>Data Corrente</mat-label>
-      <input matInput [value]="os.ultimaAtualizacao | date:'dd/MM/yyyy'" >
+      <input matInput [matDatepicker]="picker" [value]="formatarData(os.ultimaAtualizacao)" >
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
     </mat-form-field>
+
 
     <!-- Cliente -->
     <mat-form-field  *ngIf="!isNewOS" appearance="fill">

@@ -363,4 +363,9 @@ export class DialogOpenOsComponent implements  OnInit, OnDestroy  {
     return !(this.produtoControl.valid && this.quantidadeControl.valid);
   }
 
+
+  formatarData(dataString: string): Date {
+    return new Date(dataString);
+  }
+
 }
