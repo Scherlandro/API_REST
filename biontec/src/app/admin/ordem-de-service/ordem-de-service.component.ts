@@ -113,16 +113,19 @@ export class OrdemDeServiceComponent implements OnInit {
       }
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result: iServiceOrder) => {
       if (result) {
-        // Se for uma nova OS, adicionamos ao array
-        const data = this.tbSourceOS$.data;
-        data.push(result);
-        this.tbSourceOS$.data = data; // Atualiza a referência para o Angular detectar
-
-        // Se for edição, o objeto já costuma estar vinculado por referência,
-        // mas você pode forçar a atualização:
-        this.tableOS.renderRows();
+        const data = [...this.tbSourceOS$.data]; // Cria cópia do array atual
+        const index = data.findIndex(os => os.idOS === result.idOS);
+        if (index > -1) {
+          // MODO EDIÇÃO: Substitui o item antigo pelo novo
+          data[index] = result;
+        } else {
+          // MODO ADIÇÃO: Adiciona ao início ou fim da lista
+          data.unshift(result);
+        }
+        this.tbSourceOS$.data = data; // Atualiza o DataSource (refresca a tela)
+        this.notificationMsg.success('Operação realizada com sucesso!');
       }
     });
   }
@@ -156,21 +159,7 @@ export class OrdemDeServiceComponent implements OnInit {
         itensOS: { ...itens, codOS: os.idOS }
       }
     });
-    /* dialogRef.afterClosed().subscribe((result) => {
-          if (!result) return;
-           if (result.modo === 'adicionar') {
-             if (!os.itensOS) os.itensOS = []; // <= garante que existe
-             os.itensOS.push(result.item);
-           }
-           if (result.modo === 'editar') {
-             const idx = os.itensOS.findIndex((i: any) =>
-               i.idItensDaOS === result.item.idItensDaOS
-             );
-             if (idx >= 0) os.itensOS[idx] = result.item;
-           }
-           this.recalcularTotalOS(os, result);
-           this.updateOS(os);
-         });*/
+
   }
 
   onSearch() {
@@ -290,17 +279,16 @@ export class OrdemDeServiceComponent implements OnInit {
   }
 
   deleteOS(eventOS: iServiceOrder) {
-    this.notificationMsg.openConfirmDialog('Tem certeza em REMOVER esta OS ?')
+    this.notificationMsg.openConfirmDialog('Tem certeza em REMOVER esta OS?')
       .afterClosed().subscribe(res => {
       if (res) {
-        this.osService.delete(eventOS.idOS).subscribe(() => {
-          // Remove o item localmente filtrando o array atual
-          const index = this.tbSourceOS$.data.findIndex(item => item.idOS === eventOS.idOS);
-          if (index > -1) {
-            this.tbSourceOS$.data.splice(index, 1);
-            this.tbSourceOS$.data = [...this.tbSourceOS$.data]; // Trigger update
-          }
-          this.notificationMsg.warn('Deletado com sucesso!');
+        this.osService.delete(eventOS.idOS).subscribe({
+          next: () => {
+            // Filtra o array removendo o item deletado
+            this.tbSourceOS$.data = this.tbSourceOS$.data.filter(os => os.idOS !== eventOS.idOS);
+            this.notificationMsg.warn('Deletado com sucesso!');
+          },
+          error: () => this.onError('Erro ao deletar no servidor')
         });
       }
     });
@@ -311,19 +299,16 @@ export class OrdemDeServiceComponent implements OnInit {
       .afterClosed().subscribe(res => {
       if (res) {
         this.itensOsService.deleteItensOS(item).subscribe(() => {
-          // 1. Localiza a OS que contém esse item
+          //Localiza a OS que contém esse item
           const osPai = this.tbSourceOS$.data.find(os => os.idOS === item.codOS);
 
           if (osPai && osPai.itensOS) {
-            // 2. Remove o item do array interno
+            // Remove o item do array interno
             const index = osPai.itensOS.findIndex((i: any) => i.idItensDaOS === item.idItensDaOS);
             if (index > -1) {
               osPai.itensOS.splice(index, 1);
-
-              // 3. Força a atualização da tabela pai para refletir novos cálculos/totais
+              //Força a atualização da tabela pai para refletir novos cálculos/totais
               this.tbSourceOS$.data = [...this.tbSourceOS$.data];
-
-              // 4. Se tiver cálculo de total, chame-o aqui
               this.toggleRow(osPai);
             }
           }
