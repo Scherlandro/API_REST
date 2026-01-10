@@ -27,7 +27,7 @@
 
     </mat-toolbar>
 
-    <table mat-table class="expanding-table-os body" [dataSource]="tbSourceOS$" multiTemplateDataRows>
+    <table mat-table #tableOS class="expanding-table-os body" [dataSource]="tbSourceOS$" multiTemplateDataRows>
 
       <tr mat-header-row *matHeaderRowDef="displayedColumns0S"></tr>
 
@@ -85,7 +85,7 @@
         <th mat-cell *matCellDef="let elementOS" [attr.colspan]="displayedColumns0S.length">
           <div class="example-element-detail" [@detailExpand]="elementOS.isExpanded ? 'expanded' : 'collapsed'">
 
-            <table mat-table class="expanding-table-os" [dataSource]="elementOS.itensOS">
+            <table #tableItensOS mat-table class="expanding-table-os" [dataSource]="elementOS.itensOS">
 
               <tr mat-row *matRowDef=" let row; columns: displayedColumns;"></tr>
               <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

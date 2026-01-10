@@ -34,8 +34,8 @@ import {ChangeDetectorRef} from '@angular/core';
 export class OrdemDeServiceComponent implements OnInit {
   spiner = false;
   destroy$ = new Subject<void>();
-  @ViewChild(MatTable) tableOS!: MatTable<any>;
-  @ViewChild(MatTable) tableItensOS!: MatTable<any>;
+  @ViewChild('tableOS') tableOS!: MatTable<any>;
+  @ViewChild('tableItensOS') tableItensOS!: MatTable<any>;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   pageEvent!: PageEvent;
@@ -77,7 +77,7 @@ export class OrdemDeServiceComponent implements OnInit {
   loadOrders() {
     this.spiner = true;
     this.osService.getAll()
-      .pipe(first(), delay(1500), catchError(error => {
+      .pipe(first(), catchError(error => {
         if (error === 'Session Expired')
           this.onError('Sua sessão expirou!');
         this.tokenServer.clearTokenExpired();
@@ -115,7 +115,14 @@ export class OrdemDeServiceComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.clienteSelecionado = result;
+        // Se for uma nova OS, adicionamos ao array
+        const data = this.tbSourceOS$.data;
+        data.push(result);
+        this.tbSourceOS$.data = data; // Atualiza a referência para o Angular detectar
+
+        // Se for edição, o objeto já costuma estar vinculado por referência,
+        // mas você pode forçar a atualização:
+        this.tableOS.renderRows();
       }
     });
   }
@@ -283,31 +290,45 @@ export class OrdemDeServiceComponent implements OnInit {
   }
 
   deleteOS(eventOS: iServiceOrder) {
-    console.log('OS para atulizar', eventOS);
     this.notificationMsg.openConfirmDialog('Tem certeza em REMOVER esta OS ?')
       .afterClosed().subscribe(res => {
       if (res) {
-        this.osService.delete(eventOS.idOS).pipe(first(), delay(200),
-           )
-          .subscribe((item) => {
-            this.tbData.splice(this.ruwSelec, 1);
-          });
-        this.notificationMsg.warn('! Deletado com sucesso!');
+        this.osService.delete(eventOS.idOS).subscribe(() => {
+          // Remove o item localmente filtrando o array atual
+          const index = this.tbSourceOS$.data.findIndex(item => item.idOS === eventOS.idOS);
+          if (index > -1) {
+            this.tbSourceOS$.data.splice(index, 1);
+            this.tbSourceOS$.data = [...this.tbSourceOS$.data]; // Trigger update
+          }
+          this.notificationMsg.warn('Deletado com sucesso!');
+        });
       }
     });
-
   }
-
 
   deleteElement(item: iItensOS) {
     this.notificationMsg.openConfirmDialog('Tem certeza em REMOVER este item ?')
       .afterClosed().subscribe(res => {
       if (res) {
-        this.itensOsService.deleteItensOS(item)
-          .subscribe((item) => {
-            this.tbData.splice(this.ruwSelec, 1);
-          });
-        this.notificationMsg.warn('! Deletado com sucesso!');
+        this.itensOsService.deleteItensOS(item).subscribe(() => {
+          // 1. Localiza a OS que contém esse item
+          const osPai = this.tbSourceOS$.data.find(os => os.idOS === item.codOS);
+
+          if (osPai && osPai.itensOS) {
+            // 2. Remove o item do array interno
+            const index = osPai.itensOS.findIndex((i: any) => i.idItensDaOS === item.idItensDaOS);
+            if (index > -1) {
+              osPai.itensOS.splice(index, 1);
+
+              // 3. Força a atualização da tabela pai para refletir novos cálculos/totais
+              this.tbSourceOS$.data = [...this.tbSourceOS$.data];
+
+              // 4. Se tiver cálculo de total, chame-o aqui
+              this.toggleRow(osPai);
+            }
+          }
+          this.notificationMsg.warn('Item removido!');
+        });
       }
     });
   }
