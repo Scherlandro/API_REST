@@ -20,14 +20,14 @@ import { ErrorComponent } from './utils/error/error.component';
 import { TokenInterceptorProvider} from "./services/interceptors/token.interceptor";
 import {MatRippleModule} from "@angular/material/core";
 import {PublicModule} from "./public/public.module";
-import {CurrencyBrlPipe} from "./utils/CurrencyBrlPipe ";
+//import {CurrencyBrlPipe} from "./utils/CurrencyBrlPipe ";
 
 
 @NgModule({
   declarations: [
     AppComponent,
     ErrorComponent,
-    CurrencyBrlPipe
+   // CurrencyBrlPipe
 
   ],
   imports: [

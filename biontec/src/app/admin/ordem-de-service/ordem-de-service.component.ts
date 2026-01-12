@@ -17,6 +17,7 @@ import {DialogOpenOsComponent} from "../../shared/diolog_components/dialog-open-
 import {TokenService} from "../../services/token.service";
 import {NotificationMgsService} from "../../services/notification-mgs.service";
 import {ChangeDetectorRef} from '@angular/core';
+//import {CurrencyBrlPipe} from "../../utils/CurrencyBrlPipe ";
 
 
 @Component({
