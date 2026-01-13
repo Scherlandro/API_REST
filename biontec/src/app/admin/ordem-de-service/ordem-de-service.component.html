@@ -49,7 +49,7 @@
       <ng-container matColumnDef="Total">
         <th mat-header-cell *matHeaderCellDef> Total</th>
         <td mat-cell class="rating" *matCellDef="let elementOS">
-          {{formatarReal(elementOS.totalGeralOS || 0 )}}  </td>
+          {{CurrencyBRL(elementOS.totalGeralOS || 0 )}}  </td>
       </ng-container>
 
       <ng-container matColumnDef="Opcoes">

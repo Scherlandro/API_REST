@@ -8,7 +8,6 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 
 import {AppMaterialModule} from "./shared/app-material/app-material.module";
-import {SharedModule} from "./shared/shared.module";
 import {MatSidenavModule} from "@angular/material/sidenav";
 import {MatPaginatorModule} from "@angular/material/paginator";
 import {MatSortModule} from "@angular/material/sort";
@@ -20,15 +19,12 @@ import { ErrorComponent } from './utils/error/error.component';
 import { TokenInterceptorProvider} from "./services/interceptors/token.interceptor";
 import {MatRippleModule} from "@angular/material/core";
 import {PublicModule} from "./public/public.module";
-//import {CurrencyBrlPipe} from "./utils/CurrencyBrlPipe ";
 
 
 @NgModule({
   declarations: [
     AppComponent,
-    ErrorComponent,
-   // CurrencyBrlPipe
-
+    ErrorComponent
   ],
   imports: [
     BrowserModule,
