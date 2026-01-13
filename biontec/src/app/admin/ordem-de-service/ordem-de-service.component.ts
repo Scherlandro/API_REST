@@ -17,8 +17,6 @@ import {DialogOpenOsComponent} from "../../shared/diolog_components/dialog-open-
 import {TokenService} from "../../services/token.service";
 import {NotificationMgsService} from "../../services/notification-mgs.service";
 import {ChangeDetectorRef} from '@angular/core';
-import {cu} from "chart.js/dist/chunks/helpers.core";
-import {CurrencyBRLPipe} from "../../shared/pipes/currency-brl.pipe";
 
 
 @Component({
@@ -358,10 +356,10 @@ export class OrdemDeServiceComponent implements OnInit {
       return 0;
     }
   }
-
+/*
   CurrencyBRL(valor: any) {
    const currencyPipe = new CurrencyBRLPipe();
     // Chamamos o método transform da instância do Pipe
     return currencyPipe.transform(valor);
-  }
+  }*/
 }

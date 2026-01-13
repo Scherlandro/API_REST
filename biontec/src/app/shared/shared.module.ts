@@ -13,6 +13,7 @@ import { DialogUsuarioComponent } from "./diolog_components/dialog-usuario/dialo
 import {DialogFuncionarioComponent} from "./diolog_components/dialog-funcionario/dialog-funcionario.component";
 import {DialogClienteComponent} from "./diolog_components/dialog-cliente/dialog-cliente.component";
 import { ErrorDiologComponent } from "./diolog_components/error-diolog/error-diolog.component";
+import {CurrencyBRLPipe} from "./pipes/currency-brl.pipe";
 
 
 @NgModule({
@@ -26,7 +27,8 @@ import { ErrorDiologComponent } from "./diolog_components/error-diolog/error-dio
     DialogProdutoComponent,
     DialogOpenSalesComponent,
     DialogOpenOsComponent,
-    DialogItensVdComponent
+    DialogItensVdComponent,
+    CurrencyBRLPipe
   ],
   imports: [
     CommonModule,
