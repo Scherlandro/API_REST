@@ -19,6 +19,7 @@ import { UsuariosComponent } from "./usuarios/usuarios.component";
 import { VendaComponent } from "./vendas/vendas.component";
 import { CarrinhoDeComprasComponent } from './carrinho-de-compras/carrinho-de-compras.component';
 import { NfeComponent } from './nfe/nfe.component';
+import {SharedModule} from "../shared/shared.module";
 
 
 @NgModule({
@@ -44,7 +45,8 @@ import { NfeComponent } from './nfe/nfe.component';
         ReactiveFormsModule,
         A11yModule,
         FormsModule,
-        HighchartsChartModule
+        HighchartsChartModule,
+        SharedModule
     ],
 })
 export class AdminModule { }

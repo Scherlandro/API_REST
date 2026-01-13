@@ -36,6 +36,8 @@ import {CurrencyBRLPipe} from "./pipes/currency-brl.pipe";
     A11yModule,
     FormsModule
   ],
-  exports:[]
+  exports: [
+    CurrencyBRLPipe
+  ]
 })
 export class SharedModule { }
