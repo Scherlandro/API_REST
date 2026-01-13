@@ -108,7 +108,7 @@
               <ng-container matColumnDef="preco">
 
                 <th mat-header-cell *matHeaderCellDef> Preço</th>
-                <td mat-cell class="rating" *matCellDef="let element"> {{element.valorUnitario}} </td>
+                <td mat-cell class="rating" *matCellDef="let element"> {{element.valorUnitario | currencyBRL}} </td>
               </ng-container>
 
               <ng-container matColumnDef="qtd">
@@ -118,7 +118,7 @@
 
               <ng-container matColumnDef="soma">
                 <th mat-header-cell *matHeaderCellDef> Soma</th>
-                <td mat-cell class="rating" *matCellDef="let element"> {{formatarReal(element.total || 0 )}} </td>
+                <td mat-cell class="rating" *matCellDef="let element"> {{element.total | currencyBRL }} </td>
               </ng-container>
 
               <ng-container matColumnDef="imagem">
