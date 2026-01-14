@@ -39,7 +39,8 @@ export class VendaComponent implements OnInit {
   spiner = false;
   isSearching= false;
 
-  @ViewChild(MatTable) tableVendas!: MatTable<any>;
+  @ViewChild('tableVd') tableVendas!: MatTable<any>;
+  @ViewChild('tableItensVd') tableItensOS!: MatTable<any>;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   pageEvent!: PageEvent;
@@ -225,6 +226,30 @@ export class VendaComponent implements OnInit {
     });
   }
 
+
+  deleteElement(item: iItensVd) {
+    this.notificationMsg.openConfirmDialog('Tem certeza em REMOVER este item ?')
+      .afterClosed().subscribe(res => {
+      if (res) {
+        this.itensVdService.deleteItensVd(item).subscribe(() => {
+          //Localiza a venda que contém esse item
+          const vendaPai = this.tbSourceVd$.data.find(vd => vd.idVenda !== item.codVenda);
+
+          if (vendaPai && vendaPai.itensVd) {
+            // Remove o item do array interno
+            const index = vendaPai.itensVd.findIndex((i: any) => i.idItensVd === item.idItensVd);
+            if (index > -1) {
+              vendaPai.itensVd.splice(index, 1);
+              //Força a atualização da tabela pai para refletir novos cálculos/totais
+              this.tbSourceVd$.data = [...this.tbSourceVd$.data];
+              this.toggleRow(vendaPai);
+            }
+          }
+          this.notificationMsg.warn('Item removido!');
+        });
+      }
+    });
+  }
 
 
 }

@@ -27,7 +27,7 @@
 
     </mat-toolbar>
 
-    <table mat-table class="expanding-table body" [dataSource]="tbSourceVd$" multiTemplateDataRows>
+    <table #tableVd mat-table class="expanding-table body" [dataSource]="tbSourceVd$" multiTemplateDataRows>
 
       <tr mat-header-row *matHeaderRowDef="displayedColumnsVd"></tr>
 
@@ -59,14 +59,14 @@
           <span></span>
 
           <button class="button-edite" (click)="editarVd(elementVd)" >
-            <mat-icon type="hidden" title="Editar OS" class="edit">
+            <mat-icon type="hidden" title="Editar Venda" class="edit">
               edite
             </mat-icon>
           </button>
           <span></span>
 
           <button class="button-delete" (click)="deleteVd(elementVd)" >
-            <mat-icon type="hidden" title="Remover OS" class="edit">
+            <mat-icon type="hidden" title="Remover Venda" class="edit">
               delete
             </mat-icon>
           </button>
@@ -80,7 +80,7 @@
         <th mat-cell *matCellDef="let elemento" [attr.colspan]="displayedColumnsVd.length">
           <div class="example-element-detail" [@detailExpand]="elemento.isExpanded ? 'expanded' : 'collapsed'">
 
-            <table mat-table class="expanding-table" [dataSource]="tbSourceItensVd$">
+            <table  #tableItensVd mat-table class="expanding-table" [dataSource]="tbSourceItensVd$">
 
              <tr mat-row *matRowDef=" let row; columns: displayedColumns;"></tr>
               <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
@@ -132,7 +132,8 @@
                               (click)="openDilogItenVd(element)" >
                     </mat-icon>
                   </button>
-                  <button class="button-update" title="Remover Item">
+                  <button class="button-delete" title="Remover Item"
+                          (click)="deleteElement(element)">
                     <mat-icon>delete</mat-icon>
                   </button>
                 </td>

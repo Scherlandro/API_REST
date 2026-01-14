@@ -36,4 +36,9 @@ export class ItensVdService {
     return this._http.put<iItensVd>(this.baseUrl+'editar', element);
   }
 
+  deleteItensVd(item: iItensVd): Observable<iItensVd>{
+    return this._http.delete<iItensVd>(this.baseUrl +'delete/'+ item.idItensVd);
+  }
+
+
 }
