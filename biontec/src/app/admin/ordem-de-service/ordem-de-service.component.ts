@@ -17,6 +17,7 @@ import {DialogOpenOsComponent} from "../../shared/diolog_components/dialog-open-
 import {TokenService} from "../../services/token.service";
 import {NotificationMgsService} from "../../services/notification-mgs.service";
 import {ChangeDetectorRef} from '@angular/core';
+import {CurrencyBRLPipe} from "../../shared/pipes/currency-brl.pipe";
 
 
 @Component({
@@ -48,6 +49,7 @@ export class OrdemDeServiceComponent implements OnInit {
   displayedColumns0S = ['Nome', 'Data', 'Status', 'Total', 'Opcoes'];
   displayedColumns: string[] = ['codOS', 'codigo', 'descricao', 'preco', 'qtd', 'soma', 'imagem', 'opcoes'];
   OSControl = new FormControl();
+  formatarMoeda = new CurrencyBRLPipe();
 
   searchForm = this.fb.group({
     searchType: ['code'],
@@ -202,7 +204,7 @@ export class OrdemDeServiceComponent implements OnInit {
       if (element.isExpanded && element.itensOS && Array.isArray(element.itensOS)) {
         const soma = element.itensOS.reduce((acc: number, item: iItensOS) => {
           // Garantir que 'item.total' seja um número válido
-          const valorItem = typeof item.total === 'number' ? item.total : this.parseCurrency(item.total);
+          const valorItem = typeof item.total === 'number' ? item.total : Number(this.formatarMoeda.transform(item.total));
           return acc + valorItem;
           /* return acc + (Number(item.total) || 0);*/
         }, 0);
@@ -261,7 +263,7 @@ export class OrdemDeServiceComponent implements OnInit {
       return acc;
     }, 0);
     eventOS.totalGeralOS = soma;
-    eventOS.totalGeralOS = this.formatarReal(soma);
+    eventOS.totalGeralOS = Number(this.formatarMoeda.transform(soma));
 
     this.cdRef.detectChanges();
     return eventOS;
@@ -321,7 +323,7 @@ export class OrdemDeServiceComponent implements OnInit {
   formatarData(dataString: string): Date {
     return new Date(dataString);
   }
-
+/*
   // Método para formatar valores para Real brasileiro
   formatarReal(valor: any): any {
     if (valor === null || valor === undefined) return "R$ 0,00";
@@ -355,11 +357,6 @@ export class OrdemDeServiceComponent implements OnInit {
     } catch {
       return 0;
     }
-  }
-/*
-  CurrencyBRL(valor: any) {
-   const currencyPipe = new CurrencyBRLPipe();
-    // Chamamos o método transform da instância do Pipe
-    return currencyPipe.transform(valor);
   }*/
+
 }
