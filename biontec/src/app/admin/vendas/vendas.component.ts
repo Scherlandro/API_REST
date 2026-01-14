@@ -17,6 +17,10 @@ import {ErrorDiologComponent} from "../../shared/diolog_components/error-diolog/
 import {TokenService} from "../../services/token.service";
 import {b2n} from "@kurkle/color";
 import {iProduto} from "../../interfaces/product";
+import {iServiceOrder} from "../../interfaces/service-order";
+import {DialogOpenOsComponent} from "../../shared/diolog_components/dialog-open-os/dialog-open-os.component";
+import {iItensOS} from "../../interfaces/itens-os";
+import {NotificationMgsService} from "../../services/notification-mgs.service";
 
 
 @Component({
@@ -51,9 +55,10 @@ export class VendaComponent implements OnInit {
 
 
   constructor(
-    private tokenServer: TokenService,
     private vendasService: VendasService,
     private itensVdService: ItensVdService,
+    private tokenServer: TokenService,
+    public notificationMsg: NotificationMgsService,
     public dialog: MatDialog
   ) {
     this.tbSourceVd$ = new MatTableDataSource();
@@ -141,50 +146,40 @@ export class VendaComponent implements OnInit {
     });
   }
 
-  openDilogItenVd(eventVd: iItensVd) {
-    console.log("Dados do elementoDialog", eventVd)
-    const dialogRef = this.dialog.open(DialogItensVdComponent, {
-      width: '300px',
-      data: eventVd === null ? {
-        idItensVd: null,
-        codProduto: ' ',
-        codVenda: ' ',
-        descricao: ' ',
-        dtRegistro: ' ',
-        qtdVendidas: null,
-        valCompra: null,
-        valVenda: null,
-        valorParcial: null,
-      } : {
-        idItensVd: eventVd.idItensVd,
-        codProduto: eventVd.codProduto,
-        codVenda: eventVd.codVenda,
-        descricao: eventVd.descricao,
-        dtRegistro: eventVd.dtRegistro,
-        qtdVendidas: eventVd.qtdVendidas,
-        valCompra: eventVd.valCompra,
-        valVenda: eventVd.valVenda,
-        valorParcial: eventVd.valorParcial,
-      }
-    });
-    console.log("Evento de dialogRef", dialogRef)
-     /* dialogRef.afterClosed().subscribe(result => {
-        if (result !== undefined) {
-          if (this.tbSourceItensVd$.data
-            .map(p => p.codProduto).includes(result.id)) {
-            this.itensVdService.getItensVdEntreDatas(result)
-              .subscribe((data: iProduto) => {
-                const index = this.tbSourceItensVd$.data
-                  .findIndex(p => p.codVenda === data.codProduto);
-                this.tbSourceItensVd$.data[index] = data;
-                this.tableVendas.renderRows();
-              });
-          } else {
-            this.itensVdService.createVd(result)
-              .subscribe((data: iProduto) => {
-                this.tbSourceItensVd$.data.push(result);
-                this.tableVendas.renderRows();
-              }); }  } });         */
+
+  editarVd(element: iVendas) {
+    this.openDilogItenVd(element);
+  }
+
+
+  openDilogItenVd(vd: iVendas, item?: iItensVd) {
+    const isEdit = !!item;
+    const isNovaVD = !vd.itensVd; // nova venda recém criada
+
+    const emptyItem: iItensVd = {
+      idItensVd: 0,
+      codVenda: vd.idVenda ?? 0,
+      codProduto: '',
+      descricao: '',
+      valCompra: 0,
+      valVenda: 0,
+      qtdVendidas: 1,
+      descPorUnidade: 0,
+      valorParcial: 0,
+      dtRegistro: '',
+      fotoProduto: ''
+    };
+
+    const itens = isEdit ? item : emptyItem;
+
+       this.dialog.open(DialogItensVdComponent, {
+        data: {
+          modoNew: isNovaVD ? 'adicionar' : 'editar',
+          modo: isEdit ? 'editar' : 'adicionar',
+          ...vd,
+          itensVd: { ...itens, codVD: vd.idVenda }
+        }
+      });
   }
 
   openDilogVd(eventVd: iVendas) {
@@ -214,5 +209,22 @@ export class VendaComponent implements OnInit {
         qtdDeParcelas: eventVd.qtdDeParcelas,
       } });
   }
+  deleteVd(eventVd: iVendas) {
+    this.notificationMsg.openConfirmDialog('Tem certeza em REMOVER esta OS?')
+      .afterClosed().subscribe(res => {
+      if (res) {
+        this.vendasService.delete(eventVd.idVenda).subscribe({
+          next: () => {
+            // Filtra o array removendo o item deletado
+            this.tbSourceVd$.data = this.tbSourceVd$.data.filter(vd => vd.idVenda !== eventVd.idVenda);
+            this.notificationMsg.warn('Deletado com sucesso!');
+          },
+          error: () => this.onError('Erro ao deletar no servidor')
+        });
+      }
+    });
+  }
+
+
 
 }

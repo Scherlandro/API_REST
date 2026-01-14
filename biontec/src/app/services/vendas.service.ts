@@ -43,5 +43,8 @@ export class VendasService {
     return this._http.post<iVendas>(this.baseUrl+'/untrash/'+cid, {})
   }
 
-  deleteSales(){}
+  delete(id: number): Observable<any> {
+    return this._http.delete<any>(`${this.baseUrl}/delete/${id}`);
+  }
+
 }

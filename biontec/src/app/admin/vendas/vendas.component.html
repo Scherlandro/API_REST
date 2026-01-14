@@ -48,15 +48,26 @@
 
       <ng-container matColumnDef="opicao">
         <th mat-header-cell *matHeaderCellDef>
-          <mat-icon>redeem</mat-icon>
-          <mat-icon>shopping_basket</mat-icon>
-          <mat-icon>shopping_cart</mat-icon>
-          Adicionar itens
+          <mat-icon>shopping_basket</mat-icon> Opções
         </th>
         <td mat-cell *matCellDef="let elementVd">
           <button class="componet-gradient" (click)="openDilogItenVd(elementVd)">
             <mat-icon type="hidden" title="Adicionar mais Item" class="edit">
               add_shopping_cart
+            </mat-icon>
+          </button>
+          <span></span>
+
+          <button class="button-edite" (click)="editarVd(elementVd)" >
+            <mat-icon type="hidden" title="Editar OS" class="edit">
+              edite
+            </mat-icon>
+          </button>
+          <span></span>
+
+          <button class="button-delete" (click)="deleteVd(elementVd)" >
+            <mat-icon type="hidden" title="Remover OS" class="edit">
+              delete
             </mat-icon>
           </button>
         </td>

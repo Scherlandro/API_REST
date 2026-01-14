@@ -2,7 +2,7 @@
 
 export interface iItensVd {
   idItensVd: number;
-  codVenda?: string;
+  codVenda: number;
   codProduto: string;
   descricao: string;
   valCompra?: number;
