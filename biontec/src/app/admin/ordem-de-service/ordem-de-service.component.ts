@@ -323,40 +323,6 @@ export class OrdemDeServiceComponent implements OnInit {
   formatarData(dataString: string): Date {
     return new Date(dataString);
   }
-/*
-  // Método para formatar valores para Real brasileiro
-  formatarReal(valor: any): any {
-    if (valor === null || valor === undefined) return "R$ 0,00";
-    if (typeof valor === 'number') {
-      return valor.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
-    }
-    if (typeof valor === 'string') {
-      valor = valor
-        .replace(/[^\d,.-]/g, '')  // Remove tudo exceto números, vírgula e ponto
-        .replace(',', '.');        // Converte vírgula em ponto para parseFloat
-    }
-    // Converter para número, garantindo que o valor seja válido
-    const numero = parseFloat(valor);
-    if (isNaN(numero)) return "R$ 0,00";
 
-    return numero.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
-  }
-
-  private parseCurrency(value: any): number {
-    if (value === null || value === undefined || value === '') return 0;
-    // Se já é número, retorna direto
-    if (typeof value === 'number') return value;
-
-    try {
-      return parseFloat(
-        value.replace('R$', '')
-          .replace(/\./g, '') // Remove todos os pontos de milhar
-          .replace(',', '.')  // Troca a vírgula decimal por ponto
-          .trim()
-      ) || 0;
-    } catch {
-      return 0;
-    }
-  }*/
 
 }

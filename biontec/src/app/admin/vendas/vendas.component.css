@@ -22,14 +22,14 @@
    width: fit-content;
  }
 
-.componet-gradient {
-  min-width: 120px;
-  width: auto;
+.collun-op {
+  width: fit-content;
   height: 50px;
   background-color: rgba(51, 33, 83, 0.07);
   -webkit-border-radius: 20px;
   -moz-border-radius: 20px;
-  border-radius: 20px;
+  border-radius: 10px;
+  position: center;
 }
 
 .componet-gradient:hover {
