@@ -2,6 +2,11 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import { iItensVd } from 'src/app/interfaces/itens-vd';
 import { ItensVdService } from 'src/app/services/itens-vd.service';
+import {FormControl, Validators} from "@angular/forms";
+import {Observable} from "rxjs";
+import {IFuncionario} from "../../../interfaces/funcionario";
+import {ICliente} from "../../../interfaces/cliente";
+import {iVendas} from "../../../interfaces/vendas";
 
 @Component({
   selector: 'app-dialog-editor-itvd',
@@ -10,6 +15,13 @@ import { ItensVdService } from 'src/app/services/itens-vd.service';
 })
 export class DialogItensVdComponent implements OnInit {
   isChange!: boolean;
+  funcionarioControl = new FormControl('', [Validators.required]);
+  funcionarioFilted!: Observable<IFuncionario[]>;
+  clientesFiltrados!: Observable<ICliente[]>;
+  clienteControl = new FormControl('', [Validators.required]);
+
+  venda!:iVendas;
+
 
   constructor(
     @Inject(MAT_DIALOG_DATA)
@@ -28,6 +40,9 @@ export class DialogItensVdComponent implements OnInit {
     }
   }
 
+  displayFn(cliente: ICliente): string {
+    return cliente ? cliente.nomeCliente : '';
+  }
 
   onCancel(): void {
     this.dialogRef.close();

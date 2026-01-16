@@ -40,8 +40,7 @@ import {PublicModule} from "./public/public.module";
     MatSortModule,
     MatProgressBarModule,
     MatRippleModule,
-    PublicModule,
-    SharedModule
+    PublicModule
     ],
   providers: [AuthService, AuthGuard, BaseService,TokenInterceptorProvider ],
   schemas:[CUSTOM_ELEMENTS_SCHEMA],
