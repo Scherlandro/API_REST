@@ -1,12 +1,18 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
+import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog";
 import { iItensVd } from 'src/app/interfaces/itens-vd';
 import { ItensVdService } from 'src/app/services/itens-vd.service';
 import {FormControl, Validators} from "@angular/forms";
-import {Observable} from "rxjs";
+import {debounceTime, distinctUntilChanged, Observable, of, Subject, switchMap, takeUntil} from "rxjs";
 import {IFuncionario} from "../../../interfaces/funcionario";
 import {ICliente} from "../../../interfaces/cliente";
 import {iVendas} from "../../../interfaces/vendas";
+import {iProduto} from "../../../interfaces/product";
+import {catchError, startWith} from "rxjs/operators";
+import {ProductService} from "../../../services/product.service";
+import {FuncionarioService} from "../../../services/funcionario.service";
+import {ClienteService} from "../../../services/cliente.service";
+import {VendasService} from "../../../services/vendas.service";
 
 @Component({
   selector: 'app-dialog-editor-itvd',
@@ -14,48 +20,390 @@ import {iVendas} from "../../../interfaces/vendas";
   styleUrls: ['./dialog-itensvd.component.css']
 })
 export class DialogItensVdComponent implements OnInit {
-  isChange!: boolean;
+
+  destroy$ = new Subject<void>();
+  venda!: iVendas;
+  itensVd: iItensVd;
+  isNewVd : boolean;
+  isChange: boolean;
+  vendaSelecionada!: iVendas;
   funcionarioControl = new FormControl('', [Validators.required]);
   funcionarioFilted!: Observable<IFuncionario[]>;
-  clientesFiltrados!: Observable<ICliente[]>;
+  clientesFiltradvenda!: Observable<ICliente[]>;
   clienteControl = new FormControl('', [Validators.required]);
+  statusOsFiltradvenda!: Observable<any>;
+  statusOsControl = new FormControl('', [Validators.required]);
 
-  venda!:iVendas;
+  produtvenda: iProduto[] = [];
+  produtoFiltered: iProduto[] = [];
+  produtoControl: FormControl;
+  quantidadeControl: FormControl;
 
+  clientes: ICliente[] = [];
+  itensVd$: iItensVd[] = [];
+  etapa = 1;
 
   constructor(
     @Inject(MAT_DIALOG_DATA)
-    public itensVd: iItensVd,
+    public data: {
+      modoNew: 'adicionar' | 'editar' ;
+      modo:'editar' |'adicionar'  ;
+      venda: iVendas;
+      itensVd: iItensVd;
+    },
     public dialogRef: MatDialogRef<DialogItensVdComponent>,
-    public itensVdService: ItensVdService
-  ) {}
+    public vendaServices: VendasService,
+    public dialog: MatDialog,
+    private clienteService: ClienteService,
+    private funcionarioService: FuncionarioService,
+    private ItensVdService: ItensVdService,
+    private productService: ProductService
+  ) {
+    this.venda = data as any;
+    this.itensVd = data.itensVd;  // item selecionado (ou item vazio)
+    this.isChange = data.modo === 'adicionar';
+    this.isNewVd = data.modoNew === 'editar';
+    this.produtoControl = new FormControl();
+    this.quantidadeControl = new FormControl(
+      this.itensVd?.qtdVendidas || 1,      [Validators.required, Validators.min(1)]
+    );
+  }
 
 
   ngOnInit(): void {
+    this.listarProdutvenda();
+    this.setupAutocompleteFilters();
 
-    if (this.itensVd.idItensVd != null) {
-      this.isChange = true;
-    } else {
-      this.isChange = false;
+    this.clienteControl.setValue(this.venda.nomeCliente);
+    this.funcionarioControl.setValue(this.venda.nomeFuncionario);
+    if (this.itensVd && this.itensVd.qtdVendidas) {
+      // emitEvent: false evita que o subscribe abaixo seja disparado desnecessariamente na inicialização
+      this.quantidadeControl.setValue(this.itensVd.qtdVendidas, { emitEvent: false });
+    }
+
+    this.quantidadeControl.valueChanges.subscribe(novoValor => {
+      // Verifica se o valor é válido antes de atribuir
+      if (this.venda?.itensVd) {
+        this.venda.itensVd.qtdVendidas = novoValor;
+        this.updateTotal();
+      }
+    });
+    // Se estiver editando, força o cálculo inicial do total
+    if (this.isChange) {
+      this.updateTotal();
     }
   }
 
-  displayFn(cliente: ICliente): string {
+
+  ngOnDestroy() {
+    // this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  // =============== AUTOCOMPLETE ==================
+  // ===============================================
+
+  setupAutocompleteFilters() {
+    this.funcionarioFilted = this.funcionarioControl.valueChanges.pipe(
+      startWith(''),
+      debounceTime(250),
+      distinctUntilChanged(),
+      switchMap(value =>
+        typeof value === 'string' && value.length >= 1
+          ? this.funcionarioService.getFuncionarioPorNome(value)
+          : of([])
+      ),
+      catchError(() => of([])),
+      takeUntil(this.destroy$)
+    );
+
+    this.clientesFiltradvenda = this.clienteControl.valueChanges.pipe(
+      startWith(''),
+      debounceTime(250),
+      distinctUntilChanged(),
+      switchMap(value =>
+        typeof value === 'string' && value.length >= 1
+          ? this.clienteService.getClientePorNome(value)
+          : of([])
+      ),
+      catchError(() => of([])),
+      takeUntil(this.destroy$)
+    );
+
+
+  }
+
+  selecionarCliente(): void {
+    this.dialogRef.close(this.clientes);
+  }
+
+  listarProdutvenda() {
+    this.productService.getTodosProdutos().pipe(
+      catchError(() => {
+        console.error('Erro ao buscar produtvenda');
+        return of([]);
+      }),
+      takeUntil(this.destroy$)
+    ).subscribe((produtvenda: iProduto[]) => {
+      this.produtvenda = produtvenda;
+      this.produtoFiltered = produtvenda;
+    });
+  }
+
+  filterProdutvenda(event: Event): void {
+    const valor = (event.target as HTMLInputElement).value.toLowerCase();
+    this.produtoFiltered = this.produtvenda.filter(p =>
+      p.nomeProduto.toLowerCase().includes(valor)
+    );
+  }
+
+  onProdutoSelecionado(produto: iProduto): void {
+    if (produto) {
+      this.itensVd.codProduto = produto.codProduto;
+      this.itensVd.descricao = produto.nomeProduto;
+      this.itensVd.valVenda = produto.valorVenda;
+      this.updateTotal();
+    }
+  }
+
+  updateTotal() {
+    const qtd = Number(this.itensVd.qtdVendidas);
+    const valor = Number(this.itensVd.valVenda);
+    this.itensVd.valorParcial = qtd * valor || 0;
+  }
+
+  iniciarVd() {
+    if (this.clienteControl.invalid || this.funcionarioControl.invalid) {
+      this.onError('Preencha cliente e atendente');
+      return;
+    }
+
+    const cliente: any = this.clienteControl.value;
+    const funcionario: any = this.funcionarioControl.value;
+
+    const vendaParaCriar: iVendas = {
+      desconto: "",
+      dtVenda: "",
+      formasDePagamento: "",
+      idCliente: 0,
+      idFuncionario: 0,
+      idVenda: 0,
+      itensVd: [],
+      nomeCliente: "",
+      nomeFuncionario: "",
+      produtos: [],
+      qtdDeParcelas: 0,
+      subtotal: "",
+      totalgeral: ""
+      /* idVd: 0,
+       idCliente: cliente.idCliente,
+       nomeCliente: cliente.nomeCliente,
+       idFuncionario: funcionario.idFuncionario,
+       nomeFuncionario: funcionario.nomeFuncionario,
+       dataDeEntrada: new Date().toISVdtring(),
+       ultimaAtualizacao: new Date().toISVdtring(),
+       status: 'Vd_EM_ANDAMENTO',
+       subtotal: 0,
+       desconto: 0,
+       totalGeralVd: 0,
+       porConta: 0,
+       restante: 0,
+       itensVd: []*/
+    };
+
+    this.vendaServices.addVenda(vendaParaCriar).subscribe({
+      next: (vendaCriada) => {
+        this.venda = vendaCriada;
+        this.isChange = false;
+        this.isNewVd = true;
+      },
+      error: () => this.onError('Erro ao iniciar Vd')
+    });
+  }
+
+
+  save(venda: any) {
+    console.log('ClienteControl ', this.clienteControl.status , 'funcionario', this.funcionarioControl.invalid)
+    /*  if (this.clienteControl.invalid || this.funcionarioControl.invalid) {
+         this.onError('Preencha todvenda venda campvenda obrigatórivenda');
+         return;
+       }*/
+
+    const cliente: any = this.clienteControl.value;
+    const funcionario: any = this.funcionarioControl.value;
+    const dataAtual = new Date();
+    const statusOs: any = this.statusOsControl.value
+
+    // ATENÇÃO: Se o autocomplete já tiver um objeto, pegamvenda a propriedade.
+    // Se o usuário não mudou nada, ou se o controle for apenas texto, tratamvenda aqui:
+
+    if (cliente && typeof cliente === 'object') {
+      venda.idCliente = cliente.idCliente;
+      venda.nomeCliente = cliente.nomeCliente;
+    }
+
+    if (funcionario && typeof funcionario === 'object') {
+      venda.idFuncionario = funcionario.idFuncionario;
+      venda.nomeFuncionario = funcionario.nomeFuncionario;
+    }
+
+    venda.dataDeEntrada = venda.dataDeEntrada || dataAtual.toISOString();
+    venda.ultimaAtualizacao = dataAtual.toISOString();
+    venda.status = typeof statusOs === 'object' ? statusOs : statusOs; // Ajuste conforme seu displayWith
+    venda.itensVd = this.itensVd;
+
+    // Log para depuração antes de enviar
+    console.log('Objeto Vd antes de enviar:', venda);
+
+    if(venda.modo === 'adicionar' && venda.modoNew === 'adicionar') {
+      this.vendaServices.addVenda(venda).pipe(takeUntil(this.destroy$))
+        .subscribe({
+          next: (vendaCriada) => {
+            this.dialogRef.close(vendaCriada);
+          },
+          error: (err) => {
+            this.onError('Erro ao criar a Vd');
+            console.error(err);
+          }
+        });
+    }
+    if (venda.modo === 'adicionar' && venda.modoNew === 'editar') {
+      console.log('isChange no save ', this.isChange)
+      this.vendaServices.updateVenda(venda).pipe(takeUntil(this.destroy$))
+        .subscribe({
+          next: (vendaAtualizada) => {
+            this.dialogRef.close(vendaAtualizada);
+          },
+          error: (err) => {
+            this.onError('Erro ao atualizar a Vd');
+            console.error(err);
+          }
+        });
+    }
+  }
+
+  addItem() {
+    const produtoSelecionado = this.produtoControl.value;
+    if ( this.produtoControl.invalid || this.quantidadeControl.invalid) {
+      this.onError("Selecione o produto e uma quantidade válida.");
+      return;
+    }
+    const novoItem: iItensVd = {
+      codProduto: "",
+      codVenda: 0,
+      descPorUnidade: 0,
+      descricao: "",
+      dtRegistro: "",
+      fotoProduto: undefined,
+      idItensVd: 0,
+      qtdVendidas: 0,
+      valVenda: 0,
+      valorParcial: 0
+      /*   idItensDaVd: 0, // item novo sempre inicia com 0
+         codVd: this.venda.idVd ?? 0,
+         codProduto: String(produtoSelecionado.codProduto),
+         descricao: String(produtoSelecionado.nomeProduto),
+         valorUnitario: Number(produtoSelecionado.valorVenda),
+         quantidade: Number(this.quantidadeControl.value),
+         total: Number(produtoSelecionado.valorVenda) * Number(this.quantidadeControl.value)*/
+    };
+    if(novoItem.idItensVd == 0){
+      this.ItensVdService.createElements(novoItem).subscribe({
+        next: () => {
+          this.venda.itensVd.push(novoItem); // só para UI
+          //this.updateTotal();
+        }
+      });
+    }
+    this.voltar();
+    this.dialogRef.close();
+    /* limpa venda campvenda
+    this.produtoControl.reset();*/
+  }
+
+  editarItem(itensVd: iItensVd) {
+    const dto = {
+      idItensVd: 0,
+      idItensDaVd: itensVd.idItensVd,
+      codVenda: itensVd.codVenda,
+      codProduto: itensVd.codProduto,
+      descricao: itensVd.descricao,
+      valCompra: itensVd.valCompra,
+      valVenda: itensVd.valVenda,
+      qtdVendidas: itensVd.qtdVendidas,
+      descPorUnidade: itensVd.descPorUnidade,
+      valorParcial: itensVd.valVenda * itensVd.qtdVendidas,
+      dtRegistro: itensVd.dtRegistro,
+      fotoProduto: itensVd.fotoProduto,
+      highlighted: itensVd.highlighted
+
+    };
+
+    this.ItensVdService.editElement(dto).subscribe({
+      next: (res) => this.dialogRef.close(res),
+      error: (err) => console.error("Erro detalhado:", err)
+    });
+  }
+
+  finalizarVd() {
+    //this.venda.status = 'FINALIZADA';
+    this.vendaServices.updateVenda(this.venda).subscribe();
+  }
+
+
+  removeItem(item: iItensVd) {
+    const index = this.itensVd$.indexOf(item);
+    if (index >= 0) {
+      this.itensVd$.splice(index, 1);
+    }
+  }
+
+  displayCli(cliente: ICliente): string {
     return cliente ? cliente.nomeCliente : '';
   }
 
-  onCancel(): void {
+  displayStatus(status: string): string {
+    return status ? status : '';
+  }
+
+  displayFunc(func: IFuncionario): string {
+    return func ? func.nomeFuncionario : '';
+  }
+
+  displayPd(produto: iProduto): string {
+    return produto ? produto.nomeProduto : '';
+  }
+
+  onNoClick(): void {
     this.dialogRef.close();
   }
 
-  save():void{
-    this.itensVdService.createElements(this.itensVd);
+  onError(message: string) {
+    console.error(message);
+  }
+
+  onCancel() {
+    this.voltar();
+    this.dialogRef.close();
+  }
+
+  voltar(): void {
+    if (this.etapa === 2) {
+      this.etapa = 1;
+    }
   }
 
   formatter(value: number): string {
-    return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
+    return new Intl.NumberFormat('pt-BR', {style: 'currency', currency: 'BRL'}).format(value);
+  }
+  // Método que valida se o botão "Salvar" deve ser habilitado
+  isSaveButtonDisabled(): boolean {
+    return !(this.produtoControl.valid && this.quantidadeControl.valid);
   }
 
 
-}
+  formatarData(dataString: string): Date {
+    return new Date(dataString);
+  }
 
+}

@@ -1,41 +1,173 @@
+<div class="div-venda">
 
-<div mat-dialog-content class="div-vd">
-
-  <h1 *ngIf="!isChange" mat-dialog-title>Abrir Venda</h1>
-  <h1 *ngIf="isChange" mat-dialog-title>Editar Venda</h1>
-
-  <mat-form-field class="example-full-width">
-    <mat-label>Cliente</mat-label>
-    <input type="text"
-           placeholder="Digite o Cliente"
-           matInput
-           [formControl]="clienteControl"
-           [matAutocomplete]="auto"/>
-    <mat-error>Campo Obrigatório não preenchido.</mat-error>
-    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
-      <mat-option *ngFor="let cliente of clientesFiltrados | async" [value]="cliente">
-        {{cliente.nomeCliente}}
-      </mat-option>
-    </mat-autocomplete>
-  </mat-form-field>
-
-  <mat-form-field appearance="fill">
-    <mat-label>Data</mat-label>
-    <input matInput [(ngModel)]="venda.dtVenda">
-  </mat-form-field>
+  <mat-card class="container-box-venda ">
+    <h1 *ngIf="isChange" mat-dialog-title>Abrir Serviço</h1>
+    <h1 *ngIf="!isChange" mat-dialog-title>Editar Serviço</h1>
 
 
-  <button mat-button *ngIf="!isChange" cdkFocusInitial
-          (click)="save()">Adicionar
-  </button>
-  <button mat-raised-button (click)="onCancel()">Cancel</button>
+    <mat-form-field appearance="fill">
+      <mat-label>Código da Vd</mat-label>
+      <input matInput [(ngModel)]="venda.idVd" disabled>
+    </mat-form-field>
+
+    <mat-form-field *ngIf="!isNewVd" appearance="fill">
+      <mat-label>Atendente</mat-label>
+      <input type="text"
+             placeholder="Atendente"
+             matInput
+             [formControl]="funcionarioControl"
+             [matAutocomplete]="autofunc"
+             (keypress)="setupAutocompleteFilters()"/>
+      <mat-error>Campo Obrigatório não preenchido.</mat-error>
+      <mat-autocomplete #autofunc="matAutocomplete" [displayWith]="displayFunc">
+        <mat-option *ngFor="let funcionario of funcionarioFilted | async" [value]="funcionario">
+          {{funcionario.nomeFuncionario}}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" *ngIf="isNewVd" >
+      <mat-label>Atendente</mat-label>
+      <input matInput [value]="venda.nomeFuncionario" disabled>
+    </mat-form-field>
+
+    <!-- Data de Entrada -->
+    <mat-form-field appearance="fill" *ngIf="!isNewVd" >
+      <mat-label>Data</mat-label>
+      <input matInput [matDatepicker]="picker" [(ngModel)]="venda.dataDeEntrada" >
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+
+    <mat-form-field *ngIf="isNewVd" appearance="fill">
+      <mat-label>Data</mat-label>
+      <input matInput [value]="venda.dataDeEntrada | date:'dd/MM/yyyy'" disabled>
+    </mat-form-field>
+
+    <!-- Data de Corrente -->
+    <mat-form-field appearance="fill" *ngIf="isNewVd && isChange" >
+      <mat-label>Data Corrente</mat-label>
+      <input matInput [matDatepicker]="picker" [(ngModel)]="venda.ultimaAtualizacao" >
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+
+    <mat-form-field *ngIf="isNewVd && !isChange" appearance="fill">
+      <mat-label>Data Corrente</mat-label>
+      <input matInput [value]="venda.ultimaAtualizacao | date:'dd/MM/yyyy'"  disabled>
+    </mat-form-field>
+
+
+    <!-- Cliente -->
+    <mat-form-field  *ngIf="!isNewVd" appearance="fill">
+      <mat-label>Cliente</mat-label>
+      <input type="text"
+             placeholder="Digite o Cliente"
+             matInput
+             [formControl]="clienteControl"
+             [matAutocomplete]="autcli"
+             (keypress)="setupAutocompleteFilters()"/>
+      <mat-error>Campo Obrigatório não preenchido.</mat-error>
+      <mat-autocomplete #autcli="matAutocomplete" [displayWith]="displayCli">
+        <mat-option *ngFor="let cliente of clientesFiltradvenda | async" [value]="cliente">
+          {{cliente.nomeCliente}}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill"*ngIf="isNewVd" >
+      <mat-label>Cliente</mat-label>
+      <input matInput [value]="venda.nomeCliente" disabled>
+    </mat-form-field>
+
+
+    <div>
+      <button mat-button *ngIf="isChange" cdkFocusInitial [mat-dialog-clvendae]="vendaSelecionada"
+              (click)="save(venda)">Savar Vd
+      </button>
+
+      <button mat-button (click)="onCancel()">Cancelar</button>
+    </div>
+  </mat-card>
+
+
+  <mat-card  *ngIf="isNewVd || !isChange" class="container-box-itens " >
+    <!-- Itens -->
+    <mat-form-field>
+      <mat-label>ID</mat-label>
+      <input matInput [(ngModel)]="venda.itensVd.idItensDaVd" disabled>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Código do Produto</mat-label>
+      <input matInput [value]="venda.itensVd.codProduto" disabled>
+    </mat-form-field>
+
+    <mat-form-field *ngIf="isChange" appearance="fill" >
+      <mat-label>Produto</mat-label>
+      <input type="text" matInput placeholder="Digite o nome do produto"
+             [formControl]="produtoControl"
+             [matAutocomplete]="auto"
+             (input)="filterProdutvenda($event)"/>
+      <mat-error *ngIf="produtoControl.hasError('required')">Campo obrigatório.</mat-error>
+
+      <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayPd">
+        <mat-option *ngFor="let produto of produtoFiltered" [value]="produto"
+                    (onSelectionChange)="onProdutoSelecionado(produto)">
+          {{ produto.nomeProduto }}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+
+    <mat-form-field *ngIf="!isChange" appearance="fill">
+      <mat-label>Descrição</mat-label>
+      <input matInput [value]="venda.itensVd.descricao" disabled>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Preço Unitário</mat-label>
+      <input matInput [value]="formatter(venda.itensVd.valorUnitario || 0)" disabled>
+    </mat-form-field>
+
+    <!-- Campo Quantidade com validação -->
+    <mat-form-field>
+      <mat-label>Quantidade</mat-label>
+      <input matInput type="number"  [formControl]="quantidadeControl">
+      <mat-error *ngIf="quantidadeControl.hasError('required')">Campo obrigatório.</mat-error>
+      <mat-error *ngIf="quantidadeControl.hasError('min')">A quantidade mínima é 1.</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Total</mat-label>
+      <input matInput [value]="formatter(venda.itensVd.total || 0)" disabled [(ngModel)]="itensVd.total">
+    </mat-form-field>
+
+    <!-- Itens da Ordem de Serviço -->
+    <div mat-dialog-content> <!-- *ngIf="itensVd$.length > 0">-->
+
+
+      <button mat-raised-button *ngIf="!isNewVd || isChange" (click)="addItem()" [disabled]="isSaveButtonDisabled()">
+        Adicionar Item
+      </button>
+      <button mat-raised-button *ngIf="!isChange" (click)="editarItem(itensVd)" [disabled]="isSaveButtonDisabled()">
+        Atualizar Item
+      </button>
+
+      <!--  <div *ngFor="let item of itensVd$">
+          <div>{{ item.descricao }} - {{ formatter(item.total) }}</div>
+          <button mat-button (click)="removeItem(item)">Remover</button>
+        </div>
+        &lt;!&ndash; Adicionar Produto &ndash;&gt;
+        <button mat-raised-button (click)="addItem()"> + item  </button>
+
+        <button mat-button *ngIf="isChange" [mat-dialog-clvendae]="itensVd" cdkFocusInitial>Editar</button>
+        <button mat-button *ngIf="!isChange" [mat-dialog-clvendae]="itensVd" cdkFocusInitial (click)="addItem()"
+                [disabled]="isSaveButtonDisabled()">Salvar
+        </button>-->
+    </div>
+
+  </mat-card>
+
 
 </div>
-<!-- <mat-form-field>
-   <mat-select   placeholder="Selecione o Cliente"
-   [formControl]="clienteControl" multiple>
-     <mat-option *ngFor="let topping of listProd"
-     [value]="topping">{{topping}}</mat-option>
-   </mat-select>
- </mat-form-field>
--->
+
