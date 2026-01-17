@@ -82,7 +82,7 @@
 
 
     <div>
-      <button mat-button *ngIf="isChange" cdkFocusInitial [mat-dialog-clvendae]="vendaSelecionada"
+      <button mat-button *ngIf="isChange" cdkFocusInitial [mat-dialog-close]="vendaSelecionada"
               (click)="save(venda)">Savar Vd
       </button>
 
@@ -108,7 +108,7 @@
       <input type="text" matInput placeholder="Digite o nome do produto"
              [formControl]="produtoControl"
              [matAutocomplete]="auto"
-             (input)="filterProdutvenda($event)"/>
+             (input)="filterProdutos($event)"/>
       <mat-error *ngIf="produtoControl.hasError('required')">Campo obrigatório.</mat-error>
 
       <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayPd">
@@ -124,10 +124,10 @@
       <input matInput [value]="venda.itensVd.descricao" disabled>
     </mat-form-field>
 
-    <mat-form-field>
+   <!-- <mat-form-field>
       <mat-label>Preço Unitário</mat-label>
       <input matInput [value]="formatter(venda.itensVd.valorUnitario || 0)" disabled>
-    </mat-form-field>
+    </mat-form-field>-->
 
     <!-- Campo Quantidade com validação -->
     <mat-form-field>
@@ -137,21 +137,21 @@
       <mat-error *ngIf="quantidadeControl.hasError('min')">A quantidade mínima é 1.</mat-error>
     </mat-form-field>
 
-    <mat-form-field appearance="fill">
+   <!-- <mat-form-field appearance="fill">
       <mat-label>Total</mat-label>
       <input matInput [value]="formatter(venda.itensVd.total || 0)" disabled [(ngModel)]="itensVd.total">
-    </mat-form-field>
+    </mat-form-field>-->
 
     <!-- Itens da Ordem de Serviço -->
     <div mat-dialog-content> <!-- *ngIf="itensVd$.length > 0">-->
 
 
-      <button mat-raised-button *ngIf="!isNewVd || isChange" (click)="addItem()" [disabled]="isSaveButtonDisabled()">
+      <!--<button mat-raised-button *ngIf="!isNewVd || isChange" (click)="addItem()" [disabled]="isSaveButtonDisabled()">
         Adicionar Item
       </button>
       <button mat-raised-button *ngIf="!isChange" (click)="editarItem(itensVd)" [disabled]="isSaveButtonDisabled()">
         Atualizar Item
-      </button>
+      </button>-->
 
       <!--  <div *ngFor="let item of itensVd$">
           <div>{{ item.descricao }} - {{ formatter(item.total) }}</div>

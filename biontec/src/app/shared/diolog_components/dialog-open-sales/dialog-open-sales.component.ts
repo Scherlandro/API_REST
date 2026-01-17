@@ -1,29 +1,41 @@
-import {Component, Inject} from '@angular/core';
+import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {FormControl, Validators} from "@angular/forms";
 import {VendasService} from "../../../services/vendas.service";
 import {catchError, map, startWith} from "rxjs/operators";
-import {debounceTime, distinctUntilChanged, Observable, of, switchMap} from "rxjs";
+import {debounceTime, distinctUntilChanged, Observable, of, Subject, switchMap, takeUntil} from "rxjs";
 import {ErrorDiologComponent} from "../error-diolog/error-diolog.component";
 import {each} from "chart.js/dist/helpers";
 import {ICliente} from "../../../interfaces/cliente";
 import {ClienteService} from "../../../services/cliente.service";
-import {iServiceOrder} from "../../../interfaces/service-order";
 import {iVendas} from "../../../interfaces/vendas";
+import {iProduto} from "../../../interfaces/product";
+import {IFuncionario} from "../../../interfaces/funcionario";
+import {FuncionarioService} from "../../../services/funcionario.service";
+import {ProductService} from "../../../services/product.service";
 
 @Component({
   selector: 'app-dialog-open-sales',
   templateUrl: './dialog-open-sales.component.html',
   styleUrls: ['./dialog-open-sales.component.css']
 })
-export class DialogOpenSalesComponent {
+export class DialogOpenSalesComponent implements  OnInit, OnDestroy  {
+
+  destroy$ = new Subject<void>();
   isChange!: boolean;
-  cli!: ICliente;
-  clienteControl = new FormControl('', [Validators.required]);
-  clientesFiltrados: Observable<ICliente[]>;
-  clientes: ICliente[] = [];
   listProd: any;
   etapa = 1;
+  vendaSelecionada: any;
+  funcionarioControl = new FormControl('', [Validators.required]);
+  funcionarioFilted!: Observable<IFuncionario[]>;
+  clientesFiltrados!: Observable<ICliente[]>;
+  clienteControl = new FormControl('', [Validators.required]);
+  clientes: ICliente[] = [];
+  isNewVd: boolean;
+  produtos: iProduto[] = [];
+  produtoFiltered: iProduto[] = [];
+  produtoControl: FormControl;
+  quantidadeControl: FormControl;
 
   constructor(
     @Inject(MAT_DIALOG_DATA)
@@ -32,6 +44,8 @@ export class DialogOpenSalesComponent {
     public vendaServices: VendasService,
     public dialog: MatDialog,
     public clienteService: ClienteService,
+    private funcionarioService: FuncionarioService,
+    private productService: ProductService,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
     this.clientesFiltrados = this.clienteControl.valueChanges.pipe(
@@ -55,6 +69,12 @@ export class DialogOpenSalesComponent {
    this.listarClientes();
   }
 
+
+  ngOnDestroy() {
+    // this.destroy$.next();
+    this.destroy$.complete();
+  }
+
   private filtrarClientes(nome: string): Observable<ICliente[]> {
     if (nome.length < 2) {
       return of([]);
@@ -71,6 +91,9 @@ export class DialogOpenSalesComponent {
     return cliente ? cliente.nomeCliente : '';
   }
 
+  displayPd(prod: iProduto):string{
+    return prod ? prod.nomeProduto : '';
+  }
 
   listarClientes() {
     if (this.clienteControl.valid) {
@@ -101,6 +124,41 @@ export class DialogOpenSalesComponent {
   onNoClick(): void {
     this.dialogRef.close();
   }
+
+
+  // =============== AUTOCOMPLETE ==================
+  // ===============================================
+
+  setupAutocompleteFilters() {
+    this.funcionarioFilted = this.funcionarioControl.valueChanges.pipe(
+      startWith(''),
+      debounceTime(250),
+      distinctUntilChanged(),
+      switchMap(value =>
+        typeof value === 'string' && value.length >= 1
+          ? this.funcionarioService.getFuncionarioPorNome(value)
+          : of([])
+      ),
+      catchError(() => of([])),
+      takeUntil(this.destroy$)
+    );
+
+    this.clientesFiltrados = this.clienteControl.valueChanges.pipe(
+      startWith(''),
+      debounceTime(250),
+      distinctUntilChanged(),
+      switchMap(value =>
+        typeof value === 'string' && value.length >= 1
+          ? this.clienteService.getClientePorNome(value)
+          : of([])
+      ),
+      catchError(() => of([])),
+      takeUntil(this.destroy$)
+    );
+
+
+  }
+
 
   selecionarCliente(): void {
     this.dialogRef.close(this.clientes);
@@ -135,5 +193,33 @@ export class DialogOpenSalesComponent {
   }
 
 
+  listarProdutos() {
+    this.productService.getTodosProdutos().pipe(
+      catchError(() => {
+        console.error('Erro ao buscar produtos');
+        return of([]);
+      }),
+      //takeUntil(this.destroy$)
+    ).subscribe((produtos: iProduto[]) => {
+      this.produtos = produtos;
+      this.produtoFiltered = produtos;
+    });
+  }
+
+  filterProdutos(event: Event): void {
+    const valor = (event.target as HTMLInputElement).value.toLowerCase();
+    this.produtoFiltered = this.produtos.filter(p =>
+      p.nomeProduto.toLowerCase().includes(valor)
+    );
+  }
+
+  onProdutoSelecionado(produto: iProduto): void {
+    if (produto) {
+     /* this.itensVd.codProduto = produto.codProduto;
+      this.itensVd.descricao = produto.nomeProduto;
+      this.itensVd.valorUnitario = produto.valorVenda;
+      this.updateTotal();*/
+    }
+  }
 
 }
