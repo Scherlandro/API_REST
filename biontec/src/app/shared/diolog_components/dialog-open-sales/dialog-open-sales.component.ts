@@ -133,13 +133,7 @@ export class DialogOpenSalesComponent {
       this.etapa = 1;
     }
   }
-  /*
-  aplicarFiltro(valor: string) {
-    valor = valor.trim().toLowerCase();
-    this.clienteControl.getRawValue().filter = valor;
-  }
 
-*/
 
 
 }
