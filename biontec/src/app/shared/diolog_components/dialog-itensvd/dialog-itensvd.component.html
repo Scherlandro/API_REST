@@ -7,7 +7,7 @@
 
     <mat-form-field appearance="fill">
       <mat-label>Código da Vd</mat-label>
-      <input matInput [(ngModel)]="venda.idVd" disabled>
+      <input matInput [(ngModel)]="venda.idVenda" disabled>
     </mat-form-field>
 
     <mat-form-field *ngIf="!isNewVd" appearance="fill">
@@ -97,7 +97,7 @@
     </mat-form-field>
 
     <div>
-      <button mat-button *ngIf="isChange" cdkFocusInitial [mat-dialog-clvendae]="vendaSelecionada"
+      <button mat-button *ngIf="isChange" cdkFocusInitial [mat-dialog-close]="vendaSelecionada"
               (click)="save(venda)">Savar Vd
       </button>
 

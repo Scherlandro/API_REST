@@ -13,6 +13,7 @@ import {iProduto} from "../../../interfaces/product";
 import {IFuncionario} from "../../../interfaces/funcionario";
 import {FuncionarioService} from "../../../services/funcionario.service";
 import {ProductService} from "../../../services/product.service";
+import {iItensVd} from "../../../interfaces/itens-vd";
 
 @Component({
   selector: 'app-dialog-open-sales',
@@ -26,6 +27,8 @@ export class DialogOpenSalesComponent implements  OnInit, OnDestroy  {
   listProd: any;
   etapa = 1;
   vendaSelecionada: any;
+  venda!: iVendas;
+  itensVd: iItensVd;
   funcionarioControl = new FormControl('', [Validators.required]);
   funcionarioFilted!: Observable<IFuncionario[]>;
   clientesFiltrados!: Observable<ICliente[]>;
@@ -39,7 +42,6 @@ export class DialogOpenSalesComponent implements  OnInit, OnDestroy  {
 
   constructor(
     @Inject(MAT_DIALOG_DATA)
-    public venda: iVendas,
     public dialogRef: MatDialogRef<DialogOpenSalesComponent>,
     public vendaServices: VendasService,
     public dialog: MatDialog,
@@ -48,6 +50,14 @@ export class DialogOpenSalesComponent implements  OnInit, OnDestroy  {
     private productService: ProductService,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
+    this.venda = data as any;
+    this.itensVd = data.itensVd;
+    this.isChange = data.modo === 'adicionar';
+    this.isNewVd = data.modoNew === 'editar';
+    this.produtoControl = new FormControl();
+    this.quantidadeControl = new FormControl(
+      this.itensVd?.qtdVendidas || 1,      [Validators.required, Validators.min(1)]
+    );
     this.clientesFiltrados = this.clienteControl.valueChanges.pipe(
       startWith(''),
       debounceTime(300),
@@ -182,9 +192,62 @@ export class DialogOpenSalesComponent implements  OnInit, OnDestroy  {
     this.dialogRef.close();
   }
 
-  save():void{
-    //this.clienteServices.createElements(this.iCliente);
-  }
+  save(vd: any):void{
+      console.log('ClienteControl ', this.clienteControl.status , 'funcionario', this.funcionarioControl.invalid)
+      /*  if (this.clienteControl.invalid || this.funcionarioControl.invalid) {
+           this.onError('Preencha todos os campos obrigatórios');
+           return;
+         }*/
+
+      const cliente: any = this.clienteControl.value;
+      const funcionario: any = this.funcionarioControl.value;
+      const dataAtual = new Date();
+
+      // ATENÇÃO: Se o autocomplete já tiver um objeto, pegamos a propriedade.
+      // Se o usuário não mudou nada, ou se o controle for apenas texto, tratamos aqui:
+
+      if (cliente && typeof cliente === 'object') {
+        vd.idCliente = cliente.idCliente;
+        vd.nomeCliente = cliente.nomeCliente;
+      }
+
+      if (funcionario && typeof funcionario === 'object') {
+        vd.idFuncionario = funcionario.idFuncionario;
+        vd.nomeFuncionario = funcionario.nomeFuncionario;
+      }
+
+    vd.dataDeEntrada = vd.dataDeEntrada || dataAtual.toISOString();
+    vd.ultimaAtualizacao = dataAtual.toISOString();
+    vd.itensVd = this.itensVd;
+
+
+
+      if(vd.modo === 'adicionar' && vd.modoNew === 'adicionar') {
+        this.vendaServices.addVenda(vd).pipe(takeUntil(this.destroy$))
+          .subscribe({
+            next: (osCriada) => {
+              this.dialogRef.close(osCriada);
+            },
+            error: (err) => {
+              this.onError('Erro ao criar a OS');
+              console.error(err);
+            }
+          });
+      }
+      if (vd.modo === 'adicionar' && vd.modoNew === 'editar') {
+        console.log('isChange no save ', this.isChange)
+        this.vendaServices.updateVenda(vd).pipe(takeUntil(this.destroy$))
+          .subscribe({
+            next: (osAtualizada) => {
+              this.dialogRef.close(osAtualizada);
+            },
+            error: (err) => {
+              this.onError('Erro ao atualizar a OS');
+              console.error(err);
+            }
+          });
+      }
+    }
 
   voltar(): void {
     if (this.etapa === 2) {
@@ -221,5 +284,13 @@ export class DialogOpenSalesComponent implements  OnInit, OnDestroy  {
       this.updateTotal();*/
     }
   }
+  displayCli(cliente: ICliente): string {
+    return cliente ? cliente.nomeCliente : '';
+  }
+
+  displayFunc(func: IFuncionario): string {
+    return func ? func.nomeFuncionario : '';
+  }
+
 
 }

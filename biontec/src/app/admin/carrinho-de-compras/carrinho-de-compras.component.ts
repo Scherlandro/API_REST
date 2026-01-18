@@ -227,7 +227,7 @@ export class CarrinhoDeComprasComponent implements OnInit {
   }
 
   calcularTotais(): void {
-    const subtotal = this.venda.itensVd.reduce((sum, item) => sum + item.valorParcial, 0);
+    const subtotal = this.venda.itensVd.reduce((sum:any, item:any) => sum + item.valorParcial, 0);
     this.venda.subtotal = subtotal.toFixed(2);
     // Simulando desconto de 10% para compras acima de R$ 1000
     const desconto = subtotal > 1000 ? subtotal * 0.1 : 0;

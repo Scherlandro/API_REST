@@ -7,7 +7,7 @@
 
     <mat-form-field appearance="fill">
       <mat-label>Código da Vd</mat-label>
-      <input matInput [(ngModel)]="venda.idVd" disabled>
+      <input matInput [(ngModel)]="venda.idVenda" disabled>
     </mat-form-field>
 
     <mat-form-field *ngIf="!isNewVd" appearance="fill">
@@ -34,27 +34,27 @@
     <!-- Data de Entrada -->
     <mat-form-field appearance="fill" *ngIf="!isNewVd" >
       <mat-label>Data</mat-label>
-      <input matInput [matDatepicker]="picker" [(ngModel)]="venda.dataDeEntrada" >
+      <input matInput [matDatepicker]="picker" [(ngModel)]="venda.dtVenda" >
       <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
       <mat-datepicker #picker></mat-datepicker>
     </mat-form-field>
 
     <mat-form-field *ngIf="isNewVd" appearance="fill">
       <mat-label>Data</mat-label>
-      <input matInput [value]="venda.dataDeEntrada | date:'dd/MM/yyyy'" disabled>
+      <input matInput [value]="venda.dtVenda | date:'dd/MM/yyyy'" disabled>
     </mat-form-field>
 
     <!-- Data de Corrente -->
     <mat-form-field appearance="fill" *ngIf="isNewVd && isChange" >
       <mat-label>Data Corrente</mat-label>
-      <input matInput [matDatepicker]="picker" [(ngModel)]="venda.ultimaAtualizacao" >
+      <input matInput [matDatepicker]="picker" [(ngModel)]="venda.dtVenda" >
       <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
       <mat-datepicker #picker></mat-datepicker>
     </mat-form-field>
 
     <mat-form-field *ngIf="isNewVd && !isChange" appearance="fill">
       <mat-label>Data Corrente</mat-label>
-      <input matInput [value]="venda.ultimaAtualizacao | date:'dd/MM/yyyy'"  disabled>
+      <input matInput [value]="venda.dtVenda | date:'dd/MM/yyyy'"  disabled>
     </mat-form-field>
 
 
@@ -69,7 +69,7 @@
              (keypress)="setupAutocompleteFilters()"/>
       <mat-error>Campo Obrigatório não preenchido.</mat-error>
       <mat-autocomplete #autcli="matAutocomplete" [displayWith]="displayCli">
-        <mat-option *ngFor="let cliente of clientesFiltradvenda | async" [value]="cliente">
+        <mat-option *ngFor="let cliente of clientesFiltrados | async" [value]="cliente">
           {{cliente.nomeCliente}}
         </mat-option>
       </mat-autocomplete>
@@ -83,7 +83,7 @@
 
     <div>
       <button mat-button *ngIf="isChange" cdkFocusInitial [mat-dialog-close]="vendaSelecionada"
-              (click)="save(venda)">Savar Vd
+              (click)="save(venda)">Savar Venda
       </button>
 
       <button mat-button (click)="onCancel()">Cancelar</button>
