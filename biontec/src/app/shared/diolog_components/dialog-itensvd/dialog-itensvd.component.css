@@ -1,1 +1,18 @@
 
+
+.container-box-venda {
+  width: 1200px;
+  background: radial-gradient(ellipse farthest-corner at right bottom, #FEDB37 0%, #FDB931 8%, #9f7928 30%, #8A6E2F 40%, transparent 80%),
+  radial-gradient(ellipse farthest-corner at left top, rgba(255, 255, 255, 0) 0%, #FFFFAC 8%, #D1B464 25%, #5d4a1f 62.5%, #5d4a1f 100%);
+  position: center;
+  align-items: center;
+  height: fit-content;
+}
+
+.container-box-itensvd {
+  background: radial-gradient(ellipse farthest-corner at right bottom, #FEDB37 0%, #FDB931 8%, #9f7928 30%, #8A6E2F 40%, transparent 80%),
+  radial-gradient(ellipse farthest-corner at left top, rgba(255, 255, 255, 0) 0%, #FFFFAC 8%, #D1B464 25%, #5d4a1f 62.5%, #5d4a1f 100%);
+  box-sizing: border-box;
+  position: center;
+  align-items: center;
+}

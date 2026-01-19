@@ -186,7 +186,7 @@ export class VendaComponent implements OnInit {
   openDilogVd(eventVd: iVendas) {
 
     const dialogRef = this.dialog.open(DialogOpenSalesComponent, {
-      width: '300px',
+      width: '1200px',
       data: eventVd === null ? {
         idVenda: null,
         dtVenda: '',
