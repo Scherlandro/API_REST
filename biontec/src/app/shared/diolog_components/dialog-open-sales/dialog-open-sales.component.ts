@@ -188,9 +188,6 @@ export class DialogOpenSalesComponent implements  OnInit, OnDestroy  {
     });
   }
 
-  onCancel(): void {
-    this.dialogRef.close();
-  }
 
   save(vd: any):void{
       console.log('ClienteControl ', this.clienteControl.status , 'funcionario', this.funcionarioControl.invalid)
@@ -249,12 +246,16 @@ export class DialogOpenSalesComponent implements  OnInit, OnDestroy  {
       }
     }
 
+  onCancel() {
+    this.voltar();
+    this.dialogRef.close();
+  }
+
   voltar(): void {
     if (this.etapa === 2) {
       this.etapa = 1;
     }
   }
-
 
   listarProdutos() {
     this.productService.getTodosProdutos().pipe(
