@@ -147,6 +147,33 @@ export class VendaComponent implements OnInit {
     });
   }
 
+  openDilogVd(eventVd: iVendas) {
+
+    const dialogRef = this.dialog.open(DialogItensVdComponent, {
+      width: '1200px',
+      data: eventVd === null ? {
+        idVenda: null,
+        dtVenda: '',
+        nomeFuncionario: '',
+        nomeCliente: '',
+        subtotal: null,
+        desconto: null,
+        totalgeral: null,
+        formasDePagamento: "",
+        qtdDeParcelas: null,
+      } : {
+        idVenda: eventVd.idVenda,
+        dtVenda: eventVd.dtVenda,
+        nomeFuncionario: eventVd.nomeFuncionario,
+        nomeCliente: eventVd.nomeCliente,
+        dt_venda: eventVd.dtVenda,
+        subtotal: eventVd.subtotal,
+        desconto: eventVd.desconto,
+        totalgeral: eventVd.totalgeral,
+        formasDePagamento: eventVd.formasDePagamento,
+        qtdDeParcelas: eventVd.qtdDeParcelas,
+      } });
+  }
 
   editarVd(element: iVendas) {
     this.openDilogItenVd(element);
@@ -154,6 +181,7 @@ export class VendaComponent implements OnInit {
 
 
   openDilogItenVd(vd: iVendas, item?: iItensVd) {
+    console.log('Venda : ', vd, 'Item :', item)
     const isEdit = !!item;
     const isNovaVD = !vd.itensVd; // nova venda recém criada
 
@@ -183,33 +211,7 @@ export class VendaComponent implements OnInit {
       });
   }
 
-  openDilogVd(eventVd: iVendas) {
 
-    const dialogRef = this.dialog.open(DialogOpenSalesComponent, {
-      width: '1200px',
-      data: eventVd === null ? {
-        idVenda: null,
-        dtVenda: '',
-        nomeFuncionario: '',
-        nomeCliente: '',
-        subtotal: null,
-        desconto: null,
-        totalgeral: null,
-        formasDePagamento: "",
-        qtdDeParcelas: null,
-      } : {
-        idVenda: eventVd.idVenda,
-        dtVenda: eventVd.dtVenda,
-        nomeFuncionario: eventVd.nomeFuncionario,
-        nomeCliente: eventVd.nomeCliente,
-        dt_venda: eventVd.dtVenda,
-        subtotal: eventVd.subtotal,
-        desconto: eventVd.desconto,
-        totalgeral: eventVd.totalgeral,
-        formasDePagamento: eventVd.formasDePagamento,
-        qtdDeParcelas: eventVd.qtdDeParcelas,
-      } });
-  }
   deleteVd(eventVd: iVendas) {
     this.notificationMsg.openConfirmDialog('Tem certeza em REMOVER esta OS?')
       .afterClosed().subscribe(res => {
