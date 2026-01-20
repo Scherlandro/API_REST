@@ -147,32 +147,32 @@ export class VendaComponent implements OnInit {
     });
   }
 
-  openDilogVd(eventVd: iVendas) {
+  openDilogVd() {
+
+      const vd: iVendas = {
+
+        idCliente: 0, idFuncionario: 0, produtos: [],
+        idVenda: null, dtVenda: '', nomeFuncionario: '', nomeCliente: '',
+        subtotal: 0, desconto: 0, totalgeral: 0, formasDePagamento: "",
+        qtdDeParcelas: 0,
+
+        itensVd : {
+          idItensDaVd: 0, codVenda: 0, codProduto: '', descricao: '', valorUnitario: 0,
+          quantidade: 1, total: 0
+        }
+
+      } ;
+
+          const itens: iItensVd = vd.itensVd;
 
     const dialogRef = this.dialog.open(DialogItensVdComponent, {
-      width: '1200px',
-      data: eventVd === null ? {
-        idVenda: null,
-        dtVenda: '',
-        nomeFuncionario: '',
-        nomeCliente: '',
-        subtotal: null,
-        desconto: null,
-        totalgeral: null,
-        formasDePagamento: "",
-        qtdDeParcelas: null,
-      } : {
-        idVenda: eventVd.idVenda,
-        dtVenda: eventVd.dtVenda,
-        nomeFuncionario: eventVd.nomeFuncionario,
-        nomeCliente: eventVd.nomeCliente,
-        dt_venda: eventVd.dtVenda,
-        subtotal: eventVd.subtotal,
-        desconto: eventVd.desconto,
-        totalgeral: eventVd.totalgeral,
-        formasDePagamento: eventVd.formasDePagamento,
-        qtdDeParcelas: eventVd.qtdDeParcelas,
-      } });
+      data: {
+        modoNew: 'adicionar', modo: 'adicionar',
+        ...vd,
+        itensVd: { ...itens, codVD: vd.idVenda }
+      }
+    });
+  
   }
 
   editarVd(element: iVendas) {
@@ -181,7 +181,6 @@ export class VendaComponent implements OnInit {
 
 
   openDilogItenVd(vd: iVendas, item?: iItensVd) {
-    console.log('Venda : ', vd, 'Item :', item)
     const isEdit = !!item;
     const isNovaVD = !vd.itensVd; // nova venda recém criada
 
