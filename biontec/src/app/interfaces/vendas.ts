@@ -8,20 +8,13 @@ export interface iVendas {
   idFuncionario: number,
   nomeFuncionario: string,
   dtVenda: string,
-  subtotal: string,
-  desconto: string,
-  totalgeral: string,
+  subtotal: number,
+  desconto: number,
+  totalgeral: number,
   formasDePagamento: string,
   qtdDeParcelas: number,
   itensVd: iItensVd[] | any,
-  produtos: iProduto[],
+  produtos?: iProduto[] | any,
   selecionado?:boolean
 }
 
-export interface ISingleVendas {
-    data: iVendas
-}
-
-export interface IDataVendas {
-    data: iVendas[]
-}

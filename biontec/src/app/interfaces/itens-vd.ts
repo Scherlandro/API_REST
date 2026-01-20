@@ -11,6 +11,6 @@ export interface iItensVd {
   descPorUnidade: number;
   valorParcial: number;
   dtRegistro: string;
-  fotoProduto: any;
+  fotoProduto?: any;
   highlighted?: boolean;
 }

@@ -182,7 +182,7 @@ export class DialogItensVdComponent implements OnInit {
     const funcionario: any = this.funcionarioControl.value;
 
     const vendaParaCriar: iVendas = {
-      desconto: "",
+      desconto: 0,
       dtVenda: "",
       formasDePagamento: "",
       idCliente: 0,
@@ -193,8 +193,8 @@ export class DialogItensVdComponent implements OnInit {
       nomeFuncionario: "",
       produtos: [],
       qtdDeParcelas: 0,
-      subtotal: "",
-      totalgeral: ""
+      subtotal: 0,
+      totalgeral: 0
       /* idVd: 0,
        idCliente: cliente.idCliente,
        nomeCliente: cliente.nomeCliente,

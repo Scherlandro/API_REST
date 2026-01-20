@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { iVendas, IDataVendas, ISingleVendas } from '../interfaces/vendas';
+import { iVendas } from '../interfaces/vendas';
 import {environment} from "../../environments/environment";
 import {map} from "rxjs/operators";
 

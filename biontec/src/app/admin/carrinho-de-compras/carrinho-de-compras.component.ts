@@ -38,9 +38,9 @@ export class CarrinhoDeComprasComponent implements OnInit {
     idFuncionario: 0,
     nomeFuncionario: '',
     dtVenda: new Date().toISOString(),
-    subtotal: "0",
-    desconto: "0",
-    totalgeral: "0",
+    subtotal: 0,
+    desconto: 0,
+    totalgeral: 0,
     formasDePagamento: "Cartão de Crédito",
     qtdDeParcelas: 1,
     itensVd: [],
@@ -162,9 +162,9 @@ export class CarrinhoDeComprasComponent implements OnInit {
           idFuncionario: 0,
           nomeFuncionario: this.nomeVendedor,
           dtVenda: new Date().toISOString(),
-          subtotal: "0",
-          desconto: "0",
-          totalgeral: "0",
+          subtotal: 0,
+          desconto: 0,
+          totalgeral: 0,
           formasDePagamento: "Cartão de Crédito",
           qtdDeParcelas: 1,
           itensVd: [],
@@ -172,7 +172,7 @@ export class CarrinhoDeComprasComponent implements OnInit {
           selecionado: false,
         }];
 
-        console.log('this.vendedores->', this.vendedores);
+
         this.calcularTotal();
       }
     } else {
@@ -215,9 +215,9 @@ export class CarrinhoDeComprasComponent implements OnInit {
       idFuncionario: 0, // pode obter do serviço de autenticação
       nomeFuncionario: 'Atendente Virtual',
       dtVenda: new Date().toISOString(),
-      subtotal: "0",
-      desconto: "0",
-      totalgeral: "0",
+      subtotal: 0,
+      desconto: 0,
+      totalgeral: 0,
       formasDePagamento: "Cartão de Crédito",
       qtdDeParcelas: 1,
       itensVd: [],
@@ -231,10 +231,10 @@ export class CarrinhoDeComprasComponent implements OnInit {
     this.venda.subtotal = subtotal.toFixed(2);
     // Simulando desconto de 10% para compras acima de R$ 1000
     const desconto = subtotal > 1000 ? subtotal * 0.1 : 0;
-    this.venda.desconto = desconto.toFixed(2);
+    this.venda.desconto = Number(desconto.toFixed(2));
 
     const total = subtotal - desconto;
-    this.venda.totalgeral = total.toFixed(2);
+    this.venda.totalgeral = Number(total.toFixed(2));
   }
 
   removerItem(index: number): void {
@@ -357,9 +357,9 @@ export class CarrinhoDeComprasComponent implements OnInit {
   }
 
   verificarSelecao() {
-    this.selecionarTodos = this.vendedores.every(v => v.produtos.every(p => p.highlighted = this.highlighted));
+    this.selecionarTodos = this.vendedores.every(v => v.produtos.every((p:iProduto) => p.highlighted = this.highlighted));
     this.vendedores.forEach(v => {
-      v.selecionado = v.produtos.every(p => p.highlighted);
+      v.selecionado = v.produtos.every((p:iProduto) => p.highlighted);
     });
     this.calcularTotal();
   }
@@ -374,7 +374,7 @@ export class CarrinhoDeComprasComponent implements OnInit {
 
   removerProduto(produto: iProduto) {
     this.vendedores.forEach(vendedor => {
-      vendedor.produtos = vendedor.produtos.filter(p => p !== produto);
+      vendedor.produtos = vendedor.produtos.filter((p:iProduto) => p !== produto);
     });
     // Remover vendedores sem produtos
     this.vendedores = this.vendedores.filter(v => v.produtos.length > 0);
@@ -383,7 +383,7 @@ export class CarrinhoDeComprasComponent implements OnInit {
 
   calcularTotal() {
     this.total = this.vendedores.reduce((acc, vendedor) => {
-      return acc + vendedor.produtos.reduce((sum, produto) => {
+      return acc + vendedor.produtos.reduce((sum:any, produto:iProduto) => {
         const quantidade = produto.qtdVd || 1;
         const valor = produto.valorVenda || 0;
         return sum + (valor * quantidade);

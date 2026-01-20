@@ -122,17 +122,17 @@ export class VendaComponent implements OnInit {
   }
 
   // Método para formatar valores para Real brasileiro
-  formatarReal(valor: number | string): string {
+  formatarReal(valor: number | string): number {
     // Converte para número se for string
     const numero = typeof valor === 'string' ? parseFloat(valor) : valor;
 
     // Formata para Real brasileiro
-    return numero.toLocaleString('pt-BR', {
+    return Number(numero.toLocaleString('pt-BR', {
       style: 'currency',
       currency: 'BRL',
       minimumFractionDigits: 2,
       maximumFractionDigits: 2
-    });
+    }));
   }
 
 
@@ -150,20 +150,17 @@ export class VendaComponent implements OnInit {
   openDilogVd() {
 
       const vd: iVendas = {
-
-        idCliente: 0, idFuncionario: 0, produtos: [],
-        idVenda: null, dtVenda: '', nomeFuncionario: '', nomeCliente: '',
-        subtotal: 0, desconto: 0, totalgeral: 0, formasDePagamento: "",
+        idVenda: 0, idCliente: 0, nomeCliente: '', idFuncionario: 0, nomeFuncionario: '',
+        dtVenda: '', subtotal: 0, desconto: 0, totalgeral: 0, formasDePagamento: "",
         qtdDeParcelas: 0,
 
         itensVd : {
-          idItensDaVd: 0, codVenda: 0, codProduto: '', descricao: '', valorUnitario: 0,
-          quantidade: 1, total: 0
+          idItensVd: 0, codVenda: 0, codProduto: '', descricao: '', valVenda: 0,
+          qtdVendidas: 1, descPorUnidade: 0, valorParcial: 0, dtRegistro: ''
         }
-
       } ;
 
-          const itens: iItensVd = vd.itensVd;
+    const itens: iItensVd = vd.itensVd;
 
     const dialogRef = this.dialog.open(DialogItensVdComponent, {
       data: {
@@ -172,7 +169,7 @@ export class VendaComponent implements OnInit {
         itensVd: { ...itens, codVD: vd.idVenda }
       }
     });
-  
+
   }
 
   editarVd(element: iVendas) {
