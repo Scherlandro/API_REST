@@ -108,7 +108,7 @@ export class DialogOpenSalesComponent implements OnInit {
   verificarSeccao(error:any){
     if (error === 'Session Expired')
         this.onError('Sua sessão expirou!');
-    this.notificationMsg.warn(error);
+    this.notificationMsg.sessionExpired(error);
       this.tokenServer.clearTokenExpired();
       return of([])
   }

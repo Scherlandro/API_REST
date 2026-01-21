@@ -5,6 +5,7 @@ import {AbstractControl, FormControl, FormGroupDirective, NgForm} from "@angular
 import {ConfirmDiologComponent} from "../shared/diolog_components/confirm-diolog/confirm-diolog.component";
 import {MatDialog} from "@angular/material/dialog";
 import {MatSnackBar, MatSnackBarConfig} from "@angular/material/snack-bar";
+import {ErrorDiologComponent} from "../shared/diolog_components/error-diolog/error-diolog.component";
 
 @Injectable({
   providedIn: 'root'
@@ -50,6 +51,18 @@ export class NotificationMgsService implements ErrorStateMatcher {
   warn(msg:any) {
     this.config['panelClass'] = ['notification', 'warn'];
     this.snackBar.open(msg, '', this.config);
+  }
+
+  sessionExpired(msg:string){
+    return this.dialog.open(ErrorDiologComponent, {
+     
+      panelClass: 'warn',
+      disableClose: true,
+      position: {top: "200px"},
+      data: {
+        message: msg
+      }
+    });
   }
 
 }
