@@ -14,6 +14,7 @@ import {FuncionarioService} from "../../../services/funcionario.service";
 import {ClienteService} from "../../../services/cliente.service";
 import {VendasService} from "../../../services/vendas.service";
 import {TokenService} from "../../../services/token.service";
+import {NotificationMgsService} from "../../../services/notification-mgs.service";
 
 @Component({
   selector: 'app-dialog-editor-itvd',
@@ -53,6 +54,7 @@ export class DialogOpenSalesComponent implements OnInit {
       itensVd: iItensVd;
     },
     public dialogRef: MatDialogRef<DialogOpenSalesComponent>,
+    public notificationMsg: NotificationMgsService,
     private tokenServer: TokenService,
     public vendaServices: VendasService,
     public dialog: MatDialog,
@@ -106,6 +108,7 @@ export class DialogOpenSalesComponent implements OnInit {
   verificarSeccao(error:any){
     if (error === 'Session Expired')
         this.onError('Sua sessão expirou!');
+    this.notificationMsg.warn(error);
       this.tokenServer.clearTokenExpired();
       return of([])
   }

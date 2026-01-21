@@ -14,11 +14,6 @@ import {ItensVdService} from "../../services/itens-vd.service";
 import {VendasService} from "../../services/vendas.service";
 import {ErrorDiologComponent} from "../../shared/diolog_components/error-diolog/error-diolog.component";
 import {TokenService} from "../../services/token.service";
-import {b2n} from "@kurkle/color";
-import {iProduto} from "../../interfaces/product";
-import {iServiceOrder} from "../../interfaces/service-order";
-import {DialogOpenOsComponent} from "../../shared/diolog_components/dialog-open-os/dialog-open-os.component";
-import {iItensOS} from "../../interfaces/itens-os";
 import {NotificationMgsService} from "../../services/notification-mgs.service";
 
 

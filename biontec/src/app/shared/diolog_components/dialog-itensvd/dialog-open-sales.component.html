@@ -168,10 +168,10 @@
         Atualizar Item
       </button>
 
+
+
       <!--  <div *ngFor="let item of itensVd$">
-          <div>{{ item.descricao }} - {{ formatter(item.total) }}</div>
-          <button mat-button (click)="removeItem(item)">Remover</button>
-        </div>
+
         &lt;!&ndash; Adicionar Produto &ndash;&gt;
         <button mat-raised-button (click)="addItem()"> + item  </button>
 
@@ -185,87 +185,3 @@
 
 
 </div>
-
-<!--
-
-<h1 *ngIf="!isChange" mat-dialog-title>Adicionar ItensVd</h1>
-<h1 *ngIf="isChange" mat-dialog-title>Editar ItensVd</h1>
-
-
-<div mat-dialog-content class="div-vd">
-
-  <h1 *ngIf="!isChange" mat-dialog-title>Abrir Venda</h1>
-  <h1 *ngIf="isChange" mat-dialog-title>Editar Venda</h1>
-
-  <mat-form-field class="example-full-width">
-    <mat-label>Cliente</mat-label>
-    <input type="text"
-           placeholder="Digite o Cliente"
-           matInput
-           [formControl]="clienteControl"
-           [matAutocomplete]="auto"/>
-    <mat-error>Campo Obrigatório não preenchido.</mat-error>
-    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayCli">
-      <mat-option *ngFor="let cliente of clientesFiltradvenda | async" [value]="cliente">
-        {{cliente.nomeCliente}}
-      </mat-option>
-    </mat-autocomplete>
-  </mat-form-field>
-
-  <mat-form-field appearance="fill">
-    <mat-label>Data</mat-label>
-    <input matInput [(ngModel)]="venda.dtVenda">
-  </mat-form-field>
-
-
-  <button mat-button *ngIf="!isChange" cdkFocusInitial
-          (click)="save()">Adicionar
-  </button>
-  <button mat-raised-button (click)="onCancel()">Cancel</button>
-
-</div>
-
-
-
-<div mat-dialog-content>
-
-    <mat-form-field appearance="fill">
-      <mat-label>ID</mat-label>
-      <input matInput [(ngModel)]="itensVd.idItensVd">
-    </mat-form-field>
-
-  <mat-form-field appearance="fill">
-    <mat-label>Códico</mat-label>
-    <input matInput [(ngModel)]="itensVd.codProduto">
-  </mat-form-field>
-
-  <mat-form-field appearance="fill">
-    <mat-label>Descrição</mat-label>
-    <input matInput [(ngModel)]="itensVd.descricao">
-  </mat-form-field>
-
-    <mat-form-field appearance="fill">
-      <mat-label>Preço de Compra</mat-label>
-      <input matInput  [value]="formatter(itensVd.valVenda)" >
-    </mat-form-field>
-
-  <mat-form-field appearance="fill">
-    <mat-label>Quantidade em Estoque</mat-label>
-    <input matInput type="number" matInput [(ngModel)]="itensVd.qtdVendidas">
-  </mat-form-field>
-
-  <mat-form-field appearance="fill">
-    <mat-label>Data de Cadastro</mat-label>
-    <input  matInput [(ngModel)]="itensVd.dtRegistro">
-  </mat-form-field>
-
-<span>
-
-  <button mat-button *ngIf="isChange" [mat-dialog-close]="itensVd" cdkFocusInitial >Edit</button>
-  <button mat-button *ngIf="!isChange" [mat-dialog-close]="itensVd" cdkFocusInitial (click)="save()" >salvar</button>
-  <button mat-raised-button (click)="onCancel()">Cancel</button>
- </span>
-
-
-</div>
--->
