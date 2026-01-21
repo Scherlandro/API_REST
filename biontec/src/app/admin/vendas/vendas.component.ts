@@ -7,12 +7,11 @@ import {MatSort} from "@angular/material/sort";
 import {MatTable, MatTableDataSource} from "@angular/material/table";
 import {expand, of, timeout} from "rxjs";
 import {catchError, delay, first} from "rxjs/operators";
-import {DialogItensVdComponent} from "src/app/shared/diolog_components/dialog-itensvd/dialog-itensvd.component";
+import {DialogOpenSalesComponent} from "src/app/shared/diolog_components/dialog-itensvd/dialog-open-sales.component";
 import {iItensVd} from "../../interfaces/itens-vd";
 import {iVendas} from "../../interfaces/vendas";
 import {ItensVdService} from "../../services/itens-vd.service";
 import {VendasService} from "../../services/vendas.service";
-import {DialogOpenSalesComponent} from "../../shared/diolog_components/dialog-open-sales/dialog-open-sales.component";
 import {ErrorDiologComponent} from "../../shared/diolog_components/error-diolog/error-diolog.component";
 import {TokenService} from "../../services/token.service";
 import {b2n} from "@kurkle/color";
@@ -162,7 +161,7 @@ export class VendaComponent implements OnInit {
 
     const itens: iItensVd = vd.itensVd;
 
-    const dialogRef = this.dialog.open(DialogItensVdComponent, {
+    const dialogRef = this.dialog.open(DialogOpenSalesComponent, {
       data: {
         modoNew: 'adicionar', modo: 'adicionar',
         ...vd,
@@ -197,7 +196,7 @@ export class VendaComponent implements OnInit {
 
     const itens = isEdit ? item : emptyItem;
 
-       this.dialog.open(DialogItensVdComponent, {
+       this.dialog.open(DialogOpenSalesComponent, {
         data: {
           modoNew: isNovaVD ? 'adicionar' : 'editar',
           modo: isEdit ? 'editar' : 'adicionar',

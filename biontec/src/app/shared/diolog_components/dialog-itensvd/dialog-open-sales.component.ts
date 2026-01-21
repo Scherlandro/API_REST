@@ -16,10 +16,10 @@ import {VendasService} from "../../../services/vendas.service";
 
 @Component({
   selector: 'app-dialog-editor-itvd',
-  templateUrl: './dialog-itensvd.component.html',
-  styleUrls: ['./dialog-itensvd.component.css']
+  templateUrl: './dialog-open-sales.component.html',
+  styleUrls: ['./dialog-open-sales.component.css']
 })
-export class DialogItensVdComponent implements OnInit {
+export class DialogOpenSalesComponent implements OnInit {
 
   destroy$ = new Subject<void>();
   venda!: iVendas;
@@ -51,7 +51,7 @@ export class DialogItensVdComponent implements OnInit {
       venda: iVendas;
       itensVd: iItensVd;
     },
-    public dialogRef: MatDialogRef<DialogItensVdComponent>,
+    public dialogRef: MatDialogRef<DialogOpenSalesComponent>,
     public vendaServices: VendasService,
     public dialog: MatDialog,
     private clienteService: ClienteService,
