@@ -53,9 +53,9 @@ export class NotificationMgsService implements ErrorStateMatcher {
     this.snackBar.open(msg, '', this.config);
   }
 
-  sessionExpired(msg:string){
-    return this.dialog.open(ErrorDiologComponent, {
-     
+  sessionExpired(msg:any){
+     this.dialog.open(ErrorDiologComponent, {
+
       panelClass: 'warn',
       disableClose: true,
       position: {top: "200px"},

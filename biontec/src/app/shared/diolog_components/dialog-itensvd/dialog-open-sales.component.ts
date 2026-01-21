@@ -15,6 +15,7 @@ import {ClienteService} from "../../../services/cliente.service";
 import {VendasService} from "../../../services/vendas.service";
 import {TokenService} from "../../../services/token.service";
 import {NotificationMgsService} from "../../../services/notification-mgs.service";
+import {ErrorDiologComponent} from "../error-diolog/error-diolog.component";
 
 @Component({
   selector: 'app-dialog-editor-itvd',
@@ -105,14 +106,6 @@ export class DialogOpenSalesComponent implements OnInit {
     this.destroy$.complete();
   }
 
-  verificarSeccao(error:any){
-    if (error === 'Session Expired')
-        this.onError('Sua sessão expirou!');
-    this.notificationMsg.sessionExpired(error);
-      this.tokenServer.clearTokenExpired();
-      return of([])
-  }
-
   // =============== AUTOCOMPLETE ==================
   // ===============================================
 
@@ -155,7 +148,7 @@ export class DialogOpenSalesComponent implements OnInit {
       first(),delay(1000),
       catchError(error => {
         if(this.verificarSeccao(error))
-        console.error('Erro ao buscar produtvenda');
+        this.tokenServer.clearTokenExpired();
         return of([]);
       }),
       takeUntil(this.destroy$)
@@ -210,20 +203,6 @@ export class DialogOpenSalesComponent implements OnInit {
       qtdDeParcelas: 0,
       subtotal: 0,
       totalgeral: 0
-      /* idVd: 0,
-       idCliente: cliente.idCliente,
-       nomeCliente: cliente.nomeCliente,
-       idFuncionario: funcionario.idFuncionario,
-       nomeFuncionario: funcionario.nomeFuncionario,
-       dataDeEntrada: new Date().toISVdtring(),
-       ultimaAtualizacao: new Date().toISVdtring(),
-       status: 'Vd_EM_ANDAMENTO',
-       subtotal: 0,
-       desconto: 0,
-       totalGeralVd: 0,
-       porConta: 0,
-       restante: 0,
-       itensVd: []*/
     };
 
     this.vendaServices.addVenda(vendaParaCriar).subscribe({
@@ -389,12 +368,22 @@ export class DialogOpenSalesComponent implements OnInit {
     return produto ? produto.nomeProduto : '';
   }
 
+
+  verificarSeccao(error:any){
+    if (error === 'Session Expired')
+      this.onError('Sua sessão expirou!');
+    return of([])
+  }
+
   onNoClick(): void {
     this.dialogRef.close();
   }
 
-  onError(message: string) {
-    console.error(message);
+  onError(errrorMsg: string) {
+    this.dialog.open(ErrorDiologComponent, {
+      data: errrorMsg
+    });
+    this.onCancel();
   }
 
   onCancel() {
