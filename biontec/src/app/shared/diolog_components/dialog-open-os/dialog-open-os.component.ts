@@ -93,6 +93,7 @@ export class DialogOpenOsComponent implements  OnInit, OnDestroy  {
     if (this.isChange) {
       this.updateTotal();
     }
+
   }
 
 

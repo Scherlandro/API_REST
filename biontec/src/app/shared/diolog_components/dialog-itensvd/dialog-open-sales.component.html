@@ -1,8 +1,8 @@
 <div class="div-venda">
 
   <mat-card class="container-box-venda">
-    <h1 *ngIf="isChange" mat-dialog-title>Abrir VENDA DE ITENS</h1>
-    <h1 *ngIf="!isChange" mat-dialog-title>Editar VENDA DE ITENS</h1>
+    <h1 *ngIf="isChange" mat-dialog-title>Abrir Venda</h1>
+    <h1 *ngIf="!isChange" mat-dialog-title>Editar Venda</h1>
 
 
     <mat-form-field appearance="fill">
@@ -98,7 +98,7 @@
 
     <div>
       <button mat-button *ngIf="isChange" cdkFocusInitial [mat-dialog-close]="vendaSelecionada"
-              (click)="save(venda)">Savar Vd
+              (click)="save(venda)">Savar Venda
       </button>
 
       <button mat-button (click)="onCancel()">Cancelar</button>

@@ -8,11 +8,12 @@ import {IFuncionario} from "../../../interfaces/funcionario";
 import {ICliente} from "../../../interfaces/cliente";
 import {iVendas} from "../../../interfaces/vendas";
 import {iProduto} from "../../../interfaces/product";
-import {catchError, startWith} from "rxjs/operators";
+import {catchError, delay, first, startWith} from "rxjs/operators";
 import {ProductService} from "../../../services/product.service";
 import {FuncionarioService} from "../../../services/funcionario.service";
 import {ClienteService} from "../../../services/cliente.service";
 import {VendasService} from "../../../services/vendas.service";
+import {TokenService} from "../../../services/token.service";
 
 @Component({
   selector: 'app-dialog-editor-itvd',
@@ -52,6 +53,7 @@ export class DialogOpenSalesComponent implements OnInit {
       itensVd: iItensVd;
     },
     public dialogRef: MatDialogRef<DialogOpenSalesComponent>,
+    private tokenServer: TokenService,
     public vendaServices: VendasService,
     public dialog: MatDialog,
     private clienteService: ClienteService,
@@ -92,12 +94,20 @@ export class DialogOpenSalesComponent implements OnInit {
     if (this.isChange) {
       this.updateTotal();
     }
+    console.log('modoNew:', this.isNewVd, ' modo:', this.isChange)
   }
 
 
   ngOnDestroy() {
     // this.destroy$.next();
     this.destroy$.complete();
+  }
+
+  verificarSeccao(error:any){
+    if (error === 'Session Expired')
+        this.onError('Sua sessão expirou!');
+      this.tokenServer.clearTokenExpired();
+      return of([])
   }
 
   // =============== AUTOCOMPLETE ==================
@@ -139,7 +149,9 @@ export class DialogOpenSalesComponent implements OnInit {
 
   listarProdutvenda() {
     this.productService.getTodosProdutos().pipe(
-      catchError(() => {
+      first(),delay(1000),
+      catchError(error => {
+        if(this.verificarSeccao(error))
         console.error('Erro ao buscar produtvenda');
         return of([]);
       }),
