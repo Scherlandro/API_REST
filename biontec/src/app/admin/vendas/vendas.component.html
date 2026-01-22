@@ -43,7 +43,7 @@
 
       <ng-container matColumnDef="total_geral">
         <th mat-header-cell *matHeaderCellDef> Total</th>
-        <td mat-cell *matCellDef="let elementVd"> {{elementVd.totalgeral }} </td>
+        <td mat-cell *matCellDef="let elementVd"> {{elementVd.totalgeral | currencyBRL }} </td>
       </ng-container>
 
       <ng-container  matColumnDef="opicao">
@@ -97,7 +97,7 @@
 
               <ng-container matColumnDef="preco">
                 <th mat-header-cell *matHeaderCellDef> Preço</th>
-                <td mat-cell *matCellDef="let element"> {{element.valVenda}} </td>
+                <td mat-cell *matCellDef="let element"> {{element.valVenda | currencyBRL}} </td>
               </ng-container>
 
               <ng-container matColumnDef="qtd">
@@ -107,7 +107,7 @@
 
               <ng-container matColumnDef="soma">
                 <th mat-header-cell *matHeaderCellDef> Soma</th>
-                <td mat-cell *matCellDef="let element"> {{element.valorParcial}} </td>
+                <td mat-cell *matCellDef="let element"> {{element.valorParcial | currencyBRL}} </td>
               </ng-container>
 
               <ng-container matColumnDef="data">
