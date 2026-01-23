@@ -1,6 +1,7 @@
 package com.biontecapi.serviceImpl;
 
 
+import com.biontecapi.dtos.VendasDto;
 import com.biontecapi.model.Vendas;
 import com.biontecapi.repository.VendasRepository;
 import com.biontecapi.service.VendasService;
@@ -43,11 +44,38 @@ public class VendasServiceImpl implements VendasService {
     public Vendas save(Vendas vendas) {
         return vendasRepository.save(vendas);
     }
+    
+
+    @Override
+    public Vendas atualizarVenda(VendasDto dto) {
+
+        Vendas vd = vendasRepository.findById(dto.getIdVenda())
+                .orElseThrow(() -> new RuntimeException("OS não encontrada"));
+        vd.mapToDTO(dto);
+        //vd.setStatus(dto.status());
+        vd.getTotalgeral(calcularTotalDaVenda(vd));
+        return vendasRepository.save(vd);
+    }
+    
 
     @Override
     public void delete(Integer id) {
         vendasRepository.deleteById(id);
     }
+    
+
+    private Double calcularTotalDaVenda(Vendas vd) {
+
+         double totalItens = vd.getItensVd().stream()
+                .mapToDouble(item -> item.getValVenda() * item.getQtdVendidas()).sum();
+        // Se tiver desconto, subtraímos
+        double totalComDesconto = totalItens - (vd.getDesconto() != null ? vd.getDesconto() : 0);
+
+    //   LOGGER.info("CALCULO TOTA::::>" + totalComDesconto + (vd.getPorConta() != null ? vd.getPorConta() : 0));
+        // Se tiver ao porConta, somar ou subtrair aqui
+        return totalComDesconto; // + (vd.getPorConta() != null ? vd.getPorConta() : 0);
+    }
+
 
 
 }

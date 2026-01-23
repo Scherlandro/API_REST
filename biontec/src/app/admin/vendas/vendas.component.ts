@@ -41,6 +41,7 @@ export class VendaComponent implements OnInit {
   displayedColumnsVd: string[] = ['nome_cliente', 'dt_venda', 'total_geral', 'opicao'];
   tbSourceVd$: MatTableDataSource<iVendas>;
   tbSourceItensVd$: MatTableDataSource<iItensVd>;
+  tbData: any;
   displayedColumns: string[] = ['codigo', 'descricao', 'preco', 'qtd', 'soma', 'data', 'imagem', 'opicoes'];
 
   vendaControl = new FormControl();
@@ -64,13 +65,6 @@ export class VendaComponent implements OnInit {
     this.listarVenda();
   }
 
-  formatarDadosVendas(vendas: iVendas[]): iVendas[] {
-    return vendas.map(venda => ({
-      ...venda,
-      totalgeral: this.formatarReal(venda.totalgeral)
-    }));
-  }
-
   listarVenda() {
     this.spiner = true;
     this.vendasService.getAllSales()
@@ -81,15 +75,13 @@ export class VendaComponent implements OnInit {
         return of([])
       }))
       .subscribe((data: iVendas[]) => {
-        const dadosFormatados = this.formatarDadosVendas(data);
-        this.tbSourceVd$.data = dadosFormatados;
+        this.tbSourceVd$.data = data;
         this.tbSourceVd$.paginator = this.paginator;
         this.spiner = false;
       });
   }
 
   toggleRow(element: any) {
-    console.log('ID da Venda selecionada ==> ', element.idVenda);
     // Fechar todas as outras linhas expandidas
     this.tbSourceVd$.data.forEach((item:any) => {
       if (item !== element && item.isExpanded) {
@@ -105,18 +97,49 @@ export class VendaComponent implements OnInit {
         soma += element.itensVd.map((p: iItensVd) => p.valorParcial)[i];
       }
       element.totalgeral = soma;
-      element.totalgeral = this.formatarReal(soma);
+    //  element.totalgeral = this.formatarReal(soma);
       this.tbSourceItensVd$.data = element.itensVd.map((item: iItensVd) => ({
         ...item,
-        // Formata os valores individuais
+        valVenda: item.valVenda,
+        valorParcial: item.valorParcial
+       /*
+       // Formata os valores individuais
         valVenda: this.formatarReal(item.valVenda),
         valorParcial: this.formatarReal(item.valorParcial)
+        */
       }));
+      this.updateVd(element);
     }
   }
+   updateVd(vd: iVendas) {
+    this.vendasService.updateVenda(vd)
+      .subscribe({
+        next: (vdAtualizada) => {
+          this.tbData?.close(vdAtualizada);
+        },
+        error: (err) => {
+          this.onError('Erro ao atualizar a Venda');
+          console.error(err);
+        }
+      });
+    //  this.tbData.splice(this.ruwSelec, 1);
+  }
+
+
+/*
+  formatarDadosVendas(vendas: iVendas[]): iVendas[] {
+    console.log('Valor da TbItensVd', vendas.map( vd => ({
+      ...vd,
+      totalgeral: this.formatarReal(vd.totalgeral)
+    })));
+    return vendas.map(vd => ({
+      ...vd,
+      totalgeral: this.formatarReal(vd.totalgeral)
+    }));
+  }*/
 
   // Método para formatar valores para Real brasileiro
-  formatarReal(valor: number | string): number {
+ /* formatarReal(valor: number | string): number {
     // Converte para número se for string
     const numero = typeof valor === 'string' ? parseFloat(valor) : valor;
 
@@ -128,7 +151,7 @@ export class VendaComponent implements OnInit {
       maximumFractionDigits: 2
     }));
   }
-
+*/
 
   aplicarFiltro(valor: string) {
     valor = valor.trim().toLowerCase();

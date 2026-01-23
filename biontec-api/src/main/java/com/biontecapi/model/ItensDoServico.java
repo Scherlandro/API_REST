@@ -38,7 +38,6 @@ import javax.persistence.*;
         @Column(name = "total", length = 30)
         private Double total;
 
-        // Método para calcular o total automaticamente
         @PrePersist
         @PreUpdate
         public void calcularTotal() {

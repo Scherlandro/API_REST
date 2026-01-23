@@ -1,12 +1,8 @@
 package com.biontecapi.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
+import com.biontecapi.dtos.ItensDaVendaDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -44,11 +40,12 @@ public class ItensDaVenda {
     @Column(name = "valor_parcial")
     private Double valorParcial;
 
-   /* @Transient
-    @ManyToOne
-    @JoinTable(name = "vendas", joinColumns = {
-            @JoinColumn(name = "fk_Vd_itensVd", referencedColumnName = "codVenda")},
-            inverseJoinColumns = {
-                    @JoinColumn(name = "codVendas", referencedColumnName = "codVendas")})
-    private Vendas venda ;*/
+    @Transient
+    private String dtRegistro;
+
+    public ItensDaVendaDto toDTO(){
+        return new ItensDaVendaDto(this.IdItensVd,this.codVenda,this.codProduto,this.descricao,
+                this.valCompra, this.valVenda,this.qtdVendidas, this.valorParcial, this.dtRegistro);
+    }
+
 }

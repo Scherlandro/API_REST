@@ -1,5 +1,7 @@
 package com.biontecapi.model;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.persistence.Column;
@@ -11,6 +13,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.biontecapi.dtos.VendasDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -61,6 +64,27 @@ public class Vendas {
     @OneToMany
     @JoinColumn(name = "codevendas")
     private Collection<ItensDaVenda> itensVd;
+    
+
+      public VendasDto toDTO() {
+        return new VendasDto(
+                this.idVenda, this.idCliente, this.nomeCliente, this.idFuncionario, this.nomeFuncionario,
+                this.dtVenda, this.subtotal,this.desconto,
+                this.totalgeral,
+                this.itensVd != null ? this.itensVd.stream()
+                        .map(ItensDaVenda::toDTO).toList() : new ArrayList<>() );
+    }
+
+    public void mapToDTO(VendasDto dto) {
+        this.idCliente = dto.getIdCliente();
+        this.nomeCliente = dto.getNomeCliente();
+        this.idFuncionario = dto.getIdFuncionario();
+        this.nomeFuncionario = dto.getNomeFuncionario();
+        this.desconto = dto.getDesconto();
+        this.subtotal = dto.getSubtotal();
+        // A data de entrada e ID não são alterados aqui por segurança
+       // this.dtVenda = LocalDateTime.now();
+    
 
     /*
     @Transient

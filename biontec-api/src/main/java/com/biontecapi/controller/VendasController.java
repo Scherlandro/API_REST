@@ -63,6 +63,11 @@ public class VendasController {
                 .orElse(ResponseEntity.notFound().build()));
     }
 
+   @PutMapping
+    public ResponseEntity<Vendas> atualizarOS(@RequestBody VendasDto dto) {
+           return ResponseEntity.ok(vendas_serv.save(dto));
+    }
+
     @PutMapping(path = "/editar")
     public ResponseEntity editar(@RequestBody VendasDto vendasDto) {
         vendas_serv.save(mapper.map(vendasDto, Vendas.class));
