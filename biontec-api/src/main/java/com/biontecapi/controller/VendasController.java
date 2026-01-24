@@ -57,7 +57,7 @@ public class VendasController {
     @PostMapping(path = "/salvar")
     public ResponseEntity salvar(@RequestBody VendasDto vendasDto) {
         vendas_serv.save(mapper.map(vendasDto, Vendas.class));
-        Optional<Vendas> vendas = vendas_serv.findById(vendasDto.getIdVenda());
+        Optional<Vendas> vendas = vendas_serv.findById(vendasDto.idVenda());
         return ResponseEntity.ok(vendas.map(e -> mapper.map(e,
                 VendasDto.class)).map(record -> ResponseEntity.ok().body(record))
                 .orElse(ResponseEntity.notFound().build()));
@@ -65,13 +65,13 @@ public class VendasController {
 
    @PutMapping
     public ResponseEntity<Vendas> atualizarOS(@RequestBody VendasDto dto) {
-           return ResponseEntity.ok(vendas_serv.save(dto));
+           return ResponseEntity.ok(vendas_serv.atualizarVenda(dto));
     }
 
     @PutMapping(path = "/editar")
     public ResponseEntity editar(@RequestBody VendasDto vendasDto) {
         vendas_serv.save(mapper.map(vendasDto, Vendas.class));
-        Optional<Vendas> vendas = vendas_serv.findById(vendasDto.getIdVenda());
+        Optional<Vendas> vendas = vendas_serv.findById(vendasDto.idVenda());
         return ResponseEntity.ok(vendas.map(e -> mapper.map(e,
                 VendasDto.class)).map(record -> ResponseEntity.ok().body(record))
                 .orElse(ResponseEntity.notFound().build()));

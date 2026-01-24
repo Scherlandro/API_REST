@@ -3,6 +3,7 @@ package com.biontecapi.model;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.persistence.*;
@@ -61,15 +62,28 @@ public class Vendas {
     private Collection<ItensDaVenda> itensVd;
 
 
-   /* public VendasDto toDTO() {
+    public VendasDto toDTO() {
         return new VendasDto(
-                this.idVenda, this.idCliente, this.nomeCliente, this.idFuncionario, this.nomeFuncionario,
-                this.dtVenda, this.subtotal, this.desconto,
+                this.idVenda,
+                this.idCliente,
+                this.nomeCliente,
+                this.idFuncionario,
+                this.nomeFuncionario,
+                this.dtVenda,
+                this.subtotal,
+                this.desconto,
                 this.totalgeral,
-                this.itensVd != null ? this.itensVd.stream()
-                        .map(ItensDaVenda::toDTO).toList() : new ArrayList<>());
-    }*/
-   public VendasDto toDTO() {
+                this.formasDePagamento,
+                this.qtdDeParcelas,
+                this.itensVd != null
+                        ? this.itensVd.stream()
+                        .map(ItensDaVenda::toDTO)
+                        .toList()
+                        : List.of()
+        );
+    }
+
+   /* public VendasDto toDTO() {
        // Usando o Builder que o Lombok gera para o Record
        return VendasDto.builder()
                .idVenda(this.idVenda)
@@ -83,15 +97,14 @@ public class Vendas {
                .totalgeral(this.totalgeral)
                .formasDePagamento(this.formasDePagamento)
                .qtdDeParcelas(this.qtdDeParcelas)
-               // A correção do erro de "capture of ?" está aqui:
                .itensVd(this.itensVd != null ?
                        this.itensVd.stream()
                                .map(ItensDaVenda::toDTO)
-                               .collect(Collectors.toList()) : // Garante o tipo correto
+                               .collect(Collectors.toList()) :
                        new ArrayList<ItensDaVendaDto>())
                .build();
    }
-
+*/
     @PrePersist
     protected void onCreate() {
         this.dtVenda = LocalDateTime.now();

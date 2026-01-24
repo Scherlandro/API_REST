@@ -49,7 +49,7 @@ public class VendasServiceImpl implements VendasService {
     @Override
     public Vendas atualizarVenda(VendasDto dto) {
 
-        Vendas vd = vendasRepository.findById(dto.getIdVenda())
+        Vendas vd = vendasRepository.findById(dto.idVenda())
                 .orElseThrow(() -> new RuntimeException("OS não encontrada"));
         vd.mapToDTO(dto);
         //vd.setStatus(dto.status());
