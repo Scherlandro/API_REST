@@ -2,6 +2,7 @@ package com.biontecapi.serviceImpl;
 
 
 import com.biontecapi.dtos.VendasDto;
+import com.biontecapi.mapper.VendasMapper;
 import com.biontecapi.model.Vendas;
 import com.biontecapi.repository.VendasRepository;
 import com.biontecapi.service.VendasService;
@@ -13,10 +14,12 @@ import java.util.Optional;
 @Service
 public class VendasServiceImpl implements VendasService {
     final VendasRepository vendasRepository;
+    final VendasMapper vendasMapper;
 
-    public VendasServiceImpl(VendasRepository repository) {
+    public VendasServiceImpl(VendasRepository repository, VendasMapper mapper) {
 
         this.vendasRepository = repository;
+        this.vendasMapper = mapper;
     }
 
     @Override
@@ -36,8 +39,11 @@ public class VendasServiceImpl implements VendasService {
     }
 
     @Override
-    public Optional<Vendas> findById(Integer id) {
-        return vendasRepository.findById(id);
+    public VendasDto findById(Integer id) {
+        Vendas venda = vendasRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Venda não encontrada"));
+
+        return vendasMapper.toDto(venda);
     }
 
     @Override
@@ -53,7 +59,7 @@ public class VendasServiceImpl implements VendasService {
                 .orElseThrow(() -> new RuntimeException("OS não encontrada"));
         vd.mapToDTO(dto);
         //vd.setStatus(dto.status());
-        vd.getTotalgeral(calcularTotalDaVenda(vd));
+        vd.setTotalgeral(calcularTotalDaVenda(vd));
         return vendasRepository.save(vd);
     }
     

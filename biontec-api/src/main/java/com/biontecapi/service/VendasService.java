@@ -13,7 +13,7 @@ public interface VendasService {
     Vendas atualizarVenda(VendasDto dto);
     Optional<Vendas> litarVendaPorCod(Integer id) ;
     List<Vendas> litarVendaPorCliente(String name) ;
-    Optional<Vendas> findById(Integer id) ;
+    VendasDto findById(Integer id) ;
     void delete(Integer id);
 
 }

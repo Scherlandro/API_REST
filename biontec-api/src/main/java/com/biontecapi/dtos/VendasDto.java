@@ -1,11 +1,11 @@
 package com.biontecapi.dtos;
 
-import lombok.Builder;
+
 import java.time.LocalDateTime;
 import java.util.Collection;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-@Builder
+
 public record VendasDto(
         Integer idVenda,
         Integer idCliente,
