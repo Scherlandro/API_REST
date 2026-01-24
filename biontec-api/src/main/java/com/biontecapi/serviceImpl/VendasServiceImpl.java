@@ -58,7 +58,6 @@ public class VendasServiceImpl implements VendasService {
         Vendas vd = vendasRepository.findById(dto.idVenda())
                 .orElseThrow(() -> new RuntimeException("OS não encontrada"));
         vd.mapToDTO(dto);
-        //vd.setStatus(dto.status());
         vd.setTotalgeral(calcularTotalDaVenda(vd));
         return vendasRepository.save(vd);
     }
