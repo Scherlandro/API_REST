@@ -75,9 +75,5 @@ public class OrdemDeServico {
     }
 
 
-    /*
-    private List<ItensDoServicoDTO> toDTOItensDoServico() {
-        return itensOS.stream().map(ItensDoServico::toDTO).collect(Collectors.toList());
-    }
-     */
+
 }

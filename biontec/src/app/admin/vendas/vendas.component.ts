@@ -112,7 +112,7 @@ export class VendaComponent implements OnInit {
     }
   }
    updateVd(vd: iVendas) {
-    this.vendasService.updateVenda(vd)
+    this.vendasService.updateVd(vd)
       .subscribe({
         next: (vdAtualizada) => {
           this.tbData?.close(vdAtualizada);

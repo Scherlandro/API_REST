@@ -3,16 +3,11 @@ package com.biontecapi.model;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.stream.Collectors;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 
+import com.biontecapi.dtos.ItensDaVendaDto;
 import com.biontecapi.dtos.VendasDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -47,7 +42,7 @@ public class Vendas {
     private String nomeFuncionario;
 
     @Column(name = "dt_venda", length = 10)
-    private String dtVenda;
+    private LocalDateTime dtVenda;
 
     private Double subtotal;
 
@@ -61,44 +56,55 @@ public class Vendas {
     @Column(name = "numero_de_parcelas", length = 3)
     private Integer qtdDeParcelas;
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "codevendas")
     private Collection<ItensDaVenda> itensVd;
-    
 
-      public VendasDto toDTO() {
+
+   /* public VendasDto toDTO() {
         return new VendasDto(
                 this.idVenda, this.idCliente, this.nomeCliente, this.idFuncionario, this.nomeFuncionario,
-                this.dtVenda, this.subtotal,this.desconto,
+                this.dtVenda, this.subtotal, this.desconto,
                 this.totalgeral,
                 this.itensVd != null ? this.itensVd.stream()
-                        .map(ItensDaVenda::toDTO).toList() : new ArrayList<>() );
+                        .map(ItensDaVenda::toDTO).toList() : new ArrayList<>());
+    }*/
+   public VendasDto toDTO() {
+       // Usando o Builder que o Lombok gera para o Record
+       return VendasDto.builder()
+               .idVenda(this.idVenda)
+               .idCliente(this.idCliente)
+               .nomeCliente(this.nomeCliente)
+               .idFuncionario(this.idFuncionario)
+               .nomeFuncionario(this.nomeFuncionario)
+               .dtVenda(this.dtVenda)
+               .subtotal(this.subtotal)
+               .desconto(this.desconto)
+               .totalgeral(this.totalgeral)
+               .formasDePagamento(this.formasDePagamento)
+               .qtdDeParcelas(this.qtdDeParcelas)
+               // A correção do erro de "capture of ?" está aqui:
+               .itensVd(this.itensVd != null ?
+                       this.itensVd.stream()
+                               .map(ItensDaVenda::toDTO)
+                               .collect(Collectors.toList()) : // Garante o tipo correto
+                       new ArrayList<ItensDaVendaDto>())
+               .build();
+   }
+
+    @PrePersist
+    protected void onCreate() {
+        this.dtVenda = LocalDateTime.now();
     }
 
     public void mapToDTO(VendasDto dto) {
-        this.idCliente = dto.getIdCliente();
-        this.nomeCliente = dto.getNomeCliente();
-        this.idFuncionario = dto.getIdFuncionario();
-        this.nomeFuncionario = dto.getNomeFuncionario();
-        this.desconto = dto.getDesconto();
-        this.subtotal = dto.getSubtotal();
-        // A data de entrada e ID não são alterados aqui por segurança
-       // this.dtVenda = LocalDateTime.now();
-    
+        this.idCliente = dto.idCliente();
+        this.nomeCliente = dto.nomeCliente();
+        this.idFuncionario = dto.idFuncionario();
+        this.nomeFuncionario = dto.nomeFuncionario();
+        this.desconto = dto.desconto();
+        this.subtotal = dto.subtotal();
+        // o dtVenda aqui, está setado no @PrePersist!
+    }
 
-    /*
-    @Transient
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "id_itens_vd")
-    private List<ItensDaVenda> itensDaVendaList;
-
-   @Transient
-   @OneToMany(mappedBy = "vendas", cascade = CascadeType.ALL, orphanRemoval = true)
-      @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-      @JoinTable(name = "vendas", joinColumns = {
-      @JoinColumn(name = "fk_Vd_itensVd", referencedColumnName = "cod_venda")},
-     inverseJoinColumns = { @JoinColumn(name = "cod_vendas", referencedColumnName = "cod_vendas")})
-      private final List<ItensDaVenda> itensDaVendaList;
-    }*/
 }
-

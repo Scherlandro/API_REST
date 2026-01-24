@@ -1,36 +1,23 @@
 package com.biontecapi.dtos;
 
-
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-
-import com.biontecapi.model.ItensDaVenda;
-import lombok.*;
-
+import lombok.Builder;
+import java.time.LocalDateTime;
 import java.util.Collection;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Builder
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
-public class VendasDto {
-
-    private Integer idVenda;
-    private Integer idCliente;
-    @NotNull
-    @NotBlank
-    private String nomeCliente;
-    private Integer idFuncionario;
-    private String nomeFuncionario;
-    private String dtVenda;
-    private Double subtotal;
-    private Double desconto;
-    private Double totalgeral;
-    private String formasDePagamento;
-    @Size(max = 2)
-    private Integer qtdDeParcelas;
-    private Collection<ItensDaVenda> itensVd;
-
-}
+public record VendasDto(
+        Integer idVenda,
+        Integer idCliente,
+        String nomeCliente,
+        Integer idFuncionario,
+        String nomeFuncionario,
+        @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
+        LocalDateTime dtVenda,
+        Double subtotal,
+        Double desconto,
+        Double totalgeral,
+        String formasDePagamento,
+        Integer qtdDeParcelas,
+        Collection<ItensDaVendaDto> itensVd
+) {}
