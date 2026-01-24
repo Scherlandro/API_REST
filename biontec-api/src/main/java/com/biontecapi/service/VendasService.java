@@ -9,7 +9,7 @@ import java.util.Optional;
 public interface VendasService {
 
     List<Vendas> listarVendas();
-    Vendas save(Vendas vendas) ;
+    Vendas save(VendasDto dto) ;
     Vendas atualizarVenda(VendasDto dto);
     Optional<Vendas> litarVendaPorCod(Integer id) ;
     List<Vendas> litarVendaPorCliente(String name) ;
