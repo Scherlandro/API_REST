@@ -33,7 +33,7 @@ export class VendasService {
 
   updateVd(venda: iVendas): Observable<iVendas>{
     console.log('Venda foi atualizada', venda);
-    return this._http.put<iVendas>(this.baseUrl+'/'+venda.idVenda, venda)
+    return this._http.put<iVendas>(this.baseUrl, venda)
   }
 
   updateVenda(venda: iVendas): Observable<iVendas>{
