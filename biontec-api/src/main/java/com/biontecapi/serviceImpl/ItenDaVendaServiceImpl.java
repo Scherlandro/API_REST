@@ -1,12 +1,14 @@
 package com.biontecapi.serviceImpl;
 
 import com.biontecapi.dtos.ItensDaVendaDto;
+import com.biontecapi.mapper.ItensDaVendaMapper;
 import com.biontecapi.model.ItensDaVenda;
 import com.biontecapi.repository.ItensDaVendaRepository;
 import com.biontecapi.service.ItensDaVendaService;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,11 +16,14 @@ import java.util.Optional;
 public class ItenDaVendaServiceImpl implements ItensDaVendaService {
 
 
-    final ItensDaVendaRepository itensDaVendaRepository;
+    private final ItensDaVendaRepository itensDaVendaRepository;
+    private final ItensDaVendaMapper mapper;
 
-    public ItenDaVendaServiceImpl(ItensDaVendaRepository repository) {
+    public ItenDaVendaServiceImpl(ItensDaVendaRepository repository,
+                                  ItensDaVendaMapper mapper) {
 
         this.itensDaVendaRepository = repository;
+        this.mapper = mapper;
     }
 
 /*   public boolean existsIten(String item) { return ItensDaVendaRepository.existsItem(item);    }
@@ -32,6 +37,7 @@ public class ItenDaVendaServiceImpl implements ItensDaVendaService {
 
     @Override
     public List<ItensDaVenda> findAll() {
+
         return itensDaVendaRepository.findAll();
     }
 
@@ -41,25 +47,26 @@ public class ItenDaVendaServiceImpl implements ItensDaVendaService {
     }
 
     @Override
-    public List<ItensDaVendaDto> listarItensDaVdPorId(Integer id){
+    public List<ItensDaVenda> listarItensDaVdPorId(Integer id){
         return itensDaVendaRepository.findItensVdById(id);
     }
 
     @Override
-    public List<ItensDaVendaDto> listarItensVdPorIdProduto(Integer id) { return itensDaVendaRepository.findItensVdByIdProduct(id); }
+    public List<ItensDaVenda> listarItensVdPorIdProduto(Integer id) {
+        return itensDaVendaRepository.findItensVdByIdProduct(id); }
 
     @Override
-    public List<ItensDaVendaDto> ConsultarItensVdEntreDatas(String dtIni, String dtFinal) {
+    public List<ItensDaVenda> ConsultarItensVdEntreDatas(LocalDateTime dtIni, LocalDateTime dtFinal) {
         return itensDaVendaRepository.litarItemDaVendaEntreData(dtIni, dtFinal);
     }
 
     @Override
-    public List<ItensDaVendaDto> litarItemDaVendaPorData(String dt) {
+    public List<ItensDaVenda> litarItemDaVendaPorData(String dt) {
         return itensDaVendaRepository.litarItemDaVendaPorData(dt);
     }
 
     @Override
-    public List<ItensDaVendaDto> litarItemDaVendaPorCliente(String nome) {
+    public List<ItensDaVenda> litarItemDaVendaPorCliente(String nome) {
         return itensDaVendaRepository.litarItemDaVendaPorCliente(nome);
     }
 

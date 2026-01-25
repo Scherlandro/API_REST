@@ -34,7 +34,7 @@ public class VendasController {
     public ResponseEntity<List<VendasDto>> listarVendas() {
         List<Vendas> list = vendas_serv.listarVendas();
         return ResponseEntity.ok(list.stream().map(
-                e -> mapper.map(e, VendasDto.class)).collect(Collectors.toList()));
+                Vendas::toDTO).toList());
     }
 
     @GetMapping(path = "/{idVenda}")
@@ -74,8 +74,5 @@ public class VendasController {
         vendas_serv.delete(id);
         return ResponseEntity.noContent().build();
     }
-
-
-
 
 }

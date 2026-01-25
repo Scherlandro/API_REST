@@ -3,9 +3,12 @@ package com.biontecapi.model;
 import javax.persistence.*;
 
 import com.biontecapi.dtos.ItensDaVendaDto;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Data
@@ -41,7 +44,8 @@ public class ItensDaVenda {
     private Double valorParcial;
 
     @Transient
-    private String dtRegistro;
+    @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
+    private LocalDateTime dtRegistro;
 
     public ItensDaVendaDto toDTO(){
         return new ItensDaVendaDto(this.IdItensVd,this.codVenda,this.codProduto,this.descricao,

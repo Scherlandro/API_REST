@@ -1,10 +1,12 @@
 package com.biontecapi.controller;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,61 +25,52 @@ public class ItensVendaController {
 
     @Autowired
     private ItensDaVendaService itensDaVendaService;
-    @Autowired
-    private ModelMapper mapper;
-
 
     @GetMapping(path = "/all")
     public ResponseEntity<List<ItensDaVendaDto>> listarItensDaVenda() {
         List<ItensDaVenda> list = itensDaVendaService.findAll();
         return ResponseEntity.ok(list.stream().map(
-                e -> mapper.map(e, ItensDaVendaDto.class))
-                .collect(Collectors.toList()));
+               ItensDaVenda::toDTO).toList());
     }
 
     @GetMapping(value = "/buscarPorCliente")
     public ResponseEntity<List<ItensDaVendaDto>> ConsultarItensVdPorCliente(@RequestParam(name = "nome") String nome) {
-        List<ItensDaVendaDto> list = itensDaVendaService.litarItemDaVendaPorCliente(nome);
+        List<ItensDaVenda> list = itensDaVendaService.litarItemDaVendaPorCliente(nome);
         return ResponseEntity.ok(list.stream().map(
-                e -> mapper.map(e, ItensDaVendaDto.class))
-                .collect(Collectors.toList()));
+                ItensDaVenda::toDTO).toList());
     }
 
     @GetMapping(value = "/buscarPorIdProduct")
     public ResponseEntity<List<ItensDaVendaDto>> ConsultarItensVdPorIdProd(@RequestParam(value = "id") Integer id) {
-        List<ItensDaVendaDto> list = itensDaVendaService.listarItensVdPorIdProduto(id);
+        List<ItensDaVenda> list = itensDaVendaService.listarItensVdPorIdProduto(id);
         return ResponseEntity.ok(list.stream().map(
-                e -> mapper.map(e, ItensDaVendaDto.class))
-                .collect(Collectors.toList()));
+                ItensDaVenda::toDTO).toList());
     }
 
     @GetMapping(value = "/buscarPorIdVd")
     public ResponseEntity<List<ItensDaVendaDto>> ConsultarItensVdPorIdVd(@RequestParam(value = "id") Integer id) {
-        List<ItensDaVendaDto> list = itensDaVendaService.listarItensDaVdPorId(id);
+        List<ItensDaVenda> list = itensDaVendaService.listarItensDaVdPorId(id);
         return ResponseEntity.ok(list.stream().map(
-                e -> mapper.map(e, ItensDaVendaDto.class))
-                .collect(Collectors.toList()));
+                ItensDaVenda::toDTO).toList());
     }
 
     @GetMapping(value = "/buscarPorData")
     public ResponseEntity<List<ItensDaVendaDto>> ConsultarItensVdPorData(@RequestParam(name = "data") String data) {
-        List<ItensDaVendaDto> list = itensDaVendaService.litarItemDaVendaPorData(data);
+        List<ItensDaVenda> list = itensDaVendaService.litarItemDaVendaPorData(data);
         return ResponseEntity.ok(list.stream().map(
-                e -> mapper.map(e, ItensDaVendaDto.class))
-                .collect(Collectors.toList()));
+                ItensDaVenda::toDTO).toList());
     }
 
     @GetMapping(value = "/ItensVdEntreDatas")
     public ResponseEntity<List<ItensDaVendaDto>> ConsultarItensVdEntreDatas(
-            @RequestParam(name = "dtIni") String dtIni, @RequestParam(name = "dtFinal") String dtFinal) {
-        List<ItensDaVendaDto> list = itensDaVendaService.ConsultarItensVdEntreDatas(dtIni, dtFinal);
+            @RequestParam(name = "dtIni") LocalDateTime dtIni, @RequestParam(name = "dtFinal") LocalDateTime dtFinal) {
+        List<ItensDaVenda> list = itensDaVendaService.ConsultarItensVdEntreDatas(dtIni, dtFinal);
       /*  if(!list.isEmpty()){
             return ResponseEntity.notFound().eTag("Não encontrado").build();
             //   return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Registro não encontrado");
         }else */
-        return ResponseEntity.ok(list.stream().map(
-                e -> mapper.map(e, ItensDaVendaDto.class))
-                .collect(Collectors.toList()));
+        return ResponseEntity.status(HttpStatus.FOUND).body(list.stream().map(
+                ItensDaVenda::toDTO).toList());
     }
 
 

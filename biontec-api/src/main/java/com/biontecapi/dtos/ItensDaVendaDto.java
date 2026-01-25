@@ -1,5 +1,7 @@
 package com.biontecapi.dtos;
 
+import java.time.LocalDateTime;
+
 public record ItensDaVendaDto (
      Integer IdItensVd,
      String codVenda,
@@ -9,5 +11,5 @@ public record ItensDaVendaDto (
      Double valVenda,
      Integer qtdVendidas,
      Double valorParcial,
-     String dtRegistro
+     LocalDateTime dtVenda
 ){ }

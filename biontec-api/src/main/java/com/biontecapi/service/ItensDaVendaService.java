@@ -1,5 +1,6 @@
 package com.biontecapi.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,15 +14,15 @@ public interface ItensDaVendaService {
 
     Optional<ItensDaVenda> findById(Integer id);
 
-    List<ItensDaVendaDto> listarItensDaVdPorId(Integer id);
+    List<ItensDaVenda> listarItensDaVdPorId(Integer id);
 
-    List<ItensDaVendaDto> listarItensVdPorIdProduto(Integer id);
+    List<ItensDaVenda> listarItensVdPorIdProduto(Integer id);
 
-    List<ItensDaVendaDto> ConsultarItensVdEntreDatas(String dtIni, String dtFinal);
+    List<ItensDaVenda> ConsultarItensVdEntreDatas(LocalDateTime dtIni, LocalDateTime dtFinal);
 
-    List<ItensDaVendaDto> litarItemDaVendaPorData(String dt);
+    List<ItensDaVenda> litarItemDaVendaPorData(String dt);
 
-    List<ItensDaVendaDto> litarItemDaVendaPorCliente(String nome);
+    List<ItensDaVenda> litarItemDaVendaPorCliente(String nome);
 
     ItensDaVenda save(ItensDaVenda itensDaVenda);
 
