@@ -7,7 +7,7 @@ import {MatSort} from "@angular/material/sort";
 import {MatTable, MatTableDataSource} from "@angular/material/table";
 import {expand, of, timeout} from "rxjs";
 import {catchError, delay, first} from "rxjs/operators";
-import {DialogOpenSalesComponent} from "src/app/shared/diolog_components/dialog-itensvd/dialog-open-sales.component";
+import {DialogOpenSalesComponent} from "src/app/shared/diolog_components/dialog-open-sales/dialog-open-sales.component";
 import {iItensVd} from "../../interfaces/itens-vd";
 import {iVendas} from "../../interfaces/vendas";
 import {ItensVdService} from "../../services/itens-vd.service";

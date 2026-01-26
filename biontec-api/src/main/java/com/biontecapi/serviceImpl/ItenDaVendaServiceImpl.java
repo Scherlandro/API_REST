@@ -1,6 +1,5 @@
 package com.biontecapi.serviceImpl;
 
-import com.biontecapi.dtos.ItensDaVendaDto;
 import com.biontecapi.mapper.ItensDaVendaMapper;
 import com.biontecapi.model.ItensDaVenda;
 import com.biontecapi.repository.ItensDaVendaRepository;

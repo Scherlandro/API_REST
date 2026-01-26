@@ -4,7 +4,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from "@angular/forms";
 import { AppMaterialModule } from "./app-material/app-material.module";
 import { ConfirmDiologComponent } from "./diolog_components/confirm-diolog/confirm-diolog.component";
-import { DialogOpenSalesComponent } from "./diolog_components/dialog-itensvd/dialog-open-sales.component";
+import { DialogOpenSalesComponent } from "./diolog_components/dialog-open-sales/dialog-open-sales.component";
 import { DialogLoginComponent } from "./diolog_components/dialog-login/dialog-login.component";
 import { DialogOpenOsComponent } from "./diolog_components/dialog-open-os/dialog-open-os.component";
 import { DialogProdutoComponent } from "./diolog_components/dialog-produto/dialog-produto.component";
