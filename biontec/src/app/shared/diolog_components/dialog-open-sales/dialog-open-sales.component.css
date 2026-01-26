@@ -25,3 +25,15 @@
   position: center;
   align-items: center;
 }
+
+mat-form-field {
+  line-height: 0;
+  width: 90%;
+  height: 12%;
+  padding: 2px; /* Ajuste o padding se necessário */
+}
+
+
+mat-label, mat-input {
+  font-size: 0.8rem; /* Reduz o tamanho da fonte para se ajustar ao tamanho do campo */
+}

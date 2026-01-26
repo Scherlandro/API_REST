@@ -102,11 +102,6 @@ export class VendaComponent implements OnInit {
         ...item,
         valVenda: item.valVenda,
         valorParcial: item.valorParcial
-       /*
-       // Formata os valores individuais
-        valVenda: this.formatarReal(item.valVenda),
-        valorParcial: this.formatarReal(item.valorParcial)
-        */
       }));
       this.updateVd(element);
     }
@@ -124,34 +119,6 @@ export class VendaComponent implements OnInit {
       });
     //  this.tbData.splice(this.ruwSelec, 1);
   }
-
-
-/*
-  formatarDadosVendas(vendas: iVendas[]): iVendas[] {
-    console.log('Valor da TbItensVd', vendas.map( vd => ({
-      ...vd,
-      totalgeral: this.formatarReal(vd.totalgeral)
-    })));
-    return vendas.map(vd => ({
-      ...vd,
-      totalgeral: this.formatarReal(vd.totalgeral)
-    }));
-  }*/
-
-  // Método para formatar valores para Real brasileiro
- /* formatarReal(valor: number | string): number {
-    // Converte para número se for string
-    const numero = typeof valor === 'string' ? parseFloat(valor) : valor;
-
-    // Formata para Real brasileiro
-    return Number(numero.toLocaleString('pt-BR', {
-      style: 'currency',
-      currency: 'BRL',
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2
-    }));
-  }
-*/
 
   aplicarFiltro(valor: string) {
     valor = valor.trim().toLowerCase();
