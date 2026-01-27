@@ -71,29 +71,29 @@ public class ItenDaVendaServiceImpl implements ItensDaVendaService {
     }
 
     @Override
+    @Transactional
     public ItensDaVenda save(ItensDaVendaDto dto) {
-        ItensDaVenda item = itensDaVendaRepository.findById(dto.IdItensVd())
-                .orElseThrow(() -> new RuntimeException("OS não encontrada"));
+        ItensDaVenda item;
+        if (dto.IdItensVd() == null || dto.IdItensVd() == 0) {
+            item = new ItensDaVenda();
+        } else {
+            item = itensDaVendaRepository.findById(dto.IdItensVd())
+                    .orElseThrow(() -> new RuntimeException("Item não encontrado para atualizar"));
+        }
         item.mapToDTO(dto);
         item.setValorParcial(calcularValorParcial(item));
         return itensDaVendaRepository.save(item);
     }
 
     @Override
+    @Transactional
     public ItensDaVenda atualizarItensDaVenda(ItensDaVendaDto dto) {
-
-        ItensDaVenda item = itensDaVendaRepository.findById(dto.IdItensVd())
-                .orElseThrow(() -> new RuntimeException("OS não encontrada"));
-        item.mapToDTO(dto);
-        item.setValorParcial(calcularValorParcial(item));
-        return itensDaVendaRepository.save(item);
+        return this.save(dto);
     }
-
 
     private Double calcularValorParcial(ItensDaVenda itenVd) {
-        double totalItens =  itenVd.getValVenda() * itenVd.getQtdVendidas();
-        return totalItens;
+        if (itenVd.getValVenda() == null || itenVd.getQtdVendidas() == null) return 0.0;
+        return itenVd.getValVenda() * itenVd.getQtdVendidas();
     }
-
 
 }

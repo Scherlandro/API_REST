@@ -283,7 +283,7 @@ export class DialogOpenSalesComponent implements OnInit {
       return;
     }
     const novoItem: iItensVd = {
-      idItensVd: 0, // item novo sempre inicia com 0
+      idItensVd: null as any, // item novo sempre inicia com 0
       codVenda: this.venda.idVenda ?? 0,
       codProduto: String(produtoSelecionado.codProduto),
       descricao: String(produtoSelecionado.nomeProduto),

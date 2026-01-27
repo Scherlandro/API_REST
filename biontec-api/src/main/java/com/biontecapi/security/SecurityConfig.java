@@ -47,14 +47,34 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         customAuthenticationFilter.setFilterProcessesUrl("/api/login/");
         http.csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-                .authorizeRequests().antMatchers(GET, "/api/user/token-refresh/**", "/api/produtos/**", "/api/paises/**","/api/nfe/**").permitAll().and()
-                .authorizeRequests().antMatchers(POST, "/api/login/**", "/api/user/save-user","/api/nfe/**").permitAll().and()
-                .authorizeRequests().antMatchers(POST, "/api/user/save-role", "/api/user/role-addtouser").hasAnyAuthority("ROLE_ADMIN")
+                .authorizeRequests()
+                .antMatchers(GET, "/api/user/token-refresh/**", "/api/produtos/**", "/api/paises/**","/api/nfe/**").permitAll()
+                .antMatchers(POST, "/api/login/**", "/api/user/save-user","/api/nfe/**").permitAll()
+                .antMatchers(POST, "/api/user/save-role", "/api/user/role-addtouser").hasAnyAuthority("ROLE_ADMIN")
                 .anyRequest().authenticated().and()
                 .addFilter(customAuthenticationFilter).cors();
         http.addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
     }
 
+ /*   @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        CustomAuthenticationFilter customAuthenticationFilter = new CustomAuthenticationFilter(authenticationManagerBean());
+        customAuthenticationFilter.setFilterProcessesUrl("/api/login/");
+
+        http.csrf().disable()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+                .authorizeRequests()
+                .antMatchers(GET, "/api/user/token-refresh/**", "/api/produtos/**", "/api/paises/**","/api/nfe/**").permitAll()
+                .antMatchers(POST, "/api/login/**", "/api/user/save-user","/api/nfe/**").permitAll()
+                // ADICIONE ESTA LINHA se quiser permitir salvar itens sem validar token (para teste)
+                // Caso contrário, certifique-se que o Angular Interceptor está enviando o Bearer Token
+                .antMatchers(POST, "/api/itensDaVenda/salvar").authenticated()
+                .antMatchers(POST, "/api/user/save-role", "/api/user/role-addtouser").hasAnyAuthority("ROLE_ADMIN")
+                .anyRequest().authenticated().and()
+                .addFilter(customAuthenticationFilter).cors();
+        http.addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
+    }
+*/
     @Bean
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
