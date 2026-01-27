@@ -24,7 +24,7 @@ public interface ItensDaVendaService {
 
     List<ItensDaVenda> litarItemDaVendaPorCliente(String nome);
 
-    ItensDaVenda save(ItensDaVenda itensDaVenda);
+    ItensDaVenda save(ItensDaVendaDto dto);
 
     ItensDaVenda atualizarItensDaVenda(ItensDaVendaDto dto);
 }

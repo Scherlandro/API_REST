@@ -75,7 +75,7 @@ public class ItensVendaController {
         return ResponseEntity.ok(itensDaVendaService.save(dto));
     }
 
-   @PutMapping
+   @PutMapping(path = "/editar")
     public ResponseEntity<ItensDaVenda> atualizarItensDaVenda(@RequestBody ItensDaVendaDto dto) {
            return ResponseEntity.ok(itensDaVendaService.atualizarItensDaVenda(dto));
     }

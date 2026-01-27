@@ -283,23 +283,15 @@ export class DialogOpenSalesComponent implements OnInit {
       return;
     }
     const novoItem: iItensVd = {
-      codProduto: "",
-      codVenda: 0,
+      idItensVd: 0, // item novo sempre inicia com 0
+      codVenda: this.venda.idVenda ?? 0,
+      codProduto: String(produtoSelecionado.codProduto),
+      descricao: String(produtoSelecionado.nomeProduto),
+      valVenda: Number(produtoSelecionado.valorVenda),
+      qtdVendidas: Number(this.quantidadeControl.value),
       descPorUnidade: 0,
-      descricao: "",
-      dtRegistro: "",
-      fotoProduto: undefined,
-      idItensVd: 0,
-      qtdVendidas: 0,
-      valVenda: 0,
-      valorParcial: 0
-      /*   idItensDaVd: 0, // item novo sempre inicia com 0
-         codVd: this.venda.idVd ?? 0,
-         codProduto: String(produtoSelecionado.codProduto),
-         descricao: String(produtoSelecionado.nomeProduto),
-         valorUnitario: Number(produtoSelecionado.valorVenda),
-         quantidade: Number(this.quantidadeControl.value),
-         total: Number(produtoSelecionado.valorVenda) * Number(this.quantidadeControl.value)*/
+      valorParcial: Number(produtoSelecionado.valorVenda) * Number(this.quantidadeControl.value),
+      dtRegistro: ""
     };
     if(novoItem.idItensVd == 0){
       this.ItensVdService.createElements(novoItem).subscribe({

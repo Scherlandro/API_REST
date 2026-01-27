@@ -4,7 +4,7 @@ import com.biontecapi.dtos.ItensDaVendaDto;
 import com.biontecapi.mapper.ItensDaVendaMapper;
 import com.biontecapi.model.ItensDaVenda;
 import com.biontecapi.repository.ItensDaVendaRepository;
-import com.biontecapi.service.ItensDaItensDaVendaervice;
+import com.biontecapi.service.ItensDaVendaService;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -13,13 +13,13 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class ItenDaItensDaVendaerviceImpl implements ItensDaItensDaVendaervice {
+public class ItenDaVendaServiceImpl implements ItensDaVendaService {
 
 
     private final ItensDaVendaRepository itensDaVendaRepository;
     private final ItensDaVendaMapper mapper;
 
-    public ItenDaItensDaVendaerviceImpl(ItensDaVendaRepository repository,
+    public ItenDaVendaServiceImpl(ItensDaVendaRepository repository,
                                   ItensDaVendaMapper mapper) {
 
         this.itensDaVendaRepository = repository;
@@ -72,30 +72,27 @@ public class ItenDaItensDaVendaerviceImpl implements ItensDaItensDaVendaervice {
 
     @Override
     public ItensDaVenda save(ItensDaVendaDto dto) {
-        ItensDaVenda vd = itensDaVendaRepository.findById(dto.IdItensVd())
+        ItensDaVenda item = itensDaVendaRepository.findById(dto.IdItensVd())
                 .orElseThrow(() -> new RuntimeException("OS não encontrada"));
-        vd.mapToDTO(dto);
-        vd.setValorParcial(calcularValorParcial(vd));
-        return itensDaVendaRepository.save(vd);
+        item.mapToDTO(dto);
+        item.setValorParcial(calcularValorParcial(item));
+        return itensDaVendaRepository.save(item);
     }
 
     @Override
-    public ItensDaVenda atualizarVenda(ItensDaVendaDto dto) {
+    public ItensDaVenda atualizarItensDaVenda(ItensDaVendaDto dto) {
 
-        ItensDaVenda vd = itensDaVendaRepository.findById(dto.IdItensVd())
+        ItensDaVenda item = itensDaVendaRepository.findById(dto.IdItensVd())
                 .orElseThrow(() -> new RuntimeException("OS não encontrada"));
-        vd.mapToDTO(dto);
-        vd.setValorParcial(calcularValorParcial(vd));
-        return itensDaVendaRepository.save(vd);
+        item.mapToDTO(dto);
+        item.setValorParcial(calcularValorParcial(item));
+        return itensDaVendaRepository.save(item);
     }
 
 
     private Double calcularValorParcial(ItensDaVenda itenVd) {
-
-        double totalItens = itenVd.getIdItensVd().stream()
-                .mapToDouble(item -> item.getValVenda() * item.getQtdVendidas()).sum();
-
-        return totalItens; 
+        double totalItens =  itenVd.getValVenda() * itenVd.getQtdVendidas();
+        return totalItens;
     }
 
 

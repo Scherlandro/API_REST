@@ -29,6 +29,7 @@ export class ItensVdService {
 
 
   createElements(element: iItensVd): Observable<iItensVd> {
+    console.log('Foi para Post ', element)
     return this._http.post<iItensVd>(this.baseUrl+'salvar',element);
   }
 
