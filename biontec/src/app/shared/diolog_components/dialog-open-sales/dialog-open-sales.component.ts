@@ -263,7 +263,7 @@ export class DialogOpenSalesComponent implements OnInit {
     }
     if (venda.modo === 'adicionar' && venda.modoNew === 'editar') {
       console.log('isChange no save ', this.isChange)
-      this.vendaServices.updateVenda(venda).pipe(takeUntil(this.destroy$))
+      this.vendaServices.updateVd(venda).pipe(takeUntil(this.destroy$))
         .subscribe({
           next: (vendaAtualizada) => {
             this.dialogRef.close(vendaAtualizada);
@@ -341,7 +341,7 @@ export class DialogOpenSalesComponent implements OnInit {
 
   finalizarVd() {
     //this.venda.status = 'FINALIZADA';
-    this.vendaServices.updateVenda(this.venda).subscribe();
+    this.vendaServices.updateVd(this.venda).subscribe();
   }
 
 

@@ -165,19 +165,14 @@ export class VendaComponent implements OnInit {
     const isEdit = !!item;
     const isNovaVD = !vd.itensVd; // nova venda recém criada
 
+
     const emptyItem: iItensVd = {
-      idItensVd: 0,
-      codVenda: vd.idVenda ?? 0,
-      codProduto: '',
-      descricao: '',
-      valCompra: 0,
-      valVenda: 0,
-      qtdVendidas: 1,
-      descPorUnidade: 0,
-      valorParcial: 0,
-      dtRegistro: '',
-      fotoProduto: ''
+      idItensVd: 0, codVenda: vd.idVenda ?? 0, codProduto: '', descricao: '',
+      valCompra: 0, valVenda: 0, qtdVendidas: 1, descPorUnidade: 0, valorParcial: 0,
+      dtRegistro: '', fotoProduto: ''
     };
+    console.log('Vd -> ', vd,'IsNovaVD', isNovaVD ,'Item -> ', item, 'IsEdit', isEdit,
+      'EmptyItem', emptyItem);
 
     const itens = isEdit ? item : emptyItem;
 

@@ -8,11 +8,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.biontecapi.dtos.ItensDaVendaDto;
 import com.biontecapi.model.ItensDaVenda;
@@ -72,6 +68,18 @@ public class ItensVendaController {
         return ResponseEntity.status(HttpStatus.FOUND).body(list.stream().map(
                 ItensDaVenda::toDTO).toList());
     }
+
+    
+    @PostMapping(path = "/salvar")
+    public ResponseEntity salvar(@RequestBody ItensDaVendaDto dto) {
+        return ResponseEntity.ok(itensDaVendaService.save(dto));
+    }
+
+   @PutMapping
+    public ResponseEntity<ItensDaVenda> atualizarItensDaVenda(@RequestBody ItensDaVendaDto dto) {
+           return ResponseEntity.ok(itensDaVendaService.atualizarItensDaVenda(dto));
+    }
+
 
 
 

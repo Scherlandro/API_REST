@@ -11,5 +11,5 @@ public record ItensDaVendaDto (
      Double valVenda,
      Integer qtdVendidas,
      Double valorParcial,
-     LocalDateTime dtVenda
+     LocalDateTime dtRegistro
 ){ }

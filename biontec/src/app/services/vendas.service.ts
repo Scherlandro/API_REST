@@ -32,15 +32,15 @@ export class VendasService {
   }
 
   updateVd(venda: iVendas): Observable<iVendas>{
-    console.log('Venda foi atualizada', venda);
+    console.log('ID da vd atualizada -> ', venda.idVenda);
     return this._http.put<iVendas>(this.baseUrl, venda)
   }
 
-  updateVenda(venda: iVendas): Observable<iVendas>{
+ /* updateVenda(venda: iVendas): Observable<iVendas>{
     console.log('Venda foi atualizada', venda);
     return this._http.patch<iVendas>(this.baseUrl+'/'+venda.idVenda, venda)
   }
-
+*/
   trashSales(cid:number|undefined): Observable<iVendas>{
     return this._http.delete<iVendas>(this.baseUrl+'/trash/'+cid)
   }

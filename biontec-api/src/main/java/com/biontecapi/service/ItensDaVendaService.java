@@ -26,4 +26,5 @@ public interface ItensDaVendaService {
 
     ItensDaVenda save(ItensDaVenda itensDaVenda);
 
+    ItensDaVenda atualizarItensDaVenda(ItensDaVendaDto dto);
 }

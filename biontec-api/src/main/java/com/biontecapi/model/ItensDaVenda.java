@@ -52,4 +52,15 @@ public class ItensDaVenda {
                 this.valCompra, this.valVenda,this.qtdVendidas, this.valorParcial, this.dtRegistro);
     }
 
+    public void mapToDTO(ItensDaVendaDto dto) {
+                this.IdItensVd = dto.IdItensVd();
+                this.codVenda = dto.codVenda();
+                this.codProduto = dto.codProduto();
+                this.descricao = dto.descricao();
+                this.valCompra = dto.valCompra();
+                this.valVenda = dto.valVenda();
+                this.qtdVendidas = dto.qtdVendidas();
+                this.valorParcial = dto.valorParcial();
+                this.dtRegistro = dto.dtRegistro();
+    }
 }

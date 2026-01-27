@@ -274,7 +274,7 @@ export class CarrinhoDeComprasComponent implements OnInit {
   finalizarCompra(): void {
     if (this.venda.idVenda) {
       // Atualizar venda existente
-      this.vendasService.updateVenda(this.venda).subscribe({
+      this.vendasService.updateVd(this.venda).subscribe({
         next: () => {
           alert('Compra atualizada com sucesso!');
           // Redirecionar ou fazer outra ação

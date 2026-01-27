@@ -1,9 +1,10 @@
 package com.biontecapi.serviceImpl;
 
+import com.biontecapi.dtos.ItensDaVendaDto;
 import com.biontecapi.mapper.ItensDaVendaMapper;
 import com.biontecapi.model.ItensDaVenda;
 import com.biontecapi.repository.ItensDaVendaRepository;
-import com.biontecapi.service.ItensDaVendaService;
+import com.biontecapi.service.ItensDaItensDaVendaervice;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -12,13 +13,13 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class ItenDaVendaServiceImpl implements ItensDaVendaService {
+public class ItenDaItensDaVendaerviceImpl implements ItensDaItensDaVendaervice {
 
 
     private final ItensDaVendaRepository itensDaVendaRepository;
     private final ItensDaVendaMapper mapper;
 
-    public ItenDaVendaServiceImpl(ItensDaVendaRepository repository,
+    public ItenDaItensDaVendaerviceImpl(ItensDaVendaRepository repository,
                                   ItensDaVendaMapper mapper) {
 
         this.itensDaVendaRepository = repository;
@@ -69,6 +70,33 @@ public class ItenDaVendaServiceImpl implements ItensDaVendaService {
         return itensDaVendaRepository.litarItemDaVendaPorCliente(nome);
     }
 
+    @Override
+    public ItensDaVenda save(ItensDaVendaDto dto) {
+        ItensDaVenda vd = itensDaVendaRepository.findById(dto.IdItensVd())
+                .orElseThrow(() -> new RuntimeException("OS não encontrada"));
+        vd.mapToDTO(dto);
+        vd.setValorParcial(calcularValorParcial(vd));
+        return itensDaVendaRepository.save(vd);
+    }
+
+    @Override
+    public ItensDaVenda atualizarVenda(ItensDaVendaDto dto) {
+
+        ItensDaVenda vd = itensDaVendaRepository.findById(dto.IdItensVd())
+                .orElseThrow(() -> new RuntimeException("OS não encontrada"));
+        vd.mapToDTO(dto);
+        vd.setValorParcial(calcularValorParcial(vd));
+        return itensDaVendaRepository.save(vd);
+    }
+
+
+    private Double calcularValorParcial(ItensDaVenda itenVd) {
+
+        double totalItens = itenVd.getIdItensVd().stream()
+                .mapToDouble(item -> item.getValVenda() * item.getQtdVendidas()).sum();
+
+        return totalItens; 
+    }
 
 
 }
