@@ -133,11 +133,11 @@ export class OrdemDeServiceComponent implements OnInit {
   }
 
   editarOS(elementOS: iServiceOrder) {
-    this.openDilogItenOS(elementOS);
+    this.openDilogAddItenOS(elementOS);
   }
 
 
-  openDilogItenOS(os: iServiceOrder, item?: iItensOS) {
+  openDilogAddItenOS(os: iServiceOrder, item?: iItensOS) {
     const isEdit = !!item;
     const isNovaOS = !os.itensOS; // nova OS recém criada
 
