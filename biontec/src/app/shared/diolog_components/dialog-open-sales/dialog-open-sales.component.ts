@@ -287,17 +287,20 @@ export class DialogOpenSalesComponent implements OnInit {
       codVenda: this.venda.idVenda ?? 0,
       codProduto: String(produtoSelecionado.codProduto),
       descricao: String(produtoSelecionado.nomeProduto),
+      valCompra: Number(produtoSelecionado.valorCompra),
       valVenda: Number(produtoSelecionado.valorVenda),
       qtdVendidas: Number(this.quantidadeControl.value),
       descPorUnidade: 0,
       valorParcial: Number(produtoSelecionado.valorVenda) * Number(this.quantidadeControl.value),
       dtRegistro: ""
     };
-    if(novoItem.idItensVd == 0){
+
+    console.log('Id do Novo Item ', novoItem.idItensVd, 'IdVenda', this.venda.idVenda )
+    if(novoItem.idItensVd == null){
       this.ItensVdService.createElements(novoItem).subscribe({
         next: () => {
-          this.venda.itensVd.push(novoItem); // só para UI
-          //this.updateTotal();
+         // this.venda.itensVd.push(novoItem); // só para UI
+          this.updateTotal();
         }
       });
     }

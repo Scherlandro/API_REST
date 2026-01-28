@@ -35,7 +35,6 @@ export class DialogUsuarioComponent implements OnInit {
   }
 
   save(user: IUser) {
-    console.log('Usuario ', user)
     if (user.id_usuario != null ) {
       this.userService.editarUsuario(user)
         .pipe(takeUntil(this.destroy$)
@@ -44,7 +43,7 @@ export class DialogUsuarioComponent implements OnInit {
           this.dialogRef.close(i);
         },
         error: (err) => {
-          this.onError('Erro ao atualizar a OS');
+          this.onError('Erro ao atualizar o Usuário');
           console.error(err);
         }
       });
@@ -56,7 +55,7 @@ export class DialogUsuarioComponent implements OnInit {
           this.dialogRef.close(i);
         },
         error: (err) => {
-          this.onError('Erro ao adicionar item');
+          this.onError('Erro ao adicionar o Usuário');
           console.error(err);
         }
       });

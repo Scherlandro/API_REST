@@ -90,8 +90,8 @@
       <mat-error>Campo Obrigatório não preenchido.</mat-error>
 
       <mat-autocomplete #autstatus="matAutocomplete" [displayWith]="displayStatus">
-        <mat-option *ngFor="let statusOs of statusOsFiltradvenda | async" [value]="statusOs">
-          {{statusOs}}
+        <mat-option *ngFor="let statusVd of statusOsFiltradvenda | async" [value]="statusVd">
+          {{statusVd}}
         </mat-option>
       </mat-autocomplete>
     </mat-form-field>
@@ -141,7 +141,7 @@
 
     <mat-form-field>
       <mat-label>Preço Unitário</mat-label>
-      <input matInput [value]="formatter(venda.itensVd.valorUnitario || 0)" disabled>
+      <input matInput [value]="formatter(venda.itensVd.valVenda || 0)" disabled>
     </mat-form-field>
 
     <!-- Campo Quantidade com validação -->
