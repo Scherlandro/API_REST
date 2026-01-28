@@ -98,8 +98,7 @@ export class UsuariosComponent implements OnInit {
       }
     });
 
-    console.log("Evento de dialogRef", dialogRef)
-    dialogRef.afterClosed().subscribe(result => {
+   /* dialogRef.afterClosed().subscribe(result => {
       if (result !== undefined) {
         if (this.tbSourceUsuarios$.data
           .map(p => p.id_usuario).includes(result.id_user)) {
@@ -116,7 +115,7 @@ export class UsuariosComponent implements OnInit {
               this.tbSourceUsuarios$.data.push(result);
               this.tableUser.renderRows();
             });
-        }}});
+        }}});*/
   }
 
   editarElement(eventUser: IUser) {

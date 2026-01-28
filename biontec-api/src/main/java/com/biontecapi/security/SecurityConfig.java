@@ -47,16 +47,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         customAuthenticationFilter.setFilterProcessesUrl("/api/login/");
         http.csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-                .authorizeRequests()
-                .antMatchers(GET, "/api/user/token-refresh/**", "/api/produtos/**", "/api/paises/**","/api/nfe/**").permitAll()
-                .antMatchers(POST, "/api/login/**", "/api/user/save-user","/api/nfe/**").permitAll()
-                .antMatchers(POST, "/api/user/save-role", "/api/user/role-addtouser").hasAnyAuthority("ROLE_ADMIN")
+                .authorizeRequests().antMatchers(GET, "/api/user/token-refresh/**", "/api/produtos/**", "/api/paises/**","/api/nfe/**").permitAll().and()
+                .authorizeRequests().antMatchers(POST, "/api/login/**", "/api/user/save-user","/api/nfe/**").permitAll().and()
+                .authorizeRequests().antMatchers(POST, "/api/user/save-role", "/api/user/role-addtouser").hasAnyAuthority("ROLE_ADMIN")
                 .anyRequest().authenticated().and()
                 .addFilter(customAuthenticationFilter).cors();
         http.addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
     }
 
- /*   @Override
+     /*   @Override
     protected void configure(HttpSecurity http) throws Exception {
         CustomAuthenticationFilter customAuthenticationFilter = new CustomAuthenticationFilter(authenticationManagerBean());
         customAuthenticationFilter.setFilterProcessesUrl("/api/login/");
@@ -75,6 +74,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
     }
 */
+
     @Bean
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {

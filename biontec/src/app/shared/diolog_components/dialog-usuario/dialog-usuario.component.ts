@@ -35,7 +35,7 @@ export class DialogUsuarioComponent implements OnInit {
   }
 
   save(user: IUser) {
-    if (this.isChange ) {
+    if (user.id_usuario != null ) {
       this.userService.editarUsuario(user)
         .pipe(takeUntil(this.destroy$)
         ).subscribe({

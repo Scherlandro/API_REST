@@ -18,9 +18,9 @@ export class TokenInterceptor implements HttpInterceptor {
   constructor(
     private tokenService: TokenService,
     private apiErrorService: NotificationMgsService
-  ) {
-  }
+  ) {}
 
+  /*
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     const token = this.tokenService.getToken();
 
@@ -54,9 +54,9 @@ export class TokenInterceptor implements HttpInterceptor {
       })
     );
   }
-}
+}*/
 
-/*  intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
+  intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
 
     const token = this.tokenService.getToken();
     const requestUrl: Array<any> = request.url.split('/');
@@ -78,7 +78,7 @@ export class TokenInterceptor implements HttpInterceptor {
         }) )  }
     return next.handle(request);
   }
-}*/
+}
 
 export const TokenInterceptorProvider = {
   provide: HTTP_INTERCEPTORS,
