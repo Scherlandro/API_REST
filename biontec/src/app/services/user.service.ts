@@ -39,6 +39,7 @@ export class UserService {
   }
 
   editarUsuario(user: IUser): Observable<IUser> {
+    console.log('Usuario foi para atualização', user)
     return this._http.put<IUser>(this.baseUrl+'/edit-user',user);
   }
 

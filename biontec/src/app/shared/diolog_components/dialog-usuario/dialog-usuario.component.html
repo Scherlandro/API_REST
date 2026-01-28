@@ -26,7 +26,7 @@
   <span>
  <button mat-button *ngIf="!isChange" [mat-dialog-close]="iUser" cdkFocusInitial (click)="save(iUser)"
          [disabled]="isSaveButtonDisabled()">Create</button>
-  <button mat-button *ngIf="isChange" [mat-dialog-close]="iUser" cdkFocusInitial >Edit</button>
+  <button mat-button *ngIf="isChange" [mat-dialog-close]="iUser" (click)="save(iUser)" cdkFocusInitial >Edit</button>
   <button mat-raised-button (click)="onCancel()">Cancel</button>
  </span>
 

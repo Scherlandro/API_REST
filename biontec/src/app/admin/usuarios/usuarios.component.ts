@@ -98,24 +98,20 @@ export class UsuariosComponent implements OnInit {
       }
     });
 
-   /* dialogRef.afterClosed().subscribe(result => {
-      if (result !== undefined) {
-        if (this.tbSourceUsuarios$.data
-          .map(p => p.id_usuario).includes(result.id_user)) {
-          this.userService.editarUsuario(result)
-            .subscribe((data: IUser) => {
-              const index = this.tbSourceUsuarios$.data
-                .findIndex(p => p.id_usuario === data.id_usuario);
-              this.tbSourceUsuarios$.data[index] = data;
-              this.tableUser.renderRows();
-            });
-        } else {
-          this.userService.createUsuario(result)
-            .subscribe((data: IUser) => {
-              this.tbSourceUsuarios$.data.push(result);
-              this.tableUser.renderRows();
-            });
-        }}});*/
+   dialogRef.afterClosed().subscribe(result => {
+     if (result !== undefined) {
+       if (this.tbSourceUsuarios$.data
+         .map(p => p.id_usuario).includes(result.id_user)) {
+         const index = this.tbSourceUsuarios$.data
+           .findIndex(p => p.id_usuario === result.id_usuario);
+         this.tbSourceUsuarios$.data[index] = result;
+         this.tableUser.renderRows();
+       }
+     } else {
+       this.tbSourceUsuarios$.data.push(result);
+       this.tableUser.renderRows();
+     }
+   })
   }
 
   editarElement(eventUser: IUser) {
