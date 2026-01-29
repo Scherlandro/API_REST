@@ -162,6 +162,9 @@ export class VendaComponent implements OnInit {
 
 
   openDilogAddItenVd(vd: iVendas, item?: iItensVd) {
+
+    console.log('VD do EDITAR', vd.idVenda ,
+      'Item do EDITAR ', item?.codVenda)
     const isEdit = !!item;
     const isNovaVD = !vd.itensVd; // nova venda recém criada
 
@@ -171,8 +174,6 @@ export class VendaComponent implements OnInit {
       valCompra: 0, valVenda: 0, qtdVendidas: 1, descPorUnidade: 0, valorParcial: 0,
       dtRegistro: '', fotoProduto: ''
     };
-    console.log('Vd -> ', vd,'IsNovaVD', isNovaVD ,'Item -> ', item, 'IsEdit', isEdit,
-      'EmptyItem', emptyItem);
 
     const itens = isEdit ? item : emptyItem;
 
