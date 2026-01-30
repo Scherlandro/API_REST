@@ -1,8 +1,8 @@
 <div class="div-venda">
 
-  <mat-card class="container-box-venda" *ngIf="!(!isNewVd && !isChange)">
-    <h1 *ngIf="!isNewVd && isChange" mat-dialog-title>Abrir Venda</h1>
-    <h1 *ngIf="isNewVd " mat-dialog-title>Editar Venda</h1>
+  <mat-card class="container-box-venda" *ngIf="isNewVd || isUpdateVd || !isAddItem">
+    <h1 *ngIf="isNewVd && !isAddItem" mat-dialog-title>Abrir Venda</h1>
+    <h1 *ngIf="!isNewVd " mat-dialog-title>Editar Venda</h1>
 
 
     <mat-form-field appearance="fill">
@@ -45,14 +45,14 @@
     </mat-form-field>
 
     <!-- Data de Corrente -->
-    <mat-form-field appearance="fill" *ngIf="isNewVd && isChange" >
+    <mat-form-field appearance="fill" *ngIf="isNewVd && isAddItem" >
       <mat-label>Data Corrente</mat-label>
       <input matInput [matDatepicker]="picker" [(ngModel)]="venda.dtVenda" >
       <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
       <mat-datepicker #picker></mat-datepicker>
     </mat-form-field>
 
-    <mat-form-field *ngIf="isNewVd && !isChange" appearance="fill">
+    <mat-form-field *ngIf="isNewVd && !isAddItem" appearance="fill">
       <mat-label>Data Corrente</mat-label>
       <input matInput [value]="venda.dtVenda | date:'dd/MM/yyyy'"  disabled>
     </mat-form-field>
@@ -97,7 +97,7 @@
     </mat-form-field>
 
     <div>
-      <button mat-button *ngIf="isChange" cdkFocusInitial [mat-dialog-close]="vendaSelecionada"
+      <button mat-button *ngIf="isAddItem" cdkFocusInitial [mat-dialog-close]="vendaSelecionada"
               (click)="save(venda)">Savar Venda
       </button>
 
@@ -105,9 +105,9 @@
     </div>
   </mat-card>
 
+  <!-- Itens -->
+  <mat-card  *ngIf=" !isUpdateVd && isAddItem" class="container-box-itensvd" >
 
-  <mat-card  *ngIf=" isUpdateVd" class="container-box-itensvd" >
-    <!-- Itens -->
     <mat-form-field>
       <mat-label>ID</mat-label>
       <input matInput [(ngModel)]="venda.itensVd.idItensDaVd" disabled>
@@ -118,7 +118,7 @@
       <input matInput [value]="venda.itensVd.codProduto" disabled>
     </mat-form-field>
 
-    <mat-form-field *ngIf="isChange" appearance="fill" >
+    <mat-form-field *ngIf="isAddItem" appearance="fill" >
       <mat-label>Produto</mat-label>
       <input type="text" matInput placeholder="Digite o nome do produto"
              [formControl]="produtoControl"
@@ -134,7 +134,7 @@
       </mat-autocomplete>
     </mat-form-field>
 
-    <mat-form-field *ngIf="!isChange" appearance="fill">
+    <mat-form-field *ngIf="!isAddItem" appearance="fill">
       <mat-label>Descrição</mat-label>
       <input matInput [value]="venda.itensVd.descricao" disabled>
     </mat-form-field>
@@ -161,10 +161,10 @@
     <div mat-dialog-content> <!-- *ngIf="itensVd$.length > 0">-->
 
 
-      <button mat-raised-button *ngIf="!isNewVd || isChange" (click)="addItem()" [disabled]="isSaveButtonDisabled()">
+      <button mat-raised-button *ngIf="!isNewVd || isAddItem" (click)="addItem()" [disabled]="isSaveButtonDisabled()">
         Adicionar Item
       </button>
-      <button mat-raised-button *ngIf="!isChange" (click)="editarItem(itensVd)" [disabled]="isSaveButtonDisabled()">
+      <button mat-raised-button *ngIf="!isAddItem" (click)="editarItem(itensVd)" [disabled]="isSaveButtonDisabled()">
         Atualizar Item
       </button>
       <!--  <div *ngFor="let item of itensVd$">

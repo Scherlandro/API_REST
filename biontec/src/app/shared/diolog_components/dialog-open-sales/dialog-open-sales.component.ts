@@ -29,7 +29,7 @@ export class DialogOpenSalesComponent implements OnInit {
   itensVd: iItensVd;
   isNewVd : boolean;
   isUpdateVd: boolean;
-  isChange: boolean;
+  isAddItem: boolean;
   vendaSelecionada!: iVendas;
   funcionarioControl = new FormControl('', [Validators.required]);
   funcionarioFilted!: Observable<IFuncionario[]>;
@@ -50,9 +50,9 @@ export class DialogOpenSalesComponent implements OnInit {
   constructor(
     @Inject(MAT_DIALOG_DATA)
     public data: {
-      modoNew: 'novo' | 'editar' ;
-      modo:'editar' |'adicionar'  ;
-      modoUpdate: 'updateVd' | '' ,
+      modoNew: 'novo'  ;
+      modoUpdate: 'updateVd' ;
+      modoAdd:'adicionar'  ;
       venda: iVendas;
       itensVd: iItensVd;
     },
@@ -68,9 +68,10 @@ export class DialogOpenSalesComponent implements OnInit {
   ) {
     this.venda = data as any;
     this.itensVd = data.itensVd;  // item selecionado (ou item vazio)
-    this.isChange = data.modo === 'adicionar';
     this.isNewVd = data.modoNew === 'novo';
     this.isUpdateVd = data.modoUpdate === 'updateVd';
+    this.isAddItem = data.modoAdd === 'adicionar';
+    console.log('modoNew: ' , data.modoNew, 'modoUpdate: ', data.modoUpdate, 'modoAdd: ', data.modoAdd)
     this.produtoControl = new FormControl();
     this.quantidadeControl = new FormControl(
       this.itensVd?.qtdVendidas || 1,      [Validators.required, Validators.min(1)]
@@ -82,7 +83,7 @@ export class DialogOpenSalesComponent implements OnInit {
    // console.log('Dados :', this.data.itensVd)
     this.listarProdutvenda();
     this.setupAutocompleteFilters();
-     console.log('isNewVd ', this.isNewVd, 'isChange ' , this.isChange, 'isUpdateVd', this.isUpdateVd)
+     console.log('isNewVd ' , this.isNewVd, 'isUpdateVd', this.isUpdateVd, 'isAddItem ', this.isAddItem)
     this.clienteControl.setValue(this.venda.nomeCliente);
     this.funcionarioControl.setValue(this.venda.nomeFuncionario);
     if (this.itensVd && this.itensVd.qtdVendidas) {
@@ -98,7 +99,7 @@ export class DialogOpenSalesComponent implements OnInit {
       }
     });
     // Se estiver editando, força o cálculo inicial do total
-    if (this.isChange) {
+    if (this.isAddItem) {
       this.updateTotal();
     }
   }
@@ -211,7 +212,7 @@ export class DialogOpenSalesComponent implements OnInit {
     this.vendaServices.addVenda(vendaParaCriar).subscribe({
       next: (vendaCriada) => {
         this.venda = vendaCriada;
-        this.isChange = false;
+        this.isAddItem = false;
         this.isNewVd = true;
       },
       error: () => this.onError('Erro ao iniciar Vd')
@@ -265,7 +266,7 @@ export class DialogOpenSalesComponent implements OnInit {
         });
     }
     if (venda.modo === 'adicionar' && venda.modoNew === '') {
-      console.log('isChange no save ', this.isChange)
+      console.log('isChange no save ', this.isAddItem)
       this.vendaServices.updateVd(venda).pipe(takeUntil(this.destroy$))
         .subscribe({
           next: (vendaAtualizada) => {

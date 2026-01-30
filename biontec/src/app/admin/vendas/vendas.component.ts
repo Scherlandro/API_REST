@@ -131,7 +131,7 @@ export class VendaComponent implements OnInit {
     });
   }
 
-  openDilogVd() {
+  openNewVd() {
 
       const vd: iVendas = {
         idVenda: 0, idCliente: 0, nomeCliente: '', idFuncionario: 0, nomeFuncionario: '',
@@ -148,7 +148,7 @@ export class VendaComponent implements OnInit {
 
      this.dialog.open(DialogOpenSalesComponent, {
       data: {
-        modoNew: 'novo', modo: 'adicionar',
+        modoNew: 'novo', modoAdd: '', modoUpdate: '',
         ...vd,
         itensVd: { ...itens, codVD: vd.idVenda }
       }
@@ -157,13 +157,20 @@ export class VendaComponent implements OnInit {
   }
 
   editarVd(element: iVendas) {
-   this.openDilogAddItenVd(element, element.itensVd);
+   this.openDilogVd(element, element.itensVd);
   }
 
+  adicionarItenVd(element: iVendas){
+    this.openDilogVd(element)
+  }
 
-  openDilogAddItenVd(vd: iVendas, item?: iItensVd) {
+  editarItemVd(element: iItensVd){
+    this.openDilogVd(null, element);
+  }
+
+  openDilogVd(vd: any, item?: iItensVd) {
     const isEdit = !!item;
-    const isUpdateVD = !item;
+    const isUpdateVD = !!item;
     const isNovaVD = !vd.itensVd; // nova venda recém criada
     const emptyItem: iItensVd = {
       idItensVd: 0, codVenda: vd.idVenda ?? 0, codProduto: '', descricao: '',
@@ -179,7 +186,7 @@ export class VendaComponent implements OnInit {
         data: {
           modoNew: isNovaVD ? 'novo' : '',
           modoUpdate: isUpdateVD ? 'updateVd' : '' ,
-          modo: isEdit ? 'editar' : 'adicionar',
+          modoAdd: isEdit ? 'adicionar' : '',
           ...vd,
           itensVd: { ...itens, codVD: vd.idVenda }
         }
