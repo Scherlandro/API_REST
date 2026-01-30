@@ -163,8 +163,8 @@ export class VendaComponent implements OnInit {
 
   openDilogAddItenVd(vd: iVendas, item?: iItensVd) {
     const isEdit = !!item;
+    const isUpdateVD = !item;
     const isNovaVD = !vd.itensVd; // nova venda recém criada
-
     const emptyItem: iItensVd = {
       idItensVd: 0, codVenda: vd.idVenda ?? 0, codProduto: '', descricao: '',
       valCompra: 0, valVenda: 0, qtdVendidas: 1, descPorUnidade: 0, valorParcial: 0,
@@ -173,9 +173,12 @@ export class VendaComponent implements OnInit {
 
     const itens = isEdit ? item : emptyItem;
 
+    console.log('Valor do isUpdateVD', isUpdateVD);
+
        this.dialog.open(DialogOpenSalesComponent, {
         data: {
           modoNew: isNovaVD ? 'adicionar' : 'editar',
+          modoUpdate: isUpdateVD ? 'updateVd' : '' ,
           modo: isEdit ? 'editar' : 'adicionar',
           ...vd,
           itensVd: { ...itens, codVD: vd.idVenda }

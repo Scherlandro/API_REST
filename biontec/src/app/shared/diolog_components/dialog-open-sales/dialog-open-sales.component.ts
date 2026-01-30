@@ -28,6 +28,7 @@ export class DialogOpenSalesComponent implements OnInit {
   venda!: iVendas;
   itensVd: iItensVd;
   isNewVd : boolean;
+  isUpdateVd: boolean;
   isChange: boolean;
   vendaSelecionada!: iVendas;
   funcionarioControl = new FormControl('', [Validators.required]);
@@ -51,6 +52,7 @@ export class DialogOpenSalesComponent implements OnInit {
     public data: {
       modoNew: 'adicionar' | 'editar' ;
       modo:'editar' |'adicionar'  ;
+      modoUpdate: 'updateVd' | '' ,
       venda: iVendas;
       itensVd: iItensVd;
     },
@@ -68,6 +70,7 @@ export class DialogOpenSalesComponent implements OnInit {
     this.itensVd = data.itensVd;  // item selecionado (ou item vazio)
     this.isChange = data.modo === 'adicionar';
     this.isNewVd = data.modoNew === 'editar';
+    this.isUpdateVd = data.modoUpdate === 'updateVd';
     this.produtoControl = new FormControl();
     this.quantidadeControl = new FormControl(
       this.itensVd?.qtdVendidas || 1,      [Validators.required, Validators.min(1)]
@@ -76,10 +79,10 @@ export class DialogOpenSalesComponent implements OnInit {
 
 
   ngOnInit(): void {
-    console.log('Dados do Itens', this.itensVd.idItensVd)
+   // console.log('Dados :', this.data.itensVd)
     this.listarProdutvenda();
     this.setupAutocompleteFilters();
-     console.log(' isNewVd ', this.isNewVd, 'isChange ' , this.isChange, 'IdItensVd', this.itensVd.idItensVd)
+     console.log('1 isNewVd ', this.isNewVd, '1 isChange ' , this.isChange, ' isUpdateVd', this.isUpdateVd)
     this.clienteControl.setValue(this.venda.nomeCliente);
     this.funcionarioControl.setValue(this.venda.nomeFuncionario);
     if (this.itensVd && this.itensVd.qtdVendidas) {
