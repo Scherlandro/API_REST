@@ -146,9 +146,9 @@ export class VendaComponent implements OnInit {
 
     const itens: iItensVd = vd.itensVd;
 
-    const dialogRef = this.dialog.open(DialogOpenSalesComponent, {
+     this.dialog.open(DialogOpenSalesComponent, {
       data: {
-        modoNew: 'adicionar', modo: 'adicionar',
+        modoNew: 'novo', modo: 'adicionar',
         ...vd,
         itensVd: { ...itens, codVD: vd.idVenda }
       }
@@ -173,11 +173,11 @@ export class VendaComponent implements OnInit {
 
     const itens = isEdit ? item : emptyItem;
 
-    console.log('Valor do isUpdateVD', isUpdateVD);
+   // console.log('Valor do isUpdateVD', isUpdateVD);
 
        this.dialog.open(DialogOpenSalesComponent, {
         data: {
-          modoNew: isNovaVD ? 'adicionar' : 'editar',
+          modoNew: isNovaVD ? 'novo' : '',
           modoUpdate: isUpdateVD ? 'updateVd' : '' ,
           modo: isEdit ? 'editar' : 'adicionar',
           ...vd,

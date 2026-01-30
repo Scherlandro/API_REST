@@ -50,7 +50,7 @@ export class DialogOpenSalesComponent implements OnInit {
   constructor(
     @Inject(MAT_DIALOG_DATA)
     public data: {
-      modoNew: 'adicionar' | 'editar' ;
+      modoNew: 'novo' | 'editar' ;
       modo:'editar' |'adicionar'  ;
       modoUpdate: 'updateVd' | '' ,
       venda: iVendas;
@@ -69,7 +69,7 @@ export class DialogOpenSalesComponent implements OnInit {
     this.venda = data as any;
     this.itensVd = data.itensVd;  // item selecionado (ou item vazio)
     this.isChange = data.modo === 'adicionar';
-    this.isNewVd = data.modoNew === 'editar';
+    this.isNewVd = data.modoNew === 'novo';
     this.isUpdateVd = data.modoUpdate === 'updateVd';
     this.produtoControl = new FormControl();
     this.quantidadeControl = new FormControl(
@@ -82,7 +82,7 @@ export class DialogOpenSalesComponent implements OnInit {
    // console.log('Dados :', this.data.itensVd)
     this.listarProdutvenda();
     this.setupAutocompleteFilters();
-     console.log('1 isNewVd ', this.isNewVd, '1 isChange ' , this.isChange, ' isUpdateVd', this.isUpdateVd)
+     console.log('isNewVd ', this.isNewVd, 'isChange ' , this.isChange, 'isUpdateVd', this.isUpdateVd)
     this.clienteControl.setValue(this.venda.nomeCliente);
     this.funcionarioControl.setValue(this.venda.nomeFuncionario);
     if (this.itensVd && this.itensVd.qtdVendidas) {
@@ -101,7 +101,6 @@ export class DialogOpenSalesComponent implements OnInit {
     if (this.isChange) {
       this.updateTotal();
     }
-    console.log('modoNew:', this.isNewVd, ' modo:', this.isChange)
   }
 
 
@@ -253,7 +252,7 @@ export class DialogOpenSalesComponent implements OnInit {
     // Log para depuração antes de enviar
     console.log('Objeto Vd antes de enviar:', venda);
 
-    if(venda.modo === 'adicionar' && venda.modoNew === 'adicionar') {
+    if(venda.modo === 'adicionar' && venda.modoNew === 'novo') {
       this.vendaServices.addVenda(venda).pipe(takeUntil(this.destroy$))
         .subscribe({
           next: (vendaCriada) => {
@@ -265,7 +264,7 @@ export class DialogOpenSalesComponent implements OnInit {
           }
         });
     }
-    if (venda.modo === 'adicionar' && venda.modoNew === 'editar') {
+    if (venda.modo === 'adicionar' && venda.modoNew === '') {
       console.log('isChange no save ', this.isChange)
       this.vendaServices.updateVd(venda).pipe(takeUntil(this.destroy$))
         .subscribe({
