@@ -157,17 +157,13 @@ export class VendaComponent implements OnInit {
   }
 
   editarVd(element: iVendas) {
-    this.openDilogAddItenVd(element);
+   this.openDilogAddItenVd(element, element.itensVd);
   }
 
 
   openDilogAddItenVd(vd: iVendas, item?: iItensVd) {
-
-    console.log('VD do EDITAR', vd.idVenda ,
-      'Item do EDITAR ', item?.codVenda)
     const isEdit = !!item;
     const isNovaVD = !vd.itensVd; // nova venda recém criada
-
 
     const emptyItem: iItensVd = {
       idItensVd: 0, codVenda: vd.idVenda ?? 0, codProduto: '', descricao: '',

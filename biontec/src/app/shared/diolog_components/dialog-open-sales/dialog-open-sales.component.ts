@@ -76,6 +76,7 @@ export class DialogOpenSalesComponent implements OnInit {
 
 
   ngOnInit(): void {
+    console.log('Dados do Itens', this.itensVd.idItensVd)
     this.listarProdutvenda();
     this.setupAutocompleteFilters();
      console.log(' isNewVd ', this.isNewVd, 'isChange ' , this.isChange, 'IdItensVd', this.itensVd.idItensVd)
