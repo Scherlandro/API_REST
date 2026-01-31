@@ -1,6 +1,6 @@
 <div class="div-venda">
 
-  <mat-card class="container-box-venda" *ngIf="isNewVd || isUpdateVd || !isAddItem">
+  <mat-card class="container-box-venda" *ngIf="(isNewVd || isUpdateVd) && !isAddItem">
     <h1 *ngIf="isNewVd && !isAddItem" mat-dialog-title>Abrir Venda</h1>
     <h1 *ngIf="!isNewVd " mat-dialog-title>Editar Venda</h1>
 
@@ -106,7 +106,7 @@
   </mat-card>
 
   <!-- Itens -->
-  <mat-card  *ngIf=" !isUpdateVd && isAddItem" class="container-box-itensvd" >
+  <mat-card  *ngIf=" !isAddItem" class="container-box-itensvd" >
 
     <mat-form-field>
       <mat-label>ID</mat-label>

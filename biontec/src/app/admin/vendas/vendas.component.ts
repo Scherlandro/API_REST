@@ -148,7 +148,7 @@ export class VendaComponent implements OnInit {
 
      this.dialog.open(DialogOpenSalesComponent, {
       data: {
-        modoNew: 'novo', modoAdd: '', modoUpdate: '',
+        modoNew: 'novo',  modoUpdate: '', modoAdd: '',
         ...vd,
         itensVd: { ...itens, codVD: vd.idVenda }
       }
@@ -157,7 +157,9 @@ export class VendaComponent implements OnInit {
   }
 
   editarVd(element: iVendas) {
-   this.openDilogVd(element, element.itensVd);
+    /*const action = 'editarVd';
+    this.openDilogVd(element, action);*/
+    this.openDilogVd(element, element.itensVd);
   }
 
   adicionarItenVd(element: iVendas){
@@ -168,7 +170,8 @@ export class VendaComponent implements OnInit {
     this.openDilogVd(null, element);
   }
 
-  openDilogVd(vd: any, item?: iItensVd) {
+  //openDilogVd(vd: any, item?: any) {
+ openDilogVd(vd: any, item?: iItensVd) {
     const isEdit = !!item;
     const isUpdateVD = !!item;
     const isNovaVD = !vd.itensVd; // nova venda recém criada
