@@ -51,16 +51,17 @@
           <mat-icon>shopping_basket</mat-icon> Opções
         </th>
         <td class="collun-op" mat-cell *matCellDef="let elementVd">
-          <button class="button-add-item" (click)="adicionarItenVd(elementVd)">
-            <mat-icon type="hidden" title="Adicionar mais Item" class="edit">
-              add_shopping_cart
-            </mat-icon>
-          </button>
-          <span></span>
 
           <button class="button-edite" (click)="editarVd(elementVd)" >
             <mat-icon type="hidden" title="Editar Venda" class="edit">
               edite
+            </mat-icon>
+          </button>
+          <span></span>
+
+          <button class="button-add-item" (click)="adicionarItenVd(elementVd)">
+            <mat-icon type="hidden" title="Adicionar mais Item" class="edit">
+              add_shopping_cart
             </mat-icon>
           </button>
           <span></span>

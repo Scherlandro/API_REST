@@ -9,7 +9,7 @@ import {expand, of, timeout} from "rxjs";
 import {catchError, delay, first} from "rxjs/operators";
 import {DialogOpenSalesComponent} from "src/app/shared/diolog_components/dialog-open-sales/dialog-open-sales.component";
 import {iItensVd} from "../../interfaces/itens-vd";
-import {iVendas} from "../../interfaces/vendas";
+import {FaseVenda, iVendas} from "../../interfaces/vendas";
 import {ItensVdService} from "../../services/itens-vd.service";
 import {VendasService} from "../../services/vendas.service";
 import {ErrorDiologComponent} from "../../shared/diolog_components/error-diolog/error-diolog.component";
@@ -44,6 +44,7 @@ export class VendaComponent implements OnInit {
   tbData: any;
   displayedColumns: string[] = ['codigo', 'descricao', 'preco', 'qtd', 'soma', 'data', 'imagem', 'opicoes'];
 
+  fase!: FaseVenda;
   vendaControl = new FormControl();
   produtControl = new FormControl();
   itensVdFiltered: iItensVd[] = [];
@@ -131,6 +132,70 @@ export class VendaComponent implements OnInit {
     });
   }
 
+
+// Dentro da classe VendaComponent
+  executarFluxoVenda(fase: FaseVenda, elementVd?: any, elementItem?: any) {
+    let tagVd: boolean;
+    let tagItemVd: boolean;
+
+    // A Lógica do Switch solicitada
+    switch (fase) {
+      case 'newVd':
+        tagVd = true;
+        tagItemVd = false;
+        break;
+      case 'editarVd':
+        tagVd = true;
+        tagItemVd = false;
+        break;
+      case 'addItemVd':
+        tagVd = true;
+        tagItemVd = true;
+        break;
+      case 'editarItemVd':
+        tagVd = false;
+        tagItemVd = true;
+        break;
+      default:
+        tagVd = false;
+        tagItemVd = false;
+    }
+
+    // Preparação dos dados baseada na fase
+    const vdBase = elementVd || { idVenda: 0, nomeCliente: '', dtVenda: new Date().toISOString() };
+    const itemBase = elementItem || { idItensVd: 0, qtdVendidas: 1, valVenda: 0 };
+
+    this.dialog.open(DialogOpenSalesComponent, {
+      data: {
+        fase: fase, // Enviamos a fase para o diálogo saber o que exibir
+        tagVd: tagVd,
+        tagItemVd: tagItemVd,
+        ...vdBase,
+        itensVd: { ...itemBase, codVD: vdBase.idVenda }
+      }
+    });
+  }
+
+// Métodos que o HTML chama:
+  openNewVd() {
+    this.executarFluxoVenda('newVd');
+  }
+
+  editarVd(elementVd: iVendas) {
+    this.executarFluxoVenda('editarVd', elementVd);
+  }
+
+  adicionarItenVd(elementVd: iVendas) {
+    this.executarFluxoVenda('addItemVd', elementVd);
+  }
+
+  editarItemVd(elementItem: iItensVd) {
+    // Para editar o item, precisamos referenciar a venda pai se necessário
+    this.executarFluxoVenda('editarItemVd', null, elementItem);
+  }
+
+/*
+
   openNewVd() {
 
       const vd: iVendas = {
@@ -157,9 +222,9 @@ export class VendaComponent implements OnInit {
   }
 
   editarVd(element: iVendas) {
-    /*const action = 'editarVd';
-    this.openDilogVd(element, action);*/
-    this.openDilogVd(element, element.itensVd);
+    const action = 'editarVd';
+    this.openDilogVd(element, action);
+    //this.openDilogVd(element, element.itensVd);
   }
 
   adicionarItenVd(element: iVendas){
@@ -170,31 +235,36 @@ export class VendaComponent implements OnInit {
     this.openDilogVd(null, element);
   }
 
-  //openDilogVd(vd: any, item?: any) {
- openDilogVd(vd: any, item?: iItensVd) {
-    const isEdit = !!item;
+  openDilogVd(vd: any, item?: any) {
+ //openDilogVd(vd: any, item?: iItensVd) {
+   /!* const isEdit = !!item;
     const isUpdateVD = !!item;
-    const isNovaVD = !vd.itensVd; // nova venda recém criada
+    const isNovaVD = !vd.itensVd; // nova venda recém criada*!/
+
+    const resut = item;
+
     const emptyItem: iItensVd = {
       idItensVd: 0, codVenda: vd.idVenda ?? 0, codProduto: '', descricao: '',
       valCompra: 0, valVenda: 0, qtdVendidas: 1, descPorUnidade: 0, valorParcial: 0,
       dtRegistro: '', fotoProduto: ''
     };
 
-    const itens = isEdit ? item : emptyItem;
+   // const itens = isEdit ? item : emptyItem;
+    const itens = resut;
 
    // console.log('Valor do isUpdateVD', isUpdateVD);
 
        this.dialog.open(DialogOpenSalesComponent, {
         data: {
-          modoNew: isNovaVD ? 'novo' : '',
+         /!* modoNew: isNovaVD ? 'novo' : '',
           modoUpdate: isUpdateVD ? 'updateVd' : '' ,
-          modoAdd: isEdit ? 'adicionar' : '',
+          modoAdd: isEdit ? 'adicionar' : '',*!/
           ...vd,
           itensVd: { ...itens, codVD: vd.idVenda }
         }
       });
   }
+*/
 
 
   deleteVd(eventVd: iVendas) {

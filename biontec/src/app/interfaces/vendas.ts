@@ -16,5 +16,8 @@ export interface iVendas {
   itensVd: iItensVd[] | any,
   produtos?: iProduto[] | any,
   selecionado?:boolean
-}
+};
+
+export type FaseVenda = 'newVd' | 'editarVd' | 'addItemVd' | 'editarItemVd';
+//export interface FaseVenda{ newVd:'newVd' , editarVd:'editarVd' ,addItemVd: 'addItemVd' , editarItemVd: 'editarItemVd'}
 

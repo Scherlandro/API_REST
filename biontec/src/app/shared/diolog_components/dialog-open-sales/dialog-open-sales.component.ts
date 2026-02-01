@@ -6,7 +6,7 @@ import {FormControl, Validators} from "@angular/forms";
 import {debounceTime, distinctUntilChanged, Observable, of, Subject, switchMap, takeUntil} from "rxjs";
 import {IFuncionario} from "../../../interfaces/funcionario";
 import {ICliente} from "../../../interfaces/cliente";
-import {iVendas} from "../../../interfaces/vendas";
+import {FaseVenda, iVendas} from "../../../interfaces/vendas";
 import {iProduto} from "../../../interfaces/product";
 import {catchError, delay, first, startWith} from "rxjs/operators";
 import {ProductService} from "../../../services/product.service";
@@ -26,10 +26,13 @@ export class DialogOpenSalesComponent implements OnInit {
 
   destroy$ = new Subject<void>();
   venda!: iVendas;
-  itensVd: iItensVd;
-  isNewVd : boolean;
+  itensVd!: iItensVd;
+/*  isNewVd : boolean;
   isUpdateVd: boolean;
-  isAddItem: boolean;
+  isAddItem: boolean;*/
+  tagVd: boolean;
+  tagItemVd: boolean;
+  fase: FaseVenda;
   vendaSelecionada!: iVendas;
   funcionarioControl = new FormControl('', [Validators.required]);
   funcionarioFilted!: Observable<IFuncionario[]>;
@@ -49,13 +52,13 @@ export class DialogOpenSalesComponent implements OnInit {
 
   constructor(
     @Inject(MAT_DIALOG_DATA)
-    public data: {
+    public data: any,/*{
       modoNew: 'novo'  ;
       modoUpdate: 'updateVd' ;
       modoAdd:'adicionar'  ;
       venda: iVendas;
       itensVd: iItensVd;
-    },
+    },*/
     public dialogRef: MatDialogRef<DialogOpenSalesComponent>,
     public notificationMsg: NotificationMgsService,
     private tokenServer: TokenService,
@@ -67,10 +70,15 @@ export class DialogOpenSalesComponent implements OnInit {
     private productService: ProductService
   ) {
     this.venda = data as any;
-    this.itensVd = data.itensVd;  // item selecionado (ou item vazio)
+    /*this.itensVd = data.itensVd;  // item selecionado (ou item vazio)
     this.isNewVd = data.modoNew === 'novo';
     this.isUpdateVd = data.modoUpdate === 'updateVd';
-    this.isAddItem = data.modoAdd === 'adicionar';
+    this.isAddItem = data.modoAdd === 'adicionar';*/
+
+    // Agora pegamos os valores processados pelo switch do componente pai
+    this.tagVd = data.tagVd;
+    this.tagItemVd = data.tagItemVd;
+    this.fase = data.fase;
     console.log('modoNew: ' , data.modoNew, 'modoUpdate: ', data.modoUpdate, 'modoAdd: ', data.modoAdd)
     this.produtoControl = new FormControl();
     this.quantidadeControl = new FormControl(
@@ -83,7 +91,6 @@ export class DialogOpenSalesComponent implements OnInit {
    // console.log('Dados :', this.data.itensVd)
     this.listarProdutvenda();
     this.setupAutocompleteFilters();
-     console.log('isNewVd ' , this.isNewVd, 'isUpdateVd', this.isUpdateVd, 'isAddItem ', this.isAddItem)
     this.clienteControl.setValue(this.venda.nomeCliente);
     this.funcionarioControl.setValue(this.venda.nomeFuncionario);
     if (this.itensVd && this.itensVd.qtdVendidas) {
@@ -99,7 +106,7 @@ export class DialogOpenSalesComponent implements OnInit {
       }
     });
     // Se estiver editando, força o cálculo inicial do total
-    if (this.isAddItem) {
+    if (this.tagItemVd) {
       this.updateTotal();
     }
   }
@@ -212,8 +219,8 @@ export class DialogOpenSalesComponent implements OnInit {
     this.vendaServices.addVenda(vendaParaCriar).subscribe({
       next: (vendaCriada) => {
         this.venda = vendaCriada;
-        this.isAddItem = false;
-        this.isNewVd = true;
+       /* this.isAddItem = false;
+        this.isNewVd = true;*/
       },
       error: () => this.onError('Erro ao iniciar Vd')
     });
@@ -266,7 +273,7 @@ export class DialogOpenSalesComponent implements OnInit {
         });
     }
     if (venda.modo === 'adicionar' && venda.modoNew === '') {
-      console.log('isChange no save ', this.isAddItem)
+
       this.vendaServices.updateVd(venda).pipe(takeUntil(this.destroy$))
         .subscribe({
           next: (vendaAtualizada) => {
@@ -400,9 +407,18 @@ export class DialogOpenSalesComponent implements OnInit {
     return new Intl.NumberFormat('pt-BR', {style: 'currency', currency: 'BRL'}).format(value);
   }
   // Método que valida se o botão "Salvar" deve ser habilitado
+
   isSaveButtonDisabled(): boolean {
+    // Se for edição de item (Fase 4), não precisamos validar o produtoControl (pois ele nem aparece)
+    if (this.fase === 'editarItemVd') {
+      return !this.quantidadeControl.valid;
+    }
+    // Se for inclusão (Fase 3), validamos ambos
     return !(this.produtoControl.valid && this.quantidadeControl.valid);
   }
+  /* isSaveButtonDisabled(): boolean {
+    return !(this.produtoControl.valid && this.quantidadeControl.valid);
+  }*/
 
 
   formatarData(dataString: string): Date {
