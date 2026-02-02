@@ -138,7 +138,6 @@ export class VendaComponent implements OnInit {
     let tagVd: boolean;
     let tagItemVd: boolean;
 
-    // A Lógica do Switch solicitada
     switch (fase) {
       case 'newVd':
         tagVd = true;
@@ -161,22 +160,39 @@ export class VendaComponent implements OnInit {
         tagItemVd = false;
     }
 
-    // Preparação dos dados baseada na fase
-    const vdBase = elementVd || { idVenda: 0, nomeCliente: '', dtVenda: new Date().toISOString() };
-    const itemBase = elementItem || { idItensVd: 0, qtdVendidas: 1, valVenda: 0 };
+    const vdBase = {
+      idVenda: elementVd?.idVenda || 0,
+      nomeCliente: elementVd?.nomeCliente || '',
+      dtVenda: elementVd?.dtVenda || new Date().toISOString(),
+      ...elementVd // Mantém outras propriedades existentes
+    };
+
+    const itemBase = {
+      idItensDaVd: elementItem?.idItensDaVd || 0,
+      codProduto: elementItem?.codProduto || '',
+      descricao: elementItem?.descricao || '',
+      qtdVendidas: elementItem?.qtdVendidas || 1,
+      valVenda: elementItem?.valVenda || 0,
+      valorParcial: elementItem?.valorParcial || 0,
+      total: elementItem?.total || 0,
+      ...elementItem
+    };
 
     this.dialog.open(DialogOpenSalesComponent, {
       data: {
-        fase: fase, // Enviamos a fase para o diálogo saber o que exibir
+        fase: fase,
         tagVd: tagVd,
         tagItemVd: tagItemVd,
-        ...vdBase,
-        itensVd: { ...itemBase, codVD: vdBase.idVenda }
+        venda: {
+          ...vdBase,
+          itensVd: itemBase // O diálogo espera venda.itensVd conforme seu HTML
+        },
+        // Caso o componente use a variável solta 'itensVd' no ngModel:
+        itensVd: itemBase
       }
     });
   }
 
-// Métodos que o HTML chama:
   openNewVd() {
     this.executarFluxoVenda('newVd');
   }
@@ -190,12 +206,11 @@ export class VendaComponent implements OnInit {
   }
 
   editarItemVd(elementItem: iItensVd) {
-    // Para editar o item, precisamos referenciar a venda pai se necessário
+
     this.executarFluxoVenda('editarItemVd', null, elementItem);
   }
 
 /*
-
   openNewVd() {
 
       const vd: iVendas = {

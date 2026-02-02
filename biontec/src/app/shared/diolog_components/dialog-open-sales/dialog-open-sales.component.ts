@@ -79,7 +79,7 @@ export class DialogOpenSalesComponent implements OnInit {
     this.tagVd = data.tagVd;
     this.tagItemVd = data.tagItemVd;
     this.fase = data.fase;
-    console.log('modoNew: ' , data.modoNew, 'modoUpdate: ', data.modoUpdate, 'modoAdd: ', data.modoAdd)
+    console.log('dataFase: ' , data.fase)
     this.produtoControl = new FormControl();
     this.quantidadeControl = new FormControl(
       this.itensVd?.qtdVendidas || 1,      [Validators.required, Validators.min(1)]
@@ -88,7 +88,14 @@ export class DialogOpenSalesComponent implements OnInit {
 
 
   ngOnInit(): void {
-   // console.log('Dados :', this.data.itensVd)
+    if (this.data) {
+      this.fase = this.data.fase;
+      this.venda = this.data.venda;
+      this.itensVd = this.data.itensVd;
+
+      // Agora o updateTotal não vai falhar, pois qtdVendidas e valVenda existem (mesmo que 0)
+      this.updateTotal();
+    }
     this.listarProdutvenda();
     this.setupAutocompleteFilters();
     this.clienteControl.setValue(this.venda.nomeCliente);
