@@ -132,8 +132,6 @@ export class VendaComponent implements OnInit {
     });
   }
 
-
-// Dentro da classe VendaComponent
   executarFluxoVenda(fase: FaseVenda, elementVd?: any, elementItem?: any) {
     let tagVd: boolean;
     let tagItemVd: boolean;
@@ -185,9 +183,8 @@ export class VendaComponent implements OnInit {
         tagItemVd: tagItemVd,
         venda: {
           ...vdBase,
-          itensVd: itemBase // O diálogo espera venda.itensVd conforme seu HTML
+          itensVd: itemBase
         },
-        // Caso o componente use a variável solta 'itensVd' no ngModel:
         itensVd: itemBase
       }
     });
@@ -209,10 +206,7 @@ export class VendaComponent implements OnInit {
 
     this.executarFluxoVenda('editarItemVd', null, elementItem);
   }
-
-/*
-  openNewVd() {
-
+/*  openNewVd() {
       const vd: iVendas = {
         idVenda: 0, idCliente: 0, nomeCliente: '', idFuncionario: 0, nomeFuncionario: '',
         dtVenda: '', subtotal: 0, desconto: 0, totalgeral: 0, formasDePagamento: "",
@@ -223,7 +217,6 @@ export class VendaComponent implements OnInit {
           qtdVendidas: 1, descPorUnidade: 0, valorParcial: 0, dtRegistro: ''
         }
       } ;
-
     const itens: iItensVd = vd.itensVd;
 
      this.dialog.open(DialogOpenSalesComponent, {
@@ -233,19 +226,14 @@ export class VendaComponent implements OnInit {
         itensVd: { ...itens, codVD: vd.idVenda }
       }
     });
-
   }
-
   editarVd(element: iVendas) {
     const action = 'editarVd';
     this.openDilogVd(element, action);
-    //this.openDilogVd(element, element.itensVd);
   }
-
   adicionarItenVd(element: iVendas){
     this.openDilogVd(element)
   }
-
   editarItemVd(element: iItensVd){
     this.openDilogVd(null, element);
   }

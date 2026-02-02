@@ -79,7 +79,7 @@ export class DialogOpenSalesComponent implements OnInit {
     this.tagVd = data.tagVd;
     this.tagItemVd = data.tagItemVd;
     this.fase = data.fase;
-    console.log('dataFase: ' , data.fase)
+    console.log('dataFase: ' , data.fase , 'Fase ', this.fase)
     this.produtoControl = new FormControl();
     this.quantidadeControl = new FormControl(
       this.itensVd?.qtdVendidas || 1,      [Validators.required, Validators.min(1)]
