@@ -14,27 +14,27 @@ import com.biontecapi.model.ItensDaVenda;
 @Repository
 public interface ItensDaVendaRepository extends JpaRepository<ItensDaVenda, Integer> {
 
-    @Query(value = " Select new com.biontecapi.dtos.ItensDaVendaDto(i.IdItensVd,i.codVenda,i.codProduto," +
+    @Query(value = " Select new com.biontecapi.dtos.ItensDaVendaDto(i.idItensVd,i.codVenda,i.codProduto," +
             " i.descricao, i.valCompra, i.valVenda, i.qtdVendidas, i.valorParcial, v.dtVenda )" +
             "from Vendas v inner join ItensDaVenda i " +
             "on v.codevenda = i.codVenda and v.idVenda = ?1 ")
     List<ItensDaVenda> findItensVdById(Integer id);
 
-    @Query(value = " Select new com.biontecapi.dtos.ItensDaVendaDto(i.IdItensVd,i.codVenda,i.codProduto," +
+    @Query(value = " Select new com.biontecapi.dtos.ItensDaVendaDto(i.idItensVd,i.codVenda,i.codProduto," +
             " i.descricao, i.valCompra, i.valVenda, i.qtdVendidas, i.valorParcial, v.dtVenda )" +
             "from Vendas v inner join ItensDaVenda i " +
             "on v.codevenda =  i.codVenda and v.dtVenda =?1 ")
     List<ItensDaVenda> litarItemDaVendaPorData(@Param("dtVenda") String dtVenda);
 
 
-    @Query(" select new com.biontecapi.dtos.ItensDaVendaDto(i.IdItensVd, i.codVenda,i.codProduto,i.descricao," +
+    @Query(" select new com.biontecapi.dtos.ItensDaVendaDto(i.idItensVd, i.codVenda,i.codProduto,i.descricao," +
        " i.valCompra,i.valVenda, i.qtdVendidas, i.valorParcial, v.dtVenda)" +
        " from Vendas v join ItensDaVenda i on v.codevenda = i.codVenda " +
        " where v.dtVenda between :dtIni and :dtFinal")
     List<ItensDaVenda> litarItemDaVendaEntreData(@Param("dtIni") LocalDateTime dtIni,
             @Param("dtFinal") LocalDateTime dtFinal);
 
-    @Query(" select new com.biontecapi.dtos.ItensDaVendaDto(i.IdItensVd, i.codVenda,i.codProduto,i.descricao," +
+    @Query(" select new com.biontecapi.dtos.ItensDaVendaDto(i.idItensVd, i.codVenda,i.codProduto,i.descricao," +
        " i.valCompra,i.valVenda, i.qtdVendidas, i.valorParcial, v.dtVenda)" +
        " from Vendas v join ItensDaVenda i on v.codevenda = i.codVenda " +
        " where v.dtVenda between :dtIni and :dtFinal")
@@ -42,29 +42,29 @@ public interface ItensDaVendaRepository extends JpaRepository<ItensDaVenda, Inte
             @Param("dtFinal") LocalDateTime dtFinal);
 
 
-   /* @Query(value = " Select new com.biontecapi.dtos.ItensDaVendaDto(i.IdItensVd,i.codVenda,i.codProduto," +
+   /* @Query(value = " Select new com.biontecapi.dtos.ItensDaVendaDto(i.idItensVd,i.codVenda,i.codProduto," +
             " i.descricao, i.valCompra, i.valVenda, i.qtdVendidas, i.valorParcial, v.dtVenda )" +
             "from Vendas v inner join ItensDaVenda i on v.codevenda = i.codVenda " +
             "where STR_TO_DATE(v.dtVenda,'%d/%m/%y')  BETWEEN STR_TO_DATE(:dtIni,'%d/%m/%y') AND STR_TO_DATE(:dtFinal,'%d/%m/%y') ")
     List<ItensDaVendaDto> litarItemDaVendaEntreData(@Param("dtIni") String dtIni, @Param("dtFinal") String dtFinal);
 
-    @Query("Select new com.biontecapi.dtos.ItensDaVendaDto(i.IdItensVd, i.codVenda, i.codProduto, i.descricao, " +
+    @Query("Select new com.biontecapi.dtos.ItensDaVendaDto(i.idItensVd, i.codVenda, i.codProduto, i.descricao, " +
             "i.valCompra, i.valVenda, i.qtdVendidas, i.valorParcial, v.dtVenda) " +
             "from Vendas v inner join ItensDaVenda i on v.codevenda = i.codVenda " +
             "where STR_TO_DATE(v.dtVenda,'%d/%m/%y') BETWEEN STR_TO_DATE(:dtIni,'%d/%m/%y') AND STR_TO_DATE(:dtFinal,'%d/%m/%y')")
     List<ItensDaVendaDto> litarItensVdPorPeriodo(@Param("dtIni") String dtIni, @Param("dtFinal") String dtFinal);*/
 
 
-    @Query(value = " Select new com.biontecapi.dtos.ItensDaVendaDto(i.IdItensVd,i.codVenda,i.codProduto," +
+    @Query(value = " Select new com.biontecapi.dtos.ItensDaVendaDto(i.idItensVd,i.codVenda,i.codProduto," +
             " i.descricao, i.valCompra, i.valVenda, i.qtdVendidas, i.valorParcial, v.dtVenda )" +
             "from Vendas v inner join ItensDaVenda i " +
             "on v.codevenda = i.codVenda and v.nomeCliente = ?1")
     List<ItensDaVenda> litarItemDaVendaPorCliente(@Param("nomeCliente") String nomeCliente);
 
- /*   @Query(value = " Select new com.biontecapi.dtos.ItensDaVendaDto(i.IdItensVd,i.codVenda,i.codProduto," +
+ /*   @Query(value = " Select new com.biontecapi.dtos.ItensDaVendaDto(i.idItensVd,i.codVenda,i.codProduto," +
             " i.descricao, i.valCompra, i.valVenda, i.qtdVendidas, i.valorParcial, i.dtVenda )" +
             "from Produto p inner join ItensDaVenda i " +
-            "on i.IdItensVd = p.idProduto and p.codProduto = ?1 ")
+            "on i.idItensVd = p.idProduto and p.codProduto = ?1 ")
     List<ItensDaVendaDto> findItensVdByIdProduct(Integer id);*/
 
     @Query("select i from Produto p join ItensDaVenda i " +

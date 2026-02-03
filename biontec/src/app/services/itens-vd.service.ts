@@ -38,7 +38,6 @@ export class ItensVdService {
   }
 
   deleteItensVd(item: iItensVd): Observable<iItensVd>{
-    console.log('Id do Item a Deletar ', item.idItensVd)
     return this._http.delete<iItensVd>(this.baseUrl + item.idItensVd);
   }
 

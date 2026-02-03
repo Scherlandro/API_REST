@@ -20,7 +20,7 @@ public class ItensDaVenda {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_itens_vd", length = 20)
-    private Integer IdItensVd;
+    private Integer idItensVd;
 
     @Column(name = "codevendas", length = 20)
     private String codVenda;
@@ -48,12 +48,12 @@ public class ItensDaVenda {
     private LocalDateTime dtRegistro;
 
     public ItensDaVendaDto toDTO(){
-        return new ItensDaVendaDto(this.IdItensVd,this.codVenda,this.codProduto,this.descricao,
+        return new ItensDaVendaDto(this.idItensVd,this.codVenda,this.codProduto,this.descricao,
                 this.valCompra, this.valVenda,this.qtdVendidas, this.valorParcial, this.dtRegistro);
     }
 
     public void mapToDTO(ItensDaVendaDto dto) {
-                this.IdItensVd = dto.IdItensVd();
+                this.idItensVd = dto.idItensVd();
                 this.codVenda = dto.codVenda();
                 this.codProduto = dto.codProduto();
                 this.descricao = dto.descricao();

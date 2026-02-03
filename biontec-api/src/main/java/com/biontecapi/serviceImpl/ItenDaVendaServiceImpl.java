@@ -74,10 +74,10 @@ public class ItenDaVendaServiceImpl implements ItensDaVendaService {
     @Transactional
     public ItensDaVenda save(ItensDaVendaDto dto) {
         ItensDaVenda item;
-        if (dto.IdItensVd() == null || dto.IdItensVd() == 0) {
+        if (dto.idItensVd() == null || dto.idItensVd() == 0) {
             item = new ItensDaVenda();
         } else {
-            item = itensDaVendaRepository.findById(dto.IdItensVd())
+            item = itensDaVendaRepository.findById(dto.idItensVd())
                     .orElseThrow(() -> new RuntimeException("Item não encontrado para atualizar"));
         }
         item.mapToDTO(dto);

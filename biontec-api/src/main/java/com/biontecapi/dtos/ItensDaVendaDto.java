@@ -3,7 +3,7 @@ package com.biontecapi.dtos;
 import java.time.LocalDateTime;
 
 public record ItensDaVendaDto (
-     Integer IdItensVd,
+     Integer idItensVd,
      String codVenda,
      String codProduto,
      String descricao,
