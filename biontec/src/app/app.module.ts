@@ -20,6 +20,8 @@ import { ErrorComponent } from './utils/error/error.component';
 import { TokenInterceptorProvider} from "./services/interceptors/token.interceptor";
 import {MatRippleModule} from "@angular/material/core";
 import {PublicModule} from "./public/public.module";
+import {MatSnackBarModule} from "@angular/material/snack-bar";
+import {MatDialogModule} from "@angular/material/dialog";
 
 
 @NgModule({
@@ -40,7 +42,9 @@ import {PublicModule} from "./public/public.module";
     MatSortModule,
     MatProgressBarModule,
     MatRippleModule,
-    PublicModule
+    PublicModule,
+    MatSnackBarModule,
+    MatDialogModule
     ],
   providers: [AuthService, AuthGuard, BaseService,TokenInterceptorProvider ],
   schemas:[CUSTOM_ELEMENTS_SCHEMA],

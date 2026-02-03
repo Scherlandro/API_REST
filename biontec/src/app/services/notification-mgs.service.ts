@@ -11,7 +11,7 @@ import {ErrorDiologComponent} from "../shared/diolog_components/error-diolog/err
   providedIn: 'root'
 })
 export class NotificationMgsService implements ErrorStateMatcher {
-  snackBar!: MatSnackBar;
+
   apiError = new Subject<string>();
 
   config: MatSnackBarConfig = {
@@ -20,7 +20,8 @@ export class NotificationMgsService implements ErrorStateMatcher {
     verticalPosition: 'top'
   }
 
-  constructor( public dialog:MatDialog ) {  }
+  constructor( public dialog:MatDialog, private snackBar: MatSnackBar ) {
+  }
 
   sendError(message: string): void {
     this.apiError.next(message)
@@ -47,10 +48,17 @@ export class NotificationMgsService implements ErrorStateMatcher {
     this.config['panelClass'] = ['notification', 'success'];
     this.snackBar.open(msg, '', this.config);
   }
-
+/*
   warn(msg:any) {
     this.config['panelClass'] = ['notification', 'warn'];
     this.snackBar.open(msg, '', this.config);
+  }*/
+
+  warn(msg: string) {
+    this.snackBar.open(msg, 'OK', {
+      duration: 3000,
+      panelClass: ['warn-snackbar']
+    });
   }
 
   sessionExpired(msg:any){

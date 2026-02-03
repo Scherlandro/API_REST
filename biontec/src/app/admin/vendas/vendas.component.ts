@@ -288,25 +288,18 @@ export class VendaComponent implements OnInit {
   deleteElement(item: iItensVd) {
     this.notificationMsg.openConfirmDialog('Tem certeza em REMOVER este item ?')
       .afterClosed().subscribe(res => {
-      if (res) {
+        if (!res) return;
         this.itensVdService.deleteItensVd(item).subscribe(() => {
-          //Localiza a venda que contém esse item
-          const vendaPai = this.tbSourceVd$.data.find(vd => vd.idVenda !== item.codVenda);
-
-          if (vendaPai && vendaPai.itensVd) {
-            // Remove o item do array interno
-            const index = vendaPai.itensVd.findIndex((i: any) => i.idItensVd === item.idItensVd);
+          const vendaPai = this.tbSourceVd$.data.find(vd => vd.idVenda === item.codVenda);
+          if (vendaPai?.itensVd) {
+            const index = vendaPai.itensVd.findIndex((i:any) => i.idItensVd === item.idItensVd);
             if (index > -1) {
               vendaPai.itensVd.splice(index, 1);
-              //Força a atualização da tabela pai para refletir novos cálculos/totais
               this.tbSourceVd$.data = [...this.tbSourceVd$.data];
-              this.toggleRow(vendaPai);
-            }
-          }
+            } }
           this.notificationMsg.warn('Item removido!');
         });
-      }
-    });
+      });
   }
 
 
