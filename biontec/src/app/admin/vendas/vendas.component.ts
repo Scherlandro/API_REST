@@ -255,8 +255,6 @@ export class VendaComponent implements OnInit {
    // const itens = isEdit ? item : emptyItem;
     const itens = resut;
 
-   // console.log('Valor do isUpdateVD', isUpdateVD);
-
        this.dialog.open(DialogOpenSalesComponent, {
         data: {
          /!* modoNew: isNovaVD ? 'novo' : '',
@@ -271,7 +269,7 @@ export class VendaComponent implements OnInit {
 
 
   deleteVd(eventVd: iVendas) {
-    this.notificationMsg.openConfirmDialog('Tem certeza em REMOVER esta OS?')
+    this.notificationMsg.openConfirmDialog('Tem certeza em REMOVER esta Venda?')
       .afterClosed().subscribe(res => {
       if (res) {
         this.vendasService.delete(eventVd.idVenda).subscribe({

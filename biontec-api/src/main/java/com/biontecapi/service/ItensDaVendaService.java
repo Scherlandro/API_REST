@@ -27,4 +27,6 @@ public interface ItensDaVendaService {
     ItensDaVenda save(ItensDaVendaDto dto);
 
     ItensDaVenda atualizarItensDaVenda(ItensDaVendaDto dto);
+
+    void deletar(Integer id);
 }

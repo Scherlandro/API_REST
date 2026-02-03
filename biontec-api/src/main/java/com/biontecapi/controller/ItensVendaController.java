@@ -80,7 +80,10 @@ public class ItensVendaController {
            return ResponseEntity.ok(itensDaVendaService.atualizarItensDaVenda(dto));
     }
 
-
-
+    @DeleteMapping(path = "/{id}")
+    public ResponseEntity deletar(@PathVariable("id") Integer id){
+        itensDaVendaService.deletar(id);
+        return ResponseEntity.noContent().build();
+    }
 
 }

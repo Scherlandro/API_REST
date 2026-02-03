@@ -49,7 +49,7 @@ export class VendasService {
   }
 
   delete(id: number): Observable<any> {
-    return this._http.delete<any>(`${this.baseUrl}/delete/${id}`);
+    return this._http.delete<any>(`${this.baseUrl}delete/${id}`);
   }
 
 }

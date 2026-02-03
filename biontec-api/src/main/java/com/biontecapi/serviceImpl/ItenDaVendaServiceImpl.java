@@ -96,4 +96,9 @@ public class ItenDaVendaServiceImpl implements ItensDaVendaService {
         return itenVd.getValVenda() * itenVd.getQtdVendidas();
     }
 
+   @Override
+    public void deletar(Integer id) {
+       itensDaVendaRepository.deleteById(id);
+    }
+
 }
