@@ -52,21 +52,21 @@
         </th>
         <td class="collun-op" mat-cell *matCellDef="let elementVd">
 
-          <button class="button-edite" (click)="editarVd(elementVd)" >
+          <button class="button-edite" (click)="editarVd(elementVd); $event.stopPropagation() " >
             <mat-icon type="hidden" title="Editar Venda" class="edit">
               edite
             </mat-icon>
           </button>
           <span></span>
 
-          <button class="button-add-item" (click)="adicionarItenVd(elementVd)">
+          <button class="button-add-item" (click)="adicionarItenVd(elementVd); $event.stopPropagation()">
             <mat-icon type="hidden" title="Adicionar mais Item" class="edit">
               add_shopping_cart
             </mat-icon>
           </button>
           <span></span>
 
-          <button class="button-delete" (click)="deleteVd(elementVd)" >
+          <button class="button-delete" (click)="deleteVd(elementVd); $event.stopPropagation() " >
             <mat-icon type="hidden" title="Remover Venda" class="edit">
               delete
             </mat-icon>

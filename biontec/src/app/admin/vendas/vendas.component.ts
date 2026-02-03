@@ -107,6 +107,7 @@ export class VendaComponent implements OnInit {
       this.updateVd(element);
     }
   }
+
    updateVd(vd: iVendas) {
     this.vendasService.updateVd(vd)
       .subscribe({
@@ -130,6 +131,23 @@ export class VendaComponent implements OnInit {
     this.dialog.open(ErrorDiologComponent, {
       data: errrorMsg
     });
+  }
+
+  openNewVd() {
+    this.executarFluxoVenda('newVd');
+  }
+
+  editarVd(elementVd: iVendas) {
+    this.executarFluxoVenda('editarVd', elementVd);
+  }
+
+  adicionarItenVd(elementVd: iVendas) {
+    this.executarFluxoVenda('addItemVd', elementVd);
+  }
+
+  editarItemVd(elementItem: iItensVd) {
+
+    this.executarFluxoVenda('editarItemVd', null, elementItem);
   }
 
   executarFluxoVenda(fase: FaseVenda, elementVd?: any, elementItem?: any) {
@@ -190,22 +208,6 @@ export class VendaComponent implements OnInit {
     });
   }
 
-  openNewVd() {
-    this.executarFluxoVenda('newVd');
-  }
-
-  editarVd(elementVd: iVendas) {
-    this.executarFluxoVenda('editarVd', elementVd);
-  }
-
-  adicionarItenVd(elementVd: iVendas) {
-    this.executarFluxoVenda('addItemVd', elementVd);
-  }
-
-  editarItemVd(elementItem: iItensVd) {
-
-    this.executarFluxoVenda('editarItemVd', null, elementItem);
-  }
 /*  openNewVd() {
       const vd: iVendas = {
         idVenda: 0, idCliente: 0, nomeCliente: '', idFuncionario: 0, nomeFuncionario: '',

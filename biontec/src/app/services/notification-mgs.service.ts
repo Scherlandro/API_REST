@@ -45,14 +45,17 @@ export class NotificationMgsService implements ErrorStateMatcher {
   }
 
   success(msg:any) {
-    this.config['panelClass'] = ['notification', 'success'];
-    this.snackBar.open(msg, '', this.config);
+    this.snackBar.open(msg, 'OK', {
+      duration: 3000,
+      panelClass: ['success-snackbar']
+    });
   }
-/*
-  warn(msg:any) {
+
+/*  warn(msg:any) {
     this.config['panelClass'] = ['notification', 'warn'];
     this.snackBar.open(msg, '', this.config);
   }*/
+
 
   warn(msg: string) {
     this.snackBar.open(msg, 'OK', {
@@ -61,9 +64,9 @@ export class NotificationMgsService implements ErrorStateMatcher {
     });
   }
 
+
   sessionExpired(msg:any){
      this.dialog.open(ErrorDiologComponent, {
-
       panelClass: 'warn',
       disableClose: true,
       position: {top: "200px"},

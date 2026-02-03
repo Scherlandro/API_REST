@@ -28,11 +28,12 @@ export class VendasService {
   }
 
   addVenda(venda: iVendas): Observable<iVendas>{
-    return this._http.put<iVendas>(this.baseUrl, venda)
+    console.log('Nova Venda iniciada', venda);
+    return this._http.post<iVendas>(this.baseUrl,'salvar'+ venda)
   }
 
   updateVd(venda: iVendas): Observable<iVendas>{
-    return this._http.put<iVendas>(this.baseUrl, venda)
+    return this._http.put<iVendas>(this.baseUrl,'editar' + venda)
   }
 
  /* updateVenda(venda: iVendas): Observable<iVendas>{

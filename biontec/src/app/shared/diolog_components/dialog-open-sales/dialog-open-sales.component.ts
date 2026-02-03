@@ -27,9 +27,6 @@ export class DialogOpenSalesComponent implements OnInit {
   destroy$ = new Subject<void>();
   venda!: iVendas;
   itensVd!: iItensVd;
-/*  isNewVd : boolean;
-  isUpdateVd: boolean;
-  isAddItem: boolean;*/
   tagVd: boolean;
   tagItemVd: boolean;
   fase: FaseVenda;
@@ -52,13 +49,7 @@ export class DialogOpenSalesComponent implements OnInit {
 
   constructor(
     @Inject(MAT_DIALOG_DATA)
-    public data: any,/*{
-      modoNew: 'novo'  ;
-      modoUpdate: 'updateVd' ;
-      modoAdd:'adicionar'  ;
-      venda: iVendas;
-      itensVd: iItensVd;
-    },*/
+    public data: any,
     public dialogRef: MatDialogRef<DialogOpenSalesComponent>,
     public notificationMsg: NotificationMgsService,
     private tokenServer: TokenService,
@@ -70,20 +61,17 @@ export class DialogOpenSalesComponent implements OnInit {
     private productService: ProductService
   ) {
     this.venda = data as any;
-    /*this.itensVd = data.itensVd;  // item selecionado (ou item vazio)
-    this.isNewVd = data.modoNew === 'novo';
-    this.isUpdateVd = data.modoUpdate === 'updateVd';
-    this.isAddItem = data.modoAdd === 'adicionar';*/
 
-    // Agora pegamos os valores processados pelo switch do componente pai
     this.tagVd = data.tagVd;
     this.tagItemVd = data.tagItemVd;
     this.fase = data.fase;
-    console.log('dataFase: ' , data.fase , 'Fase ', this.fase)
+
     this.produtoControl = new FormControl();
     this.quantidadeControl = new FormControl(
       this.itensVd?.qtdVendidas || 1,      [Validators.required, Validators.min(1)]
     );
+
+    console.log('dataFase: ' , data.fase , 'Fase ', this.fase)
   }
 
 
@@ -92,12 +80,10 @@ export class DialogOpenSalesComponent implements OnInit {
       this.fase = this.data.fase;
       this.venda = this.data.venda;
       this.itensVd = this.data.itensVd;
-
-      // Agora o updateTotal não vai falhar, pois qtdVendidas e valVenda existem (mesmo que 0)
       this.updateTotal();
     }
     this.listarProdutvenda();
-    this.setupAutocompleteFilters();
+     this.setupAutocompleteFilters();
     this.clienteControl.setValue(this.venda.nomeCliente);
     this.funcionarioControl.setValue(this.venda.nomeFuncionario);
     if (this.itensVd && this.itensVd.qtdVendidas) {
@@ -116,6 +102,8 @@ export class DialogOpenSalesComponent implements OnInit {
     if (this.tagItemVd) {
       this.updateTotal();
     }
+
+
   }
 
 
@@ -234,7 +222,7 @@ export class DialogOpenSalesComponent implements OnInit {
   }
 
 
-  save(venda: any) {
+  save(venda: iVendas) {
     console.log('ClienteControl ', this.clienteControl.status , 'funcionario', this.funcionarioControl.invalid)
     /*  if (this.clienteControl.invalid || this.funcionarioControl.invalid) {
          this.onError('Preencha todvenda venda campvenda obrigatórivenda');
@@ -259,15 +247,16 @@ export class DialogOpenSalesComponent implements OnInit {
       venda.nomeFuncionario = funcionario.nomeFuncionario;
     }
 
-    venda.dataDeEntrada = venda.dataDeEntrada || dataAtual.toISOString();
-    venda.ultimaAtualizacao = dataAtual.toISOString();
-    venda.status = typeof statusOs === 'object' ? statusOs : statusOs; // Ajuste conforme seu displayWith
+    venda.dtVenda = venda.dtVenda || dataAtual.toISOString();
+    venda.dtVenda = dataAtual.toISOString();
+    //venda.status = typeof statusVd === 'object' ? statusVd : statusVd;
     venda.itensVd = this.itensVd;
 
-    // Log para depuração antes de enviar
-    console.log('Objeto Vd antes de enviar:', venda);
 
-    if(venda.modo === 'adicionar' && venda.modoNew === 'novo') {
+    console.log(' Vd antes de enviar:', venda,'Id da Venda',
+      venda.idVenda);
+
+    if(venda.idVenda == 0) {
       this.vendaServices.addVenda(venda).pipe(takeUntil(this.destroy$))
         .subscribe({
           next: (vendaCriada) => {
@@ -279,8 +268,7 @@ export class DialogOpenSalesComponent implements OnInit {
           }
         });
     }
-    if (venda.modo === 'adicionar' && venda.modoNew === '') {
-
+    else {
       this.vendaServices.updateVd(venda).pipe(takeUntil(this.destroy$))
         .subscribe({
           next: (vendaAtualizada) => {
