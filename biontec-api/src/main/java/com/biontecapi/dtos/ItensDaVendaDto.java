@@ -5,7 +5,7 @@ import java.time.OffsetDateTime;
 
 public record ItensDaVendaDto (
      Integer idItensVd,
-     String codVenda,
+     Integer codVenda,
      String codProduto,
      String descricao,
      Double valCompra,

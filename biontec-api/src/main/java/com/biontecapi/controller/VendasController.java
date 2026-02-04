@@ -60,13 +60,8 @@ public class VendasController {
         return ResponseEntity.ok(vendas_serv.save(dto));
     }
 
-   @PutMapping
-    public ResponseEntity<Vendas> atualizarOS(@RequestBody VendasDto dto) {
-           return ResponseEntity.ok(vendas_serv.atualizarVenda(dto));
-    }
-
     @PutMapping(path = "/editar")
-    public ResponseEntity editar(@RequestBody VendasDto dto) {
+    public ResponseEntity atualizarOS(@RequestBody VendasDto dto) {
         return ResponseEntity.ok(vendas_serv.atualizarVenda(dto));
     }
 

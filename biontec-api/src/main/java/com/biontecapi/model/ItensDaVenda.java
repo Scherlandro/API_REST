@@ -24,7 +24,7 @@ public class ItensDaVenda {
     private Integer idItensVd;
 
     @Column(name = "codevendas", length = 20)
-    private String codVenda;
+    private Integer codVenda;
 
     @Column(name = "cod_produtos",length = 20)
     private String codProduto;
