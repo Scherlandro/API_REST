@@ -56,6 +56,7 @@ public class VendasController {
 
     @PostMapping(path = "/salvar")
     public ResponseEntity salvar(@RequestBody VendasDto dto) {
+
         return ResponseEntity.ok(vendas_serv.save(dto));
     }
 

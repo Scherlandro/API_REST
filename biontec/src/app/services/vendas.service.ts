@@ -29,7 +29,7 @@ export class VendasService {
 
   addVenda(venda: iVendas): Observable<iVendas>{
     console.log('Nova Venda iniciada', venda);
-    return this._http.post<iVendas>(this.baseUrl,'salvar'+ venda)
+    return this._http.post<iVendas>(this.baseUrl +'salvar', venda)
   }
 
   updateVd(venda: iVendas): Observable<iVendas>{

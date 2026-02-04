@@ -1,6 +1,7 @@
 package com.biontecapi.dtos;
 
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 public record ItensDaVendaDto (
      Integer idItensVd,

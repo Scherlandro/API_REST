@@ -48,10 +48,11 @@ public class VendasServiceImpl implements VendasService {
 
     @Override
     public Vendas save(VendasDto dto) {
-        Vendas vd = vendasRepository.findById(dto.idVenda())
-                .orElseThrow(() -> new RuntimeException("OS não encontrada"));
+        Vendas vd = new Vendas();
+               /* vendasRepository.findById(dto.idVenda())
+                .orElseThrow(() -> new RuntimeException("Venda não encontrada"));*/
         vd.mapToDTO(dto);
-        vd.setTotalgeral(calcularTotalDaVenda(vd));
+       // vd.setTotalgeral(calcularTotalDaVenda(vd));
         return vendasRepository.save(vd);
     }
     

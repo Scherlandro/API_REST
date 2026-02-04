@@ -1,6 +1,7 @@
 package com.biontecapi.model;
 
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -26,9 +27,6 @@ public class Vendas {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_venda")
     private Integer idVenda;
-
-    @Column(name = "codevenda", length = 20)
-    private String codevenda;
 
     @Column(name = "id_cliente", length = 11)
     private Integer idCliente;
@@ -107,6 +105,7 @@ public class Vendas {
 */
     @PrePersist
     protected void onCreate() {
+       // this.dtVenda = OffsetDateTime.from(LocalDateTime.now());
         this.dtVenda = LocalDateTime.now();
     }
 

@@ -186,7 +186,19 @@ export class DialogOpenSalesComponent implements OnInit {
     this.itensVd.valorParcial = qtd * valor || 0;
   }
 
-  iniciarVd() {
+  formatarDataParaBackend(date: Date): string {
+    const pad = (n: number) => n.toString().padStart(2, '0');
+
+    return `${pad(date.getDate())}/` +
+      `${pad(date.getMonth() + 1)}/` +
+      `${date.getFullYear()} ` +
+      `${pad(date.getHours())}:` +
+      `${pad(date.getMinutes())}:` +
+      `${pad(date.getSeconds())}`;
+  }
+
+
+  iniciarVd(venda: iVendas) {
     if (this.clienteControl.invalid || this.funcionarioControl.invalid) {
       this.onError('Preencha cliente e atendente');
       return;
@@ -195,35 +207,50 @@ export class DialogOpenSalesComponent implements OnInit {
     const cliente: any = this.clienteControl.value;
     const funcionario: any = this.funcionarioControl.value;
 
-    const vendaParaCriar: iVendas = {
-      desconto: 0,
-      dtVenda: "",
-      formasDePagamento: "",
-      idCliente: 0,
-      idFuncionario: 0,
-      idVenda: 0,
+    if (cliente && typeof cliente === 'object') {
+      venda.idCliente = cliente.id_cliente;
+      venda.nomeCliente = cliente.nomeCliente;
+    }
+
+    if (funcionario && typeof funcionario === 'object') {
+      venda.idFuncionario = funcionario.id_funcionario;
+      venda.nomeFuncionario = funcionario.nomeFuncionario;
+    }
+
+    const dataAtual = new Date();
+    venda.dtVenda = this.formatarDataParaBackend(dataAtual);
+
+
+    const vendaParaCriar: any = {
+      idVenda: null,
+      idFuncionario: venda.idFuncionario,
+      nomeFuncionario: venda.nomeFuncionario,
+      idCliente: venda.idCliente,
+      nomeCliente: venda.nomeCliente,
+      dtVenda: venda.dtVenda,  // || dataAtual.toISOString(),
       itensVd: [],
-      nomeCliente: "",
-      nomeFuncionario: "",
-      produtos: [],
       qtdDeParcelas: 0,
       subtotal: 0,
-      totalgeral: 0
+      desconto: 0,
+      totalgeral: 0,
+      formasDePagamento: ""
     };
 
     this.vendaServices.addVenda(vendaParaCriar).subscribe({
-      next: (vendaCriada) => {
-        this.venda = vendaCriada;
-       /* this.isAddItem = false;
-        this.isNewVd = true;*/
-      },
-      error: () => this.onError('Erro ao iniciar Vd')
-    });
-  }
+         next: (vendaCriada) => {
+            this.dialogRef.close(vendaCriada);
+          },
+          error: (err) => {
+            this.onError('Erro ao criar a Venda');
+            console.error(err);
+          }
+        });
+       }
 
 
   save(venda: iVendas) {
-    console.log('ClienteControl ', this.clienteControl.status , 'funcionario', this.funcionarioControl.invalid)
+    console.log('ClienteControl ', this.clienteControl.value ,
+      'funcionario', this.funcionarioControl.value)
     /*  if (this.clienteControl.invalid || this.funcionarioControl.invalid) {
          this.onError('Preencha todvenda venda campvenda obrigatórivenda');
          return;
@@ -238,17 +265,18 @@ export class DialogOpenSalesComponent implements OnInit {
     // Se o usuário não mudou nada, ou se o controle for apenas texto, tratamvenda aqui:
 
     if (cliente && typeof cliente === 'object') {
-      venda.idCliente = cliente.idCliente;
+      venda.idCliente = cliente.id_cliente;
       venda.nomeCliente = cliente.nomeCliente;
     }
 
     if (funcionario && typeof funcionario === 'object') {
-      venda.idFuncionario = funcionario.idFuncionario;
+      venda.idFuncionario = funcionario.id_funcionario;
       venda.nomeFuncionario = funcionario.nomeFuncionario;
     }
 
     venda.dtVenda = venda.dtVenda || dataAtual.toISOString();
     venda.dtVenda = dataAtual.toISOString();
+    venda.totalgeral = venda.totalgeral || 0;
     //venda.status = typeof statusVd === 'object' ? statusVd : statusVd;
     venda.itensVd = this.itensVd;
 
@@ -256,30 +284,30 @@ export class DialogOpenSalesComponent implements OnInit {
     console.log(' Vd antes de enviar:', venda,'Id da Venda',
       venda.idVenda);
 
-    if(venda.idVenda == 0) {
+    if (!venda.idVenda) {
       this.vendaServices.addVenda(venda).pipe(takeUntil(this.destroy$))
         .subscribe({
           next: (vendaCriada) => {
             this.dialogRef.close(vendaCriada);
           },
           error: (err) => {
-            this.onError('Erro ao criar a Vd');
+            this.onError('Erro ao criar a Venda');
             console.error(err);
           }
         });
-    }
-    else {
+    } else {
       this.vendaServices.updateVd(venda).pipe(takeUntil(this.destroy$))
         .subscribe({
           next: (vendaAtualizada) => {
             this.dialogRef.close(vendaAtualizada);
           },
           error: (err) => {
-            this.onError('Erro ao atualizar a Vd');
+            this.onError('Erro ao atualizar a Venda');
             console.error(err);
           }
         });
     }
+
   }
 
   addItem() {

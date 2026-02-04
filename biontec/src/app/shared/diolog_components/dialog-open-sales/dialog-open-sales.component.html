@@ -96,8 +96,11 @@
     </mat-form-field>
 
     <div class="actions">
-      <button mat-button *ngIf="fase === 'newVd' || fase === 'editarVd'" (click)="save(venda)">
-        {{ fase === 'newVd' ? 'Iniciar Venda' : 'Atualizar Dados' }}
+      <button mat-button *ngIf="fase === 'newVd' " (click)="iniciarVd(venda)">
+        {{ fase === 'newVd' ? 'Iniciar Venda' : '' }}
+      </button>
+      <button mat-button *ngIf=" fase === 'editarVd'" (click)="save(venda)">
+        {{ fase === 'editarVd' ? 'Atualizar Dados' : '' }}
       </button>
       <button mat-button (click)="onCancel()">Cancelar</button>
     </div>
