@@ -3,11 +3,13 @@
   background: radial-gradient(ellipse farthest-corner at right bottom, #FEDB37 0%, #FDB931 8%, #9f7928 30%, #8A6E2F 40%, transparent 80%),
   radial-gradient(ellipse farthest-corner at left top, #FFFFFF 0%, #FFFFAC 8%, #D1B464 25%, #5d4a1f 62.5%, #5d4a1f 100%);
   border-radius: 5px;
-  line-height: 1px;
-  padding: 5px;
+  line-height: 1%;
+  padding: 3px;
   display: grid;
   grid-template-columns: 1fr 1fr ;
-  width: auto;
+  width: fit-content;
+  max-width: min-content;
+  height: fit-content;
 }
 
 .container-box-venda {
@@ -15,20 +17,22 @@
   radial-gradient(ellipse farthest-corner at left top, rgba(255, 255, 255, 0) 0%, #FFFFAC 8%, #D1B464 25%, #5d4a1f 62.5%, #5d4a1f 100%);
   position: center;
   align-items: center;
+  box-sizing: border-box;
   height: fit-content;
 }
 
 .container-box-itensvd {
   background: radial-gradient(ellipse farthest-corner at right bottom, #FEDB37 0%, #FDB931 8%, #9f7928 30%, #8A6E2F 40%, transparent 80%),
   radial-gradient(ellipse farthest-corner at left top, rgba(255, 255, 255, 0) 0%, #FFFFAC 8%, #D1B464 25%, #5d4a1f 62.5%, #5d4a1f 100%);
-  box-sizing: border-box;
   position: center;
   align-items: center;
+  box-sizing: border-box;
+  width: 300px;
 }
 
 mat-form-field {
   line-height: 0;
-  width: 90%;
+  width: 95%;
   height: 12%;
   padding: 2px; /* Ajuste o padding se necessário */
 }

@@ -4,7 +4,7 @@
     <h1 mat-dialog-title>
       {{ fase === 'newVd' ? 'Abrir Nova Venda' : 'Dados da Venda' }}
     </h1>
-    <mat-form-field appearance="fill">
+    <mat-form-field appearance="fill" *ngIf="fase == 'editarVd' || fase == 'addItemVd'">
       <mat-label>Código da Vd</mat-label>
       <input matInput [(ngModel)]="venda.idVenda" disabled>
     </mat-form-field>
@@ -104,12 +104,7 @@
       </button>
       <button mat-button (click)="onCancel()">Cancelar</button>
     </div>
-   <!-- <div>
-      <button mat-button *ngIf="tagVd" cdkFocusInitial [mat-dialog-close]="vendaSelecionada"
-              (click)="save(venda)">Savar Venda
-      </button>
-      <button mat-button (click)="onCancel()">Cancelar</button>
-    </div>-->
+   
   </mat-card>
 
   <!-- Itens -->
@@ -117,7 +112,7 @@
     <h1 mat-dialog-title>
       {{ fase === 'addItemVd' ? 'Adicionar Produto' : 'Editar Item' }}
     </h1>
-    <mat-form-field>
+    <mat-form-field appearance="fill">
       <mat-label>ID</mat-label>
       <input matInput [(ngModel)]="venda.itensVd.idItensDaVd" disabled>
     </mat-form-field>
@@ -166,22 +161,14 @@
       <input matInput [value]="formatter(venda.itensVd.total || 0)" disabled [(ngModel)]="itensVd.valorParcial">
     </mat-form-field>
 
-    <div mat-dialog-content>
+     <form>
       <button mat-raised-button
               (click)="fase === 'addItemVd' ? addItem() : editarItem(itensVd)"
               [disabled]="isSaveButtonDisabled()">
-        {{ fase === 'addItemVd' ? 'Adicionar ao Carrinho' : 'Confirmar Alteração' }}
+        {{ fase === 'addItemVd' ? 'Adicionar Item' : 'Confirmar Alteração' }}
       </button>
-    </div>
- <!--   <div mat-dialog-content>
-      <button mat-raised-button *ngIf="tagItemVd" (click)="addItem()" [disabled]="isSaveButtonDisabled()">
-        Adicionar Item
-      </button>
-      <button mat-raised-button *ngIf="tagItemVd" (click)="editarItem(itensVd)" [disabled]="isSaveButtonDisabled()">
-        Atualizar Item
-      </button>
-     </div>-->
-
+    <button mat-button *ngIf="fase === 'editarItemVd' " (click)="onCancel()">Cancelar</button>
+     </form>
   </mat-card>
 
 
