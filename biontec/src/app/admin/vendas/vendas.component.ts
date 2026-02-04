@@ -91,14 +91,13 @@ export class VendaComponent implements OnInit {
     });
     // Alternar o estado da linha clicada
     element.isExpanded = !element.isExpanded;
-    // Se a linha foi expandida, carregar os dados
-    if (element.isExpanded) {
+
+    if (element.isExpanded && element.itensVd) {
       var soma = 0;
       for (var i = 0; i < element.itensVd.length; i++) {
         soma += element.itensVd.map((p: iItensVd) => p.valorParcial)[i];
       }
       element.totalgeral = soma;
-    //  element.totalgeral = this.formatarReal(soma);
       this.tbSourceItensVd$.data = element.itensVd.map((item: iItensVd) => ({
         ...item,
         valVenda: item.valVenda,
