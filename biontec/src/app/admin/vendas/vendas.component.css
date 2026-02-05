@@ -7,6 +7,29 @@
   height: 1%;
 }
 
+.mat-column-nome_cliente {
+  width: 35%;
+  padding-right: 16px !important;
+}
+
+.mat-column-descricao {
+  width: 28%;
+  padding-right: 10px !important;
+}
+
+.mat-column-opicao,
+.mat-colunm-opicoes{
+  width: 15%;
+}
+
+.mat-column-dt_venda,
+.mat-column-total_geral,
+.mat-column-qtd,
+.mat-column-preco {
+  width: 100px;
+  white-space: nowrap;
+}
+
 .table-child{
   background-image: linear-gradient( #8438ee, #34db85);
 }

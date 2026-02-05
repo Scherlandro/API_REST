@@ -42,7 +42,7 @@ export class VendaComponent implements OnInit {
   tbSourceVd$: MatTableDataSource<iVendas>;
   tbSourceItensVd$: MatTableDataSource<iItensVd>;
   tbData: any;
-  displayedColumns: string[] = ['codigo', 'descricao', 'preco', 'qtd', 'soma', 'data', 'imagem', 'opicoes'];
+  displayedColumns: string[] = ['codigo', 'descricao', 'preco', 'qtd', 'soma', 'imagem', 'opicoes'];
 
   fase!: FaseVenda;
   vendaControl = new FormControl();

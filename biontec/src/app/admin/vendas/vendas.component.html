@@ -38,7 +38,7 @@
 
       <ng-container matColumnDef="dt_venda">
         <th mat-header-cell *matHeaderCellDef> Data</th>
-        <td mat-cell *matCellDef="let elementVd"> {{elementVd.dtVenda}} </td>
+        <td mat-cell *matCellDef="let elementVd"> {{elementVd.dtVenda| date:'dd/MM/yyyy'}} </td>
       </ng-container>
 
       <ng-container matColumnDef="total_geral">
@@ -109,11 +109,6 @@
               <ng-container matColumnDef="soma">
                 <th mat-header-cell *matHeaderCellDef> Soma</th>
                 <td mat-cell *matCellDef="let element"> {{element.valorParcial | currencyBRL}} </td>
-              </ng-container>
-
-              <ng-container matColumnDef="data">
-                <th mat-header-cell *matHeaderCellDef> Data </th>
-                <td mat-cell *matCellDef="let element"> {{element.dtRegistro}} </td>
               </ng-container>
 
 
