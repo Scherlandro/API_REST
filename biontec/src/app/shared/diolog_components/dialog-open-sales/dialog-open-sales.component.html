@@ -104,7 +104,7 @@
       </button>
       <button mat-button (click)="onCancel()">Cancelar</button>
     </div>
-   
+
   </mat-card>
 
   <!-- Itens -->
@@ -165,7 +165,7 @@
       <button mat-raised-button
               (click)="fase === 'addItemVd' ? addItem() : editarItem(itensVd)"
               [disabled]="isSaveButtonDisabled()">
-        {{ fase === 'addItemVd' ? 'Adicionar Item' : 'Confirmar Alteração' }}
+        {{ fase === 'addItemVd' ? 'Adicionar Item' : 'Salvar' }}
       </button>
     <button mat-button *ngIf="fase === 'editarItemVd' " (click)="onCancel()">Cancelar</button>
      </form>
