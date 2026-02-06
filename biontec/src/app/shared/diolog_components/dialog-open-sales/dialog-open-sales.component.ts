@@ -339,8 +339,7 @@ export class DialogOpenSalesComponent implements OnInit {
 
   editarItem(itensVd: iItensVd) {
     const dto = {
-      idItensVd: 0,
-      idItensDaVd: itensVd.idItensVd,
+      idItensVd: itensVd.idItensVd,
       codVenda: itensVd.codVenda,
       codProduto: itensVd.codProduto,
       descricao: itensVd.descricao,

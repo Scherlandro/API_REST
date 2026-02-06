@@ -34,6 +34,7 @@ export class ItensVdService {
   }
 
   editElement(element: iItensVd): Observable<iItensVd> {
+    console.log('Foi para PUT ', element)
     return this._http.put<iItensVd>(this.baseUrl+'editar', element);
   }
 
