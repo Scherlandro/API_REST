@@ -68,10 +68,26 @@
   border-radius: 20px;
 }
 
+h3{
+  margin-right: 16px;
+  margin-bottom: 0;
+}
+
+.spacer{
+flex:3 1 auto;
+}
+
+.search-container {
+  display: flex;
+  align-items: center;
+  gap: 8px; /* Espaço entre o input e o botão search */
+  width: 50%; /* Define quanto da tela a busca pode ocupar (ajustável) */
+  max-width: 500px; /* Evita que fique gigante em telas ultra-wide */
+}
+
 .button-add{
-  max-width: 100px;
+ width: 15%;
   background-position:left ;
-  width: auto;
   height: 35px;
   background-color: rgba(51, 33, 83, 0.07);
   -webkit-border-radius: 20px;
@@ -80,8 +96,8 @@
 }
 
 .button-search-vd {
-  width: 100%;
-  min-width: 50px;
+  width: 20%;
+  align-content: end;
   height: 35px;
   background-color: rgba(51, 33, 83, 0.07);
   -webkit-border-radius: 20px;
@@ -148,23 +164,31 @@
   border-radius: 15px;
   background-color: rgba(51, 33, 83, 0.07);
   color: #0f2102;
-  display: grid;
-  align-content: end;
-  grid-template-columns: 1fr 3fr 1fr 1fr;
-  grid-gap: 2px;
+  display: inline-flex;
+  align-content: center;
   min-height: 45px;
   height: auto;
 }
 
-.input-table-vd{
+/*.input-table-vd{
   padding-inline-start: 10px;
   border-bottom-left-radius: 15px;
   min-height: 25px;
   height: auto;
-  max-width: 300px;
+  max-width: 40%;
   width: auto;
   color: #32e27e;
   background: rgba(0, 3, 10, 0.05);
+}*/
+
+.input-table-vd {
+  flex-grow: 1; /* Faz o input expandir para preencher o search-container */
+  height: 35px;
+  padding: 0 15px;
+  color: #32e27e;
+  background: rgba(0, 3, 10, 0.05);
+  border-radius: 20px;
+  outline: none;
 }
 
 

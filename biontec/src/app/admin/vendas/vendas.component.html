@@ -15,9 +15,13 @@
 
     <mat-toolbar class="head-table-vd body">
       <h3> Vendas </h3>
-      <button class="button-add" (click)="openNewVd()">
+      <button class="button-add body" title="Abrir Venda" (click)="openNewVd()">
         <mat-icon>add</mat-icon>
+        <mat-icon>point_of_sale</mat-icon>
       </button>
+
+      <span class="spacer"></span>
+
       <input class="input-table-vd" type="text" placeholder=" Digite a consulta" matInput
              [formControl]="vendaControl"
              (keydown)="listarVenda()"
@@ -61,7 +65,7 @@
 
           <button class="button-add-item" (click)="adicionarItenVd(elementVd); $event.stopPropagation()">
             <mat-icon type="hidden" title="Adicionar mais Item" class="edit">
-              add_shopping_cart
+              playlist_add
             </mat-icon>
           </button>
           <span></span>
