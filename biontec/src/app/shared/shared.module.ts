@@ -1,6 +1,8 @@
 import { A11yModule } from "@angular/cdk/a11y";
 import { CommonModule } from '@angular/common';
-import { NgModule } from '@angular/core';
+import {LOCALE_ID, NgModule} from '@angular/core';
+import { registerLocaleData } from '@angular/common';
+import localePt from '@angular/common/locales/pt';
 import { FormsModule } from "@angular/forms";
 import { AppMaterialModule } from "./app-material/app-material.module";
 import { ConfirmDiologComponent } from "./diolog_components/confirm-diolog/confirm-diolog.component";
@@ -13,7 +15,10 @@ import {DialogFuncionarioComponent} from "./diolog_components/dialog-funcionario
 import {DialogClienteComponent} from "./diolog_components/dialog-cliente/dialog-cliente.component";
 import { ErrorDiologComponent } from "./diolog_components/error-diolog/error-diolog.component";
 import {CurrencyBRLPipe} from "./pipes/currency-brl.pipe";
+import {DateLocalPipe} from "./pipes/date-local.pipe";
 
+
+registerLocaleData(localePt);
 
 @NgModule({
   declarations: [
@@ -27,7 +32,8 @@ import {CurrencyBRLPipe} from "./pipes/currency-brl.pipe";
     DialogOpenSalesComponent,
     DialogOpenOsComponent,
     DialogOpenSalesComponent,
-    CurrencyBRLPipe
+    CurrencyBRLPipe,
+    DateLocalPipe
   ],
   imports: [
     CommonModule,
@@ -36,7 +42,11 @@ import {CurrencyBRLPipe} from "./pipes/currency-brl.pipe";
     FormsModule
   ],
   exports: [
-    CurrencyBRLPipe
+    CurrencyBRLPipe,
+    DateLocalPipe
+  ],
+  providers: [
+    { provide: LOCALE_ID, useValue: 'pt-BR' }
   ]
 })
 export class SharedModule { }

@@ -40,7 +40,7 @@
 
     <mat-form-field *ngIf="fase == 'editarVd' || fase == 'addItemVd' " appearance="fill">
       <mat-label>Data</mat-label>
-      <input matInput [value]="venda.dtVenda | date:'dd/MM/yyyy'" disabled>
+      <input matInput [value]="venda.dtVenda " disabled>
     </mat-form-field>
 
     <!-- Data de Corrente -->

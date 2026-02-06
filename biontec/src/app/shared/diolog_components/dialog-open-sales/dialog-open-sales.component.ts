@@ -102,19 +102,14 @@ export class DialogOpenSalesComponent implements OnInit {
     if (this.tagItemVd) {
       this.updateTotal();
     }
-
-
   }
-
 
   ngOnDestroy() {
     // this.destroy$.next();
     this.destroy$.complete();
   }
 
-  // =============== AUTOCOMPLETE ==================
-  // ===============================================
-
+  // =============== Autocomplete for multiple elements ==================
   setupAutocompleteFilters() {
     this.funcionarioFilted = this.funcionarioControl.valueChanges.pipe(
       startWith(''),
@@ -141,8 +136,6 @@ export class DialogOpenSalesComponent implements OnInit {
       catchError(() => of([])),
       takeUntil(this.destroy$)
     );
-
-
   }
 
   selecionarCliente(): void {
@@ -227,7 +220,7 @@ export class DialogOpenSalesComponent implements OnInit {
       nomeFuncionario: venda.nomeFuncionario,
       idCliente: venda.idCliente,
       nomeCliente: venda.nomeCliente,
-      dtVenda: venda.dtVenda,  // || dataAtual.toISOString(),
+      dtVenda: venda.dtVenda,// || dataAtual.toISOString(),
       itensVd: [],
       qtdDeParcelas: 0,
       subtotal: 0,
