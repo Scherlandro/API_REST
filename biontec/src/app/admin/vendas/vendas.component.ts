@@ -213,7 +213,6 @@ export class VendaComponent implements OnInit {
       if (res) {
         this.vendasService.delete(eventVd.idVenda).subscribe({
           next: () => {
-            // Filtra o array removendo o item deletado
             this.tbSourceVd$.data = this.tbSourceVd$.data.filter(vd => vd.idVenda !== eventVd.idVenda);
             this.notificationMsg.warn('Deletado com sucesso!');
           },
@@ -228,15 +227,21 @@ export class VendaComponent implements OnInit {
     this.notificationMsg.openConfirmDialog('Tem certeza em REMOVER este item ?')
       .afterClosed().subscribe(res => {
         if (!res) return;
-        this.itensVdService.deleteItensVd(item).subscribe(() => {
+        this.itensVdService.deleteItensVd(item).subscribe({
+          next: () => {
           const vendaPai = this.tbSourceVd$.data.find(vd => vd.idVenda === item.codVenda);
-          if (vendaPai?.itensVd) {
-            const index = vendaPai.itensVd.findIndex((i:any) => i.idItensVd === item.idItensVd);
-            if (index > -1) {
-              vendaPai.itensVd.splice(index, 1);
+          if (vendaPai && vendaPai?.itensVd) {
+
+            vendaPai.itensVd = vendaPai.itensVd.filter((i:any) => i.idItensVd !== item.idItensVd);
+            vendaPai.totalgeral = vendaPai.itensVd.reduce(
+              (acc: number, cur:iItensVd)=> acc + (cur.valorParcial || 0), 0);
+
               this.tbSourceVd$.data = [...this.tbSourceVd$.data];
-            } }
+              this.tbSourceItensVd$.data = [...vendaPai.itensVd];
+            }
           this.notificationMsg.warn('Item removido!');
+        },
+          error: (err)=> this.onError('Erro ao remover o item')
         });
       });
   }
