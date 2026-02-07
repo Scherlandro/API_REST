@@ -27,14 +27,11 @@ export class ItensVdService {
     return this._http.get<iItensVd[]>(this.baseUrl +'ItensVdEntreDatas?dtIni='+d1+'&dtFinal='+d2);
   }
 
-
   createElements(element: iItensVd): Observable<iItensVd> {
-    console.log('Foi para Post ', element)
     return this._http.post<iItensVd>(this.baseUrl+'salvar',element);
   }
 
   editElement(element: iItensVd): Observable<iItensVd> {
-    console.log('Foi para PUT ', element)
     return this._http.put<iItensVd>(this.baseUrl+'editar', element);
   }
 

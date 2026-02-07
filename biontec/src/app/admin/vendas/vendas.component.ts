@@ -149,7 +149,7 @@ export class VendaComponent implements OnInit {
     this.executarFluxoVenda('editarItemVd', null, elementItem);
   }
 
-  executarFluxoVenda(fase: FaseVenda, elementVd?: any, elementItem?: any) {
+  executarFluxoVenda(fase: FaseVenda, elementMain?: any, elementItem?: any) {
     let tagVd: boolean;
     let tagItemVd: boolean;
 
@@ -176,10 +176,10 @@ export class VendaComponent implements OnInit {
     }
 
     const vdBase = {
-      idVenda: elementVd?.idVenda || 0,
-      nomeCliente: elementVd?.nomeCliente || '',
-      dtVenda: elementVd?.dtVenda || new Date().toISOString(),
-      ...elementVd // Mantém outras propriedades existentes
+      idVenda: elementMain?.idVenda || 0,
+      nomeCliente: elementMain?.nomeCliente || '',
+      dtVenda: elementMain?.dtVenda || new Date().toISOString(),
+      ...elementMain // Mantém outras propriedades existentes
     };
 
     const itemBase = {
@@ -206,68 +206,6 @@ export class VendaComponent implements OnInit {
       }
     });
   }
-
-/*  openNewVd() {
-      const vd: iVendas = {
-        idVenda: 0, idCliente: 0, nomeCliente: '', idFuncionario: 0, nomeFuncionario: '',
-        dtVenda: '', subtotal: 0, desconto: 0, totalgeral: 0, formasDePagamento: "",
-        qtdDeParcelas: 0,
-
-        itensVd : {
-          idItensVd: 0, codVenda: 0, codProduto: '', descricao: '', valVenda: 0,
-          qtdVendidas: 1, descPorUnidade: 0, valorParcial: 0, dtRegistro: ''
-        }
-      } ;
-    const itens: iItensVd = vd.itensVd;
-
-     this.dialog.open(DialogOpenSalesComponent, {
-      data: {
-        modoNew: 'novo',  modoUpdate: '', modoAdd: '',
-        ...vd,
-        itensVd: { ...itens, codVD: vd.idVenda }
-      }
-    });
-  }
-  editarVd(element: iVendas) {
-    const action = 'editarVd';
-    this.openDilogVd(element, action);
-  }
-  adicionarItenVd(element: iVendas){
-    this.openDilogVd(element)
-  }
-  editarItemVd(element: iItensVd){
-    this.openDilogVd(null, element);
-  }
-
-  openDilogVd(vd: any, item?: any) {
- //openDilogVd(vd: any, item?: iItensVd) {
-   /!* const isEdit = !!item;
-    const isUpdateVD = !!item;
-    const isNovaVD = !vd.itensVd; // nova venda recém criada*!/
-
-    const resut = item;
-
-    const emptyItem: iItensVd = {
-      idItensVd: 0, codVenda: vd.idVenda ?? 0, codProduto: '', descricao: '',
-      valCompra: 0, valVenda: 0, qtdVendidas: 1, descPorUnidade: 0, valorParcial: 0,
-      dtRegistro: '', fotoProduto: ''
-    };
-
-   // const itens = isEdit ? item : emptyItem;
-    const itens = resut;
-
-       this.dialog.open(DialogOpenSalesComponent, {
-        data: {
-         /!* modoNew: isNovaVD ? 'novo' : '',
-          modoUpdate: isUpdateVD ? 'updateVd' : '' ,
-          modoAdd: isEdit ? 'adicionar' : '',*!/
-          ...vd,
-          itensVd: { ...itens, codVD: vd.idVenda }
-        }
-      });
-  }
-*/
-
 
   deleteVd(eventVd: iVendas) {
     this.notificationMsg.openConfirmDialog('Tem certeza em REMOVER esta Venda?')
