@@ -50,12 +50,6 @@
       <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
       <mat-datepicker #picker></mat-datepicker>
     </mat-form-field>
-<!--
-    <mat-form-field *ngIf=" fase == 'addItemVd' " appearance="fill">
-      <mat-label>Data Corrente</mat-label>
-      <input matInput [value]="venda.dtVenda | date:'dd/MM/yyyy'"  disabled>
-    </mat-form-field>
--->
 
     <!-- Cliente -->
     <mat-form-field  *ngIf="fase == 'newVd' " appearance="fill">
@@ -96,7 +90,8 @@
     </mat-form-field>
 
     <div class="actions">
-      <button mat-button *ngIf="fase === 'newVd' " (click)="iniciarVd(venda)">
+      <button mat-button *ngIf="fase === 'newVd' " [disabled]="clienteControl.invalid || funcionarioControl.invalid"
+              (click)="iniciarVd(venda)">
         {{ fase === 'newVd' ? 'Iniciar Venda' : '' }}
       </button>
       <button mat-button *ngIf=" fase === 'editarVd'" (click)="save(venda)">
