@@ -193,7 +193,7 @@ export class VendaComponent implements OnInit {
       ...elementItem
     };
 
-    this.dialog.open(DialogOpenSalesComponent, {
+  const dialogRef =  this.dialog.open(DialogOpenSalesComponent, {
       data: {
         fase: fase,
         tagVd: tagVd,
@@ -205,6 +205,40 @@ export class VendaComponent implements OnInit {
         itensVd: itemBase
       }
     });
+
+     dialogRef.afterClosed().subscribe(res=>{
+       if(res){
+         if (fase === 'newVd') {
+           // Adiciona a nova venda ao início da lista
+           this.tbSourceVd$.data = [res, ...this.tbSourceVd$.data];
+           this.notificationMsg.success('Venda iniciada com sucesso!');
+         } else if (fase === 'addItemVd' || fase === 'editarItemVd') {
+           // Se o retorno for um item ou venda atualizada,
+           // recarregue a venda específica ou a lista
+           this.listarVenda();
+         }
+       }
+     });
+
+     /*
+     // Exemplo de lógica para atualizar apenas os itens daquela venda sem dar refresh na página toda
+dialogRef.afterClosed().subscribe(novoItem => {
+  if (novoItem && fase === 'addItemVd') {
+    const venda = this.tbSourceVd$.data.find(v => v.idVenda === novoItem.codVenda);
+    if (venda) {
+      if (!venda.itensVd) venda.itensVd = [];
+      venda.itensVd = [...venda.itensVd, novoItem];
+
+      // Atualiza a fonte de dados da tabela interna que está visível
+      this.tbSourceItensVd$.data = [...venda.itensVd];
+
+      // Força o Material a ver a mudança na tabela principal
+      this.tbSourceVd$.data = [...this.tbSourceVd$.data];
+    }
+  }
+});
+      */
+
   }
 
   deleteVd(eventVd: iVendas) {

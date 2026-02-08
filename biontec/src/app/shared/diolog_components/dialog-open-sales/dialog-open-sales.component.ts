@@ -238,8 +238,8 @@ export class DialogOpenSalesComponent implements OnInit {
             console.error(err);
           }
         });
-       }
 
+  }
 
   save(venda: iVendas) {
     console.log('ClienteControl ', this.clienteControl.value ,
@@ -323,12 +323,16 @@ export class DialogOpenSalesComponent implements OnInit {
     };
 
     console.log('Id do Novo Item ', novoItem.idItensVd, 'IdVenda', this.venda.idVenda )
-    if(novoItem.idItensVd == null){
+    if(novoItem.idItensVd == null || novoItem.codVenda !== 0){
       this.ItensVdService.createElements(novoItem).subscribe({
-        next: () => {
+        next: (itemCriado) => {
+          this.notificationMsg.warn('Item adicionado!');
+          // FECHE PASSANDO O ITEM CRIADO
+          this.dialogRef.close(itemCriado);
          // this.venda.itensVd.push(novoItem); // só para UI
           this.updateTotal();
-        }
+        },
+        error: (err) => this.onError("Erro ao salvar item")
       });
     }
     this.voltar();
