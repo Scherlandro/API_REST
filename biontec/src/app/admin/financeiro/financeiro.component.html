@@ -1,0 +1,31 @@
+<div class="card border-danger">
+  <div class="card-header bg-danger text-white d-flex justify-content-between">
+    <span><strong>Relatório de Inadimplência</strong></span>
+    <span>Total em Atraso: {{ totalAtrasado | currency:'BRL' }}</span>
+  </div>
+  <div class="card-body">
+    <table class="table table-sm">
+      <thead>
+      <tr>
+        <th>Venda #</th>
+        <th>Cliente</th>
+        <th>Vencimento</th>
+        <th>Atraso (Dias)</th>
+        <th>Valor</th>
+        <th>Ações</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let item of listaAtrasados">
+        <td>{{ item.origemId }}</td>
+        <td>{{ item.nomeCliente }}</td> <td class="text-danger">{{ item.dataVencimento | date:'dd/MM/yyyy' }}</td>
+        <td>{{ calcularDias(item.dataVencimento) }}</td>
+        <td>{{ item.valorParcela | currency:'BRL' }}</td>
+        <td>
+          <button class="btn btn-primary btn-sm">Notificar Cliente</button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

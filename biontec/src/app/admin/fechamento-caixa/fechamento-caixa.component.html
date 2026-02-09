@@ -1,0 +1,40 @@
+<div class="container mt-4">
+
+  <h2>Fechamento de Caixa</h2>
+
+  <div class="row mb-3">
+    <div class="col-md-4">
+      <input type="date" class="form-control" [(ngModel)]="dataConsulta">
+    </div>
+    <div class="col-md-2">
+      <button class="btn btn-primary" (click)="consultar()">Consultar</button>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-8">
+      <table class="table table-striped table-bordered">
+        <thead class="table-dark">
+        <tr>
+          <th>Forma de Pagamento</th>
+          <th>Qtd. Vendas</th>
+          <th>Total (R$)</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let item of resumo">
+          <td>{{ item.formaPagamento }}</td>
+          <td>{{ item.quantidadeTransacoes }}</td>
+          <td>{{ item.totalRecebido | currency:'BRL' }}</td>
+        </tr>
+        </tbody>
+        <tfoot>
+        <tr class="table-info">
+          <td colspan="2"><strong>TOTAL GERAL EM CAIXA</strong></td>
+          <td><strong>{{ totalGeral | currency:'BRL' }}</strong></td>
+        </tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
+</div>

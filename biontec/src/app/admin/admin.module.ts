@@ -20,24 +20,30 @@ import { VendaComponent } from "./vendas/vendas.component";
 import { CarrinhoDeComprasComponent } from './carrinho-de-compras/carrinho-de-compras.component';
 import { NfeComponent } from './nfe/nfe.component';
 import {SharedModule} from "../shared/shared.module";
+import { PagamentoListaComponent } from './pagamento-lista/pagamento-lista.component';
+import { FechamentoCaixaComponent } from './fechamento-caixa/fechamento-caixa.component';
+import { FinanceiroComponent } from './financeiro/financeiro.component';
 
 
 @NgModule({
-  declarations: [
-    LayoutComponent,
-    DashboardComponent,
-    MenuComponent,
-    AheaderComponent,
-    UsuariosComponent,
-    FuncionariosComponent,
-    ClientesComponent,
-    ProductsComponent,
-    ContabilidadeComponent,
-    VendaComponent,
-    OrdemDeServiceComponent,
-    CarrinhoDeComprasComponent,
-    NfeComponent,
-  ],
+    declarations: [
+        LayoutComponent,
+        DashboardComponent,
+        MenuComponent,
+        AheaderComponent,
+        UsuariosComponent,
+        FuncionariosComponent,
+        ClientesComponent,
+        ProductsComponent,
+        ContabilidadeComponent,
+        VendaComponent,
+        OrdemDeServiceComponent,
+        CarrinhoDeComprasComponent,
+        NfeComponent,
+        PagamentoListaComponent,
+        FechamentoCaixaComponent,
+        FinanceiroComponent,
+    ],
     imports: [
         CommonModule,
         AdminRoutingModule,
@@ -48,5 +54,8 @@ import {SharedModule} from "../shared/shared.module";
         HighchartsChartModule,
         SharedModule
     ],
+    exports: [
+        PagamentoListaComponent
+    ]
 })
 export class AdminModule { }

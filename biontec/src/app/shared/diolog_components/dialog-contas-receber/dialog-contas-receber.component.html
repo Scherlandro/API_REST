@@ -1,0 +1,22 @@
+<table class="table">
+  <thead>
+  <tr>
+    <th>Parcela</th>
+    <th>Vencimento</th>
+    <th>Valor</th>
+    <th>Ações</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let c of contasPendentes">
+    <td>{{ c.numeroParcela }} / {{ totalParcelas }}</td>
+    <td>{{ c.dataVencimento | date:'dd/MM/yyyy' }}</td>
+    <td>{{ c.valorParcela | currency:'BRL' }}</td>
+    <td>
+      <button class="btn btn-success btn-sm" (click)="abrirModalPagamento(c)">
+        Receber Pagamento
+      </button>
+    </td>
+  </tr>
+  </tbody>
+</table>

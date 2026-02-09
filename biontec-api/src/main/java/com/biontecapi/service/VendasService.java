@@ -11,6 +11,7 @@ public interface VendasService {
     List<Vendas> listarVendas();
     Vendas save(VendasDto dto) ;
     Vendas atualizarVenda(VendasDto dto);
+    Vendas salvarVendaComParcelas(VendasDto dto);
     Optional<Vendas> litarVendaPorCod(Integer id) ;
     List<Vendas> litarVendaPorCliente(String name) ;
     VendasDto findById(Integer id) ;

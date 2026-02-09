@@ -3,22 +3,28 @@ package com.biontecapi.serviceImpl;
 
 import com.biontecapi.dtos.VendasDto;
 import com.biontecapi.mapper.VendasMapper;
+import com.biontecapi.model.ContasAReceber;
 import com.biontecapi.model.Vendas;
 import com.biontecapi.repository.VendasRepository;
+import com.biontecapi.service.ContasAReceberService;
 import com.biontecapi.service.VendasService;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class VendasServiceImpl implements VendasService {
     final VendasRepository vendasRepository;
+    final ContasAReceberService contasAReceberService;
     final VendasMapper vendasMapper;
 
-    public VendasServiceImpl(VendasRepository repository, VendasMapper mapper) {
+    public VendasServiceImpl(VendasRepository repository, ContasAReceberService contasAReceberService, VendasMapper mapper) {
 
         this.vendasRepository = repository;
+        this.contasAReceberService = contasAReceberService;
         this.vendasMapper = mapper;
     }
 
@@ -49,7 +55,13 @@ public class VendasServiceImpl implements VendasService {
     public Vendas save(VendasDto dto) {
         Vendas vd = new Vendas();
         vd.mapToDTO(dto);
-        return vendasRepository.save(vd);
+        Vendas vendaSalva = vendasRepository.save(vd);
+        // Se a venda for parcelada (ex: mais de 1 parcela), gera o contas a receber
+        if (vendaSalva.getQtdDeParcelas() != null && vendaSalva.getQtdDeParcelas() > 1) {
+            contasAReceberService.gerarParcelasVenda(vendaSalva);
+        }
+
+        return vendaSalva;
     }
     
 
@@ -62,7 +74,32 @@ public class VendasServiceImpl implements VendasService {
         vd.setTotalgeral(calcularTotalDaVenda(vd));
         return vendasRepository.save(vd);
     }
-    
+
+    @Override
+    @Transactional
+    public Vendas salvarVendaComParcelas(VendasDto dto) {
+        // 1. Salva a Venda normalmente
+        Vendas vendaSalva = vendasRepository.save(vendasMapper.toEntity(dto));
+
+        // 2. Se for parcelado, gera o Contas a Receber
+        if (vendaSalva.getQtdDeParcelas() > 1) {
+            double valorParcela = vendaSalva.getTotalgeral() / vendaSalva.getQtdDeParcelas();
+
+            for (int i = 1; i <= vendaSalva.getQtdDeParcelas(); i++) {
+                ContasAReceber conta = new ContasAReceber();
+                conta.setOrigemId(vendaSalva.getIdVenda());
+                conta.setTipoOrigem("VENDA");
+                conta.setNumeroParcela(i);
+                conta.setValorParcela(valorParcela);
+                conta.setDataVencimento(LocalDate.now().plusMonths(i));
+                conta.setStatus("PENDENTE");
+
+                //contasAReceberRepository.save(conta);
+            }
+        }
+        return vendaSalva;
+    }
+
 
     @Override
     public void delete(Integer id) {

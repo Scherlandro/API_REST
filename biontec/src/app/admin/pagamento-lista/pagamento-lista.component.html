@@ -1,0 +1,38 @@
+<div class="card mt-3">
+  <div class="card-header">Histórico de Pagamentos</div>
+  <div class="card-body">
+    <div>
+      [origemId]="venda.idVenda"
+      [tipoOrigem]="'VENDA'
+    </div>
+    <table class="table table-hover">
+      <thead>
+      <tr>
+        <th>Data</th>
+        <th>Forma</th>
+        <th>Valor</th>
+        <th>Status</th>
+        <th>Ações</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let p of pagamentos">
+        <td>{{ p.dtPagamento | date:'dd/MM/yyyy HH:mm' }}</td>
+        <td>{{ p.formaPagamento }}</td>
+        <td>{{ p.valorPago | currency:'BRL' }}</td>
+        <td>
+            <span [ngClass]="{'badge bg-success': p.status === 1, 'badge bg-danger': p.status === 2}">
+              {{ getLabelStatus(p.status) }}
+            </span>
+        </td>
+        <td>
+          <button *ngIf="p.status === 1" class="btn btn-sm btn-outline-danger"
+                  (click)="estornar(p.idPagamento)">
+            Estornar
+          </button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

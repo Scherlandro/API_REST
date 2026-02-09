@@ -16,6 +16,8 @@ import {DialogClienteComponent} from "./diolog_components/dialog-cliente/dialog-
 import { ErrorDiologComponent } from "./diolog_components/error-diolog/error-diolog.component";
 import {CurrencyBRLPipe} from "./pipes/currency-brl.pipe";
 import {DateLocalPipe} from "./pipes/date-local.pipe";
+import { DialogContasReceberComponent } from './diolog_components/dialog-contas-receber/dialog-contas-receber.component';
+import { DialogPagamentosComponent } from './diolog_components/dialog-pagamentos/dialog-pagamentos.component';
 
 
 registerLocaleData(localePt);
@@ -33,7 +35,9 @@ registerLocaleData(localePt);
     DialogOpenOsComponent,
     DialogOpenSalesComponent,
     CurrencyBRLPipe,
-    DateLocalPipe
+    DateLocalPipe,
+    DialogContasReceberComponent,
+    DialogPagamentosComponent
   ],
   imports: [
     CommonModule,
