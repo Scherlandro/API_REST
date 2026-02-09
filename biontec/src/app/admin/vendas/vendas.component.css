@@ -110,15 +110,22 @@ flex:3 1 auto;
   overflow: hidden;
 }
 
-.button-add-item {
-  min-width: 40px;
-  width: auto;
-  height: 35px;
+.button-editeVd {
+  width: 25px;
+  height: 25px;
   background-color: rgba(51, 33, 83, 0.07);
-  -webkit-border-radius: 14px;
-  -moz-border-radius: 14px;
-  border-radius: 14px;
+  border-radius: 5px;
+}
 
+.button-editeVd:hover {
+  background-image: linear-gradient( #e2efec, #758e7b);
+}
+
+.button-add-item {
+  width: auto;
+  height: 25px;
+  background-color: rgba(51, 33, 83, 0.07);
+  border-radius: 5px;
 }
 
 .button-add-item:hover {
@@ -126,13 +133,10 @@ flex:3 1 auto;
 }
 
 .button-edite {
-  min-width: 40px;
   width: auto;
-  height: 35px;
+  height: 25px;
   background-color: rgba(51, 33, 83, 0.07);
-  -webkit-border-radius: 14px;
-  -moz-border-radius: 14px;
-  border-radius: 14px;
+  border-radius: 5px;
 }
 
 .button-edite:hover {
@@ -141,17 +145,27 @@ flex:3 1 auto;
 
 .button-delete {
   width: auto;
-  height: 35px;
+  height: 25px;
   background-color: rgba(51, 33, 83, 0.07);
-  -webkit-border-radius: 14px;
-  -moz-border-radius: 14px;
-  border-radius: 14px;
+  border-radius: 5px;
 }
 
 .button-delete:hover {
   background-image: linear-gradient( #e2efec, #d90505);
 }
 
+.button-finalizar {
+  padding-left: 10px;
+  padding-right: 10px;
+  width: 25px;
+  height: 25px;
+  background-color: rgba(51, 33, 83, 0.07);
+  border-radius: 5px;
+}
+
+.button-finalizar:hover {
+  background-image: linear-gradient( #e2efec, #753dc6);
+}
 
 .image-table{
   height: auto;

@@ -366,7 +366,7 @@ export class DialogOpenSalesComponent implements OnInit {
 
   finalizarVd() {
     //this.venda.status = 'FINALIZADA';
-    this.vendaServices.updateVd(this.venda).subscribe();
+   // this.vendaServices.updateVd(this.venda).subscribe();
   }
 
 
