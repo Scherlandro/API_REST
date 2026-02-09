@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {Pagamento} from "../../interfaces/pagamento";
+import {iPagamento} from "../../interfaces/pagamento";
 import {PagamentoService} from "../../services/pagmentos.service";
 
 @Component({
@@ -12,7 +12,7 @@ export class PagamentoListaComponent implements OnInit {
   @Input() origemId!: number;
   @Input() tipoOrigem: string = 'VENDA';
 
-  pagamentos: Pagamento[] = [];
+  pagamentos: iPagamento[] = [];
 
   constructor(private service: PagamentoService) {}
 

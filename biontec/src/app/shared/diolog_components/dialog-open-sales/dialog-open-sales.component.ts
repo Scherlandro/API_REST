@@ -364,11 +364,6 @@ export class DialogOpenSalesComponent implements OnInit {
     });
   }
 
-  finalizarVd() {
-    //this.venda.status = 'FINALIZADA';
-   // this.vendaServices.updateVd(this.venda).subscribe();
-  }
-
 
   removeItem(item: iItensVd) {
     const index = this.itensVd$.indexOf(item);

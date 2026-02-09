@@ -1,4 +1,4 @@
-export interface Pagamento {
+export interface iPagamento {
   idPagamento?: number;
   valorPago: number;
   dtPagamento?: string;

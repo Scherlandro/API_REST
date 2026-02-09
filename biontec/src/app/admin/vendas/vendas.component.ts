@@ -15,8 +15,8 @@ import {VendasService} from "../../services/vendas.service";
 import {ErrorDiologComponent} from "../../shared/diolog_components/error-diolog/error-diolog.component";
 import {TokenService} from "../../services/token.service";
 import {NotificationMgsService} from "../../services/notification-mgs.service";
-import {Pagamento} from "../../interfaces/pagamento";
-import {PagamentoService} from "../../services/pagmentos.service";
+import {iPagamento} from "../../interfaces/pagamento";
+import {DialogPagamentosComponent} from "../../shared/diolog_components/dialog-pagamentos/dialog-pagamentos.component";
 
 
 @Component({
@@ -60,7 +60,6 @@ export class VendaComponent implements OnInit {
     private tokenServer: TokenService,
     public notificationMsg: NotificationMgsService,
     public dialog: MatDialog,
-    public pagamentoService: PagamentoService,
   ) {
     this.tbSourceVd$ = new MatTableDataSource();
     this.tbSourceItensVd$ = new MatTableDataSource();
@@ -284,18 +283,20 @@ dialogRef.afterClosed().subscribe(novoItem => {
       });
   }
 
-  finalizarVenda() {
-    const novoPagamento: Pagamento = {
-      valorPago: this.venda.totalgeral,
-      formaPagamento: this.venda.formasDePagamento,
-      origemId: this.venda.idVenda, // ID retornado após salvar a venda
+  finalizarVenda(venda: any) {
+
+    const novoPagamento: iPagamento = {
+      valorPago: venda.totalgeral,
+      formaPagamento: venda.formasDePagamento,
+      origemId: venda.idVenda, // ID retornado após salvar a venda
       tipoOrigem: 'VENDA',
       status: 1
-    };
-
-    this.pagamentoService.salvar(novoPagamento).subscribe(res => {
-      console.log('Pagamento vinculado com sucesso!');
-    });
+    }
+      this.dialog.open(DialogPagamentosComponent, {
+        data: {
+            ...novoPagamento,
+        }
+      });
   }
 
 

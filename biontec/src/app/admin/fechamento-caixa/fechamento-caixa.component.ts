@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import {PagamentoService} from "../../services/pagmentos.service";
-import {Pagamento} from "../../interfaces/pagamento";
+import {iPagamento} from "../../interfaces/pagamento";
 
 @Component({
   selector: 'app-fechamento-caixa',
@@ -17,7 +17,7 @@ export class FechamentoCaixaComponent {
   consultar() {
     this.pagamentoService.getFechamento(this.dataConsulta).subscribe(dados => {
       this.resumo = dados;
-      this.totalGeral = dados.reduce((acc, obj:Pagamento) => acc + obj.valorPago, 0);
+      this.totalGeral = dados.reduce((acc, obj:iPagamento) => acc + obj.valorPago, 0);
     });
   }
 }

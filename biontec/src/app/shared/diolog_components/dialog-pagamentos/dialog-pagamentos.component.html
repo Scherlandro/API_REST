@@ -1,5 +1,155 @@
+<div class="div-pag">
+<mat-card class="container-box-pg" >
+  <h1 mat-dialog-title>
+    {{  'Pagamentos' }}
+  </h1>
+  <mat-form-field appearance="fill">
+    <mat-label>Código da Vd</mat-label>
+    <input matInput [(ngModel)]="venda.idVenda" disabled>
+  </mat-form-field>
+
+
+  <mat-form-field appearance="fill"  >
+    <mat-label>Atendente</mat-label>
+    <input matInput [value]="venda.nomeFuncionario" disabled>
+  </mat-form-field>
+
+  <!-- Data de Entrada -->
+  <mat-form-field appearance="fill" >
+    <mat-label>Data</mat-label>
+    <input matInput [matDatepicker]="picker" [(ngModel)]="venda.dtVenda" >
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker #picker></mat-datepicker>
+  </mat-form-field>
+
+  <mat-form-field  appearance="fill">
+    <mat-label>Data</mat-label>
+    <input matInput [value]="venda.dtVenda | dateLocalBR " disabled>
+  </mat-form-field>
+
+  <!-- Data de Corrente -->
+  <mat-form-field appearance="fill"  >
+    <mat-label>Data Corrente</mat-label>
+    <input matInput [matDatepicker]="picker" [(ngModel)]="venda.dtVenda" >
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker #picker></mat-datepicker>
+  </mat-form-field>
+
+
+
+  <mat-form-field appearance="fill" >
+    <mat-label>Cliente</mat-label>
+    <input matInput [value]="venda.nomeCliente" disabled>
+  </mat-form-field>
+
+  <!--  <mat-form-field  appearance="fill">
+    <mat-label>Status da Vd</mat-label>
+    <input type="text"
+           placeholder="Status da Vd"
+           matInput
+           [formControl]="statusOsControl"
+           [matAutocomplete]="autstatus"/>
+    <mat-error>Campo Obrigatório não preenchido.</mat-error>
+
+    <mat-autocomplete #autstatus="matAutocomplete" [displayWith]="displayStatus">
+      <mat-option *ngFor="let statusVd of statusOsFiltradvenda | async" [value]="statusVd">
+        {{statusVd}}
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+-->
+  <div class="actions">
+    <button mat-button >Cancelar</button>
+  </div>
+
+
+</mat-card>
+
+<div class="container-tb-pag">
+  <div class="div-pag">Histórico de Pagamentos</div>
+  <div class="body">
+    <div>
+      [origemId]="venda.idVenda"
+      [tipoOrigem]="'VENDA'
+    </div>
+    <table class="container-tb-pag">
+      <thead>
+      <tr>
+        <th>Data</th>
+        <th>Forma</th>
+        <th>Valor</th>
+        <th>Status</th>
+        <th>Ações</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let p of pagamentos">
+        <td>{{ p.dtPagamento | date:'dd/MM/yyyy HH:mm' }}</td>
+        <td>{{ p.formaPagamento }}</td>
+        <td>{{ p.valorPago | currency:'BRL' }}</td>
+        <td>
+            <span [ngClass]="{'badge bg-success': p.status === 1, 'badge bg-danger': p.status === 2}">
+              {{ getLabelStatus(p.status) }}
+            </span>
+        </td>
+        <td>
+          <button *ngIf="p.status === 1" class="btn btn-sm btn-outline-danger"
+                  (click)="estornar(p.idPagamento)">
+            Estornar
+          </button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
 
 
 
 
+  <table mat-table id="tablePagamento" [dataSource]="tbSourcePagamentos$"
+         matSort (matSortChange)="onMatSortChange()" matSortDirection="asc"
+         multiTemplateDataRows class="componet-gradient body">
+
+    <ng-container matColumnDef="nomePagamento">
+      <th mat-header-cell *matHeaderCellDef> Nome</th>
+      <td mat-cell *matCellDef="let element"> {{element.nomePagamento}} </td>
+    </ng-container>
+    <ng-container matColumnDef="cargo">
+      <th mat-header-cell *matHeaderCellDef> Cargo</th>
+      <td mat-cell *matCellDef="let element"> {{element.cargo}} </td>
+    </ng-container>
+    <ng-container matColumnDef="telefone">
+      <th mat-header-cell *matHeaderCellDef> Telefone</th>
+      <td mat-cell *matCellDef="let element"> {{element.telefone}} </td>
+    </ng-container>
+    <ng-container matColumnDef="opicoes">
+      <th mat-header-cell *matHeaderCellDef> Opições</th>
+      <td mat-cell *matCellDef="let element">
+        <button mat-icon-button class="edit componet-gradient" (click)="editarElement(element)">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button mat-icon-button class="delete componet-gradient" (click)="deleteElement(element.id_Pagamento)">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row  *matRowDef="let row; columns: displayedColumns; "  (click)="selectRow(row)"></tr>
+
+    <tr class="mat-row" *matNoDataRow>
+      <td class="mat-cell" colspan="3"></td>
+    </tr>
+
+  </table>
+  <mat-paginator [length]="100"
+                 [pageSize]="5"
+                 [pageSizeOptions]="[5, 10, 25, 100]"
+                 aria-label="Select page">
+  </mat-paginator>
+
+
+
+
+</div>
 

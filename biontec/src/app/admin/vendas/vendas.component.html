@@ -73,9 +73,11 @@
              type="hidden" title="Remover Venda" >
               delete
           </mat-icon>
+
           <span></span>
 
-            <mat-icon type="hidden" title="Finalizar Venda"  (click)="finalizarVenda()" class="button-finalizar">
+            <mat-icon type="hidden" title="Finalizar Venda"  (click)="finalizarVenda(elementVd); $event.stopPropagation() "
+                      class="button-finalizar">
              payment
             </mat-icon>
 

@@ -1,0 +1,55 @@
+
+.div-pag {
+  background: radial-gradient(ellipse farthest-corner at right bottom, #FEDB37 0%, #FDB931 8%, #9f7928 30%, #8A6E2F 40%, transparent 80%),
+  radial-gradient(ellipse farthest-corner at left top, #FFFFFF 0%, #FFFFAC 8%, #D1B464 25%, #5d4a1f 62.5%, #5d4a1f 100%);
+  border-radius: 5px;
+  line-height: 1%;
+  padding: 10px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  width: 95vw;
+  max-width: min-content;
+  height: fit-content;
+}
+
+.container-box-pg {
+  background: rgba(227, 161, 78, 0);
+  position: center;
+  align-items: center;
+  box-sizing: border-box;
+  height: fit-content;
+}
+
+
+.container-tb-pag {
+  background: rgba(227, 161, 78, 0);
+  position: center;
+  align-items: center;
+  box-sizing: border-box;
+  min-width: 250px;
+}
+
+mat-form-field {
+  line-height: 0;
+  width: 95%;
+  height: 12%;
+  padding: 2px;
+}
+
+mat-label, mat-input {
+  font-size: 0.8rem;
+}
+
+@media (max-width: 600px) {
+  .div-pag {
+    grid-template-columns: 1fr; /* Força uma única coluna */
+    width: 100%;
+    padding: 5px;
+  }
+
+  h1 {
+    font-size: 1.2rem;
+  }
+}
+
