@@ -31,6 +31,20 @@ export class PagamentoService {
   }
 
 
+  getFormasPagamento(termo: string): Observable<string[]> {
+    const listaStatus = [
+      'Dinheiro',
+      'Pix',
+      'Cartão em Débito',
+      'Cartão em Crédito',
+      'Boleto'
+    ];
+    const filtrados = listaStatus.filter(s =>
+      s.toLowerCase().includes(termo.toLowerCase())
+    );
+    return of(filtrados); // Retorna como Observable
+  }
+
   getStatus(termo: string): Observable<string[]> {
     const listaStatus = [
       'Aberta',

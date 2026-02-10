@@ -46,7 +46,7 @@
            [matAutocomplete]="autoformapg"/>
     <mat-error>Campo Obrigatório não preenchido.</mat-error>
 
-    <mat-autocomplete #autoformapg="matAutocomplete" [displayWith]="displayStatus">
+    <mat-autocomplete #autoformapg="matAutocomplete" [displayWith]="displayFormasDePg">
       <mat-option *ngFor="let formasPg of formaDePgFiltrad | async" [value]="formasPg">
         {{formasPg}}
       </mat-option>

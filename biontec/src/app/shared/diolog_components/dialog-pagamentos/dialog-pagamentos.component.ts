@@ -83,7 +83,6 @@ export class DialogPagamentosComponent implements OnInit, OnDestroy{
 
   }
 
-
   pagar(val: any) {
     this.pagamentoService.salvar(val).subscribe(res => {
       console.log('Pagamento vinculado com sucesso!');
@@ -93,24 +92,21 @@ export class DialogPagamentosComponent implements OnInit, OnDestroy{
   // =============== AUTOCOMPLETE ==================
   // ===============================================
 
-
   setupAutocompleteFilters() {
- /*   this.formasPgFilted = this.formasControl.valueChanges.pipe(
+  this.formaDePgFiltrad = this.formaPagamentoControl.valueChanges.pipe(
       startWith(''),
       debounceTime(250),
       distinctUntilChanged(),
       switchMap(value =>
         typeof value === 'string' && value.length >= 1
-          ? this.pagamentoService.getFormasDePagamento(value)
+          ? this.pagamentoService.getFormasPagamento(value)
           : of([])
       ),
       catchError(() => of([])),
       takeUntil(this.destroy$)
     );
 
-  */
-
-    this.statusFiltradPg = this.statusPgControl.valueChanges.pipe(
+  this.statusFiltradPg = this.statusPgControl.valueChanges.pipe(
       startWith(''),
       debounceTime(200),
       distinctUntilChanged(),
@@ -166,6 +162,10 @@ export class DialogPagamentosComponent implements OnInit, OnDestroy{
     this.dialog.open(ErrorDiologComponent, {
       data: errrorMsg
     });
+  }
+
+  displayFormasDePg(status: string): string {
+    return status ? status : '';
   }
 
   displayStatus(status: string): string {
