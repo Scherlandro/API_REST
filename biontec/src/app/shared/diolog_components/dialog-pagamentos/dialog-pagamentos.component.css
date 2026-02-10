@@ -6,57 +6,54 @@
   line-height: 1%;
   padding: 10px;
   display: grid;
-  grid-template-columns: 1fr 600px;
+  grid-template-columns: 1fr auto;
   gap: 10px;
-  width: 95vw;
-  max-width: min-content;
-  height: fit-content;
+  max-height: min-content;
 }
 
 .container-box-pg {
   background: rgba(227, 161, 78, 0);
-  position: center;
-  align-items: center;
-  box-sizing: border-box;
-  height: fit-content;
+  height: 95vh;
+  overflow-y: auto; /* Se o conteúdo ainda for grande, o scroll fica dentro do card */
+  display: flex;
+  flex-direction: column;
 }
-
 
 .container-tb-pag {
   background: rgba(227, 161, 78, 0);
-  position: center;
-  align-items: center;
-  box-sizing: border-box;
-  min-width: 250px;
 }
 
-
-.expanding-table-pg {
-  min-width: 100%;
-  height: 50px;
+.table-pg {
   background-color: rgba(51, 33, 83, 0.07);
-  -webkit-border-radius: 20px;
-  -moz-border-radius: 20px;
   border-radius: 20px;
-  table-layout: fixed;
-  width: fit-content;
 }
 
-
-mat-form-field {
-  line-height: 0;
+::ng-deep .mat-mdc-form-field {
   width: 95%;
   height: 12%;
   padding: 2px;
+  margin-bottom: -10px !important; /* Remove o espaço da legenda de erro/hint */
+  display: block;
+}
+/* Reduz a altura da caixa de entrada */
+::ng-deep .mat-mdc-text-field-wrapper {
+  height: 40px !important; /* Altura bem reduzida */
+  padding: 0 8px !important;
+}
+/* Alinha o texto e o label dentro da caixa menor */
+::ng-deep .mat-mdc-form-field-flex {
+  height: 40px !important;
+  align-items: center !important;
 }
 
 mat-label, mat-input {
   font-size: 0.8rem;
 }
 
+/*
 @media (max-width: 600px) {
   .div-pag {
-    grid-template-columns: 1fr; /* Força uma única coluna */
+    grid-template-columns: 1fr; !* Força uma única coluna *!
     width: 100%;
     padding: 5px;
   }
@@ -65,4 +62,5 @@ mat-label, mat-input {
     font-size: 1.2rem;
   }
 }
+*/
 

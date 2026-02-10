@@ -293,6 +293,8 @@ dialogRef.afterClosed().subscribe(novoItem => {
       status: 1
     }
       this.dialog.open(DialogPagamentosComponent, {
+
+        //width: 'auto',*/
         data: {
             ...novoPagamento,
         }
