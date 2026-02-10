@@ -1,19 +1,18 @@
 import {Component, Inject, Input, ViewChild} from '@angular/core';
+import {FormControl, Validators} from "@angular/forms";
 import {PagamentoService} from "../../../services/pagmentos.service";
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog";
-import {iVendas} from "../../../interfaces/vendas";
 import {iPagamento} from "../../../interfaces/pagamento";
 import {MatTable, MatTableDataSource} from "@angular/material/table";
 import {MatPaginator} from "@angular/material/paginator";
 import {MatSort} from "@angular/material/sort";
 import {TokenService} from "../../../services/token.service";
 import {NotificationMgsService} from "../../../services/notification-mgs.service";
-import {catchError} from "rxjs/operators";
-import {of} from "rxjs";
+import {catchError, startWith} from "rxjs/operators";
+import {debounceTime, distinctUntilChanged, Observable, of, Subject, switchMap, takeUntil} from "rxjs";
 import {ErrorDiologComponent} from "../error-diolog/error-diolog.component";
 
-class FormControl {
-}
+
 
 @Component({
   selector: 'app-dialog-pagamentos',
@@ -21,41 +20,45 @@ class FormControl {
   styleUrls: ['./dialog-pagamentos.component.css']
 })
 export class DialogPagamentosComponent {
-
+  destroy$ = new Subject<void>();
   @ViewChild(MatTable) tablePagamento!: MatTable<any>;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   displayedColumns: string[] = ['Data', 'forma', 'valor', 'opicoes'];
   tbSourcePagamentos$: MatTableDataSource<iPagamento>;
-  tbData:any;
+  tbData: any;
   PagamentoControl = new FormControl();
   PagamentoFilted: iPagamento[] = [];
   buscaDigitada: any;
   ruwSelec: any;
-  venda: any;
+  pagamento!: iPagamento;
   @Input() origemId!: number;
   @Input() tipoOrigem: string = 'VENDA';
 
   pagamentos: iPagamento[] = [];
+  statusFiltradPg!: Observable<any>;
+  statusPgControl = new FormControl('', [Validators.required]);
+
 
   constructor(
     @Inject(MAT_DIALOG_DATA)
-    public data: iVendas,
+    public data: iPagamento,
     public dialog: MatDialog,
     public dialogRef: MatDialogRef<DialogPagamentosComponent>,
     public pagamentoService: PagamentoService,
     private tokenServer: TokenService,
-    public notificationMsg:  NotificationMgsService,
+    public notificationMsg: NotificationMgsService,
     private PagamentoSevice: PagamentoService
   ) {
-    this.venda = data;
+    this.pagamento = data;
     this.tbSourcePagamentos$ = new MatTableDataSource();
+    console.log('Venda para Pagar', this.pagamento);
   }
 
 
   ngOnInit(): void {
-    this.carregarPagamentos();
-     // this.listarPagamentos(origemId: number, tipoOrigem: string);
+   // this.carregarPagamentos();
+    // this.listarPagamentos(origemId: number, tipoOrigem: string);
   }
 
   carregarPagamentos() {
@@ -73,11 +76,42 @@ export class DialogPagamentosComponent {
   }
 
 
-pagar(val: any) {
-  this.pagamentoService.salvar(val).subscribe(res => {
-    console.log('Pagamento vinculado com sucesso!');
-  });
-}
+  pagar(val: any) {
+    this.pagamentoService.salvar(val).subscribe(res => {
+      console.log('Pagamento vinculado com sucesso!');
+    });
+  }
+
+  // =============== AUTOCOMPLETE ==================
+  // ===============================================
+
+  setupAutocompleteFilters() {
+ /*   this.formasPgFilted = this.formasControl.valueChanges.pipe(
+      startWith(''),
+      debounceTime(250),
+      distinctUntilChanged(),
+      switchMap(value =>
+        typeof value === 'string' && value.length >= 1
+          ? this.pagamentoService.getFormasDePagamento(value)
+          : of([])
+      ),
+      catchError(() => of([])),
+      takeUntil(this.destroy$)
+    );
+
+  */
+
+    this.statusFiltradPg = this.statusPgControl.valueChanges.pipe(
+      startWith(''),
+      debounceTime(200),
+      distinctUntilChanged(),
+      switchMap(value => { const busca = typeof value === 'string' ? value : '';
+        return this.pagamentoService.getStatus(busca);
+      }),
+      takeUntil(this.destroy$)
+    );
+  }
+
 
 
   onMatSortChange() {
@@ -96,7 +130,7 @@ pagar(val: any) {
       .pipe(catchError(error => {
         if (error === 'Session Expired')
           //this.onError('Sua sessão expirou!');
-        this.tokenServer.clearTokenExpired();
+          this.tokenServer.clearTokenExpired();
         return of([])
       })).subscribe(
       (result: iPagamento[]) => {
@@ -106,7 +140,7 @@ pagar(val: any) {
   }
 
 
-  editarElement(element:any) {
+  editarElement(element: any) {
 
   }
 
@@ -115,7 +149,7 @@ pagar(val: any) {
   }
 
 
-  selectRow(row:any){
+  selectRow(row: any) {
     this.ruwSelec = this.tbSourcePagamentos$.filteredData.indexOf(row);
   }
 
@@ -123,6 +157,10 @@ pagar(val: any) {
     this.dialog.open(ErrorDiologComponent, {
       data: errrorMsg
     });
+  }
+
+  displayStatus(status: string): string {
+    return status ? status : '';
   }
 
 }

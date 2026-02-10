@@ -1,7 +1,7 @@
 import {Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
 import {iPagamento} from "../interfaces/pagamento";
-import {Observable} from "rxjs";
+import {Observable, of} from "rxjs";
 import {environment} from "../../environments/environment";
 
 @Injectable({ providedIn: 'root' })
@@ -28,5 +28,19 @@ export class PagamentoService {
   getFechamento(dataConsulta: string): Observable<iPagamento[]> {
     return this.http.get<iPagamento[]>(`${this.baseUrl}/fechamento/${dataConsulta}`);
 
+  }
+
+
+  getStatus(termo: string): Observable<string[]> {
+    const listaStatus = [
+      'Aberta',
+      'Fechada',
+      'Parcelada',
+      'Pendente'
+    ];
+    const filtrados = listaStatus.filter(s =>
+      s.toLowerCase().includes(termo.toLowerCase())
+    );
+    return of(filtrados); // Retorna como Observable
   }
 }

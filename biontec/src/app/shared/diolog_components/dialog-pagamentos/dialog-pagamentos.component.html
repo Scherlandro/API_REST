@@ -3,61 +3,59 @@
   <h1 mat-dialog-title>
     {{  'Pagamentos' }}
   </h1>
-  <mat-form-field appearance="fill">
-    <mat-label>Código da Vd</mat-label>
-    <input matInput [(ngModel)]="venda.idVenda" disabled>
-  </mat-form-field>
-
 
   <mat-form-field appearance="fill"  >
-    <mat-label>Atendente</mat-label>
-    <input matInput [value]="venda.nomeFuncionario" disabled>
+    <mat-label>ID do Pagamento</mat-label>
+    <input matInput [value]="pagamento.idPagamento" disabled>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Código de Origem</mat-label>
+    <input matInput [(ngModel)]="pagamento.origemId" disabled>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" >
+    <mat-label>Tipo Origem</mat-label>
+    <input matInput [value]="pagamento.tipoOrigem" disabled>
   </mat-form-field>
 
   <!-- Data de Entrada -->
   <mat-form-field appearance="fill" >
     <mat-label>Data</mat-label>
-    <input matInput [matDatepicker]="picker" [(ngModel)]="venda.dtVenda" >
+    <input matInput [matDatepicker]="picker" [(ngModel)]="pagamento.dtPagamento" >
     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
     <mat-datepicker #picker></mat-datepicker>
   </mat-form-field>
 
   <mat-form-field  appearance="fill">
     <mat-label>Data</mat-label>
-    <input matInput [value]="venda.dtVenda | dateLocalBR " disabled>
+    <input matInput [value]="pagamento.dtPagamento | dateLocalBR " disabled>
   </mat-form-field>
 
   <!-- Data de Corrente -->
   <mat-form-field appearance="fill"  >
-    <mat-label>Data Corrente</mat-label>
-    <input matInput [matDatepicker]="picker" [(ngModel)]="venda.dtVenda" >
+    <mat-label>Formas de Pagamento</mat-label>
+    <input matInput [matDatepicker]="picker" [(ngModel)]="pagamento.formaPagamento" >
     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
     <mat-datepicker #picker></mat-datepicker>
   </mat-form-field>
 
-
-
-  <mat-form-field appearance="fill" >
-    <mat-label>Cliente</mat-label>
-    <input matInput [value]="venda.nomeCliente" disabled>
-  </mat-form-field>
-
-  <!--  <mat-form-field  appearance="fill">
-    <mat-label>Status da Vd</mat-label>
+   <mat-form-field  appearance="fill">
+    <mat-label>Status do Pagamento</mat-label>
     <input type="text"
            placeholder="Status da Vd"
            matInput
-           [formControl]="statusOsControl"
+           [formControl]="statusPgControl"
            [matAutocomplete]="autstatus"/>
     <mat-error>Campo Obrigatório não preenchido.</mat-error>
 
     <mat-autocomplete #autstatus="matAutocomplete" [displayWith]="displayStatus">
-      <mat-option *ngFor="let statusVd of statusOsFiltradvenda | async" [value]="statusVd">
-        {{statusVd}}
+      <mat-option *ngFor="let statusPg of statusFiltradPg | async" [value]="statusPg">
+        {{statusPg}}
       </mat-option>
     </mat-autocomplete>
   </mat-form-field>
--->
+
   <div class="actions">
     <button mat-button >Cancelar</button>
   </div>
