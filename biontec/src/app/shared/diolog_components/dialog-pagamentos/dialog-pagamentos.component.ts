@@ -1,4 +1,4 @@
-import {Component, Inject, Input, ViewChild} from '@angular/core';
+import {Component, Inject, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {FormControl, Validators} from "@angular/forms";
 import {PagamentoService} from "../../../services/pagmentos.service";
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog";
@@ -19,7 +19,7 @@ import {ErrorDiologComponent} from "../error-diolog/error-diolog.component";
   templateUrl: './dialog-pagamentos.component.html',
   styleUrls: ['./dialog-pagamentos.component.css']
 })
-export class DialogPagamentosComponent {
+export class DialogPagamentosComponent implements OnInit, OnDestroy{
   destroy$ = new Subject<void>();
   @ViewChild(MatTable) tablePagamento!: MatTable<any>;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -39,8 +39,8 @@ export class DialogPagamentosComponent {
   pagamentos: iPagamento[] = [];
   statusFiltradPg!: Observable<any>;
   statusPgControl = new FormControl('', [Validators.required]);
-
   formaDePgFiltrad!: Observable<any>;
+  etapa = 1;
 
   constructor(
     @Inject(MAT_DIALOG_DATA)
@@ -61,6 +61,12 @@ export class DialogPagamentosComponent {
   ngOnInit(): void {
    // this.carregarPagamentos();
     // this.listarPagamentos(origemId: number, tipoOrigem: string);
+   this.setupAutocompleteFilters();
+  }
+
+  ngOnDestroy() {
+    // this.destroy$.next();
+    this.destroy$.complete();
   }
 
   carregarPagamentos() {
@@ -109,7 +115,7 @@ export class DialogPagamentosComponent {
       debounceTime(200),
       distinctUntilChanged(),
       switchMap(value => { const busca = typeof value === 'string' ? value : '';
-        return this.pagamentoService.getStatus(busca);
+       return this.pagamentoService.getStatus(busca);
       }),
       takeUntil(this.destroy$)
     );
@@ -164,6 +170,17 @@ export class DialogPagamentosComponent {
 
   displayStatus(status: string): string {
     return status ? status : '';
+  }
+
+  onCancel() {
+    this.voltar();
+    this.dialogRef.close();
+  }
+
+  voltar(): void {
+    if (this.etapa === 2) {
+      this.etapa = 1;
+    }
   }
 
 }

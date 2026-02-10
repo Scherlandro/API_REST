@@ -137,10 +137,11 @@ export class DialogOpenOsComponent implements  OnInit, OnDestroy  {
       debounceTime(200),
       distinctUntilChanged(),
       switchMap(value => { const busca = typeof value === 'string' ? value : '';
-        return this.osServices.getStatus(busca);
+      return this.osServices.getStatus(busca);
       }),
       takeUntil(this.destroy$)
     );
+
   }
 
   selecionarCliente(): void {

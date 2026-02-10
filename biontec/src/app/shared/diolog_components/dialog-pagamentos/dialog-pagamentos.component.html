@@ -43,10 +43,10 @@
            placeholder="Formas de Pagamento"
            matInput
            [formControl]="formaPagamentoControl"
-           [matAutocomplete]="autstatus"/>
+           [matAutocomplete]="autoformapg"/>
     <mat-error>Campo Obrigatório não preenchido.</mat-error>
 
-    <mat-autocomplete #autstatus="matAutocomplete" [displayWith]="displayStatus">
+    <mat-autocomplete #autoformapg="matAutocomplete" [displayWith]="displayStatus">
       <mat-option *ngFor="let formasPg of formaDePgFiltrad | async" [value]="formasPg">
         {{formasPg}}
       </mat-option>
@@ -56,7 +56,7 @@
    <mat-form-field  appearance="fill">
     <mat-label>Status do Pagamento</mat-label>
     <input type="text"
-           placeholder="Status da Vd"
+           placeholder="Status de Pagamentos"
            matInput
            [formControl]="statusPgControl"
            [matAutocomplete]="autstatus"/>
@@ -70,7 +70,7 @@
   </mat-form-field>
 
   <div class="actions">
-    <button mat-button >Cancelar</button>
+    <button mat-button (click)="onCancel()" >Cancelar</button>
   </div>
 
 
@@ -125,12 +125,12 @@
          multiTemplateDataRows >
 
     <ng-container matColumnDef="origemId">
-      <th mat-header-cell *matHeaderCellDef> origemId</th>
+      <th mat-header-cell *matHeaderCellDef> Id da Origem</th>
       <td mat-cell *matCellDef="let element"> {{element.origemId}} </td>
     </ng-container>
 
     <ng-container matColumnDef="tipoOrigem">
-      <th mat-header-cell *matHeaderCellDef> tipoOrigem</th>
+      <th mat-header-cell *matHeaderCellDef> Tipo da Origem</th>
       <td mat-cell *matCellDef="let element"> {{element.tipoOrigem}} </td>
     </ng-container>
 
@@ -140,7 +140,7 @@
     </ng-container>
 
     <ng-container matColumnDef="formaPagamento">
-      <th mat-header-cell *matHeaderCellDef> formaPagamento</th>
+      <th mat-header-cell *matHeaderCellDef> forma de Pagamento</th>
       <td mat-cell *matCellDef="let element"> {{element.formaPagamento}} </td>
     </ng-container>
     <ng-container matColumnDef="status">
