@@ -24,9 +24,10 @@ export class DialogPagamentosComponent {
   @ViewChild(MatTable) tablePagamento!: MatTable<any>;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
-  displayedColumns: string[] = ['Data', 'forma', 'valor', 'opicoes'];
+  displayedColumns: string[] = ['origemId', 'tipoOrigem', 'formaPagamento', 'status','valor', 'opicoes'];
   tbSourcePagamentos$: MatTableDataSource<iPagamento>;
   tbData: any;
+  formaPagamentoControl= new FormControl();
   PagamentoControl = new FormControl();
   PagamentoFilted: iPagamento[] = [];
   buscaDigitada: any;
@@ -39,6 +40,7 @@ export class DialogPagamentosComponent {
   statusFiltradPg!: Observable<any>;
   statusPgControl = new FormControl('', [Validators.required]);
 
+  formaDePgFiltrad!: Observable<any>;
 
   constructor(
     @Inject(MAT_DIALOG_DATA)
@@ -84,6 +86,7 @@ export class DialogPagamentosComponent {
 
   // =============== AUTOCOMPLETE ==================
   // ===============================================
+
 
   setupAutocompleteFilters() {
  /*   this.formasPgFilted = this.formasControl.valueChanges.pipe(
