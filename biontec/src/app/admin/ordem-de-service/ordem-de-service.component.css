@@ -113,6 +113,19 @@
   background-image: linear-gradient( #e2efec, #d90505);
 }
 
+.button-finalizar {
+  padding-left: 10px;
+  padding-right: 10px;
+  width: 25px;
+  height: 25px;
+  background-color: rgba(51, 33, 83, 0.07);
+  border-radius: 5px;
+}
+
+.button-finalizar:hover {
+  background-image: linear-gradient( #e2efec, #753dc6);
+}
+
 .image-table{
   height: auto;
   min-height: 50px;

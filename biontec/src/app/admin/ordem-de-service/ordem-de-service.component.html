@@ -76,6 +76,14 @@
               delete
             </mat-icon>
           </button>
+
+          <span></span>
+
+          <mat-icon type="hidden" title="Finalizar Venda"  (click)="finalizarOperacao(elementOS); $event.stopPropagation() "
+                    class="button-finalizar">
+            payment
+          </mat-icon>
+
         </td>
       </ng-container>
 

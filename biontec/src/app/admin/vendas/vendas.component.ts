@@ -283,15 +283,15 @@ dialogRef.afterClosed().subscribe(novoItem => {
       });
   }
 
-  finalizarVenda(venda: any) {
+  finalizarOperacao(origem: any) {
 
     const novoPagamento: iPagamento = {
-      origemId: venda.idVenda, // ID retornado após salvar a venda
+      origemId: origem.idVenda,
       tipoOrigem: 'VENDA',
       status: 1,
-      dtPagamento: venda.dtVenda,
-      valorPago: venda.totalgeral,
-      formaPagamento: venda.formasDePagamento,
+      dtPagamento: origem.dtVenda,
+      valorPago: origem.totalgeral,
+      formaPagamento: origem.formasDePagamento,
     }
       this.dialog.open(DialogPagamentosComponent, {
         data: { ...novoPagamento }

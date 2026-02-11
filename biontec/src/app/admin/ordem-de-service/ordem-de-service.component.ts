@@ -18,6 +18,8 @@ import {TokenService} from "../../services/token.service";
 import {NotificationMgsService} from "../../services/notification-mgs.service";
 import {ChangeDetectorRef} from '@angular/core';
 import {CurrencyBRLPipe} from "../../shared/pipes/currency-brl.pipe";
+import {iPagamento} from "../../interfaces/pagamento";
+import {DialogPagamentosComponent} from "../../shared/diolog_components/dialog-pagamentos/dialog-pagamentos.component";
 
 
 @Component({
@@ -325,4 +327,18 @@ export class OrdemDeServiceComponent implements OnInit {
   }
 
 
+  finalizarOperacao(origem: any) {
+
+    const novoPagamento: iPagamento = {
+      origemId: origem.idOS,
+      tipoOrigem: 'OS',
+      status: 1,
+      dtPagamento: origem.dataDeEntrada,
+      valorPago: origem.totalGeralOS,
+      formaPagamento: origem.formasDePagamento,
+    }
+    this.dialog.open(DialogPagamentosComponent, {
+      data: { ...novoPagamento }
+    });
+  }
 }
