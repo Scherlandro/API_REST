@@ -21,7 +21,7 @@ import {ErrorDiologComponent} from "../error-diolog/error-diolog.component";
 })
 export class DialogPagamentosComponent implements OnInit, OnDestroy{
   destroy$ = new Subject<void>();
-  @ViewChild(MatTable) tablePagamento!: MatTable<any>;
+  @ViewChild('tablePg') tablePagamento!: MatTable<any>;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   displayedColumns: string[] = ['origemId', 'tipoOrigem', 'formaPagamento', 'status','valor', 'opicoes'];
@@ -33,9 +33,6 @@ export class DialogPagamentosComponent implements OnInit, OnDestroy{
   buscaDigitada: any;
   ruwSelec: any;
   pagamento!: iPagamento;
-  @Input() origemId!: number;
-  @Input() tipoOrigem: string = 'VENDA';
-
   pagamentos: iPagamento[] = [];
   statusFiltradPg!: Observable<any>;
   statusPgControl = new FormControl('', [Validators.required]);
@@ -70,7 +67,7 @@ export class DialogPagamentosComponent implements OnInit, OnDestroy{
   }
 
   carregarPagamentos() {
-    this.pagamentoService.buscarPorOrigem(this.origemId, this.tipoOrigem)
+    this.pagamentoService.buscarPorOrigem(this.data.origemId, this.data.tipoOrigem)
       .subscribe(dados => this.pagamentos = dados);
   }
 

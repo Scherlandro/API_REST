@@ -97,7 +97,6 @@ flex:3 1 auto;
 
 .button-search-vd {
   width: 20%;
-  align-content: end;
   height: 35px;
   background-color: rgba(51, 33, 83, 0.07);
   -webkit-border-radius: 20px;
@@ -183,17 +182,6 @@ flex:3 1 auto;
   min-height: 45px;
   height: auto;
 }
-
-/*.input-table-vd{
-  padding-inline-start: 10px;
-  border-bottom-left-radius: 15px;
-  min-height: 25px;
-  height: auto;
-  max-width: 40%;
-  width: auto;
-  color: #32e27e;
-  background: rgba(0, 3, 10, 0.05);
-}*/
 
 .input-table-vd {
   flex-grow: 1; /* Faz o input expandir para preencher o search-container */

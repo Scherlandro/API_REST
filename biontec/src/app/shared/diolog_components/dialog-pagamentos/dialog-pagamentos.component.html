@@ -73,50 +73,7 @@
     <button mat-button (click)="onCancel()" >Cancelar</button>
   </div>
 
-
 </mat-card>
-
-<!--
-<div class="container-tb-pag">
-  <div class="div-pag">Histórico de Pagamentos</div>
-  <div class="body">
-    <div>
-      [origemId]="venda.idVenda"
-      [tipoOrigem]="'VENDA'
-    </div>
-    <table class="container-tb-pag">
-      <thead>
-      <tr>
-        <th>Data</th>
-        <th>Forma</th>
-        <th>Valor</th>
-        <th>Status</th>
-        <th>Ações</th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr *ngFor="let p of pagamentos">
-        <td>{{ p.dtPagamento | date:'dd/MM/yyyy HH:mm' }}</td>
-        <td>{{ p.formaPagamento }}</td>
-        <td>{{ p.valorPago | currency:'BRL' }}</td>
-        <td>
-            <span [ngClass]="{'badge bg-success': p.status === 1, 'badge bg-danger': p.status === 2}">
-              {{ getLabelStatus(p.status) }}
-            </span>
-        </td>
-        <td>
-          <button *ngIf="p.status === 1" class="btn btn-sm btn-outline-danger"
-                  (click)="estornar(p.idPagamento)">
-            Estornar
-          </button>
-        </td>
-      </tr>
-      </tbody>
-    </table>
-  </div>
-</div>
-
--->
 
   <mat-card class="container-tb-pag" >
 
@@ -157,7 +114,16 @@
         <button mat-icon-button class="delete componet-gradient" (click)="deleteElement(element.id_Pagamento)">
           <mat-icon>delete</mat-icon>
         </button>
+        <button *ngIf="element.status === 1" class="btn btn-sm btn-outline-danger"
+                (click)="estornar(element.idPagamento)">
+          Estornar
+        </button>
+        <span [ngClass]="{'badge bg-success': element.status === 1, 'badge bg-danger': element.status === 2}">
+              {{ getLabelStatus(element.status) }}
+            </span>
+
       </td>
+
     </ng-container>
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row  *matRowDef="let row; columns: displayedColumns; "  (click)="selectRow(row)"></tr>

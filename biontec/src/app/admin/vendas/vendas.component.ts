@@ -286,18 +286,15 @@ dialogRef.afterClosed().subscribe(novoItem => {
   finalizarVenda(venda: any) {
 
     const novoPagamento: iPagamento = {
-      valorPago: venda.totalgeral,
-      formaPagamento: venda.formasDePagamento,
       origemId: venda.idVenda, // ID retornado após salvar a venda
       tipoOrigem: 'VENDA',
-      status: 1
+      status: 1,
+      dtPagamento: venda.dtVenda,
+      valorPago: venda.totalgeral,
+      formaPagamento: venda.formasDePagamento,
     }
       this.dialog.open(DialogPagamentosComponent, {
-
-        //width: 'auto',*/
-        data: {
-            ...novoPagamento,
-        }
+        data: { ...novoPagamento }
       });
   }
 
