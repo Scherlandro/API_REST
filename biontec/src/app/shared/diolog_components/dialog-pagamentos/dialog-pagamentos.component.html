@@ -34,7 +34,7 @@
 
   <mat-form-field matColumnDef="valor">
     <mat-label> Valor </mat-label>
-    <input matInput [value]="pagamento.valorPago" >
+    <input matInput [value]="pagamento.valorPago | currencyBRL " >
   </mat-form-field>
 
   <mat-form-field appearance="fill"  >
