@@ -146,6 +146,7 @@ onFormaPagamentoSelect(event: MatAutocompleteSelectedEvent) {
       }
     });
   }
+
   onMatSortChange() {
     this.tbSourcePagamentos$.sort = this.sort;
   }
