@@ -123,22 +123,29 @@ onFormaPagamentoSelect(event: MatAutocompleteSelectedEvent) {
   const formaSelecionada = event.option.value;
 
   if (formaSelecionada === 'Cartão em Crédito') {
-    // 1. Atualiza o status automaticamente para 'Parcelada'
+    // Atualiza o status automaticamente para 'Parcelada'
     this.statusPgControl.setValue('Parcelada');
-
-    // 2. Chama a função de gerar parcelas
-    const valorVenda = this.pagamento.valorPago; // Exemplo de onde pegar o valor
+    const valorVenda = this.pagamento.valorPago;
     this.gerarParcelas(valorVenda);
   }
 }
 
-gerarParcelas(valor: any) {
-  this.dialog.open(DialogParcelamentosComponent, {
-    data: valor,
-    width: '400px' // Opcional: define largura do modal
-  });
-}
+  gerarParcelas(valor: any) {
+    const dialogRef = this.dialog.open(DialogParcelamentosComponent, {
+      data: valor,
+      width: '500px',
+      disableClose: true // Impede fechar clicando fora, forçando o uso dos botões
+    });
 
+    dialogRef.afterClosed().subscribe((parcelasGeradas: any[]) => {
+      if (parcelasGeradas) {
+        console.log('Parcelas recebidas do modal:', parcelasGeradas);
+        // para enviar junto com o formulário final da venda
+       // this.listaDeParcelasFinal = parcelasGeradas;
+        this.notificationMsg.success(`${parcelasGeradas.length} parcelas geradas com sucesso!`);
+      }
+    });
+  }
   onMatSortChange() {
     this.tbSourcePagamentos$.sort = this.sort;
   }
