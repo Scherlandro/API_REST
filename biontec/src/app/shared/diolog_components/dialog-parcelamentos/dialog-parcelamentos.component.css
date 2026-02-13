@@ -1,0 +1,31 @@
+.setup-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 20px;
+  padding-top: 10px;
+}
+
+.row {
+  display: flex;
+  gap: 15px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.btn-calcular {
+  width: fit-content;
+  align-self: flex-end;
+}
+
+.table-container {
+  margin-top: 20px;
+  max-height: 300px;
+  overflow: auto;
+}
+
+table {
+  width: 100%;
+}

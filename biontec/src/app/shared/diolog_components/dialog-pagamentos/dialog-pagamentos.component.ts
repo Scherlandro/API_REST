@@ -12,6 +12,8 @@ import {catchError, startWith} from "rxjs/operators";
 import {debounceTime, distinctUntilChanged, Observable, of, Subject, switchMap, takeUntil} from "rxjs";
 import {ErrorDiologComponent} from "../error-diolog/error-diolog.component";
 
+import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import {DialogParcelamentosComponent} from "../dialog-parcelamentos/dialog-parcelamentos.component";
 
 
 @Component({
@@ -94,12 +96,15 @@ export class DialogPagamentosComponent implements OnInit, OnDestroy{
       startWith(''),
       debounceTime(250),
       distinctUntilChanged(),
-      switchMap(value =>
+     /* switchMap(value =>
         typeof value === 'string' && value.length >= 1
           ? this.pagamentoService.getFormasPagamento(value)
           : of([])
-      ),
-      catchError(() => of([])),
+      ),*/
+      switchMap(value => { const busca = typeof value === 'string' ? value : '';
+        return this.pagamentoService.getFormasPagamento(busca);
+      }),
+     // catchError(() => of([])),
       takeUntil(this.destroy$)
     );
 
@@ -114,7 +119,25 @@ export class DialogPagamentosComponent implements OnInit, OnDestroy{
     );
   }
 
+onFormaPagamentoSelect(event: MatAutocompleteSelectedEvent) {
+  const formaSelecionada = event.option.value;
 
+  if (formaSelecionada === 'Cartão em Crédito') {
+    // 1. Atualiza o status automaticamente para 'Parcelada'
+    this.statusPgControl.setValue('Parcelada');
+
+    // 2. Chama a função de gerar parcelas
+    const valorVenda = this.pagamento.valorPago; // Exemplo de onde pegar o valor
+    this.gerarParcelas(valorVenda);
+  }
+}
+
+gerarParcelas(valor: any) {
+  this.dialog.open(DialogParcelamentosComponent, {
+    data: valor,
+    width: '400px' // Opcional: define largura do modal
+  });
+}
 
   onMatSortChange() {
     this.tbSourcePagamentos$.sort = this.sort;

@@ -1,0 +1,61 @@
+<h2 mat-dialog-title>Gerar Parcelamento</h2>
+
+<mat-dialog-content class="mat-typography">
+  <div class="setup-container" [formGroup]="parcelaForm">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Valor Total</mat-label>
+      <input matInput type="number" formControlName="valorTotal" readonly>
+      <span matPrefix>R$&nbsp;</span>
+    </mat-form-field>
+
+    <div class="row">
+      <mat-form-field appearance="outline">
+        <mat-label>Qtd. de Parcelas</mat-label>
+        <input matInput type="number" formControlName="quantidade" min="1" max="12">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>1º Vencimento</mat-label>
+        <input matInput [matDatepicker]="picker" formControlName="dataPrimeiraParcela">
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+    </div>
+
+    <button mat-raised-button color="primary" (click)="calcularParcelas()" class="btn-calcular">
+      Calcular Parcelas
+    </button>
+  </div>
+
+  <mat-divider></mat-divider>
+
+  <div class="table-container" *ngIf="dataSource.length > 0">
+    <table mat-table [dataSource]="dataSource" class="mat-elevation-z2">
+
+      <ng-container matColumnDef="numero">
+        <th mat-header-cell *matHeaderCell=""> Parcela </th>
+        <td mat-cell *matCell="let p"> {{p.numero}}x </td>
+      </ng-container>
+
+      <ng-container matColumnDef="vencimento">
+        <th mat-header-cell *matHeaderCell=""> Vencimento </th>
+        <td mat-cell *matCell="let p"> {{p.vencimento | date:'dd/MM/yyyy'}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="valor">
+        <th mat-header-cell *matHeaderCell=""> Valor </th>
+        <td mat-cell *matCell="let p"> {{p.valor | currency:'BRL'}} </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancelar</button>
+  <button mat-raised-button color="accent" [mat-dialog-close]="dataSource" [disabled]="dataSource.length === 0">
+    Confirmar Parcelamento
+  </button>
+</mat-dialog-actions>

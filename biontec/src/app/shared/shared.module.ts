@@ -18,6 +18,7 @@ import {CurrencyBRLPipe} from "./pipes/currency-brl.pipe";
 import {DateLocalPipe} from "./pipes/date-local.pipe";
 import { DialogContasReceberComponent } from './diolog_components/dialog-contas-receber/dialog-contas-receber.component';
 import { DialogPagamentosComponent } from './diolog_components/dialog-pagamentos/dialog-pagamentos.component';
+import { DialogParcelamentosComponent } from './diolog_components/dialog-parcelamentos/dialog-parcelamentos.component';
 
 
 registerLocaleData(localePt);
@@ -37,7 +38,8 @@ registerLocaleData(localePt);
     CurrencyBRLPipe,
     DateLocalPipe,
     DialogContasReceberComponent,
-    DialogPagamentosComponent
+    DialogPagamentosComponent,
+    DialogParcelamentosComponent
   ],
   imports: [
     CommonModule,

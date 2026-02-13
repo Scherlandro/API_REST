@@ -37,7 +37,7 @@
     <input matInput [value]="pagamento.valorPago | currencyBRL " >
   </mat-form-field>
 
-  <mat-form-field appearance="fill"  >
+  <mat-form-field appearance="fill">
     <mat-label>Formas de Pagamento</mat-label>
     <input type="text"
            placeholder="Formas de Pagamento"
@@ -46,7 +46,9 @@
            [matAutocomplete]="autoformapg"/>
     <mat-error>Campo Obrigatório não preenchido.</mat-error>
 
-    <mat-autocomplete #autoformapg="matAutocomplete" [displayWith]="displayFormasDePg">
+    <mat-autocomplete #autoformapg="matAutocomplete"
+                      [displayWith]="displayFormasDePg"
+                      (optionSelected)="onFormaPagamentoSelect($event)">
       <mat-option *ngFor="let formasPg of formaDePgFiltrad | async" [value]="formasPg">
         {{formasPg}}
       </mat-option>
