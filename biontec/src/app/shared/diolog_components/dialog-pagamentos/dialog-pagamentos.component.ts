@@ -128,6 +128,11 @@ onFormaPagamentoSelect(event: MatAutocompleteSelectedEvent) {
     const valorVenda = this.pagamento.valorPago;
     this.gerarParcelas(valorVenda);
   }
+  if(formaSelecionada === 'Dinheiro' || formaSelecionada === 'Pix' || formaSelecionada === 'Cartão em Débito'){
+    this.statusPgControl.setValue('Fechada');
+    const valorVenda = this.pagamento.valorPago;
+    this.notificationMsg.openConfirmDialog( 'Confirma o pagamento de  '+ valorVenda +' em forma de  '+formaSelecionada );
+  }
 }
 
   gerarParcelas(valor: any) {

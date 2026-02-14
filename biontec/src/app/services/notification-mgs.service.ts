@@ -34,7 +34,7 @@ export class NotificationMgsService implements ErrorStateMatcher {
   openConfirmDialog(msg: string) {
     return this.dialog.open(ConfirmDiologComponent, {
       width: '340px',
-      height:'100px',
+      height:'150px',
       panelClass: 'confirm-dialog-container',
       disableClose: true,
       position: {top: "100px"},
