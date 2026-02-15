@@ -103,8 +103,8 @@ public class PagamentosServiceImpl implements PagamentosService {
             for (int i = 0; i < pagamentosPagos.length(); i++) {
                 String txid = pagamentosPagos.getJSONObject(i).getString("txid");
 
-                // Aqui precisa implementar a busca no Repository do pagamento com esse TXID
-                // Localiza o pagamento pelo TXID que salvamos na criação
+                // implementar a busca no Repository do pagamento com esse TXID
+                // Localiza o pagamento pelo TXID que foi salvo ao criar
                /* repository.findByTxid(txid).ifPresent(p -> {
                    p.setStatus(1); // 1 = Pago/Confirmado
                     repository.save(p);
