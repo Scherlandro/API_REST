@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface PagamentosRepository extends JpaRepository<Pagamentos, Integer> {
@@ -22,5 +23,7 @@ public interface PagamentosRepository extends JpaRepository<Pagamentos, Integer>
             "GROUP BY p.formaPagamento")
     List<FechamentoCaixaDto> resumoFechamento(@Param("inicio") LocalDateTime inicio,
                                               @Param("fim") LocalDateTime fim);
+
+    Optional<Pagamentos> findByTxid(String txid);
 }
 

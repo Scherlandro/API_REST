@@ -4,4 +4,5 @@ biontec-api/src/test/
 biontec/.angular/
 biontec/node_modules/
 biontec-api/target/
+biontec-api/src/main/resources/certificados/
 cube3d.css

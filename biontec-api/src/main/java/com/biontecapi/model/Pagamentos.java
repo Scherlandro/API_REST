@@ -33,14 +33,16 @@ public class Pagamentos {
     private Integer origemId; // ID da Venda, ID da OS, etc.
     private String tipoOrigem; // "VENDA", "SERVICO"
 
+    // Campos para vínculo com Efí
+    @Column(unique = true)
+    private String txid; // Fundamental para o Webhook localizar a cobrança
+
     @PrePersist
     protected void onCreate() {
         this.dtPagamento = LocalDateTime.now();
     }
 
-    public void setTxid(String txid) {    };
-
-    // Converte os dados da Efí para atualizar sua entidade antes de salvar
+   // Converte os dados da Efí para atualizar sua entidade antes de salvar
     public void updateEntityWithPix(Pagamentos pagamento, PixResponseDTO pixDto) {
         if (pixDto == null) return;
 
