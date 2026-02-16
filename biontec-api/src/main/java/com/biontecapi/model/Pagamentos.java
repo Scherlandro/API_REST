@@ -37,23 +37,12 @@ public class Pagamentos {
     @Column(unique = true)
     private String txid; // Fundamental para o Webhook localizar a cobrança
 
+    @Column(length = 100)
+    private String e2eid; // Identificador da transação no Banco Central
+
     @PrePersist
     protected void onCreate() {
         this.dtPagamento = LocalDateTime.now();
-    }
-
-   // Converte os dados da Efí para atualizar sua entidade antes de salvar
-    public void updateEntityWithPix(Pagamentos pagamento, PixResponseDTO pixDto) {
-        if (pixDto == null) return;
-
-        // Armazenamos o TXID para identificar o pagamento no Webhook depois
-        pagamento.setTxid(pixDto.txid());
-
-        // O status inicial de um Pix gerado na Efí é sempre 0 (Pendente)
-        pagamento.setStatus(0);
-
-        //*Imprementar->  salvar a string do QR Code ou Link se precisar de log
-      //  pagamento.setObservacao("Pix gerado. TXID: " + pixDto.txid());
     }
 
     public PagamentosDto toDTO() {

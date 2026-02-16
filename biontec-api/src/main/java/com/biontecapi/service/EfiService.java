@@ -6,4 +6,7 @@ import com.biontecapi.dtos.PixResponseDTO;
 public interface EfiService {
 
     PixResponseDTO gerarCobrancaPix(PixRequestDTO dto);
-}
+
+    void estornarPix(Integer idPamento, Double valor);
+
+    }
