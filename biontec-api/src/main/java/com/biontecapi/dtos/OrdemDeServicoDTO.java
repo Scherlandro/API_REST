@@ -8,8 +8,7 @@ import java.util.Collection;
 
 public record OrdemDeServicoDTO(
         Long idOS,
-        Integer clienteId,
-        String nomeCliente,
+        ClienteDTO cliente,
         Integer idFuncionario,
         String nomeFuncionario,
 

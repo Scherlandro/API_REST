@@ -30,52 +30,11 @@ public class ItensOSController {
     }
 
     @PostMapping("/salvar")
-    public ResponseEntity salvar(@RequestBody ItensDoServico item) {
-       return ResponseEntity.status(HttpStatus.CREATED).body(itensOSService.saveItemOS(item));
-    }
-/*
-
-    @PostMapping("/itens")
-    public ResponseEntity<ItensDoServico> criarItem(@RequestBody ItensDoServicoDTO dto) {
-
-        OrdemDeServico os = osService.findById(dto.codOS())
-                .orElseThrow(() -> new RuntimeException("OS não encontrada"));
-
-        ItensDoServico item = new ItensDoServico();
-        item.setCodOS(os.getIdOS());
-        item.setDescricao(dto.descricao());
-        item.setQuantidade(dto.quantidade());
-        item.setValorUnitario(dto.valorUnitario());
-
-        return ResponseEntity.ok(itensOSService.saveItemOS(item));
+    public ResponseEntity salvar(@RequestBody ItensDoServicoDTO dto) {
+       return ResponseEntity.status(HttpStatus.CREATED)
+               .body(itensOSService.saveItemOS(dto));
     }
 
-*/
-
-  /*  @PutMapping("/editar")
-    public ResponseEntity<ItensDoServico> atualizarOS( @RequestBody ItensDoServicoDTO itensDto) {
-        if (!itensOSService.existsById(itensDto.idItensDaOS())) {
-            return ResponseEntity.notFound().build();
-        }
-        ItensDoServico entidade = mapper.map(itensDto, ItensDoServico.class);
-      //  entidade.setIdItensDaOS(idItensDaOS);
-
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(itensOSService.updateItemOS(entidade));
-    }
-
-    @PutMapping("/editar")
-    public ResponseEntity<ItensDoServico> atualizarOS(@RequestBody ItensDoServicoDTO itensDto) {
-        if (!itensOSService.existsById(itensDto.idItensDaOS())) {
-            return ResponseEntity.notFound().build();
-        }
-        // Busca a entidade existente para garantir que o Hibernate a rastreie (Managed State)
-        ItensDoServico entidade = mapper.map(itensDto, ItensDoServico.class);
-        // Força o ID do DTO na entidade mapeada
-        entidade.setIdItensDaOS(itensDto.idItensDaOS());
-        return ResponseEntity.ok(itensOSService.updateItemOS(entidade));
-    }
-*/
   @PutMapping("/editar")
   public ResponseEntity<?> atualizarOS(@RequestBody ItensDoServicoDTO itensDto) {
       if (!itensOSService.existsById(itensDto.idItensDaOS())) {

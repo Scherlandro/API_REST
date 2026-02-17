@@ -11,7 +11,7 @@ public interface ItensOSService {
 
     boolean existsById(Long idItensDaOS);
 
-    ItensDoServico saveItemOS(ItensDoServico ItensDoServico);
+    ItensDoServico saveItemOS(ItensDoServicoDTO dto);
 
     ItensDoServico updateItemOS(ItensDoServico ItensDoServico);
 

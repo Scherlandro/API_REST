@@ -45,7 +45,7 @@ export class OrdemDeServiceComponent implements OnInit {
   tbData: any;
   ruwSelec: any;
   orders: iServiceOrder[] = [];
-  clienteFilted: ICliente[] = [];
+  cliente$!: ICliente;
   clienteSelecionado: ICliente | null = null;
   tbSourceOS$: MatTableDataSource<iServiceOrder>;
   displayedColumns0S = ['Nome', 'Data', 'Status', 'Total', 'Opcoes'];
@@ -88,6 +88,7 @@ export class OrdemDeServiceComponent implements OnInit {
         return of([])
       })).subscribe(
       (result: iServiceOrder[]) => {
+        console.log('Orders -> ', result)
         this.tbSourceOS$.data = result;
         this.tbSourceOS$.paginator = this.paginator;
         this.spiner = false;
@@ -97,7 +98,7 @@ export class OrdemDeServiceComponent implements OnInit {
   openDilogOS() {
 
     const os: iServiceOrder = {
-      idOS: 0, cliente: ICliente, idFuncionario: 0, nomeFuncionario: '',
+      idOS: 0, cliente: this.cliente$, idFuncionario: 0, nomeFuncionario: '',
       dataDeEntrada: '', ultimaAtualizacao: '', status: '', subtotal: 0,
       desconto: 0, totalGeralOS: 0, porConta: 0, restante: 0,
 

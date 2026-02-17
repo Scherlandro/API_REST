@@ -29,15 +29,23 @@ public class ItensOSServiceImpl implements ItensOSService {
         return itensDaOSRepository.existsById(id);
     }
 
-
     @Override
     public Optional<ItensDoServico> findByCodOS(Long id){
         return itensDaOSRepository.findById(id);
     }
 
     @Override
-    public ItensDoServico saveItemOS(ItensDoServico itensDoServico) {
-        return itensDaOSRepository.save(itensDoServico);
+    public ItensDoServico saveItemOS(ItensDoServicoDTO dto) {
+        ItensDoServico item;
+        if (dto.idItensDaOS() == null || dto.idItensDaOS() == 0) {
+            item = new ItensDoServico();
+        } else {
+            item = itensDaOSRepository.findById(dto.idItensDaOS())
+                    .orElseThrow(() -> new RuntimeException("Item não encontrado para atualizar"));
+        }
+        item.mapToDTO(dto);
+        item.setValorUnitario(calcularValorParcial(item));
+        return itensDaOSRepository.save(item);
     }
 
 
@@ -87,6 +95,11 @@ public class ItensOSServiceImpl implements ItensOSService {
     @Override
     public List<ItensDoServicoDTO> litarItemOSPorCliente(String nome) {
         return itensDaOSRepository.litarItensOSporCliente(nome);
+    }
+
+    private Double calcularValorParcial(ItensDoServico itensOS) {
+        if (itensOS.getValorUnitario() == null || itensOS.getQuantidade() == null) return 0.0;
+        return itensOS.getValorUnitario() * itensOS.getQuantidade();
     }
 
     @Override

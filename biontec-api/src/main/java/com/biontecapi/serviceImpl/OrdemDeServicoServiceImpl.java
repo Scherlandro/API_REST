@@ -80,13 +80,7 @@ public class OrdemDeServicoServiceImpl implements OrdemDeServicoService {
     @Override
     public OrdemDeServico criarOS(OrdemDeServicoDTO dto) {
         OrdemDeServico order = new OrdemDeServico();
-        order.setIdCliente(dto.clienteId());
-        order.setNomeCliente(dto.nomeCliente());
-        order.setIdFuncionario(dto.idFuncionario());
-        order.setNomeFuncionario(dto.nomeFuncionario());
-       // order.setGestorDaOS(dto.gestorDaOS());
-        order.setDataDeEntrada(LocalDateTime.now());
-        order.setStatus(Status.OS_em_Andamento);
+        order.mapToDTO(dto);
         return osRepository.save(order);
     }
 

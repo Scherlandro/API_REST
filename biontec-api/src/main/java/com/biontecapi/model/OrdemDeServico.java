@@ -10,6 +10,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 @Entity
 @Table(name = "ordem_de_servico")
@@ -23,8 +24,13 @@ public class OrdemDeServico {
     @Column(name = "id_os")
     private Long idOS;
 
-    private Integer idCliente;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_cliente")
+    private Cliente cliente;
+
+    @Column(name = "nome_cliente", length = 45)
     private String nomeCliente;
+
     private Integer idFuncionario;
     private String nomeFuncionario;
 
@@ -54,16 +60,32 @@ public class OrdemDeServico {
 
     public OrdemDeServicoDTO toDTO() {
         return new OrdemDeServicoDTO(
-                this.idOS, this.idCliente, this.nomeCliente, this.idFuncionario, this.nomeFuncionario,
-                this.dataDeEntrada, this.ultimaAtualizacao,this.status,this.subtotal,this.desconto,
-                this.porConta,this.totalGeralOS,this.restante,this.gestorDaOS,this.tecnicoEncarregado,
-                this.itensOS != null ? this.itensOS.stream()
-                        .map(ItensDoServico::toDTO).toList() : new ArrayList<>() );
+                this.idOS, this.cliente != null ? this.cliente.toDTO() : null,
+                this.idFuncionario,
+                this.nomeFuncionario,
+                this.dataDeEntrada,
+                this.ultimaAtualizacao,
+                this.status,
+                this.subtotal,
+                this.desconto,
+                this.porConta,
+                this.totalGeralOS,
+                this.restante,
+                this.gestorDaOS,
+                this.tecnicoEncarregado,
+                this.itensOS != null
+                        ? this.itensOS.stream()
+                        .map(ItensDoServico::toDTO)
+                        .toList()
+                        : List.of()
+        );
     }
 
     public void mapToDTO(OrdemDeServicoDTO dto) {
-        this.idCliente = dto.clienteId();
-        this.nomeCliente = dto.nomeCliente();
+        if (dto.cliente() != null) {
+            this.cliente = new Cliente();
+            this.cliente.setId_cliente(dto.cliente().id_cliente());
+        }
         this.idFuncionario = dto.idFuncionario();
         this.nomeFuncionario = dto.nomeFuncionario();
         this.desconto = dto.desconto();

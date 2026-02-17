@@ -50,5 +50,14 @@ import javax.persistence.*;
             return new ItensDoServicoDTO(this.idItensDaOS,this.codOS,
                     this.codProduto,this.descricao,this.valorUnitario,this.quantidade, this.total);
         }
+        public void  mapToDTO(ItensDoServicoDTO dto){
+            this.idItensDaOS= dto.idItensDaOS();
+            this.codOS= dto.codOS();
+            this.codProduto= dto.codProduto();
+            this.descricao= dto.descricao();
+            this.valorUnitario= dto.valorUnitario();
+            this.quantidade= dto.quantidade();
+            this.total= dto.total();
+        }
 
     }

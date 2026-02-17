@@ -31,8 +31,6 @@ public class Vendas {
     @JoinColumn(name = "id_cliente")
     private Cliente cliente;
 
-    // Opcional: Se você ainda precisar do nome_cliente gravado na tabela vendas como histórico
-    // caso o cliente mude de nome no futuro, pode manter. Se não, remova.
     @Column(name = "nome_cliente", length = 45)
     private String nomeCliente;
 
@@ -62,7 +60,6 @@ public class Vendas {
     public VendasDto toDTO() {
         return new VendasDto(
                 this.idVenda,
-                // Agora passamos o objeto Cliente (ou o DTO dele)
                 this.cliente != null ? this.cliente.toDTO() : null,
                 this.idFuncionario,
                 this.nomeFuncionario,
@@ -86,10 +83,9 @@ public class Vendas {
     }
 
     public void mapToDTO(VendasDto dto) {
-        // No mapToDTO, você extrai o ID do objeto cliente que vem do Front
         if (dto.cliente() != null) {
             this.cliente = new Cliente();
-            this.cliente.setId_cliente(dto.cliente().id_cliente()); // Ou logica de busca no DB
+            this.cliente.setId_cliente(dto.cliente().id_cliente());
         }
         this.idFuncionario = dto.idFuncionario();
         this.nomeFuncionario = dto.nomeFuncionario();
