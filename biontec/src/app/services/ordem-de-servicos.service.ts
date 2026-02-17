@@ -11,7 +11,7 @@ export class OrdemDeServicosService {
   constructor(private http: HttpClient) {}
 
   getAll(): Observable<iServiceOrder[]> {
-    return this.http.get<iServiceOrder[]>(this.baseUrl);
+    return this.http.get<iServiceOrder[]>(this.baseUrl+ '/all');
   }
 
   getStatus(termo: string): Observable<string[]> {

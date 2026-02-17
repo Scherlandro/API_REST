@@ -33,8 +33,7 @@ public class VendasController {
     @GetMapping(path = "/all")
     public ResponseEntity<List<VendasDto>> listarVendas() {
         List<Vendas> list = vendas_serv.listarVendas();
-        return ResponseEntity.ok(list.stream().map(
-                Vendas::toDTO).toList());
+        return ResponseEntity.ok(list.stream().map(Vendas::toDTO).toList());
     }
 
     @GetMapping(path = "/{idVenda}")

@@ -2,9 +2,7 @@ package com.biontecapi.controller;
 
 import com.biontecapi.dtos.ItensDoServicoDTO;
 import com.biontecapi.model.ItensDoServico;
-import com.biontecapi.model.OrdemDeServico;
 import com.biontecapi.service.ItensOSService;
-import com.biontecapi.service.OrdemDeServicoService;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,12 +18,10 @@ public class ItensOSController {
 
 
     private final ItensOSService itensOSService;
-    private final OrdemDeServicoService osService;
     private final ModelMapper mapper;
 
-    public ItensOSController(ItensOSService itensOSService, OrdemDeServicoService osService, ModelMapper mapper){
+    public ItensOSController(ItensOSService itensOSService, ModelMapper mapper){
         this.itensOSService = itensOSService;
-        this.osService = osService;
         this.mapper = mapper;
     }
 
@@ -40,13 +36,10 @@ public class ItensOSController {
       if (!itensOSService.existsById(itensDto.idItensDaOS())) {
           return ResponseEntity.notFound().build();
       }
-
-      // Em vez de usar apenas o mapper, garanta os campos principais
       ItensDoServico entidade = mapper.map(itensDto, ItensDoServico.class);
-
       // FORÇAR os valores do Record para a Entidade
       entidade.setIdItensDaOS(itensDto.idItensDaOS());
-      entidade.setValorUnitario(itensDto.valorUnitario()); // Aqui o Record usa o nome do campo como método
+      entidade.setValorUnitario(itensDto.valorUnitario());
       entidade.setQuantidade(itensDto.quantidade());
       entidade.setCodOS(itensDto.codOS());
       entidade.setCodProduto(itensDto.codProduto());

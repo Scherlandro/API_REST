@@ -1,44 +1,35 @@
 package com.biontecapi.serviceImpl;
 
 
-import com.biontecapi.enuns.Status;
 import com.biontecapi.dtos.ItensDoServicoDTO;
 import com.biontecapi.dtos.OrdemDeServicoDTO;
+import com.biontecapi.mapper.OrdemDeServicoMapper;
+import com.biontecapi.model.Cliente;
 import com.biontecapi.model.OrdemDeServico;
 import com.biontecapi.repository.*;
 import com.biontecapi.service.OrdemDeServicoService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 
 @Service
-@Transactional
 public class OrdemDeServicoServiceImpl implements OrdemDeServicoService {
 
     final OrdemDeServicosRepository osRepository;
-    final ClienteRepository clientRepository;
-    final FuncionarioRepository funcionarioRepository;
     final ItensDaOSRepository itensDaOSRepository;
-    final ProdutoRepository productRepository;
-
-   private static Logger LOGGER = LoggerFactory.getLogger(OrdemDeServicoServiceImpl.class);
+    final OrdemDeServicoMapper osMapper;
+    private final ClienteRepository clienteRepository;
+  // private static Logger LOGGER = LoggerFactory.getLogger(OrdemDeServicoServiceImpl.class);
 
     public OrdemDeServicoServiceImpl(OrdemDeServicosRepository osRepository,
-                                     ClienteRepository clientRepository,
-                                     FuncionarioRepository funcionarioRepository,
                                      ItensDaOSRepository itensDaOSRepository,
-                                     ProdutoRepository productRepository) {
+                                     OrdemDeServicoMapper osMapper, ClienteRepository clienteRepository) {
         this.osRepository = osRepository;
-        this.clientRepository = clientRepository;
-        this.funcionarioRepository = funcionarioRepository;
         this.itensDaOSRepository = itensDaOSRepository;
-        this.productRepository = productRepository;
+        this.osMapper = osMapper;
+        this.clienteRepository = clienteRepository;
     }
 
     @Override
@@ -81,6 +72,12 @@ public class OrdemDeServicoServiceImpl implements OrdemDeServicoService {
     public OrdemDeServico criarOS(OrdemDeServicoDTO dto) {
         OrdemDeServico order = new OrdemDeServico();
         order.mapToDTO(dto);
+        if (dto.cliente() != null && dto.cliente().id_cliente() != null) {
+            Cliente cliente = clienteRepository.findById(dto.cliente().id_cliente())
+                    .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
+            order.setCliente(cliente);
+            order.setNomeCliente(cliente.getNomeCliente()); // Opcional: sincroniza o nome
+        }
         return osRepository.save(order);
     }
 
@@ -102,6 +99,31 @@ public class OrdemDeServicoServiceImpl implements OrdemDeServicoService {
         calcularTotalDaOS(order);
         return osRepository.save(order);
     }
+
+/*    @Override
+    @Transactional
+    public OrdemDeServico salvarOSComParcelas(OrdemDeServicoDTO dto) {
+        // 1. Salva a OS normalmente
+        OrdemDeServico osSalva = osRepository.save(osMapper.toEntity(dto));
+
+        // 2. Se for parcelado, gera o Contas a Receber
+        if (osSalva.getQtdDeParcelas() > 1) {
+            double valorParcela = osSalva.getTotalGeralOS() / osSalva.getQtdDeParcelas();
+
+            for (int i = 1; i <= osSalva.getQtdDeParcelas(); i++) {
+                ContasAReceber conta = new ContasAReceber();
+                conta.setOrigemId(osSalva.getIdOS());
+                conta.setTipoOrigem("VENDA");
+                conta.setNumeroParcela(i);
+                conta.setValorParcela(valorParcela);
+                conta.setDataVencimento(LocalDate.now().plusMonths(i));
+                conta.setStatus("PENDENTE");
+
+                //contasAReceberRepository.save(conta);
+            }
+        }
+        return osSalva;
+    }*/
 
     @Override
     public OrdemDeServico removerItemDaOS(Long serviceOrderId, Long itemId) {
@@ -126,7 +148,7 @@ public class OrdemDeServicoServiceImpl implements OrdemDeServicoService {
         // Se tiver desconto, subtraímos
         double totalComDesconto = totalItens - (order.getDesconto() != null ? order.getDesconto() : 0);
 
-       LOGGER.info("CALCULO TOTA::::>" + totalComDesconto + (order.getPorConta() != null ? order.getPorConta() : 0));
+   //    LOGGER.info("CALCULO TOTA::::>" + totalComDesconto + (order.getPorConta() != null ? order.getPorConta() : 0));
         // Se tiver ao porConta, somar ou subtrair aqui
         return totalComDesconto + (order.getPorConta() != null ? order.getPorConta() : 0);
     }

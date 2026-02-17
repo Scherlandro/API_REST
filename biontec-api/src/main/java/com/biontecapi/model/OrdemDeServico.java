@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -58,9 +57,15 @@ public class OrdemDeServico {
     @JoinColumn(name = "cod_os")
     private Collection<ItensDoServico> itensOS;
 
+    @PrePersist
+    protected void onCreate() {
+        this.dataDeEntrada = LocalDateTime.now();
+    }
+
     public OrdemDeServicoDTO toDTO() {
         return new OrdemDeServicoDTO(
-                this.idOS, this.cliente != null ? this.cliente.toDTO() : null,
+                this.idOS,
+                this.cliente != null ? this.cliente.toDTO() : null,
                 this.idFuncionario,
                 this.nomeFuncionario,
                 this.dataDeEntrada,
@@ -95,7 +100,4 @@ public class OrdemDeServico {
         // A data de entrada e ID não são alterados aqui por segurança
         this.ultimaAtualizacao = LocalDateTime.now();
     }
-
-
-
 }

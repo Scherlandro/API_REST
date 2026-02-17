@@ -23,5 +23,5 @@ public record VendasDto(
         Double totalgeral,
         String formasDePagamento,
         Integer qtdDeParcelas,
-        Collection<ItensDaVendaDto> itensVd
+        Collection<ItensDaVendaDto> itensVdDTO
 ) {}

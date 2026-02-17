@@ -30,6 +30,7 @@ public class VendasServiceImpl implements VendasService {
 
     @Override
     public List<Vendas> listarVendas() {
+
         return vendasRepository.findAll();
     }
 

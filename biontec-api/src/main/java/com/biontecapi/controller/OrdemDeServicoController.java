@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import com.biontecapi.dtos.ItensDoServicoDTO;
-import org.modelmapper.ModelMapper;
+import com.biontecapi.mapper.OrdemDeServicoMapper;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,22 +20,17 @@ import com.biontecapi.service.OrdemDeServicoService;
 public class OrdemDeServicoController {
 
     private final OrdemDeServicoService service;
-    private final ModelMapper mapper;
+    private final OrdemDeServicoMapper mapper;
 
-    public OrdemDeServicoController(OrdemDeServicoService service,  ModelMapper mapper) {
+    public OrdemDeServicoController(OrdemDeServicoService service,  OrdemDeServicoMapper mapper) {
         this.service = service;
         this.mapper = mapper;
     }
 
-    @GetMapping
-    public ResponseEntity<List<OrdemDeServico>> findAll() {
-        return ResponseEntity.ok(service.listarOS());
-    }
-
     @GetMapping(path = "/all")
     public ResponseEntity<List<OrdemDeServicoDTO>> listarOrdemDeServicos(){
-       List<OrdemDeServico> os = service.listarOS();
-         return ResponseEntity.ok(os.stream().map(OrdemDeServico::toDTO).toList());
+       List<OrdemDeServico> list = service.listarOS();
+         return ResponseEntity.ok(list.stream().map(OrdemDeServico::toDTO).toList());
     }
 
     @GetMapping(path = "/findOSById/{idOs}")

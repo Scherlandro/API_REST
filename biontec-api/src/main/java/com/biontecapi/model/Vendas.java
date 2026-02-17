@@ -1,19 +1,16 @@
 package com.biontecapi.model;
 
-import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.stream.Collectors;
 
-import javax.persistence.*;
-
-import com.biontecapi.dtos.ItensDaVendaDto;
 import com.biontecapi.dtos.VendasDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
+import java.time.LocalDateTime;
+import java.util.Collection;
+import java.util.List;
+
 
 @Entity
 @Table(name = "vendas")
@@ -57,6 +54,11 @@ public class Vendas {
     @JoinColumn(name = "codevendas")
     private Collection<ItensDaVenda> itensVd;
 
+    @PrePersist
+    protected void onCreate() {
+        this.dtVenda = LocalDateTime.now();
+    }
+
     public VendasDto toDTO() {
         return new VendasDto(
                 this.idVenda,
@@ -75,11 +77,6 @@ public class Vendas {
                         .toList()
                         : List.of()
         );
-    }
-
-    @PrePersist
-    protected void onCreate() {
-        this.dtVenda = LocalDateTime.now();
     }
 
     public void mapToDTO(VendasDto dto) {
