@@ -15,7 +15,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-
 @Entity
 @Table(name = "vendas")
 @Data
@@ -28,9 +27,12 @@ public class Vendas {
     @Column(name = "id_venda")
     private Integer idVenda;
 
-    @Column(name = "id_cliente", length = 11)
-    private Integer idCliente;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_cliente")
+    private Cliente cliente;
 
+    // Opcional: Se você ainda precisar do nome_cliente gravado na tabela vendas como histórico
+    // caso o cliente mude de nome no futuro, pode manter. Se não, remova.
     @Column(name = "nome_cliente", length = 45)
     private String nomeCliente;
 
@@ -40,13 +42,11 @@ public class Vendas {
     @Column(name = "nome_funcionario", length = 45)
     private String nomeFuncionario;
 
-    @Column(name = "dt_venda", length = 10)
+    @Column(name = "dt_venda")
     private LocalDateTime dtVenda;
 
     private Double subtotal;
-
     private Double desconto;
-
     private Double totalgeral;
 
     @Column(name = "forma_de_pagamento", length = 25)
@@ -59,12 +59,11 @@ public class Vendas {
     @JoinColumn(name = "codevendas")
     private Collection<ItensDaVenda> itensVd;
 
-
     public VendasDto toDTO() {
         return new VendasDto(
                 this.idVenda,
-                this.idCliente,
-                this.nomeCliente,
+                // Agora passamos o objeto Cliente (ou o DTO dele)
+                this.cliente != null ? this.cliente.toDTO() : null,
                 this.idFuncionario,
                 this.nomeFuncionario,
                 this.dtVenda,
@@ -81,42 +80,20 @@ public class Vendas {
         );
     }
 
-   /* public VendasDto toDTO() {
-       // Usando o Builder que o Lombok gera para o Record
-       return VendasDto.builder()
-               .idVenda(this.idVenda)
-               .idCliente(this.idCliente)
-               .nomeCliente(this.nomeCliente)
-               .idFuncionario(this.idFuncionario)
-               .nomeFuncionario(this.nomeFuncionario)
-               .dtVenda(this.dtVenda)
-               .subtotal(this.subtotal)
-               .desconto(this.desconto)
-               .totalgeral(this.totalgeral)
-               .formasDePagamento(this.formasDePagamento)
-               .qtdDeParcelas(this.qtdDeParcelas)
-               .itensVd(this.itensVd != null ?
-                       this.itensVd.stream()
-                               .map(ItensDaVenda::toDTO)
-                               .collect(Collectors.toList()) :
-                       new ArrayList<ItensDaVendaDto>())
-               .build();
-   }
-*/
     @PrePersist
     protected void onCreate() {
-       // this.dtVenda = OffsetDateTime.from(LocalDateTime.now());
         this.dtVenda = LocalDateTime.now();
     }
 
     public void mapToDTO(VendasDto dto) {
-        this.idCliente = dto.idCliente();
-        this.nomeCliente = dto.nomeCliente();
+        // No mapToDTO, você extrai o ID do objeto cliente que vem do Front
+        if (dto.cliente() != null) {
+            this.cliente = new Cliente();
+            this.cliente.setId_cliente(dto.cliente().id_cliente()); // Ou logica de busca no DB
+        }
         this.idFuncionario = dto.idFuncionario();
         this.nomeFuncionario = dto.nomeFuncionario();
         this.desconto = dto.desconto();
         this.subtotal = dto.subtotal();
-        // o dtVenda aqui, está setado no @PrePersist!
     }
-
 }

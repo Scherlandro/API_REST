@@ -11,7 +11,7 @@ import {ProductService} from "../../services/product.service";
 import {PurchaseStateService} from "../../services/purchase-state.service";
 import {MatDialog} from "@angular/material/dialog";
 import {catchError} from "rxjs/operators";
-import {ErrorDiologComponent} from "../../shared/diolog_components/error-diolog/error-diolog.component";
+import {ErrorDiologComponent} from "../../shared/dialogs/error-diolog/error-diolog.component";
 import {TokenService} from "../../services/token.service";
 import {Router} from "@angular/router";
 import {AuthService} from "../../services/auth.service";

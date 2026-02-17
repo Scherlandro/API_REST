@@ -1,9 +1,9 @@
 import {iItensOS} from "./itens-os";
+import {ICliente} from "./cliente";
 
 export interface iServiceOrder {
   idOS: number,
-  idCliente: number,
-  nomeCliente: string,
+  cliente: ICliente,
   idFuncionario: number,
   nomeFuncionario: string,
   dataDeEntrada: string,

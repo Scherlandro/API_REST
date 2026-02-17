@@ -11,15 +11,15 @@ import {OrdemDeServicosService} from "../../services/ordem-de-servicos.service";
 import {iServiceOrder} from "../../interfaces/service-order";
 import {ICliente} from "../../interfaces/cliente";
 import {ItensOsService} from "../../services/itens-os.service";
-import {ErrorDiologComponent} from "../../shared/diolog_components/error-diolog/error-diolog.component";
+import {ErrorDiologComponent} from "../../shared/dialogs/error-diolog/error-diolog.component";
 import {iItensOS} from "../../interfaces/itens-os";
-import {DialogOpenOsComponent} from "../../shared/diolog_components/dialog-open-os/dialog-open-os.component";
+import {DialogOpenOsComponent} from "../../shared/dialogs/dialog-open-os/dialog-open-os.component";
 import {TokenService} from "../../services/token.service";
 import {NotificationMgsService} from "../../services/notification-mgs.service";
 import {ChangeDetectorRef} from '@angular/core';
 import {CurrencyBRLPipe} from "../../shared/pipes/currency-brl.pipe";
 import {iPagamento} from "../../interfaces/pagamento";
-import {DialogPagamentosComponent} from "../../shared/diolog_components/dialog-pagamentos/dialog-pagamentos.component";
+import {DialogPagamentosComponent} from "../../shared/dialogs/dialog-pagamentos/dialog-pagamentos.component";
 
 
 @Component({
@@ -97,7 +97,7 @@ export class OrdemDeServiceComponent implements OnInit {
   openDilogOS() {
 
     const os: iServiceOrder = {
-      idOS: 0, idCliente: 0, idFuncionario: 0, nomeCliente: '', nomeFuncionario: '',
+      idOS: 0, cliente: ICliente, idFuncionario: 0, nomeFuncionario: '',
       dataDeEntrada: '', ultimaAtualizacao: '', status: '', subtotal: 0,
       desconto: 0, totalGeralOS: 0, porConta: 0, restante: 0,
 
@@ -331,6 +331,7 @@ export class OrdemDeServiceComponent implements OnInit {
 
     const novoPagamento: iPagamento = {
       origemId: origem.idOS,
+      pagador: origem.cliente,
       tipoOrigem: 'OS',
       status: 1,
       dtPagamento: origem.dataDeEntrada,

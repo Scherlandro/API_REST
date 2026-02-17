@@ -75,7 +75,7 @@ export class DialogOpenOsComponent implements  OnInit, OnDestroy  {
     this.listarProdutos();
     this.setupAutocompleteFilters();
 
-    this.clienteControl.setValue(this.os.nomeCliente);
+    this.clienteControl.setValue(this.os.cliente.nomeCliente);
     this.funcionarioControl.setValue(this.os.nomeFuncionario);
     if (this.itensOS && this.itensOS.quantidade) {
       // emitEvent: false evita que o subscribe abaixo seja disparado desnecessariamente na inicialização
@@ -194,8 +194,7 @@ export class DialogOpenOsComponent implements  OnInit, OnDestroy  {
 
     const osParaCriar: iServiceOrder = {
       idOS: 0,
-      idCliente: cliente.idCliente,
-      nomeCliente: cliente.nomeCliente,
+      cliente: cliente,
       idFuncionario: funcionario.idFuncionario,
       nomeFuncionario: funcionario.nomeFuncionario,
       dataDeEntrada: new Date().toISOString(),

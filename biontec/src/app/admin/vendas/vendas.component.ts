@@ -7,16 +7,16 @@ import {MatSort} from "@angular/material/sort";
 import {MatTable, MatTableDataSource} from "@angular/material/table";
 import {expand, of, timeout} from "rxjs";
 import {catchError, delay, first} from "rxjs/operators";
-import {DialogOpenSalesComponent} from "src/app/shared/diolog_components/dialog-open-sales/dialog-open-sales.component";
+import {DialogOpenSalesComponent} from "src/app/shared/dialogs/dialog-open-sales/dialog-open-sales.component";
 import {iItensVd} from "../../interfaces/itens-vd";
 import {FaseVenda, iVendas} from "../../interfaces/vendas";
 import {ItensVdService} from "../../services/itens-vd.service";
 import {VendasService} from "../../services/vendas.service";
-import {ErrorDiologComponent} from "../../shared/diolog_components/error-diolog/error-diolog.component";
+import {ErrorDiologComponent} from "../../shared/dialogs/error-diolog/error-diolog.component";
 import {TokenService} from "../../services/token.service";
 import {NotificationMgsService} from "../../services/notification-mgs.service";
 import {iPagamento} from "../../interfaces/pagamento";
-import {DialogPagamentosComponent} from "../../shared/diolog_components/dialog-pagamentos/dialog-pagamentos.component";
+import {DialogPagamentosComponent} from "../../shared/dialogs/dialog-pagamentos/dialog-pagamentos.component";
 
 
 @Component({
@@ -180,7 +180,7 @@ export class VendaComponent implements OnInit {
 
     const vdBase = {
       idVenda: elementMain?.idVenda || 0,
-      nomeCliente: elementMain?.nomeCliente || '',
+      cliente: elementMain?.cliente || '',
       dtVenda: elementMain?.dtVenda || new Date().toISOString(),
       ...elementMain // Mantém outras propriedades existentes
     };
@@ -283,15 +283,17 @@ dialogRef.afterClosed().subscribe(novoItem => {
       });
   }
 
-  finalizarOperacao(origem: any) {
+  finalizarOperacao(origem: iVendas) {
 
+    console.log('iniciar FinalizarOperação', origem)
     const novoPagamento: iPagamento = {
       origemId: origem.idVenda,
+      pagador: origem.cliente,
       tipoOrigem: 'VENDA',
       status: 1,
       dtPagamento: origem.dtVenda,
       valorPago: origem.totalgeral,
-      formaPagamento: origem.formasDePagamento,
+      formaPagamento: origem.formasDePagamento
     }
       this.dialog.open(DialogPagamentosComponent, {
         data: { ...novoPagamento }

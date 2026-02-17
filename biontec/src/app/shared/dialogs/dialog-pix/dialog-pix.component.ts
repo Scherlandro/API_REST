@@ -1,6 +1,5 @@
 import {Component, Inject} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog";
-import {iPagamento} from "../../../interfaces/pagamento";
 import {PagamentoService} from "../../../services/pagmentos.service";
 import {NotificationMgsService} from "../../../services/notification-mgs.service";
 import {EfiChargeRequest} from "../../../interfaces/efi-charge-request";
@@ -34,7 +33,7 @@ export class DialogPixComponent {
   verificarStatusPagamento() {
     // Checa a cada 5 segundos se o status no banco mudou
     const interval = setInterval(() => {
-      this.pagamentoService.buscarStatusNoBanco(this.data.idPagamento).subscribe(res => {
+      this.pagamentoService.buscarStatusNoBanco(this.data.idPagamento).subscribe((res:any) => {
         if (res.status === 1) { // 1 = Confirmado
           clearInterval(interval);
           this.dialogRef.close(true);
@@ -44,4 +43,7 @@ export class DialogPixComponent {
     }, 5000);
   }
 
+  copiarPix(inputPix: HTMLInputElement) {
+
+  }
 }

@@ -65,8 +65,7 @@ export class PagamentoService {
   }
 
 
-
-  buscarStatusNoBanco(idPagamento: number) {
-
+  buscarStatusNoBanco(idPagamento: any): Observable<any> {
+     return this.http.get<iPagamento[]>(this.baseUrl);
   }
 }

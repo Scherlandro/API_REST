@@ -2,10 +2,10 @@ import {Injectable} from '@angular/core';
 import {Subject} from 'rxjs';
 import {ErrorStateMatcher} from "@angular/material/core";
 import {AbstractControl, FormControl, FormGroupDirective, NgForm} from "@angular/forms";
-import {ConfirmDiologComponent} from "../shared/diolog_components/confirm-diolog/confirm-diolog.component";
+import {ConfirmDiologComponent} from "../shared/dialogs/confirm-diolog/confirm-diolog.component";
 import {MatDialog} from "@angular/material/dialog";
 import {MatSnackBar, MatSnackBarConfig} from "@angular/material/snack-bar";
-import {ErrorDiologComponent} from "../shared/diolog_components/error-diolog/error-diolog.component";
+import {ErrorDiologComponent} from "../shared/dialogs/error-diolog/error-diolog.component";
 
 @Injectable({
   providedIn: 'root'

@@ -5,7 +5,7 @@ import {iProduto} from "../../interfaces/product";
 import {interval, Observable, of, Subscription, timeout} from "rxjs";
 import {MatTableDataSource} from "@angular/material/table";
 import {catchError} from "rxjs/operators";
-import {ErrorDiologComponent} from "../../shared/diolog_components/error-diolog/error-diolog.component";
+import {ErrorDiologComponent} from "../../shared/dialogs/error-diolog/error-diolog.component";
 import {MatDialog} from "@angular/material/dialog";
 import { FormControl } from '@angular/forms';
 import {ItensVdService} from "../../services/itens-vd.service";

@@ -4,13 +4,13 @@ import {UserService} from 'src/app/services/user.service';
 import {FormControl} from '@angular/forms';
 import {MatTable, MatTableDataSource} from "@angular/material/table";
 import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
-import {DialogUsuarioComponent} from "../../shared/diolog_components/dialog-usuario/dialog-usuario.component";
+import {DialogUsuarioComponent} from "../../shared/dialogs/dialog-usuario/dialog-usuario.component";
 import {MatPaginator, PageEvent} from "@angular/material/paginator";
 import {MatSort} from "@angular/material/sort";
 import {NotificationMgsService} from "../../services/notification-mgs.service";
 import {catchError} from "rxjs/operators";
 import {of} from "rxjs";
-import {ErrorDiologComponent} from "../../shared/diolog_components/error-diolog/error-diolog.component";
+import {ErrorDiologComponent} from "../../shared/dialogs/error-diolog/error-diolog.component";
 import {SelectionModel} from "@angular/cdk/collections";
 
 import {TokenService} from "../../services/token.service";

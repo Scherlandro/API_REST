@@ -121,8 +121,22 @@ export class DialogPagamentosComponent implements OnInit, OnDestroy{
   }
 
   confirmarPagamentoEfi(forma: string) {
+    console.log('Continua o Pagamento -> ', forma,'Dados da origem-> ', this.data);
+
+    /*
+    idPagamento?: number;
+  valor: number;
+  pagador: {
+    nome: string;
+    cpf: string;
+  };
+  tipoPagamento: 'pix' | 'boleto';
+  qrcodeImage?: any;
+  copiaECola?: any;
+     */
+
     const payload: EfiChargeRequest = {
-      idPagamento: this.pagamento.idPagamento | undefined,
+      idPagamento: this.pagamento.idPagamento ,
       valor: this.pagamento.valorPago,
       pagador: {
         nome: "Cliente Exemplo", // Ideal  form ou objeto Cliente
@@ -149,6 +163,7 @@ export class DialogPagamentosComponent implements OnInit, OnDestroy{
 
 
 onFormaPagamentoSelect(event: MatAutocompleteSelectedEvent) {
+    console.log('FormaPG SELECIONADA-> ', event.option.value,'Dados da origem-> ', this.data);
   const formaSelecionada = event.option.value;
 
   if (formaSelecionada === 'Pix' || formaSelecionada === 'Boleto') {

@@ -10,9 +10,9 @@ import {MatSort} from "@angular/material/sort";
 import {catchError} from "rxjs/operators";
 import {of} from "rxjs";
 import {TokenService} from "../../services/token.service";
-import {ErrorDiologComponent} from "../../shared/diolog_components/error-diolog/error-diolog.component";
+import {ErrorDiologComponent} from "../../shared/dialogs/error-diolog/error-diolog.component";
 import {NotificationMgsService} from "../../services/notification-mgs.service";
-import {DialogFuncionarioComponent} from "../../shared/diolog_components/dialog-funcionario/dialog-funcionario.component";
+import {DialogFuncionarioComponent} from "../../shared/dialogs/dialog-funcionario/dialog-funcionario.component";
 
 @Component({
   selector: 'app-funcionarios',

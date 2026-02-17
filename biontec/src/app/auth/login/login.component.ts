@@ -7,7 +7,7 @@ import {MatDialog} from "@angular/material/dialog";
 import {UserService} from "../../services/user.service";
 import {MatTable, MatTableDataSource} from "@angular/material/table";
 import {IUser} from "../../interfaces/user";
-import {DialogUsuarioComponent} from "../../shared/diolog_components/dialog-usuario/dialog-usuario.component";
+import {DialogUsuarioComponent} from "../../shared/dialogs/dialog-usuario/dialog-usuario.component";
 import {delay} from "rxjs/operators";
 import {FormControl, Validators,FormBuilder, FormGroup} from '@angular/forms';
 

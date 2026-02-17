@@ -71,6 +71,7 @@ export class DialogOpenSalesComponent implements OnInit {
       this.itensVd?.qtdVendidas || 1,      [Validators.required, Validators.min(1)]
     );
 
+    console.log('Cliente ', data)
     console.log('dataFase: ' , data.fase , 'Fase ', this.fase)
   }
 
@@ -84,7 +85,7 @@ export class DialogOpenSalesComponent implements OnInit {
     }
     this.listarProdutvenda();
      this.setupAutocompleteFilters();
-    this.clienteControl.setValue(this.venda.nomeCliente);
+    this.clienteControl.setValue(this.venda.cliente.nomeCliente);
     this.funcionarioControl.setValue(this.venda.nomeFuncionario);
     if (this.itensVd && this.itensVd.qtdVendidas) {
       // emitEvent: false evita que o subscribe abaixo seja disparado desnecessariamente na inicialização
@@ -201,8 +202,8 @@ export class DialogOpenSalesComponent implements OnInit {
     const funcionario: any = this.funcionarioControl.value;
 
     if (cliente && typeof cliente === 'object') {
-      venda.idCliente = cliente.id_cliente;
-      venda.nomeCliente = cliente.nomeCliente;
+      venda.cliente.id_cliente = cliente.id_cliente;
+      venda.cliente.nomeCliente = cliente.nomeCliente;
     }
 
     if (funcionario && typeof funcionario === 'object') {
@@ -218,8 +219,8 @@ export class DialogOpenSalesComponent implements OnInit {
       idVenda: null,
       idFuncionario: venda.idFuncionario,
       nomeFuncionario: venda.nomeFuncionario,
-      idCliente: venda.idCliente,
-      nomeCliente: venda.nomeCliente,
+      idCliente: venda.cliente.id_cliente,
+      nomeCliente: venda.cliente.nomeCliente,
       dtVenda: venda.dtVenda,// || dataAtual.toISOString(),
       itensVd: [],
       qtdDeParcelas: 0,
@@ -258,8 +259,8 @@ export class DialogOpenSalesComponent implements OnInit {
     // Se o usuário não mudou nada, ou se o controle for apenas texto, tratamvenda aqui:
 
     if (cliente && typeof cliente === 'object') {
-      venda.idCliente = cliente.id_cliente;
-      venda.nomeCliente = cliente.nomeCliente;
+      venda.cliente.id_cliente = cliente.id_cliente;
+      venda.cliente.nomeCliente = cliente.nomeCliente;
     }
 
     if (funcionario && typeof funcionario === 'object') {

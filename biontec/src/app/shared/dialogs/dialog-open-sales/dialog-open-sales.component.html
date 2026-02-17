@@ -1,16 +1,15 @@
-<div class="div-os">
+<div class="div-venda">
 
-  <mat-card class="container-box-os ">
-    <h1 *ngIf="isChange" mat-dialog-title>Abrir Serviço</h1>
-    <h1 *ngIf="!isChange" mat-dialog-title>Editar Serviço</h1>
-
-
-    <mat-form-field appearance="fill">
-      <mat-label>Código da OS</mat-label>
-      <input matInput [(ngModel)]="os.idOS" disabled>
+  <mat-card class="container-box-venda" *ngIf="tagVd">
+    <h1 mat-dialog-title>
+      {{ fase === 'newVd' ? 'Abrir Nova Venda' : 'Dados da Venda' }}
+    </h1>
+    <mat-form-field appearance="fill" *ngIf="fase == 'editarVd' || fase == 'addItemVd'">
+      <mat-label>Código da Vd</mat-label>
+      <input matInput [(ngModel)]="venda.idVenda" disabled>
     </mat-form-field>
 
-    <mat-form-field *ngIf="!isNewOS" appearance="fill">
+    <mat-form-field *ngIf="fase == 'newVd' " appearance="fill">
       <mat-label>Atendente</mat-label>
       <input type="text"
              placeholder="Atendente"
@@ -26,40 +25,34 @@
       </mat-autocomplete>
     </mat-form-field>
 
-    <mat-form-field appearance="fill" *ngIf="isNewOS" >
+    <mat-form-field appearance="fill" *ngIf="fase == 'editarVd' || fase == 'addItemVd' " >
       <mat-label>Atendente</mat-label>
-      <input matInput [value]="os.nomeFuncionario" disabled>
+      <input matInput [value]="venda.nomeFuncionario" disabled>
     </mat-form-field>
 
     <!-- Data de Entrada -->
-    <mat-form-field appearance="fill" *ngIf="!isNewOS" >
+    <mat-form-field appearance="fill" *ngIf="fase == 'newVd' " >
       <mat-label>Data</mat-label>
-      <input matInput [matDatepicker]="picker" [(ngModel)]="os.dataDeEntrada" >
+      <input matInput [matDatepicker]="picker" [(ngModel)]="venda.dtVenda" >
       <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
       <mat-datepicker #picker></mat-datepicker>
     </mat-form-field>
 
-    <mat-form-field *ngIf="isNewOS" appearance="fill">
+    <mat-form-field *ngIf="fase == 'editarVd' || fase == 'addItemVd' " appearance="fill">
       <mat-label>Data</mat-label>
-      <input matInput [value]="os.dataDeEntrada | date:'dd/MM/yyyy'" disabled>
+      <input matInput [value]="venda.dtVenda | dateLocalBR " disabled>
     </mat-form-field>
 
     <!-- Data de Corrente -->
-    <mat-form-field appearance="fill" *ngIf="isNewOS && isChange" >
+    <mat-form-field appearance="fill" *ngIf="tagVd" >
       <mat-label>Data Corrente</mat-label>
-      <input matInput [matDatepicker]="picker" [(ngModel)]="os.ultimaAtualizacao" >
+      <input matInput [matDatepicker]="picker" [(ngModel)]="venda.dtVenda" >
       <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
       <mat-datepicker #picker></mat-datepicker>
     </mat-form-field>
 
-    <mat-form-field *ngIf="isNewOS && !isChange" appearance="fill">
-      <mat-label>Data Corrente</mat-label>
-      <input matInput [value]="os.ultimaAtualizacao | date:'dd/MM/yyyy'"  disabled>
-    </mat-form-field>
-
-
     <!-- Cliente -->
-    <mat-form-field  *ngIf="!isNewOS" appearance="fill">
+    <mat-form-field  *ngIf="fase == 'newVd' " appearance="fill">
       <mat-label>Cliente</mat-label>
       <input type="text"
              placeholder="Digite o Cliente"
@@ -69,61 +62,68 @@
              (keypress)="setupAutocompleteFilters()"/>
       <mat-error>Campo Obrigatório não preenchido.</mat-error>
       <mat-autocomplete #autcli="matAutocomplete" [displayWith]="displayCli">
-        <mat-option *ngFor="let cliente of clientesFiltrados | async" [value]="cliente">
+        <mat-option *ngFor="let cliente of clientesFiltradvenda | async" [value]="cliente">
           {{cliente.nomeCliente}}
         </mat-option>
       </mat-autocomplete>
     </mat-form-field>
 
-    <mat-form-field appearance="fill"*ngIf="isNewOS" >
+    <mat-form-field appearance="fill"*ngIf="fase == 'editarVd' || fase == 'addItemVd' " >
       <mat-label>Cliente</mat-label>
-      <input matInput [value]="os.nomeCliente" disabled>
+      <input matInput [value]="venda.cliente.nomeCliente" disabled>
     </mat-form-field>
 
-    <mat-form-field  appearance="fill">
-      <mat-label>Status da OS</mat-label>
+    <!--  <mat-form-field  appearance="fill">
+      <mat-label>Status da Vd</mat-label>
       <input type="text"
-             placeholder="Status da OS"
+             placeholder="Status da Vd"
              matInput
              [formControl]="statusOsControl"
              [matAutocomplete]="autstatus"/>
       <mat-error>Campo Obrigatório não preenchido.</mat-error>
 
       <mat-autocomplete #autstatus="matAutocomplete" [displayWith]="displayStatus">
-        <mat-option *ngFor="let statusOs of statusOsFiltrados | async" [value]="statusOs">
-          {{statusOs}}
+        <mat-option *ngFor="let statusVd of statusOsFiltradvenda | async" [value]="statusVd">
+          {{statusVd}}
         </mat-option>
       </mat-autocomplete>
     </mat-form-field>
-
-    <div>
-    <button mat-button *ngIf="isChange" cdkFocusInitial [mat-dialog-close]="osSelecionada"
-            (click)="save(os)">Savar OS
-    </button>
-
-    <button mat-button (click)="onCancel()">Cancelar</button>
+-->
+    <div class="actions">
+      <button mat-button *ngIf="fase === 'newVd' " [disabled]="clienteControl.invalid || funcionarioControl.invalid"
+              (click)="iniciarVd(venda)">
+        {{ fase === 'newVd' ? 'Iniciar Venda' : '' }}
+      </button>
+      <button mat-button *ngIf=" fase === 'editarVd'" (click)="save(venda)">
+        {{ fase === 'editarVd' ? 'Atualizar Dados' : '' }}
+      </button>
+      <button mat-button (click)="onCancel()">Cancelar</button>
     </div>
+
+
   </mat-card>
 
-
-  <mat-card  *ngIf="isNewOS || !isChange" class="container-box-itens " >
-    <!-- Itens -->
-    <mat-form-field>
+  <!-- Itens -->
+  <mat-card  *ngIf="tagItemVd" class="container-box-itensvd" >
+    <h1 mat-dialog-title>
+      {{ fase === 'addItemVd' ? 'Adicionar Produto' : 'Editar Item' }}
+    </h1>
+    <mat-form-field appearance="fill">
       <mat-label>ID</mat-label>
-      <input matInput [(ngModel)]="os.itensOS.idItensDaOS" disabled>
+      <input matInput [(ngModel)]="venda.itensVd.idItensDaVd" disabled>
     </mat-form-field>
 
     <mat-form-field>
       <mat-label>Código do Produto</mat-label>
-      <input matInput [value]="os.itensOS.codProduto" disabled>
+      <input matInput [value]="venda.itensVd.codProduto" disabled>
     </mat-form-field>
 
-   <mat-form-field *ngIf="isChange" appearance="fill" >
+    <mat-form-field  appearance="fill" *ngIf="fase === 'addItemVd'" >
       <mat-label>Produto</mat-label>
       <input type="text" matInput placeholder="Digite o nome do produto"
              [formControl]="produtoControl"
              [matAutocomplete]="auto"
-             (input)="filterProdutos($event)"/>
+             (input)="filterProdutvenda($event)"/>
       <mat-error *ngIf="produtoControl.hasError('required')">Campo obrigatório.</mat-error>
 
       <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayPd">
@@ -134,14 +134,14 @@
       </mat-autocomplete>
     </mat-form-field>
 
-    <mat-form-field *ngIf="!isChange" appearance="fill">
+    <mat-form-field *ngIf="fase === 'editarItemVd'" appearance="fill">
       <mat-label>Descrição</mat-label>
-      <input matInput [value]="os.itensOS.descricao" disabled>
+      <input matInput [value]="venda.itensVd.descricao" disabled>
     </mat-form-field>
 
     <mat-form-field>
       <mat-label>Preço Unitário</mat-label>
-      <input matInput [value]="formatter(os.itensOS.valorUnitario || 0)" disabled>
+      <input matInput [value]="formatter(venda.itensVd.valVenda || 0)" disabled>
     </mat-form-field>
 
     <!-- Campo Quantidade com validação -->
@@ -154,33 +154,17 @@
 
     <mat-form-field appearance="fill">
       <mat-label>Total</mat-label>
-      <input matInput [value]="formatter(os.itensOS.total || 0)" disabled [(ngModel)]="itensOS.total">
+      <input matInput [value]="formatter(venda.itensVd.total || 0)" disabled [(ngModel)]="itensVd.valorParcial">
     </mat-form-field>
 
-    <!-- Itens da Ordem de Serviço -->
-    <div mat-dialog-content> <!-- *ngIf="itensOS$.length > 0">-->
-
-
-      <button mat-raised-button *ngIf="!isNewOS || isChange" (click)="addItem()" [disabled]="isSaveButtonDisabled()">
-        Adicionar Item
+     <form>
+      <button mat-raised-button
+              (click)="fase === 'addItemVd' ? addItem() : editarItem(itensVd)"
+              [disabled]="isSaveButtonDisabled()">
+        {{ fase === 'addItemVd' ? 'Adicionar Item' : 'Salvar' }}
       </button>
-      <button mat-raised-button *ngIf="!isChange" (click)="editarItem(itensOS)" [disabled]="isSaveButtonDisabled()">
-        Atualizar Item
-      </button>
-
-    <!--  <div *ngFor="let item of itensOS$">
-        <div>{{ item.descricao }} - {{ formatter(item.total) }}</div>
-        <button mat-button (click)="removeItem(item)">Remover</button>
-      </div>
-      &lt;!&ndash; Adicionar Produto &ndash;&gt;
-      <button mat-raised-button (click)="addItem()"> + item  </button>
-
-      <button mat-button *ngIf="isChange" [mat-dialog-close]="itensOS" cdkFocusInitial>Editar</button>
-      <button mat-button *ngIf="!isChange" [mat-dialog-close]="itensOS" cdkFocusInitial (click)="addItem()"
-              [disabled]="isSaveButtonDisabled()">Salvar
-      </button>-->
-    </div>
-
+    <button mat-button *ngIf="fase === 'editarItemVd' " (click)="onCancel()">Cancelar</button>
+     </form>
   </mat-card>
 
 

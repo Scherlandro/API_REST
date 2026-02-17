@@ -1,6 +1,6 @@
 <div>
 <h2 mat-dialog-title>Pagamento via Pix</h2>
-<mat-content class="text-center">
+<mat-card-content class="text-center">
   <p>Escaneie o código abaixo com o app do seu banco:</p>
 
   <img [src]="data.qrcodeImage" alt="QR Code Pix" style="width: 250px; height: 250px;">
@@ -14,8 +14,8 @@
       </button>
     </mat-form-field>
   </div>
-</mat-content>
-<mat-actions align="end">
+</mat-card-content>
+<div align="end">
   <button mat-raised-button color="primary" mat-dialog-close>Já paguei</button>
-</mat-actions>
+</div>
 </div>

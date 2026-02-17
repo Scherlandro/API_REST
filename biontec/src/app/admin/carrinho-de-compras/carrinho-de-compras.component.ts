@@ -10,6 +10,7 @@ import {forkJoin, of} from "rxjs";
 import {catchError, map} from "rxjs/operators";
 import {IUser} from "../../interfaces/user";
 import {UserService} from "../../services/user.service";
+import {ICliente} from "../../interfaces/cliente";
 
 interface Vendedor {
   vendedor: string;
@@ -24,6 +25,7 @@ interface Vendedor {
 })
 export class CarrinhoDeComprasComponent implements OnInit {
   selecionarTodos: boolean = false;
+  cliente$!: ICliente;
 //  vendedores: Vendedor[] = [];
   vendedores: iVendas[] = [];
   nomeVendedor = '';
@@ -33,8 +35,7 @@ export class CarrinhoDeComprasComponent implements OnInit {
   highlighted = true;
     venda: iVendas = {
     idVenda: 0,
-    idCliente: 0,
-    nomeCliente: '',
+    cliente: this.cliente$ ,
     idFuncionario: 0,
     nomeFuncionario: '',
     dtVenda: new Date().toISOString(),
@@ -157,8 +158,7 @@ export class CarrinhoDeComprasComponent implements OnInit {
         }];*/
         this.vendedores = [{
           idVenda: 0,
-          idCliente: 0,
-          nomeCliente: '',
+          cliente: this.cliente$,
           idFuncionario: 0,
           nomeFuncionario: this.nomeVendedor,
           dtVenda: new Date().toISOString(),
@@ -210,8 +210,7 @@ export class CarrinhoDeComprasComponent implements OnInit {
     // ou carrega do localStorage se for um carrinho temporário
     this.venda = {
       idVenda: 0,
-      idCliente: 0, // pode obter do serviço de autenticação
-      nomeCliente: '', // pode obter do serviço de autenticação
+      cliente: this.cliente$, // pode obter do serviço de autenticação
       idFuncionario: 0, // pode obter do serviço de autenticação
       nomeFuncionario: 'Atendente Virtual',
       dtVenda: new Date().toISOString(),

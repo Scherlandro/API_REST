@@ -2,7 +2,7 @@ import {Component, LOCALE_ID, OnInit, ViewChild} from '@angular/core';
 import {Observable, of} from 'rxjs';
 import {ProductService} from "../../services/product.service";
 import {catchError} from "rxjs/operators";
-import {ErrorDiologComponent} from "../../shared/diolog_components/error-diolog/error-diolog.component";
+import {ErrorDiologComponent} from "../../shared/dialogs/error-diolog/error-diolog.component";
 import {MatDialog} from "@angular/material/dialog";
 import { FormControl} from "@angular/forms";
 import {iProduto} from "../../interfaces/product";

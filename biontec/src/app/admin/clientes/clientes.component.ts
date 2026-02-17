@@ -4,14 +4,14 @@ import {MatTable, MatTableDataSource} from "@angular/material/table";
 import {Form, FormControl, NgForm} from "@angular/forms";
 import {ICliente} from "../../interfaces/cliente";
 import {ClienteService} from "../../services/cliente.service";
-import {DialogClienteComponent} from "../../shared/diolog_components/dialog-cliente/dialog-cliente.component";
+import {DialogClienteComponent} from "../../shared/dialogs/dialog-cliente/dialog-cliente.component";
 import {ConsultaCepService} from "../../services/consulta-cep.service";
 import {MatPaginator} from "@angular/material/paginator";
 import {MatSort} from "@angular/material/sort";
 import {catchError} from "rxjs/operators";
 import {of} from "rxjs";
 import {TokenService} from "../../services/token.service";
-import {ErrorDiologComponent} from "../../shared/diolog_components/error-diolog/error-diolog.component";
+import {ErrorDiologComponent} from "../../shared/dialogs/error-diolog/error-diolog.component";
 import {NotificationMgsService} from "../../services/notification-mgs.service";
 
 @Component({

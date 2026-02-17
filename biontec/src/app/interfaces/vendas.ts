@@ -1,10 +1,10 @@
 import {iItensVd} from "./itens-vd";
 import {iProduto} from "./product";
+import {ICliente} from "./cliente";
 
 export interface iVendas {
   idVenda: number,
-  idCliente: number,
-  nomeCliente: string,
+  cliente: ICliente,
   idFuncionario: number,
   nomeFuncionario: string,
   dtVenda: string,
