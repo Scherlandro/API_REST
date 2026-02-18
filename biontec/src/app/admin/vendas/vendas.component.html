@@ -92,7 +92,7 @@
         <th mat-cell *matCellDef="let elementVd" [attr.colspan]="displayedColumnsVd.length">
           <div class="example-element-detail" [@detailExpand]="elementVd.isExpanded ? 'expanded' : 'collapsed'">
 
-            <table  #tableItensVd mat-table class="expanding-table" [dataSource]="elementVd.itensVd">
+            <table  #tableItensVd mat-table class="expanding-table" [dataSource]="elementVd.itensVdDTO">
 
              <tr mat-row *matRowDef=" let row; columns: displayedColumns;"></tr>
               <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

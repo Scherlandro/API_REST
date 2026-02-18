@@ -3,8 +3,10 @@ package com.biontecapi.serviceImpl;
 
 import com.biontecapi.dtos.VendasDto;
 import com.biontecapi.mapper.VendasMapper;
+import com.biontecapi.model.Cliente;
 import com.biontecapi.model.ContasAReceber;
 import com.biontecapi.model.Vendas;
+import com.biontecapi.repository.ClienteRepository;
 import com.biontecapi.repository.VendasRepository;
 import com.biontecapi.service.ContasAReceberService;
 import com.biontecapi.service.VendasService;
@@ -20,12 +22,14 @@ public class VendasServiceImpl implements VendasService {
     final VendasRepository vendasRepository;
     final ContasAReceberService contasAReceberService;
     final VendasMapper vendasMapper;
+    private final ClienteRepository clienteRepository;
 
-    public VendasServiceImpl(VendasRepository repository, ContasAReceberService contasAReceberService, VendasMapper mapper) {
+    public VendasServiceImpl(VendasRepository repository, ContasAReceberService contasAReceberService, VendasMapper mapper, ClienteRepository clienteRepository) {
 
         this.vendasRepository = repository;
         this.contasAReceberService = contasAReceberService;
         this.vendasMapper = mapper;
+        this.clienteRepository = clienteRepository;
     }
 
     @Override
@@ -56,6 +60,12 @@ public class VendasServiceImpl implements VendasService {
     public Vendas save(VendasDto dto) {
         Vendas vd = new Vendas();
         vd.mapToDTO(dto);
+        if (dto.cliente() != null && dto.cliente().id_cliente() != null) {
+            Cliente cliente = clienteRepository.findById(dto.cliente().id_cliente())
+                    .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
+            vd.setCliente(cliente);
+            vd.setNomeCliente(cliente.getNomeCliente());
+        }
         Vendas vendaSalva = vendasRepository.save(vd);
         // Se a venda for parcelada (ex: mais de 1 parcela), gera o contas a receber
         if (vendaSalva.getQtdDeParcelas() != null && vendaSalva.getQtdDeParcelas() > 1) {

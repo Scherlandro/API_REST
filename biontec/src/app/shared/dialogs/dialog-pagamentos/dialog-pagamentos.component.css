@@ -6,7 +6,7 @@
   line-height: 1%;
   padding: 10px;
   display: grid;
-  grid-template-columns: 1fr auto;
+  grid-template-columns: auto 72%;
   gap: 10px;
   max-height: min-content;
 }
@@ -24,6 +24,7 @@
 }
 
 .table-pg {
+  width: auto;
   background-color: rgba(51, 33, 83, 0.07);
   border-radius: 20px;
 }

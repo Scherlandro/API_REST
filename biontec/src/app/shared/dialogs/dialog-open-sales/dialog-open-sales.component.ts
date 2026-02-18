@@ -61,7 +61,9 @@ export class DialogOpenSalesComponent implements OnInit {
     private productService: ProductService
   ) {
     this.venda = data as any;
-
+    if (!this.venda.cliente) {
+      this.venda.cliente = {} as ICliente;
+    }
     this.tagVd = data.tagVd;
     this.tagItemVd = data.tagItemVd;
     this.fase = data.fase;
@@ -193,35 +195,28 @@ export class DialogOpenSalesComponent implements OnInit {
 
 
   iniciarVd(venda: iVendas) {
-    if (this.clienteControl.invalid || this.funcionarioControl.invalid) {
-      this.onError('Preencha cliente e atendente');
+
+    const clienteSelecionado: any = this.clienteControl.value;
+    const funcionarioSelecionado: any = this.funcionarioControl.value;
+
+    if (!clienteSelecionado || typeof clienteSelecionado === 'string') {
+      this.onError('Por favor, selecione um cliente da lista (clique na opção).');
       return;
     }
 
-    const cliente: any = this.clienteControl.value;
-    const funcionario: any = this.funcionarioControl.value;
-
-    if (cliente && typeof cliente === 'object') {
-      venda.cliente.id_cliente = cliente.id_cliente;
-      venda.cliente.nomeCliente = cliente.nomeCliente;
+    if (!funcionarioSelecionado || typeof funcionarioSelecionado === 'string') {
+      this.onError('Por favor, selecione um atendente da lista.');
+      return;
     }
 
-    if (funcionario && typeof funcionario === 'object') {
-      venda.idFuncionario = funcionario.id_funcionario;
-      venda.nomeFuncionario = funcionario.nomeFuncionario;
-    }
-
-    const dataAtual = new Date();
-    venda.dtVenda = this.formatarDataParaBackend(dataAtual);
-
-
+    console.log('dados Venda ', venda)
     const vendaParaCriar: any = {
       idVenda: null,
-      idFuncionario: venda.idFuncionario,
-      nomeFuncionario: venda.nomeFuncionario,
-      idCliente: venda.cliente.id_cliente,
-      nomeCliente: venda.cliente.nomeCliente,
-      dtVenda: venda.dtVenda,// || dataAtual.toISOString(),
+      idFuncionario: funcionarioSelecionado.id_funcionario,
+      nomeFuncionario: funcionarioSelecionado.nomeFuncionario,
+      idCliente: clienteSelecionado.id_cliente, // Pegamos direto do objeto do autocomplete
+      nomeCliente: clienteSelecionado.nomeCliente,
+      dtVenda: this.formatarDataParaBackend(new Date()),
       itensVd: [],
       qtdDeParcelas: 0,
       subtotal: 0,
@@ -230,15 +225,18 @@ export class DialogOpenSalesComponent implements OnInit {
       formasDePagamento: ""
     };
 
-    this.vendaServices.addVenda(vendaParaCriar).subscribe({
-         next: (vendaCriada) => {
-            this.dialogRef.close(vendaCriada);
-          },
-          error: (err) => {
-            this.onError('Erro ao criar a Venda');
-            console.error(err);
-          }
-        });
+    console.log('Enviando para o banco:', vendaParaCriar);
+
+  this.vendaServices.addVenda(vendaParaCriar).subscribe({
+      next: (vendaCriada) => {
+        this.notificationMsg.success('Venda iniciada com sucesso!');
+        this.dialogRef.close(vendaCriada);
+      },
+      error: (err) => {
+        this.onError('Erro ao criar a Venda no servidor');
+        console.error(err);
+      }
+    });
 
   }
 
