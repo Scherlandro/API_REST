@@ -27,6 +27,7 @@ export class DialogOpenSalesComponent implements OnInit {
   destroy$ = new Subject<void>();
   venda!: iVendas;
   itensVd!: iItensVd;
+  cliente$!: ICliente;
   tagVd: boolean;
   tagItemVd: boolean;
   fase: FaseVenda;
@@ -195,7 +196,7 @@ export class DialogOpenSalesComponent implements OnInit {
 
 
   iniciarVd(venda: iVendas) {
-
+    console.log('ClienteControl.value ', this.clienteControl.value)
     const clienteSelecionado: any = this.clienteControl.value;
     const funcionarioSelecionado: any = this.funcionarioControl.value;
 
@@ -212,10 +213,9 @@ export class DialogOpenSalesComponent implements OnInit {
     console.log('dados Venda ', venda)
     const vendaParaCriar: any = {
       idVenda: null,
+      cliente: this.clienteControl.value,
       idFuncionario: funcionarioSelecionado.id_funcionario,
       nomeFuncionario: funcionarioSelecionado.nomeFuncionario,
-      idCliente: clienteSelecionado.id_cliente, // Pegamos direto do objeto do autocomplete
-      nomeCliente: clienteSelecionado.nomeCliente,
       dtVenda: this.formatarDataParaBackend(new Date()),
       itensVd: [],
       qtdDeParcelas: 0,
@@ -227,7 +227,7 @@ export class DialogOpenSalesComponent implements OnInit {
 
     console.log('Enviando para o banco:', vendaParaCriar);
 
-  this.vendaServices.addVenda(vendaParaCriar).subscribe({
+ this.vendaServices.addVenda(vendaParaCriar).subscribe({
       next: (vendaCriada) => {
         this.notificationMsg.success('Venda iniciada com sucesso!');
         this.dialogRef.close(vendaCriada);
