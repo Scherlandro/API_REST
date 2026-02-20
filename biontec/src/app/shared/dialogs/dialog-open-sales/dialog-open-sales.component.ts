@@ -74,8 +74,7 @@ export class DialogOpenSalesComponent implements OnInit {
       this.itensVd?.qtdVendidas || 1,      [Validators.required, Validators.min(1)]
     );
 
-    console.log('Cliente ', data)
-    console.log('dataFase: ' , data.fase , 'Fase ', this.fase)
+    console.log('Dados em OpenSales ', data)
   }
 
 
@@ -321,8 +320,8 @@ export class DialogOpenSalesComponent implements OnInit {
       dtRegistro: ""
     };
 
-    console.log('Id do Novo Item ', novoItem.idItensVd, 'IdVenda', this.venda.idVenda )
-    if(novoItem.idItensVd == null || novoItem.codVenda !== 0){
+    console.log('Novo Item ', novoItem, 'IdVenda', this.venda.idVenda )
+  if(novoItem.idItensVd == null || novoItem.codVenda !== 0){
       this.ItensVdService.createElements(novoItem).subscribe({
         next: (itemCriado) => {
           this.notificationMsg.warn('Item adicionado!');
@@ -335,7 +334,7 @@ export class DialogOpenSalesComponent implements OnInit {
       });
     }
     this.voltar();
-    this.dialogRef.close();
+  //  this.dialogRef.close();
     /* limpa venda campvenda
     this.produtoControl.reset();*/
   }

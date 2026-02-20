@@ -95,17 +95,19 @@ export class VendaComponent implements OnInit {
     // Alternar o estado da linha clicada
     element.isExpanded = !element.isExpanded;
 
-    if (element.isExpanded && element.itensVd) {
+    if (element.isExpanded && element.itensVdDTO) {
+
       var soma = 0;
-      for (var i = 0; i < element.itensVd.length; i++) {
-        soma += element.itensVd.map((p: iItensVd) => p.valorParcial)[i];
+      for (var i = 0; i < element.itensVdDTO.length; i++) {
+        soma += element.itensVdDTO.map((p: iItensVd) => p.valorParcial)[i];
       }
       element.totalgeral = soma;
-      this.tbSourceItensVd$.data = element.itensVd.map((item: iItensVd) => ({
+      this.tbSourceItensVd$.data = element.itensVdDTO.map((item: iItensVd) => ({
         ...item,
         valVenda: item.valVenda,
         valorParcial: item.valorParcial
       }));
+
       this.updateVd(element);
     }
   }
@@ -125,6 +127,7 @@ export class VendaComponent implements OnInit {
   }
 
   aplicarFiltro(valor: string) {
+    console.log('Filtro ', valor);
     valor = valor.trim().toLowerCase();
     this.tbSourceVd$.filter = valor;
   }
@@ -210,6 +213,7 @@ export class VendaComponent implements OnInit {
     });
 
      dialogRef.afterClosed().subscribe(res=>{
+       this.toggleRow(res)
        if(res){
          if (fase === 'newVd') {
            // Adiciona a nova venda ao início da lista
@@ -224,7 +228,7 @@ export class VendaComponent implements OnInit {
      });
 
      /*
-     // Exemplo de lógica para atualizar apenas os itens daquela venda sem dar refresh na página toda
+     // atualizar apenas os itens daquela venda sem dar refresh na página toda
 dialogRef.afterClosed().subscribe(novoItem => {
   if (novoItem && fase === 'addItemVd') {
     const venda = this.tbSourceVd$.data.find(v => v.idVenda === novoItem.codVenda);
@@ -285,7 +289,6 @@ dialogRef.afterClosed().subscribe(novoItem => {
 
   finalizarOperacao(origem: iVendas) {
 
-    console.log('iniciar FinalizarOperação', origem)
     const novoPagamento: iPagamento = {
       origemId: origem.idVenda,
       pagador: origem.cliente,

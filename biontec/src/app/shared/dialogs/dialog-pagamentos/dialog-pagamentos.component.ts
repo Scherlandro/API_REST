@@ -145,7 +145,7 @@ export class DialogPagamentosComponent implements OnInit, OnDestroy{
       tipoPagamento: forma === 'Pix' ? 'pix' : 'boleto'
     };
 
-    this.pagamentoService.gerarCobrancaEfiViaPix(payload).subscribe({
+    /*this.pagamentoService.gerarCobrancaEfiViaPix(payload).subscribe({
       next: (res) => {
         if (forma === 'Pix') {
           // Efí retorna o QR Code em base64 e a cópia e cola
@@ -158,7 +158,7 @@ export class DialogPagamentosComponent implements OnInit, OnDestroy{
         this.listarPagamentos(this.data.origemId, this.data.tipoOrigem);
       },
       error: (err) => this.notificationMsg.sendError("Erro ao gerar cobrança na Efí")
-    });
+    });*/
   }
 
 
