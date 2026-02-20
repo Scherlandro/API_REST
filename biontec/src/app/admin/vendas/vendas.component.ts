@@ -67,6 +67,7 @@ export class VendaComponent implements OnInit {
 
   ngOnInit(): void {
     this.listarVenda();
+    this.adapterFilterPredicate();
   }
 
   listarVenda() {
@@ -126,10 +127,22 @@ export class VendaComponent implements OnInit {
     //  this.tbData.splice(this.ruwSelec, 1);
   }
 
+  adapterFilterPredicate(){
+    // Customização do filtro para acessar propriedades aninhadas
+    this.tbSourceVd$.filterPredicate = (data: iVendas, filter: string) => {
+      // Aqui são concatenados os campos que são incluidos na busca
+      const buscaCustomizada = (
+        (data.cliente?.nomeCliente || '') +
+        (data.idVenda || '') +
+        (data.nomeFuncionario || '')
+      ).toLowerCase();
+      return buscaCustomizada.includes(filter);
+    };
+  }
+
   aplicarFiltro(valor: string) {
-    console.log('Filtro ', valor);
-    valor = valor.trim().toLowerCase();
-    this.tbSourceVd$.filter = valor;
+    const filterValue = valor ? valor.toString().trim().toLowerCase() : '';
+    this.tbSourceVd$.filter = filterValue;
   }
 
   onError(errrorMsg: string) {
