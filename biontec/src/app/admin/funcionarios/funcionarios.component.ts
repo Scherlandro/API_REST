@@ -69,14 +69,7 @@ export class FuncionariosComponent implements OnInit {
       });
   }
 
-  /*
-    buscar(){
-      if(this.funcionarioControl.value == ""){  this.ngOnInit();
-      }else{  this.dataSourceFuncionario$ = this.dataSourceFuncionario$.filter(
-          res => { return res.estado.toLocaleLowerCase()
-              .match(this.funcionarioControl.value.toLocaleLowerCase());  })}
-    }
-  */
+
 
   openDialogo(eventFunc: IFuncionario) {
     console.log("Dados do elementoDialog", eventFunc)
@@ -84,20 +77,21 @@ export class FuncionariosComponent implements OnInit {
       width: '300px',
       data: eventFunc === null ? {
         id_funcionario: null, nomeFuncionario: '', dt_admissao: '',dt_demissao: '' , pessoa: '',
-        cpf: '', cnpj: '', cep: '', numero: '', telefone: '', celular: '', zap: '',
+        cpf: '', cnpj: '', cep: '', numero: '', telefone: '', celular: '', zap: '', email: ''
       } : {
         id_funcionario: eventFunc.idfuncionario,
         nomeFuncionario: eventFunc.nomeFuncionario,
-        dt_admissao: eventFunc.dt_admissao,
-        dt_demissao: eventFunc.dt_demissao,
+        dt_admissao: eventFunc.dtAdmissao,
+        dt_demissao: eventFunc.dtDemissao,
         pessoa: eventFunc.pessoa,
         cpf: eventFunc.cpf,
         cnpj: eventFunc.cnpj,
         cep: eventFunc.cep,
-        numero: eventFunc.numero,
+        numero: eventFunc.n_residencial,
         telefone: eventFunc.telefone,
         celular: eventFunc.celular,
         zap: eventFunc.zap,
+        email: eventFunc.email
       }
     });
 

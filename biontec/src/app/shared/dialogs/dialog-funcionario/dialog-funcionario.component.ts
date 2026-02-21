@@ -1,8 +1,8 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
-import {ICliente} from "../../../interfaces/cliente";
 import {NgForm} from "@angular/forms";
 import {ConsultaCepService} from "../../../services/consulta-cep.service";
+import {IFuncionario} from "../../../interfaces/funcionario";
 
 @Component({
   selector: 'app-dialog-funcionario-editor',
@@ -10,25 +10,28 @@ import {ConsultaCepService} from "../../../services/consulta-cep.service";
   styleUrls: ['./dialog-funcionario.component.css']
 })
 export class DialogFuncionarioComponent implements OnInit {
- element!: ICliente;
+
   isChange!: boolean;
+  iFuncionario!: IFuncionario;
 
   constructor(
     @Inject(MAT_DIALOG_DATA)
-    public iCliente: ICliente,
+    public data: any,
     public dialogRef: MatDialogRef<DialogFuncionarioComponent>,
     private cepService: ConsultaCepService
-  ) {}
+  ) {
+    console.log('Data funcionário ', data);
+  }
 
 
   ngOnInit(): void {
-    if (this.iCliente.id_cliente != null) {
+    if (this.iFuncionario.idfuncionario != null) {
       this.isChange = true;
     } else {
       this.isChange = false;
     }
   }
-//  https://www.fabricadecodigo.com/criar-formulario-reactive-forms/
+
   consultaCEP(cep:string, form:NgForm) {
     // Nova variável "cep" somente com dígitos.
     cep = cep.replace(/\D/g, '');

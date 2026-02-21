@@ -29,9 +29,9 @@ public class FuncionarioController {
          return ResponseEntity.ok(funcs.stream().map(Funcionario::toDTO).toList());
     }
 
-    @GetMapping(path = "/list-id/{id_funcionario}")
-    public ResponseEntity<FuncionarioDTO> consultarPorID(@PathVariable("id_funcionario") Integer id_funcionario) {
-        Optional<Funcionario> func = funcionarioService.findById(id_funcionario);
+    @GetMapping(path = "/list-id/{idFuncionario}")
+    public ResponseEntity<FuncionarioDTO> consultarPorID(@PathVariable("idFuncionario") Integer idFuncionario) {
+        Optional<Funcionario> func = funcionarioService.findById(idFuncionario);
         return func.map(Funcionario::toDTO).map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
@@ -55,9 +55,9 @@ public class FuncionarioController {
         return funcionarioService.save(funcionario);
     }
 
-    @DeleteMapping(path = "/delete/{id_funcionario}")
-    public void excluir(@PathVariable("id_funcionario") Integer id_funcionario){
-        funcionarioService.delete(id_funcionario);
+    @DeleteMapping(path = "/delete/{idFuncionario}")
+    public void excluir(@PathVariable("idFuncionario") Integer idFuncionario){
+        funcionarioService.delete(idFuncionario);
     }
 }
 
