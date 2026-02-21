@@ -16,7 +16,7 @@
              matInput
              [formControl]="funcionarioControl"
              [matAutocomplete]="autofunc"
-             (keypress)="setupAutocompleteFilters()"/>
+              />
       <mat-error>Campo Obrigatório não preenchido.</mat-error>
       <mat-autocomplete #autofunc="matAutocomplete" [displayWith]="displayFunc">
         <mat-option *ngFor="let funcionario of funcionarioFilted | async" [value]="funcionario">
@@ -59,7 +59,7 @@
              matInput
              [formControl]="clienteControl"
              [matAutocomplete]="autcli"
-             (keypress)="setupAutocompleteFilters()"/>
+              />
       <mat-error>Campo Obrigatório não preenchido.</mat-error>
       <mat-autocomplete #autcli="matAutocomplete" [displayWith]="displayCli">
         <mat-option *ngFor="let cliente of clientesFiltradvenda | async" [value]="cliente">
@@ -70,7 +70,7 @@
 
     <mat-form-field appearance="fill"*ngIf="fase == 'editarVd' || fase == 'addItemVd' " >
       <mat-label>Cliente</mat-label>
-      <input matInput [value]="venda.cliente.nomeCliente" disabled>
+      <input matInput [value]="venda.cliente?.nomeCliente" disabled>
     </mat-form-field>
 
     <!--  <mat-form-field  appearance="fill">

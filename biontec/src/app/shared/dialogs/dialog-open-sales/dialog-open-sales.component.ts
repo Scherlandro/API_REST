@@ -83,12 +83,15 @@ export class DialogOpenSalesComponent implements OnInit {
       this.fase = this.data.fase;
       this.venda = this.data.venda;
       this.itensVd = this.data.itensVd;
+      if (!this.venda.cliente) {
+        this.venda.cliente = {} as ICliente;
+      }
       this.updateTotal();
     }
     this.listarProdutvenda();
-     this.setupAutocompleteFilters();
-    this.clienteControl.setValue(this.venda.cliente.nomeCliente);
-    this.funcionarioControl.setValue(this.venda.nomeFuncionario);
+    this.setupAutocompleteFilters();
+    this.clienteControl.setValue(this.venda?.cliente.nomeCliente || '');
+    this.funcionarioControl.setValue(this.venda?.nomeFuncionario || '');
     if (this.itensVd && this.itensVd.qtdVendidas) {
       // emitEvent: false evita que o subscribe abaixo seja disparado desnecessariamente na inicialização
       this.quantidadeControl.setValue(this.itensVd.qtdVendidas, { emitEvent: false });
@@ -113,7 +116,7 @@ export class DialogOpenSalesComponent implements OnInit {
   }
 
   // =============== Autocomplete for multiple elements ==================
-  setupAutocompleteFilters() {
+ setupAutocompleteFilters() {
     this.funcionarioFilted = this.funcionarioControl.valueChanges.pipe(
       startWith(''),
       debounceTime(250),
@@ -195,7 +198,6 @@ export class DialogOpenSalesComponent implements OnInit {
 
 
   iniciarVd(venda: iVendas) {
-    console.log('ClienteControl.value ', this.clienteControl.value)
     const clienteSelecionado: any = this.clienteControl.value;
     const funcionarioSelecionado: any = this.funcionarioControl.value;
 
@@ -251,9 +253,6 @@ export class DialogOpenSalesComponent implements OnInit {
     const funcionario: any = this.funcionarioControl.value;
     const dataAtual = new Date();
     const statusOs: any = this.statusOsControl.value
-
-    // ATENÇÃO: Se o autocomplete já tiver um objeto, pegamvenda a propriedade.
-    // Se o usuário não mudou nada, ou se o controle for apenas texto, tratamvenda aqui:
 
     if (cliente && typeof cliente === 'object') {
       venda.cliente.id_cliente = cliente.id_cliente;
@@ -320,7 +319,6 @@ export class DialogOpenSalesComponent implements OnInit {
       dtRegistro: ""
     };
 
-    console.log('Novo Item ', novoItem, 'IdVenda', this.venda.idVenda )
   if(novoItem.idItensVd == null || novoItem.codVenda !== 0){
       this.ItensVdService.createElements(novoItem).subscribe({
         next: (itemCriado) => {

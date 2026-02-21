@@ -87,17 +87,32 @@ export class VendaComponent implements OnInit {
   }
 
   toggleRow(element: any) {
+    // Se não houver elemento, sai do método e não faz nada.
+    if (!element) return;
     // Fechar todas as outras linhas expandidas
     this.tbSourceVd$.data.forEach((item:any) => {
-      if (item !== element && item.isExpanded) {
-        item.isExpanded = false;
-      }
+    //  if (item !== element && item.isExpanded) {
+      if (item !== element) item.isExpanded = false;
     });
     // Alternar o estado da linha clicada
     element.isExpanded = !element.isExpanded;
 
-    if (element.isExpanded && element.itensVdDTO) {
+    if (element.isExpanded ) {
+      // Cálculo simplificado usando a função que criamos
+      const novaSoma = this.calcularTotalVenda(element);
 
+      // Só atualiza no servidor se o total mudou de fato
+      if (element.totalgeral !== novaSoma) {
+        element.totalgeral = novaSoma;
+        this.updateVd(element);
+      }
+
+     // this.tbSourceItensVd$.data = [...element.itensVdDTO];
+    }
+
+
+/*    if (element.isExpanded && element.itensVdDTO) {
+      const novaSoma = this.calcularTotalVenda(element);
       var soma = 0;
       for (var i = 0; i < element.itensVdDTO.length; i++) {
         soma += element.itensVdDTO.map((p: iItensVd) => p.valorParcial)[i];
@@ -110,7 +125,7 @@ export class VendaComponent implements OnInit {
       }));
 
       this.updateVd(element);
-    }
+    }*/
   }
 
    updateVd(vd: iVendas) {
@@ -128,17 +143,27 @@ export class VendaComponent implements OnInit {
   }
 
   adapterFilterPredicate(){
-    // Customização do filtro para acessar propriedades aninhadas
-    this.tbSourceVd$.filterPredicate = (data: iVendas, filter: string) => {
-      // Aqui são concatenados os campos que são incluidos na busca
-      const buscaCustomizada = (
-        (data.cliente?.nomeCliente || '') +
-        (data.idVenda || '') +
-        (data.nomeFuncionario || '')
-      ).toLowerCase();
-      return buscaCustomizada.includes(filter);
-    };
-  }
+    // Customização do filtro para acessar propriedades aninhadas e buscas profundas de campos
+      this.tbSourceVd$.filterPredicate = (data: iVendas, filter: string) => {
+        const searchTerms = filter.toLowerCase();
+
+        // Campos do Cliente
+        const nome = data.cliente?.nomeCliente?.toLowerCase() || '';
+        const cpf = data.cliente?.cpf?.toLowerCase() || '';
+        const cnpj = data.cliente?.cnpj?.toLowerCase() || '';
+
+        // Campos da Venda
+        const idVenda = data.idVenda?.toString() || '';
+        const funcionario = data.nomeFuncionario?.toLowerCase() || '';
+
+        // Retorna verdadeiro se o termo de busca estiver em QUALQUER um desses campos
+        return nome.includes(searchTerms) ||
+          cpf.includes(searchTerms) ||
+          cnpj.includes(searchTerms) ||
+          idVenda.includes(searchTerms) ||
+          funcionario.includes(searchTerms);
+      };
+    }
 
   aplicarFiltro(valor: string) {
     const filterValue = valor ? valor.toString().trim().toLowerCase() : '';
@@ -149,6 +174,12 @@ export class VendaComponent implements OnInit {
     this.dialog.open(ErrorDiologComponent, {
       data: errrorMsg
     });
+  }
+
+  calcularTotalVenda(venda: any): number {
+    const itens = venda.itensVdDTO || venda.itensVd || [];
+    if (itens.length === 0) return 0;
+    return itens.reduce((acc: number, item: any) => acc + (item.valorParcial || 0), 0);
   }
 
   openNewVd() {
@@ -196,7 +227,7 @@ export class VendaComponent implements OnInit {
 
     const vdBase = {
       idVenda: elementMain?.idVenda || 0,
-      cliente: elementMain?.cliente || '',
+      cliente: elementMain?.cliente || null,
       dtVenda: elementMain?.dtVenda || new Date().toISOString(),
       ...elementMain // Mantém outras propriedades existentes
     };
@@ -225,40 +256,56 @@ export class VendaComponent implements OnInit {
       }
     });
 
-     dialogRef.afterClosed().subscribe(res=>{
-       this.toggleRow(res)
-       if(res){
+    dialogRef.afterClosed().subscribe(res => {
+      if (res) {
+        // 1. Recarrega os dados para garantir que temos a lista de itens atualizada do banco
+        this.vendasService.getAllSales().subscribe(vendasAtualizadas => {
+          this.tbSourceVd$.data = vendasAtualizadas;
+
+          // 2. Localiza a venda que foi alterada (usando o codVenda do item retornado ou o id da venda)
+          const idVendaAlterada = res.codVenda || res.idVenda;
+          const vendaNoArray = this.tbSourceVd$.data.find(v => v.idVenda === idVendaAlterada);
+
+          if (vendaNoArray) {
+            // 3. Calcula o novo total com os itens que acabaram de chegar
+            const novoTotal = this.calcularTotalVenda(vendaNoArray);
+            vendaNoArray.totalgeral = novoTotal;
+
+            // 4. SALVA NO BANCO IMEDIATAMENTE (O passo que estava faltando!)
+            this.vendasService.updateVd(vendaNoArray).subscribe({
+              next: () => {
+                this.notificationMsg.success('Total da venda atualizado no servidor!');
+                // Abre a linha para o usuário ver o resultado
+                this.toggleRow(vendaNoArray);
+              },
+              error: () => this.onError('O item foi salvo, mas o total da venda não pôde ser atualizado.')
+            });
+          }
+        });
+      }
+    });
+
+  /*   dialogRef.afterClosed().subscribe(res=> {
+       if (res) {
          if (fase === 'newVd') {
            // Adiciona a nova venda ao início da lista
            this.tbSourceVd$.data = [res, ...this.tbSourceVd$.data];
            this.notificationMsg.success('Venda iniciada com sucesso!');
          } else if (fase === 'addItemVd' || fase === 'editarItemVd') {
-           // Se o retorno for um item ou venda atualizada,
-           // recarregue a venda específica ou a lista
-           this.listarVenda();
+           this.vendasService.getAllSales().subscribe(data => {
+             this.tbSourceVd$.data = data;
+
+             // Se quisermos manter a linha que o usuário estava editando aberta e somada:
+             const vendaEditada = this.tbSourceVd$.data.find(v => v.idVenda === (res.codVenda || res.idVenda));
+             if (vendaEditada) {
+               vendaEditada.totalgeral = this.calcularTotalVenda(vendaEditada);
+               this.toggleRow(vendaEditada); // Abre a linha com o novo valor
+             }
+             //  this.listarVenda();
+           });
          }
        }
-     });
-
-     /*
-     // atualizar apenas os itens daquela venda sem dar refresh na página toda
-dialogRef.afterClosed().subscribe(novoItem => {
-  if (novoItem && fase === 'addItemVd') {
-    const venda = this.tbSourceVd$.data.find(v => v.idVenda === novoItem.codVenda);
-    if (venda) {
-      if (!venda.itensVd) venda.itensVd = [];
-      venda.itensVd = [...venda.itensVd, novoItem];
-
-      // Atualiza a fonte de dados da tabela interna que está visível
-      this.tbSourceItensVd$.data = [...venda.itensVd];
-
-      // Força o Material a ver a mudança na tabela principal
-      this.tbSourceVd$.data = [...this.tbSourceVd$.data];
-    }
-  }
-});
-      */
-
+     })*/
   }
 
   deleteVd(eventVd: iVendas) {
@@ -276,7 +323,35 @@ dialogRef.afterClosed().subscribe(novoItem => {
     });
   }
 
+  deleteElement(item: iItensVd) {
+    this.notificationMsg.openConfirmDialog('Tem certeza em REMOVER este item?')
+      .afterClosed().subscribe(res => {
+      if (!res) return;
 
+      this.itensVdService.deleteItensVd(item).subscribe({
+        next: () => {
+          const vendaPai = this.tbSourceVd$.data.find(vd => vd.idVenda === item.codVenda);
+
+          if (vendaPai) {
+            // Remove o item da lista local
+            vendaPai.itensVd = vendaPai.itensVd.filter((i: any) => i.idItensVd !== item.idItensVd);
+
+            // Recalcula o total
+            vendaPai.totalgeral = this.calcularTotalVenda(vendaPai);
+
+            // SALVA A VENDA COM O NOVO TOTAL (Importante!)
+            this.vendasService.updateVd(vendaPai).subscribe(() => {
+              this.tbSourceVd$.data = [...this.tbSourceVd$.data];
+              this.notificationMsg.warn('Item removido e venda atualizada!');
+            });
+          }
+        },
+        error: (err) => this.onError('Erro ao remover o item')
+      });
+    });
+  }
+
+/*
   deleteElement(item: iItensVd) {
     this.notificationMsg.openConfirmDialog('Tem certeza em REMOVER este item ?')
       .afterClosed().subscribe(res => {
@@ -298,7 +373,7 @@ dialogRef.afterClosed().subscribe(novoItem => {
           error: (err)=> this.onError('Erro ao remover o item')
         });
       });
-  }
+  }*/
 
   finalizarOperacao(origem: iVendas) {
 
@@ -315,6 +390,7 @@ dialogRef.afterClosed().subscribe(novoItem => {
         data: { ...novoPagamento }
       });
   }
+
 
 
 }
