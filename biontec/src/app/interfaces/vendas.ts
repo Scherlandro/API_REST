@@ -13,7 +13,7 @@ export interface iVendas {
   totalgeral: number,
   formasDePagamento: string,
   qtdDeParcelas: number,
-  itensVd: iItensVd[] | any,
+  itensVdDTO: iItensVd[] | any,
   produtos?: iProduto[] | any,
   selecionado?:boolean
 };

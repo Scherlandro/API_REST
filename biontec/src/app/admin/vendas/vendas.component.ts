@@ -331,16 +331,10 @@ export class VendaComponent implements OnInit {
       this.itensVdService.deleteItensVd(item).subscribe({
         next: () => {
           const vendaPai = this.tbSourceVd$.data.find(vd => vd.idVenda === item.codVenda);
-
           if (vendaPai) {
-             console.log('Valor do vendaPai ', vendaPai.itensVd.filter((i: any) => i.idItensVd !== item.idItensVd))   // Remove o item da lista local
-            vendaPai.itensVd = vendaPai.itensVd.filter((i: any) => i.idItensVd !== item.idItensVd);
-
-            // Recalcula o total
+            vendaPai.itensVdDTO = vendaPai.itensVdDTO.filter((i: any) => i.idItensVd !== item.idItensVd);
             vendaPai.totalgeral = this.calcularTotalVenda(vendaPai);
-
-            // SALVA A VENDA COM O NOVO TOTAL (Importante!)
-            this.vendasService.updateVd(vendaPai).subscribe(() => {
+             this.vendasService.updateVd(vendaPai).subscribe(() => {
               this.tbSourceVd$.data = [...this.tbSourceVd$.data];
               this.notificationMsg.warn('Item removido e venda atualizada!');
             });
