@@ -13,11 +13,10 @@ export interface iVendas {
   totalgeral: number,
   formasDePagamento: string,
   qtdDeParcelas: number,
-  itensVdDTO: iItensVd[] | any,
+  itensVd: iItensVd[] | any,
   produtos?: iProduto[] | any,
   selecionado?:boolean
 };
 
 export type FaseVenda = 'newVd' | 'editarVd' | 'addItemVd' | 'editarItemVd';
-//export interface FaseVenda{ newVd:'newVd' , editarVd:'editarVd' ,addItemVd: 'addItemVd' , editarItemVd: 'editarItemVd'}
 

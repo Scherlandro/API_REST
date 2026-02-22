@@ -44,7 +44,7 @@ export class CarrinhoDeComprasComponent implements OnInit {
     totalgeral: 0,
     formasDePagamento: "Cartão de Crédito",
     qtdDeParcelas: 1,
-    itensVdDTO: [],
+    itensVd: [],
       produtos:[]
   };
 
@@ -167,7 +167,7 @@ export class CarrinhoDeComprasComponent implements OnInit {
           totalgeral: 0,
           formasDePagamento: "Cartão de Crédito",
           qtdDeParcelas: 1,
-          itensVdDTO: [],
+          itensVd: [],
           produtos:produtosArray,
           selecionado: false,
         }];
@@ -193,7 +193,7 @@ export class CarrinhoDeComprasComponent implements OnInit {
   carregarItensVenda2(idVenda: string): void {
     this.itensVdService.listarItensVdPorCodVenda(idVenda).subscribe({
       next: (itens: iItensVd[]) => {
-        this.venda.itensVdDTO = itens;
+        this.venda.itensVd = itens;
         this.calcularTotais();
         this.carregando = false;
       },
@@ -219,14 +219,14 @@ export class CarrinhoDeComprasComponent implements OnInit {
       totalgeral: 0,
       formasDePagamento: "Cartão de Crédito",
       qtdDeParcelas: 1,
-      itensVdDTO: [],
+      itensVd: [],
       produtos: []
     };
     this.carregando = false;
   }
 
   calcularTotais(): void {
-    const subtotal = this.venda.itensVdDTO.reduce((sum:any, item:any) => sum + item.valorParcial, 0);
+    const subtotal = this.venda.itensVd.reduce((sum:any, item:any) => sum + item.valorParcial, 0);
     this.venda.subtotal = subtotal.toFixed(2);
     // Simulando desconto de 10% para compras acima de R$ 1000
     const desconto = subtotal > 1000 ? subtotal * 0.1 : 0;
@@ -237,7 +237,7 @@ export class CarrinhoDeComprasComponent implements OnInit {
   }
 
   removerItem(index: number): void {
-    const item = this.venda.itensVdDTO[index];
+    const item = this.venda.itensVd[index];
     const itemId = item.idItensVd;
 
     if (itemId) {
@@ -245,13 +245,13 @@ export class CarrinhoDeComprasComponent implements OnInit {
       // Enquanto não tenho no serviço, vou simular com o editElement
       this.itensVdService.editElement(item).subscribe({
         next: () => {
-          this.venda.itensVdDTO.splice(index, 1);
+          this.venda.itensVd.splice(index, 1);
           this.calcularTotais();
         },
         error: (err) => console.error('Erro ao remover item:', err)
       });
     } else {
-      this.venda.itensVdDTO.splice(index, 1);
+      this.venda.itensVd.splice(index, 1);
       this.calcularTotais();
     }
   }
@@ -259,7 +259,7 @@ export class CarrinhoDeComprasComponent implements OnInit {
   adicionarItem(novoItem: iItensVd): void {
     this.itensVdService.createElements(novoItem).subscribe({
       next: (itemCriado) => {
-        this.venda.itensVdDTO.push(itemCriado);
+        this.venda.itensVd.push(itemCriado);
         this.calcularTotais();
       },
       error: (err) => console.error('Erro ao adicionar item:', err)
@@ -316,13 +316,13 @@ export class CarrinhoDeComprasComponent implements OnInit {
 
         forkJoin(requisicoes).subscribe({
           next: (itensComImagem) => {
-            this.venda.itensVdDTO = itensComImagem;
+            this.venda.itensVd = itensComImagem;
             this.calcularTotais();
             this.carregando = false;
           },
           error: (err) => {
             console.error('Erro ao carregar imagens:', err);
-            this.venda.itensVdDTO = itens; // fallback sem imagens
+            this.venda.itensVd = itens; // fallback sem imagens
             this.calcularTotais();
             this.carregando = false;
           }

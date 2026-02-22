@@ -99,8 +99,8 @@ export class DialogOpenSalesComponent implements OnInit {
 
     this.quantidadeControl.valueChanges.subscribe(novoValor => {
       // Verifica se o valor é válido antes de atribuir
-      if (this.venda?.itensVdDTO) {
-        this.venda.itensVdDTO.qtdVendidas = novoValor;
+      if (this.venda?.itensVd) {
+        this.venda.itensVd.qtdVendidas = novoValor;
         this.updateTotal();
       }
     });
@@ -268,7 +268,7 @@ export class DialogOpenSalesComponent implements OnInit {
     venda.dtVenda = dataAtual.toISOString();
     venda.totalgeral = venda.totalgeral || 0;
     //venda.status = typeof statusVd === 'object' ? statusVd : statusVd;
-    venda.itensVdDTO = this.itensVd;
+    venda.itensVd = this.itensVd;
 
 
     console.log(' Vd antes de enviar:', venda,'Id da Venda',

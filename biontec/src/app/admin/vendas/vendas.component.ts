@@ -106,26 +106,7 @@ export class VendaComponent implements OnInit {
         element.totalgeral = novaSoma;
         this.updateVd(element);
       }
-
-     // this.tbSourceItensVd$.data = [...element.itensVdDTO];
     }
-
-
-/*    if (element.isExpanded && element.itensVdDTO) {
-      const novaSoma = this.calcularTotalVenda(element);
-      var soma = 0;
-      for (var i = 0; i < element.itensVdDTO.length; i++) {
-        soma += element.itensVdDTO.map((p: iItensVd) => p.valorParcial)[i];
-      }
-      element.totalgeral = soma;
-      this.tbSourceItensVd$.data = element.itensVdDTO.map((item: iItensVd) => ({
-        ...item,
-        valVenda: item.valVenda,
-        valorParcial: item.valorParcial
-      }));
-
-      this.updateVd(element);
-    }*/
   }
 
    updateVd(vd: iVendas) {
@@ -271,7 +252,7 @@ export class VendaComponent implements OnInit {
             const novoTotal = this.calcularTotalVenda(vendaNoArray);
             vendaNoArray.totalgeral = novoTotal;
 
-            // 4. SALVA NO BANCO IMEDIATAMENTE (O passo que estava faltando!)
+            // 4. SALVA NO BANCO IMEDIATAMENTE
             this.vendasService.updateVd(vendaNoArray).subscribe({
               next: () => {
                 this.notificationMsg.success('Total da venda atualizado no servidor!');
@@ -284,28 +265,6 @@ export class VendaComponent implements OnInit {
         });
       }
     });
-
-  /*   dialogRef.afterClosed().subscribe(res=> {
-       if (res) {
-         if (fase === 'newVd') {
-           // Adiciona a nova venda ao início da lista
-           this.tbSourceVd$.data = [res, ...this.tbSourceVd$.data];
-           this.notificationMsg.success('Venda iniciada com sucesso!');
-         } else if (fase === 'addItemVd' || fase === 'editarItemVd') {
-           this.vendasService.getAllSales().subscribe(data => {
-             this.tbSourceVd$.data = data;
-
-             // Se quisermos manter a linha que o usuário estava editando aberta e somada:
-             const vendaEditada = this.tbSourceVd$.data.find(v => v.idVenda === (res.codVenda || res.idVenda));
-             if (vendaEditada) {
-               vendaEditada.totalgeral = this.calcularTotalVenda(vendaEditada);
-               this.toggleRow(vendaEditada); // Abre a linha com o novo valor
-             }
-             //  this.listarVenda();
-           });
-         }
-       }
-     })*/
   }
 
   deleteVd(eventVd: iVendas) {
@@ -332,7 +291,7 @@ export class VendaComponent implements OnInit {
         next: () => {
           const vendaPai = this.tbSourceVd$.data.find(vd => vd.idVenda === item.codVenda);
           if (vendaPai) {
-            vendaPai.itensVdDTO = vendaPai.itensVdDTO.filter((i: any) => i.idItensVd !== item.idItensVd);
+            vendaPai.itensVd = vendaPai.itensVd.filter((i: any) => i.idItensVd !== item.idItensVd);
             vendaPai.totalgeral = this.calcularTotalVenda(vendaPai);
              this.vendasService.updateVd(vendaPai).subscribe(() => {
               this.tbSourceVd$.data = [...this.tbSourceVd$.data];
@@ -344,30 +303,6 @@ export class VendaComponent implements OnInit {
       });
     });
   }
-
-/*
-  deleteElement(item: iItensVd) {
-    this.notificationMsg.openConfirmDialog('Tem certeza em REMOVER este item ?')
-      .afterClosed().subscribe(res => {
-        if (!res) return;
-        this.itensVdService.deleteItensVd(item).subscribe({
-          next: () => {
-          const vendaPai = this.tbSourceVd$.data.find(vd => vd.idVenda === item.codVenda);
-          if (vendaPai && vendaPai?.itensVd) {
-
-            vendaPai.itensVd = vendaPai.itensVd.filter((i:any) => i.idItensVd !== item.idItensVd);
-            vendaPai.totalgeral = vendaPai.itensVd.reduce(
-              (acc: number, cur:iItensVd)=> acc + (cur.valorParcial || 0), 0);
-
-              this.tbSourceVd$.data = [...this.tbSourceVd$.data];
-              this.tbSourceItensVd$.data = [...vendaPai.itensVd];
-            }
-          this.notificationMsg.warn('Item removido!');
-        },
-          error: (err)=> this.onError('Erro ao remover o item')
-        });
-      });
-  }*/
 
   finalizarOperacao(origem: iVendas) {
 
