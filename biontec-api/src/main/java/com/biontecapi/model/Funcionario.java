@@ -84,4 +84,28 @@ public class Funcionario {
                 n_residencial, complemento,bairro, cidade,telefone,celular,zap,email,obs);
     }
 
+    public void mapToDTO(FuncionarioDTO dto) {
+        if (dto == null) return;
+
+        this.id_funcionario = dto.idFuncionario();
+        this.nomeFuncionario = dto.nomeFuncionario();
+        this.rg = dto.rg();
+        this.cpf = dto.cpf();
+        this.dt_nascimnento = dto.dtNascimnento();
+        this.dt_admissao = dto.dtAdmissao();
+        this.dt_demissao = dto.dtDemissao();
+        this.cargo = dto.cargo();
+        this.salario = dto.salario();
+        this.tipo_logradouro = dto.tipo_logradouro();
+        this.logradouro = dto.logradouro();
+        this.n_residencial = dto.n_residencial();
+        this.complemento = dto.complemento();
+        this.bairro = dto.bairro();
+        this.cidade = dto.cidade();
+        this.telefone = dto.telefone();
+        this.celular = dto.celular();
+        this.zap = dto.zap();
+        this.email = dto.email();
+        this.obs = dto.obs();
+    }
 }

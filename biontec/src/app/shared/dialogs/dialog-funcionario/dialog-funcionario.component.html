@@ -6,117 +6,120 @@
 
     <mat-form-field appearance="fill">
       <mat-label>ID</mat-label>
-      <input matInput [(ngModel)]="iFuncionario.idfuncionario">
+      <input matInput [(ngModel)]="funcionario$.idFuncionario">
     </mat-form-field>
 
   <mat-form-field appearance="fill">
     <mat-label>Nome </mat-label>
-    <input matInput [(ngModel)]="iFuncionario.nomeFuncionario">
+    <input matInput [(ngModel)]="funcionario$.nomeFuncionario">
   </mat-form-field>
 
   <mat-form-field appearance="fill">
     <mat-label>Data Nascimento </mat-label>
-    <input matInput [(ngModel)]="iFuncionario.dtNascimnento">
+    <input matInput [(ngModel)]="funcionario$.dtNascimnento">
   </mat-form-field>
 
   <mat-form-field appearance="fill">
     <mat-label>Adimissão </mat-label>
-    <input matInput [(ngModel)]="iFuncionario.dtAdmissao">
+    <input matInput [(ngModel)]="funcionario$.dtAdmissao">
   </mat-form-field>
 
   <mat-form-field appearance="fill">
     <mat-label>Demissão </mat-label>
-    <input matInput [(ngModel)]="iFuncionario.dtDemissao">
+    <input matInput [(ngModel)]="funcionario$.dtDemissao">
   </mat-form-field>
 
 
   <mat-form-field appearance="fill">
     <mat-label>CPF</mat-label>
-    <input matInput [(ngModel)]="iFuncionario.cpf">
+    <input matInput [(ngModel)]="funcionario$.cpf">
   </mat-form-field>
 
   <mat-form-field appearance="fill">
     <mat-label>RG </mat-label>
-    <input matInput [(ngModel)]="iFuncionario.rg">
+    <input matInput [(ngModel)]="funcionario$.rg">
   </mat-form-field>
 
-<form #f="ngForm" ngForm >
-  <mat-form-field appearance="fill" >
-    <mat-label for="cep" >CEP</mat-label>
-    <input matInput [(ngModel)]="iFuncionario.cep"
-      type="text" class="form-control" id="cep" name="cep"
-      ngModel required #cep="ngModel" (blur)="consultaCEP(iFuncionario.cep.toString(), f)">
- </mat-form-field>
+  <mat-form-field appearance="fill">
+    <mat-label>CEP</mat-label>
+    <input matInput [(ngModel)]="funcionario$.cep" (keyup.enter)="consultaCEP(funcionario$.cep)">
+  </mat-form-field>
 
   <mat-form-field appearance="fill">
     <mat-label>Tipo Logradouro</mat-label>
-    <input matInput [(ngModel)]="iFuncionario.tipo_logradouro">
+    <input matInput [(ngModel)]="funcionario$.tipo_logradouro">
   </mat-form-field>
+
   <mat-form-field appearance="fill">
     <mat-label>Logradouro</mat-label>
-    <input matInput [(ngModel)]="iFuncionario.logradouro">
+    <input matInput [(ngModel)]="funcionario$.logradouro">
   </mat-form-field>
   <mat-form-field appearance="fill">
     <mat-label>Número</mat-label>
-    <input matInput [(ngModel)]="iFuncionario.n_residencial">
+    <input matInput [(ngModel)]="funcionario$.n_residencial">
   </mat-form-field>
   <mat-form-field appearance="fill">
     <mat-label>Bairro</mat-label>
-    <input matInput [(ngModel)]="iFuncionario.bairro">
+    <input matInput [(ngModel)]="funcionario$.bairro">
   </mat-form-field>
   <mat-form-field appearance="fill">
     <mat-label>Complemento</mat-label>
-    <input matInput [(ngModel)]="iFuncionario.complemento">
+    <input matInput [(ngModel)]="funcionario$.complemento">
   </mat-form-field>
   <mat-form-field appearance="fill">
     <mat-label>Cidade</mat-label>
-    <input matInput [(ngModel)]="iFuncionario.cidade">
+    <input matInput [(ngModel)]="funcionario$.cidade">
   </mat-form-field>
   <mat-form-field appearance="fill">
     <mat-label>UF</mat-label>
-    <input matInput [(ngModel)]="iFuncionario.uf">
+    <input matInput [(ngModel)]="funcionario$.uf">
   </mat-form-field>
-</form>
+
 
   <mat-form-field appearance="fill">
     <mat-label>Telefone Fixo</mat-label>
-    <input matInput [(ngModel)]="iFuncionario.telefone">
+    <input matInput [(ngModel)]="funcionario$.telefone">
   </mat-form-field>
 
   <mat-form-field appearance="fill">
     <mat-label>Celular</mat-label>
-    <input matInput [(ngModel)]="iFuncionario.celular">
+    <input matInput [(ngModel)]="funcionario$.celular">
   </mat-form-field>
 
   <mat-form-field appearance="fill">
     <mat-label>WhatsApp</mat-label>
-    <input matInput [(ngModel)]="iFuncionario.zap">
+    <input matInput [(ngModel)]="funcionario$.zap">
   </mat-form-field>
 
   <mat-form-field appearance="fill">
     <mat-label>Email</mat-label>
-    <input matInput [(ngModel)]="iFuncionario.email">
+    <input matInput [(ngModel)]="funcionario$.email">
   </mat-form-field>
 
  <mat-form-field appearance="fill">
     <mat-label>salario</mat-label>
-    <input matInput [(ngModel)]="iFuncionario.salario">
+    <input matInput [(ngModel)]="funcionario$.salario">
   </mat-form-field>
 
   <mat-form-field appearance="fill">
     <mat-label>Observações</mat-label>
-    <input matInput [(ngModel)]="iFuncionario.obs">
+    <input matInput [(ngModel)]="funcionario$.obs">
   </mat-form-field>
 
   <mat-form-field appearance="fill">
     <mat-label>Cargo</mat-label>
-    <input matInput [(ngModel)]="iFuncionario.cargo">
+    <input matInput [(ngModel)]="funcionario$.cargo">
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Email</mat-label>
+    <input  matInput [(ngModel)]="funcionario$.email" >
   </mat-form-field>
 
 <span>
 
-  <button mat-raised-button *ngIf="!isChange" [mat-dialog-close]="iFuncionario" cdkFocusInitial >Create</button>
-  <button mat-button *ngIf="isChange" [mat-dialog-close]="iFuncionario" cdkFocusInitial >Edit</button>
+  <button mat-raised-button *ngIf="!isChange" [mat-dialog-close]="funcionario$" cdkFocusInitial >Create</button>
+  <button mat-button *ngIf="isChange" [mat-dialog-close]="funcionario$" cdkFocusInitial >Edit</button>
   <button mat-raised-button (click)="onCancel()">Cancel</button>
  </span>
 

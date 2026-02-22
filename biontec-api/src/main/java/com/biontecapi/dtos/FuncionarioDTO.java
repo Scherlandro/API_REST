@@ -4,7 +4,7 @@ import com.biontecapi.model.Endereco;
 
 
 public record FuncionarioDTO(
-        Integer id_funcionario,
+        Integer idFuncionario,
         String nomeFuncionario,
         String rg,
         String cpf,

@@ -1,5 +1,5 @@
 export interface IFuncionario{
-  idfuncionario: number;
+  idFuncionario: number;
   nomeFuncionario: string;
   dtNascimnento:string;
   dtAdmissao: string;

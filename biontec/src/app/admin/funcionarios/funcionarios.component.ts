@@ -53,7 +53,6 @@ export class FuncionariosComponent implements OnInit {
     this.tbSourceFuncionarios$.filter = valor;
   }
 
-
   listarFuncionarios() {
 
     this.funcionarioSevice.getTodosFuncionarios()
@@ -69,40 +68,53 @@ export class FuncionariosComponent implements OnInit {
       });
   }
 
-
-
   openDialogo(eventFunc: IFuncionario) {
     console.log("Dados do elementoDialog", eventFunc)
     const dialogRef = this.dialog.open(DialogFuncionarioComponent, {
       width: '300px',
       data: eventFunc === null ? {
-        id_funcionario: null, nomeFuncionario: '', dt_admissao: '',dt_demissao: '' , pessoa: '',
-        cpf: '', cnpj: '', cep: '', numero: '', telefone: '', celular: '', zap: '', email: ''
+        idFuncionario: null, nomeFuncionario: '', dtNascimnento: '', dtAdmissao: '',
+        dtDemissao: '', pessoa: '', cpf: '', cnpj: '', rg: '', cep: '',
+        tipo_logradouro: '', logradouro: '', n_residencial: null, bairro: '',
+        complemento: '', cidade: '', uf: '', telefone: '', celular: '',
+        zap: '', email: '', salario: null, obs: '', cargo: ''
       } : {
-        id_funcionario: eventFunc.idfuncionario,
-        nomeFuncionario: eventFunc.nomeFuncionario,
-        dt_admissao: eventFunc.dtAdmissao,
-        dt_demissao: eventFunc.dtDemissao,
-        pessoa: eventFunc.pessoa,
-        cpf: eventFunc.cpf,
-        cnpj: eventFunc.cnpj,
-        cep: eventFunc.cep,
-        numero: eventFunc.n_residencial,
-        telefone: eventFunc.telefone,
-        celular: eventFunc.celular,
-        zap: eventFunc.zap,
-        email: eventFunc.email
+        idFuncionario: eventFunc.idFuncionario,
+        nomeFuncionario: eventFunc.nomeFuncionario ?? "",
+        dtNascimnento: eventFunc.dtNascimnento ?? "",
+        dtAdmissao: eventFunc.dtAdmissao ?? "",
+        dtDemissao: eventFunc.dtDemissao ?? "",
+        pessoa: eventFunc.pessoa ?? "",
+        cpf: eventFunc.cpf ?? "",
+        cnpj: eventFunc.cnpj ?? "",
+        rg: eventFunc.rg ?? "",
+        cep: eventFunc.cep ?? "",
+        tipo_logradouro: eventFunc.tipo_logradouro ?? "",
+        logradouro: eventFunc.logradouro ?? "",
+        n_residencial: eventFunc.n_residencial,
+        bairro: eventFunc.bairro ?? "",
+        complemento: eventFunc.complemento ?? "",
+        cidade: eventFunc.cidade ?? "",
+        uf: eventFunc.uf ?? "",
+        telefone: eventFunc.telefone ?? "",
+        celular: eventFunc.celular ?? "",
+        zap: eventFunc.zap ?? "",
+        email: eventFunc.email ?? "",
+        salario: eventFunc.salario,
+        obs: eventFunc.obs ?? "",
+        cargo: eventFunc.cargo ?? ""
       }
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if (result !== undefined) {
+      console.log('Valor do result', result)
+      if (result.idFuncionario !== null) {
         if (this.tbSourceFuncionarios$.data
-          .map(p => p.idfuncionario).includes(result.id_funcionario)) {
+          .map(p => p.idFuncionario).includes(result.id_funcionario)) {
           this.funcionarioSevice.editElement(result)
             .subscribe((data: IFuncionario) => {
               const index = this.tbSourceFuncionarios$.data
-                .findIndex(p => p.idfuncionario === data.idfuncionario);
+                .findIndex(p => p.idFuncionario === data.idFuncionario);
               this.tbSourceFuncionarios$.data[index] = data;
               this.tableFuncionario.renderRows();
             });
@@ -137,7 +149,7 @@ export class FuncionariosComponent implements OnInit {
   }
 
   changeFuncionario(value: any) {
-    this.tbSourceFuncionarios$.data.filter(funcionarios => funcionarios.idfuncionario.toString()
+    this.tbSourceFuncionarios$.data.filter(funcionarios => funcionarios.idFuncionario.toString()
       .includes(value.toUpperCase()));
   }
 

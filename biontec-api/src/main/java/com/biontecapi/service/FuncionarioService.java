@@ -1,5 +1,6 @@
 package com.biontecapi.service;
 
+import com.biontecapi.dtos.FuncionarioDTO;
 import com.biontecapi.model.Funcionario;
 
 import java.util.List;
@@ -10,7 +11,7 @@ public interface FuncionarioService {
 
        List<Funcionario> listarFuncionario();
 
-    Funcionario save(Funcionario funcionario);
+    Funcionario save(FuncionarioDTO dto);
 
     Optional<Funcionario> litarFuncionarioPorCod(Integer id);
 

@@ -46,13 +46,13 @@ public class FuncionarioController {
 
     @PostMapping(path = "/salvar")
     @ResponseStatus(HttpStatus.CREATED)
-    public Funcionario salvar(@RequestBody Funcionario funcionario){
-        return funcionarioService.save(funcionario);
+    public Funcionario salvar(@RequestBody FuncionarioDTO dto){
+        return funcionarioService.save(dto);
     }
 
     @PutMapping(path = "/editar")
-    public Funcionario editar(@RequestBody Funcionario funcionario){
-        return funcionarioService.save(funcionario);
+    public Funcionario editar(@RequestBody FuncionarioDTO dto){
+        return funcionarioService.save(dto);
     }
 
     @DeleteMapping(path = "/delete/{idFuncionario}")

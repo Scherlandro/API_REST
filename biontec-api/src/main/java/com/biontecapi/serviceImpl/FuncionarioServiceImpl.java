@@ -1,5 +1,6 @@
 package com.biontecapi.serviceImpl;
 
+import com.biontecapi.dtos.FuncionarioDTO;
 import com.biontecapi.model.Funcionario;
 import com.biontecapi.repository.FuncionarioRepository;
 import com.biontecapi.service.FuncionarioService;
@@ -26,8 +27,10 @@ public class FuncionarioServiceImpl implements FuncionarioService {
     }
 
     @Override
-    public Funcionario save(Funcionario funcionario) {
-        return funcionarioRepository.save(funcionario);
+    public Funcionario save(FuncionarioDTO dto) {
+           Funcionario func = new Funcionario();
+        func.mapToDTO(dto);
+        return funcionarioRepository.save(func);
     }
 
     @Override

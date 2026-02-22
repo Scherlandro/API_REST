@@ -333,7 +333,7 @@ export class VendaComponent implements OnInit {
           const vendaPai = this.tbSourceVd$.data.find(vd => vd.idVenda === item.codVenda);
 
           if (vendaPai) {
-            // Remove o item da lista local
+             console.log('Valor do vendaPai ', vendaPai.itensVd.filter((i: any) => i.idItensVd !== item.idItensVd))   // Remove o item da lista local
             vendaPai.itensVd = vendaPai.itensVd.filter((i: any) => i.idItensVd !== item.idItensVd);
 
             // Recalcula o total

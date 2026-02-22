@@ -25,12 +25,10 @@ export class FuncionarioService {
   }
 
   createFuncionario(element: IFuncionario): Observable<IFuncionario> {
-    console.log("Evento chegou no service", element)
     return this._http.post<IFuncionario>(this.baseUrl+'/salvar', element);
   }
 
   editElement(element: IFuncionario): Observable<IFuncionario> {
-    console.log("Evento chegou no service", element)
     return this._http.put<IFuncionario>(this.baseUrl+'/editar', element);
   }
 
