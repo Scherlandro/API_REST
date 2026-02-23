@@ -13,7 +13,7 @@ export class PagamentoService {
 
   constructor(private http: HttpClient) {}
 
-  //Estou enviando aqui para backend para processar com a Efí
+  //Enviando aqui para backend para processar com a Efí
   gerarCobrancaEfiViaPix(dados: EfiChargeRequest): Observable<any> {
     return this.http.post(`${this.baseUrl}/efi/pix`, dados);
   }
@@ -22,12 +22,12 @@ export class PagamentoService {
     return this.http.post<iPagamento>(`${this.baseUrl}/salvar`, pagamento);
   }
 
-  buscarPorVenda(vendaId: number): Observable<iPagamento[]> {
-    return this.http.get<iPagamento[]>(`${this.baseUrl}/origem/${vendaId}?tipo=VENDA`);
+  buscarPorVenda(vendaId: number, tipoOrigem: string): Observable<iPagamento[]> {
+    return this.http.get<iPagamento[]>(`${this.baseUrl}/origem/${vendaId}?tipo=${tipoOrigem}`);
   }
 
   buscarPorOrigem(origemId: number, tipoOrigem: string) {
-    return this.http.get<iPagamento[]>(`${this.baseUrl}/origem/${origemId}?tipo=VENDA`);
+    return this.http.get<iPagamento[]>(`${this.baseUrl}/origem/${origemId}?tipo=${tipoOrigem}`);
 
   }
 

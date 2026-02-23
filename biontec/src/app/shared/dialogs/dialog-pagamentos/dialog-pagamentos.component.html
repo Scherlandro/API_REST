@@ -1,9 +1,9 @@
 <div class="div-pag">
 
 <mat-card class="container-box-pg" >
-  <h1 mat-dialog-title>
+  <h2 mat-dialog-title>
     {{  'Pagamentos' }}
-  </h1>
+  </h2>
 
   <mat-form-field appearance="fill"  >
     <mat-label>ID do Pagamento</mat-label>
@@ -18,6 +18,11 @@
   <mat-form-field appearance="fill" >
     <mat-label>Tipo Origem</mat-label>
     <input matInput [value]="pagamento.tipoOrigem" disabled>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" >
+    <mat-label>Pagador</mat-label>
+    <input matInput [value]="pagamento.pagador.nomeCliente" disabled>
   </mat-form-field>
 
  <!-- <mat-form-field appearance="fill" >
