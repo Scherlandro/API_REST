@@ -18,6 +18,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -44,8 +45,11 @@ public class PagamentosServiceImpl implements PagamentosService {
     @Override
     @Transactional
     public PixResponseDTO criarPix(PixRequestDTO dto) {
+        Integer id = Optional.ofNullable(dto.idPagamento())
+                .map(Long::intValue)
+                .orElseThrow(() -> new RuntimeException("idPagamento obrigatório"));
         // 1. Localiza o pagamento que já deve existir (ou cria um novo)
-        Pagamentos pagamento = repository.findById(dto.idPagamento().intValue())
+        Pagamentos pagamento = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Pagamento não encontrado"));
         // 2. Chama o serviço da Efí
         PixResponseDTO efiResponse = efiService.gerarCobrancaPix(dto);

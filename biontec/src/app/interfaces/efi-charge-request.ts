@@ -4,8 +4,8 @@ export interface EfiChargeRequest {
   valor: number;
   pagador: {
     nome: string;
-    cpf?: string;  // Opcional
-    cnpj?: string; // Opcional
+    cpf?: string;
+    cnpj?: string;
   };
   tipoPagamento: 'pix' | 'boleto';
   qrcodeImage?: any;

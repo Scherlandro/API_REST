@@ -14,7 +14,7 @@ export class PagamentoService {
   constructor(private http: HttpClient) {}
 
   //Enviando aqui para backend para processar com a Efí
-  gerarCobrancaEfiViaPix(dados: EfiChargeRequest): Observable<any> {
+  gerarCobrancaEfiViaPix(dados: any): Observable<any> {
     return this.http.post(`${this.baseUrl}/efi/pix`, dados);
   }
 

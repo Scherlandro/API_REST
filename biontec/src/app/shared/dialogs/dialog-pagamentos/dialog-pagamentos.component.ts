@@ -157,18 +157,26 @@ export class DialogPagamentosComponent implements OnInit, OnDestroy{
       } else {
         dadosPagador.cpf = event.pagador.cpf.replace(/\D/g, ""); // Remove pontos e traços
       }
-
+/*
       const payload: EfiChargeRequest = {
         idPagamento: this.pagamento.idPagamento,
         valor: this.pagamento.valorPago,
         pagador: dadosPagador,
         tipoPagamento: event.formaPagamento === 'Pix' ? 'pix' : 'boleto'
+      };*/
+
+      const payload = {
+        idPagamento: 1, // this.pagamento.idPagamento,
+        valor: this.pagamento.valorPago,
+        nomeCliente: dadosPagador.nome,
+        cpf: dadosPagador.cpf || dadosPagador.cnpj
       };
 
       console.log('Payload montado:', payload);
 
      this.pagamentoService.gerarCobrancaEfiViaPix(payload).subscribe({
         next: (res) => {
+          console.log('Retorno do Pagamento', res);
           if (event.formaPagamento === 'Pix') {
             this.abrirModalPix(res.qrcode);
           } else if (event.formaPagamento === 'Boleto') {
