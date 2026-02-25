@@ -60,8 +60,8 @@ export class DialogPagamentosComponent implements OnInit, OnDestroy{
 
 
   ngOnInit(): void {
-   // this.carregarPagamentos();
-    // this.listarPagamentos(origemId: number, tipoOrigem: string);
+    this.carregarPagamentos();
+    //this.listarPagamentos(origemId: number, tipoOrigem: string);
    this.setupAutocompleteFilters();
   }
 
@@ -157,13 +157,6 @@ export class DialogPagamentosComponent implements OnInit, OnDestroy{
       } else {
         dadosPagador.cpf = event.pagador.cpf.replace(/\D/g, ""); // Remove pontos e traços
       }
-/*
-      const payload: EfiChargeRequest = {
-        idPagamento: this.pagamento.idPagamento,
-        valor: this.pagamento.valorPago,
-        pagador: dadosPagador,
-        tipoPagamento: event.formaPagamento === 'Pix' ? 'pix' : 'boleto'
-      };*/
 
       const payload = {
         idPagamento: 1, // this.pagamento.idPagamento,
