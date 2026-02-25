@@ -3,14 +3,20 @@ import {HttpClient} from "@angular/common/http";
 import {iPagamento} from "../interfaces/pagamento";
 import {Observable, of} from "rxjs";
 import {environment} from "../../environments/environment";
+import {EfiChargeRequest} from "../interfaces/efi-charge-request";
 
 @Injectable({ providedIn: 'root' })
 export class PagamentoService {
 
-  private readonly baseUrl = environment.API_PATH + 'api/pagamentos/';
+  private readonly baseUrl = environment.API_PATH + 'api/pagamentos';
   private readonly isLocal = true; //environment.isLocal;
 
   constructor(private http: HttpClient) {}
+
+  //Estou enviando aqui para backend para processar com a Efí
+  gerarCobrancaEfiViaPix(dados: EfiChargeRequest): Observable<any> {
+    return this.http.post(`${this.baseUrl}/efi/pix`, dados);
+  }
 
   salvar(pagamento: iPagamento): Observable<iPagamento> {
     return this.http.post<iPagamento>(`${this.baseUrl}/salvar`, pagamento);
@@ -56,5 +62,11 @@ export class PagamentoService {
       s.toLowerCase().includes(termo.toLowerCase())
     );
     return of(filtrados); // Retorna como Observable
+  }
+
+
+
+  buscarStatusNoBanco(idPagamento: number) {
+
   }
 }

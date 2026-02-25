@@ -14,6 +14,8 @@ import {ErrorDiologComponent} from "../error-diolog/error-diolog.component";
 
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import {DialogParcelamentosComponent} from "../dialog-parcelamentos/dialog-parcelamentos.component";
+import {EfiChargeRequest} from "../../../interfaces/efi-charge-request";
+import {DialogPixComponent} from "../dialog-pix/dialog-pix.component";
 
 
 @Component({
@@ -48,8 +50,7 @@ export class DialogPagamentosComponent implements OnInit, OnDestroy{
     public dialogRef: MatDialogRef<DialogPagamentosComponent>,
     public pagamentoService: PagamentoService,
     private tokenServer: TokenService,
-    public notificationMsg: NotificationMgsService,
-    private PagamentoSevice: PagamentoService
+    public notificationMsg: NotificationMgsService
   ) {
     this.pagamento = data;
     this.tbSourcePagamentos$ = new MatTableDataSource();
@@ -119,8 +120,43 @@ export class DialogPagamentosComponent implements OnInit, OnDestroy{
     );
   }
 
+  confirmarPagamentoEfi(forma: string) {
+    const payload: EfiChargeRequest = {
+      idPagamento: this.pagamento.idPagamento | undefined,
+      valor: this.pagamento.valorPago,
+      pagador: {
+        nome: "Cliente Exemplo", // Ideal  form ou objeto Cliente
+        cpf: "12345678909"
+      },
+      tipoPagamento: forma === 'Pix' ? 'pix' : 'boleto'
+    };
+
+    this.pagamentoService.gerarCobrancaEfiViaPix(payload).subscribe({
+      next: (res) => {
+        if (forma === 'Pix') {
+          // Efí retorna o QR Code em base64 e a cópia e cola
+         // this.abrirModalQRCode(res.qrcode, res.copiaECola);
+          this.abrirModalPix(res.qrcode);
+        } else if (forma === 'Boleto') {
+          // Efí retorna o link do PDF do boleto
+          window.open(res.linkBoleto, '_blank');
+        }
+        this.listarPagamentos(this.data.origemId, this.data.tipoOrigem);
+      },
+      error: (err) => this.notificationMsg.sendError("Erro ao gerar cobrança na Efí")
+    });
+  }
+
+
 onFormaPagamentoSelect(event: MatAutocompleteSelectedEvent) {
   const formaSelecionada = event.option.value;
+
+  if (formaSelecionada === 'Pix' || formaSelecionada === 'Boleto') {
+    this.notificationMsg.openConfirmDialog(`Deseja gerar um ${formaSelecionada} no valor de R$ ${this.pagamento.valorPago}?`)
+      .afterClosed().subscribe(confirmado => {
+      if (confirmado) this.confirmarPagamentoEfi(formaSelecionada);
+    });
+  }
 
   if (formaSelecionada === 'Cartão em Crédito') {
     // Atualiza o status automaticamente para 'Parcelada'
@@ -152,6 +188,16 @@ onFormaPagamentoSelect(event: MatAutocompleteSelectedEvent) {
     });
   }
 
+  abrirModalPix(dadosPix: any) {
+    this.dialog.open(DialogPixComponent, {
+      data: dadosPix,
+      width: '350px'
+    }).afterClosed().subscribe(() => {
+      // Após fechar, atualiza a lista para ver se o status mudou via Webhook
+      this.listarPagamentos(this.data.origemId, this.data.tipoOrigem);
+    });
+  }
+
   onMatSortChange() {
     this.tbSourcePagamentos$.sort = this.sort;
   }
@@ -164,7 +210,7 @@ onFormaPagamentoSelect(event: MatAutocompleteSelectedEvent) {
 
   listarPagamentos(origemId: number, tipoOrigem: string) {
 
-    this.PagamentoSevice.buscarPorOrigem(origemId, tipoOrigem)
+    this.pagamentoService.buscarPorOrigem(origemId, tipoOrigem)
       .pipe(catchError(error => {
         if (error === 'Session Expired')
           //this.onError('Sua sessão expirou!');

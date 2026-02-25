@@ -170,6 +170,20 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- Integração de Pagamentos pelo Efi bank -->
+        <dependency>
+            <groupId>br.com.efipay.efisdk</groupId>
+            <artifactId>sdk-java-apis-efi</artifactId>
+            <version>1.2.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.vaadin.external.google</groupId>
+            <artifactId>android-json</artifactId>
+            <version>0.0.20131108.vaadin1</version>
+            <scope>compile</scope>
+        </dependency>
+
     </dependencies>
 
     <build>

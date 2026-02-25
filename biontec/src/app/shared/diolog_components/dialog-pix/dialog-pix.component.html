@@ -1,0 +1,21 @@
+<div>
+<h2 mat-dialog-title>Pagamento via Pix</h2>
+<mat-content class="text-center">
+  <p>Escaneie o código abaixo com o app do seu banco:</p>
+
+  <img [src]="data.qrcodeImage" alt="QR Code Pix" style="width: 250px; height: 250px;">
+
+  <div class="mt-3">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Pix Copia e Cola</mat-label>
+      <input matInput [value]="data.copiaECola" readonly #inputPix>
+      <button mat-icon-button matSuffix (click)="copiarPix(inputPix)">
+        <mat-icon>content_copy</mat-icon>
+      </button>
+    </mat-form-field>
+  </div>
+</mat-content>
+<mat-actions align="end">
+  <button mat-raised-button color="primary" mat-dialog-close>Já paguei</button>
+</mat-actions>
+</div>

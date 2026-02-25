@@ -1,6 +1,7 @@
 package com.biontecapi.model;
 
 import com.biontecapi.dtos.PagamentosDto;
+import com.biontecapi.dtos.PixResponseDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -37,6 +38,22 @@ public class Pagamentos {
         this.dtPagamento = LocalDateTime.now();
     }
 
+    public void setTxid(String txid) {    };
+
+    // Converte os dados da Efí para atualizar sua entidade antes de salvar
+    public void updateEntityWithPix(Pagamentos pagamento, PixResponseDTO pixDto) {
+        if (pixDto == null) return;
+
+        // Armazenamos o TXID para identificar o pagamento no Webhook depois
+        pagamento.setTxid(pixDto.txid());
+
+        // O status inicial de um Pix gerado na Efí é sempre 0 (Pendente)
+        pagamento.setStatus(0);
+
+        //*Imprementar->  salvar a string do QR Code ou Link se precisar de log
+      //  pagamento.setObservacao("Pix gerado. TXID: " + pixDto.txid());
+    }
+
     public PagamentosDto toDTO() {
         return new PagamentosDto(
                 this.idPagamento,
@@ -48,4 +65,6 @@ public class Pagamentos {
                 this.tipoOrigem
         );
     }
+
+
 }
