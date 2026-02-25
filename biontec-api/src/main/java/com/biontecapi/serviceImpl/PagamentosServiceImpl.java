@@ -48,19 +48,14 @@ public class PagamentosServiceImpl implements PagamentosService {
         // 1. Busca o pagamento pendente no seu banco
         Pagamentos pagamento = repository.findById(dto.idPagamento())
                 .orElseThrow(() -> new RuntimeException("Pagamento não encontrado"));
-
         // 2. Chama a integração com a Efí Bank
         PixResponseDTO efiResponse = efiService.criarPix(dto);
-
         // 3. Usa o Mapper para atualizar a entidade com o TXID gerado pela Efí
         pagMapper.updateEntityWithPix(pagamento, efiResponse);
-
         // 4. Salva no banco de dados
         repository.save(pagamento);
-
         return efiResponse;
     }
-
 
     @Override
     public PixResponseDTO criarPix(PixRequestDTO dto) {
@@ -70,7 +65,6 @@ public class PagamentosServiceImpl implements PagamentosService {
         options.put("client_secret", "SEU_CLIENT_SECRET");
         options.put("certificate", "caminho/do/seu/certificado.p12");
         options.put("sandbox", true);
-
         try {
             EfiPay efi = new EfiPay(options);
 
@@ -88,13 +82,11 @@ public class PagamentosServiceImpl implements PagamentosService {
             Map<String, String> params = new HashMap<>();
             params.put("id", idLoc);
             JSONObject qrCodeRes = efi.call("pixGenerateQRCode", params, new JSONObject());
-
             return new PixResponseDTO(
                     qrCodeRes.getString("imagemQrcode"),
                     qrCodeRes.getString("qrcode"),
                     response.getString("txid")
             );
-
         } catch (EfiPayException e) {
             throw new RuntimeException("Erro Efí: " + e.getMessage());
         } catch (Exception e) {
@@ -111,21 +103,19 @@ public class PagamentosServiceImpl implements PagamentosService {
             for (int i = 0; i < pagamentosPagos.length(); i++) {
                 String txid = pagamentosPagos.getJSONObject(i).getString("txid");
 
-                // Aqui você busca no seu Repository o pagamento com esse TXID
+                // Aqui precisa implementar a busca no Repository do pagamento com esse TXID
                 // Localiza o pagamento pelo TXID que salvamos na criação
-                repository.findByTxid(txid).ifPresent(p -> {
-                    p.setStatus(1); // 1 = Pago/Confirmado
+               /* repository.findByTxid(txid).ifPresent(p -> {
+                   p.setStatus(1); // 1 = Pago/Confirmado
                     repository.save(p);
                     System.out.println("Pagamento " + p.getId() + " confirmado via Pix!");
-                });
-                // altera o status para CONFIRMADO (Status 1 no seu código Angular)
-                atualizarStatusPagamento(txid, 1);
+                });*/
+
+                //para implementar a alteração do status para CONFIRMADO (Status 1 no seu código Angular)
+              //  atualizarStatusPagamento(txid, 1);
             }
         }
     }
-
-
-
 
     public List<Pagamentos> listarPorOrigem(Integer id, String tipo) {
         return repository.findByOrigemIdAndTipoOrigem(id, tipo);
@@ -136,11 +126,9 @@ public class PagamentosServiceImpl implements PagamentosService {
     public void cancelarPagamento(Integer idPagamento) {
         Pagamentos pg = repository.findById(idPagamento)
                 .orElseThrow(() -> new RuntimeException("Pagamento não encontrado"));
-
         // Status 2 = Cancelado/Estornado
         pg.setStatus(2);
         repository.save(pg);
-
         // Criar disparo para um evento notificar o módulo de origem
         // ex: se(pg.getTipoOrigem().equals("VENDA")) { ... }
     }

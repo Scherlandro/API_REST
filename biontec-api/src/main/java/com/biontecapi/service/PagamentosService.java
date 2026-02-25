@@ -15,11 +15,11 @@ public interface PagamentosService {
 
      PixResponseDTO criarPix(PixRequestDTO dto) ;
 
+     void processarRetornoEfi(String payload);
+
      List<Pagamentos> listarPorOrigem(Integer id, String tipo);
 
      void cancelarPagamento(Integer idPagamento);
 
      List<FechamentoCaixaDto> gerarFechamento(LocalDate data);
-
-     void processarRetornoEfi(String payload);
 }
