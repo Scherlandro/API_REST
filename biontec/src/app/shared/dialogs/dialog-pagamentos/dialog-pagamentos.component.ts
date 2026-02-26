@@ -61,7 +61,6 @@ export class DialogPagamentosComponent implements OnInit, OnDestroy{
 
   ngOnInit(): void {
     this.carregarPagamentos();
-    //this.listarPagamentos(origemId: number, tipoOrigem: string);
    this.setupAutocompleteFilters();
   }
 
@@ -70,9 +69,42 @@ export class DialogPagamentosComponent implements OnInit, OnDestroy{
     this.destroy$.complete();
   }
 
+
   carregarPagamentos() {
     this.pagamentoService.buscarPorOrigem(this.data.origemId, this.data.tipoOrigem)
       .subscribe(dados => this.pagamentos = dados);
+
+    this.pagamentoService.buscarPorOrigem(this.data.origemId, this.data.tipoOrigem)
+      .pipe(catchError(error => {
+        if (error === 'Session Expired')
+          //this.onError('Sua sessão expirou!');
+          this.tokenServer.clearTokenExpired();
+        return of([])
+      })).subscribe(
+      (result: iPagamento[]) => {
+        console.log('Lista de pagamentos => ', result)
+        this.tbSourcePagamentos$.data = result;
+        this.tbSourcePagamentos$.paginator = this.paginator;
+
+      });
+
+
+    /*
+      this.vendasService.getAllSales()
+      .pipe(first(), delay(2000),catchError(error => {
+        if (error === 'Session Expired')
+        this.onError('Sua sessão expirou!');
+        this.tokenServer.clearTokenExpired();
+        return of([])
+      }))
+      .subscribe((data: iVendas[]) => {
+        this.tbSourceVd$.data = data;
+        this.tbSourceVd$.paginator = this.paginator;
+        this.spiner = false;
+      });
+  }
+     */
+
   }
 
   getLabelStatus(status: number) {
@@ -211,15 +243,6 @@ export class DialogPagamentosComponent implements OnInit, OnDestroy{
     });
   }
 
-  onMatSortChange() {
-    this.tbSourcePagamentos$.sort = this.sort;
-  }
-
-  aplicarFiltro(valor: string) {
-    valor = valor.trim().toLowerCase();
-    this.tbSourcePagamentos$.filter = valor;
-  }
-
 
   listarPagamentos(origemId: number, tipoOrigem: string) {
 
@@ -234,6 +257,17 @@ export class DialogPagamentosComponent implements OnInit, OnDestroy{
         this.tbSourcePagamentos$.data = result;
         this.tbSourcePagamentos$.paginator = this.paginator;
       });
+  }
+
+
+
+  onMatSortChange() {
+    this.tbSourcePagamentos$.sort = this.sort;
+  }
+
+  aplicarFiltro(valor: string) {
+    valor = valor.trim().toLowerCase();
+    this.tbSourcePagamentos$.filter = valor;
   }
 
 

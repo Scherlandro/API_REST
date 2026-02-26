@@ -114,7 +114,7 @@ public class PagamentosServiceImpl implements PagamentosService {
     }
 
 
-    public List<Pagamentos> listarPorOrigem(Integer id, String tipo) {
+    public List<PagamentosDto> listarPorOrigem(Integer id, String tipo) {
         return repository.findByOrigemIdAndTipoOrigem(id, tipo);
     }
 

@@ -27,7 +27,7 @@ export class PagamentoService {
   }
 
   buscarPorOrigem(origemId: number, tipoOrigem: string) {
-    return this.http.get<iPagamento[]>(`${this.baseUrl}/origem/${origemId}?tipo=${tipoOrigem}`);
+    return this.http.get<iPagamento[]>(`${this.baseUrl}/origemId/${origemId}?tipoOrigem=${tipoOrigem}`);
 
   }
 

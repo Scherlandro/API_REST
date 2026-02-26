@@ -17,7 +17,7 @@ public interface PagamentosService {
 
      void processarRetornoEfi(String payload);
 
-     List<Pagamentos> listarPorOrigem(Integer id, String tipo);
+     List<PagamentosDto> listarPorOrigem(Integer id, String tipo);
 
      void cancelarPagamento(Integer idPagamento);
 

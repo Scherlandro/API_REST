@@ -1,5 +1,6 @@
 package com.biontecapi.controller;
 
+import com.biontecapi.dtos.PagamentosDto;
 import com.biontecapi.dtos.PixEstornoDTO;
 import com.biontecapi.dtos.PixRequestDTO;
 import com.biontecapi.dtos.PixResponseDTO;
@@ -12,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -26,6 +28,13 @@ public class PagamentosController {
 
     @Autowired
     EfiService efiService;
+
+
+    @GetMapping("/origemId/{origemId}")
+    public ResponseEntity<List<PagamentosDto>> carregarPagamentos( @PathVariable("origemId") Integer origemId,
+                                                                @RequestParam(name = "tipoOrigem") String tipoOrigem) {
+        return ResponseEntity.ok(pagamentosService.listarPorOrigem(origemId, tipoOrigem));
+    }
 
     @PostMapping("efi/pix")
     public ResponseEntity<PixResponseDTO> gerarPix(@RequestBody PixRequestDTO dto) {

@@ -1,6 +1,7 @@
 package com.biontecapi.repository;
 
 import com.biontecapi.dtos.FechamentoCaixaDto;
+import com.biontecapi.dtos.PagamentosDto;
 import com.biontecapi.model.Pagamentos;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -14,7 +15,7 @@ import java.util.Optional;
 @Repository
 public interface PagamentosRepository extends JpaRepository<Pagamentos, Integer> {
     // Busca pagamentos vinculados a uma venda específica
-    List<Pagamentos> findByOrigemIdAndTipoOrigem(Integer origemId, String tipoOrigem);
+    List<PagamentosDto> findByOrigemIdAndTipoOrigem(Integer origemId, String tipoOrigem);
 
     @Query("SELECT new com.biontecapi.dtos.FechamentoCaixaDto(p.formaPagamento, SUM(p.valorPago), COUNT(p)) " +
             "FROM Pagamentos p " +
