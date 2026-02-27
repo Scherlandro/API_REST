@@ -54,10 +54,10 @@ export class DialogPagamentosComponent implements OnInit, OnDestroy{
   ) {
     this.pagamento = data;
     this.tbSourcePagamentos$ = new MatTableDataSource();
-   console.log('Dado em pagamento->', this.pagamento);
 
+   console.log('Dados da', this.pagamento.tipoOrigem,' o seu ID origem ', this.pagamento.origemId,
+     ' o ID pagamento  ', this.pagamento.idPagamento, 'para iniciar o pagamento de', this.pagamento.pagador);
   }
-
 
   ngOnInit(): void {
     this.carregarPagamentos();
@@ -71,8 +71,9 @@ export class DialogPagamentosComponent implements OnInit, OnDestroy{
 
 
   carregarPagamentos() {
-    this.pagamentoService.buscarPorOrigem(this.data.origemId, this.data.tipoOrigem)
+ /*   this.pagamentoService.buscarPorOrigem(this.data.origemId, this.data.tipoOrigem)
       .subscribe(dados => this.pagamentos = dados);
+    console.log('Carregando pagamentos => ', this.pagamentos) */
 
     this.pagamentoService.buscarPorOrigem(this.data.origemId, this.data.tipoOrigem)
       .pipe(catchError(error => {
@@ -112,8 +113,7 @@ export class DialogPagamentosComponent implements OnInit, OnDestroy{
       startWith(''),
       debounceTime(250),
       distinctUntilChanged(),
-     /* switchMap(value =>
-        typeof value === 'string' && value.length >= 1
+     /* switchMap(value => typeof value === 'string' && value.length >= 1
           ? this.pagamentoService.getFormasPagamento(value)
           : of([])
       ),*/
@@ -166,35 +166,38 @@ export class DialogPagamentosComponent implements OnInit, OnDestroy{
       };
 
       if (event.pagador.cnpj && event.pagador.cnpj !== "") {
-        dadosPagador.cnpj = event.pagador.cnpj.replace(/\D/g, ""); // Remove pontos e traços
+        dadosPagador.cnpj = event.pagador.cnpj.replace(/\D/g, "");
       } else {
-        dadosPagador.cpf = event.pagador.cpf.replace(/\D/g, ""); // Remove pontos e traços
+        dadosPagador.cpf = event.pagador.cpf.replace(/\D/g, "");
       }
 
       const payload = {
-        idPagamento: 1, // this.pagamento.idPagamento,
+        idDaOrigem: this.pagamento.origemId,
         valor: this.pagamento.valorPago,
         nomeCliente: dadosPagador.nome,
         cpf: dadosPagador.cpf || dadosPagador.cnpj
       };
 
-      console.log('Payload montado:', payload);
+      console.log('DadosPagamento', this.pagamento, 'Payload montado:', payload);
 
-     this.pagamentoService.gerarCobrancaEfiViaPix(payload).subscribe({
-        next: (res) => {
-          console.log('Retorno do Pagamento', res);
-          if (event.formaPagamento === 'Pix') {
-            this.abrirModalPix(res.qrcode);
-          } else if (event.formaPagamento === 'Boleto') {
-            window.open(res.linkBoleto, '_blank');
+      if(this.pagamento.dtPagamento != null) {
+        this.pagamentoService.gerarCobrancaEfiViaPix(payload).subscribe({
+          next: (res) => {
+            console.log('Retorno do Pagamento', res);
+            if (event.formaPagamento === 'Pix') {
+              this.abrirModalPix(res.qrcode);
+            } else if (event.formaPagamento === 'Boleto') {
+              window.open(res.linkBoleto, '_blank');
+            }
+          },
+          error: (err) => {
+            console.error(err);
+            this.notificationMsg.sendError("Erro ao gerar cobrança na Efí. Verifique os dados do cliente.");
           }
-          this.listarPagamentos(this.data.origemId, this.data.tipoOrigem);
-        },
-        error: (err) => {
-          console.error(err);
-          this.notificationMsg.sendError("Erro ao gerar cobrança na Efí. Verifique os dados do cliente.");
-        }
-      });
+        });
+      }else {
+        this.listarPagamentos(this.data.origemId, this.data.tipoOrigem);
+      }
     }
 
   gerarParcelas(valor: any) {
