@@ -67,10 +67,6 @@ export class VendaComponent implements OnInit {
   }
 
   ngOnInit(): void {
-  if (!this.onError){
-    this.onError('Sua sessão expirou!');
-    this.tokenServer.clearTokenExpired();
-    }
     this.listarVenda();
     this.adapterFilterPredicate();
   }

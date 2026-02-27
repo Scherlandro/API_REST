@@ -85,25 +85,7 @@ export class DialogPagamentosComponent implements OnInit, OnDestroy{
         console.log('Lista de pagamentos => ', result)
         this.tbSourcePagamentos$.data = result;
         this.tbSourcePagamentos$.paginator = this.paginator;
-
       });
-
-
-    /*
-      this.vendasService.getAllSales()
-      .pipe(first(), delay(2000),catchError(error => {
-        if (error === 'Session Expired')
-        this.onError('Sua sessão expirou!');
-        this.tokenServer.clearTokenExpired();
-        return of([])
-      }))
-      .subscribe((data: iVendas[]) => {
-        this.tbSourceVd$.data = data;
-        this.tbSourceVd$.paginator = this.paginator;
-        this.spiner = false;
-      });
-  }
-     */
 
   }
 
@@ -154,7 +136,6 @@ export class DialogPagamentosComponent implements OnInit, OnDestroy{
   }
 
  onFormaPagamentoSelect(event: MatAutocompleteSelectedEvent) {
-  //  console.log('FormaPG SELECIONADA-> ', event.option.value,'Dados da origem-> ', this.data);
   const formaSelecionada = event.option.value;
   this.data.formaPagamento = formaSelecionada;
 
@@ -259,8 +240,6 @@ export class DialogPagamentosComponent implements OnInit, OnDestroy{
       });
   }
 
-
-
   onMatSortChange() {
     this.tbSourcePagamentos$.sort = this.sort;
   }
@@ -270,7 +249,6 @@ export class DialogPagamentosComponent implements OnInit, OnDestroy{
     this.tbSourcePagamentos$.filter = valor;
   }
 
-
   editarElement(element: any) {
 
   }
@@ -278,7 +256,6 @@ export class DialogPagamentosComponent implements OnInit, OnDestroy{
   deleteElement(id_Pagamento: any) {
 
   }
-
 
   selectRow(row: any) {
     this.ruwSelec = this.tbSourcePagamentos$.filteredData.indexOf(row);
