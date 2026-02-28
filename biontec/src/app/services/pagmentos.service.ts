@@ -15,6 +15,7 @@ export class PagamentoService {
 
   //Enviando aqui para backend para processar com a Efí
   gerarCobrancaEfiViaPix(dados: any): Observable<any> {
+    console.log('Formato do dados', dados)
     return this.http.post(`${this.baseUrl}/efi/pix`, dados);
   }
 

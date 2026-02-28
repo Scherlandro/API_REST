@@ -88,7 +88,6 @@ export class OrdemDeServiceComponent implements OnInit {
         return of([])
       })).subscribe(
       (result: iServiceOrder[]) => {
-        console.log('Orders -> ', result)
         this.tbSourceOS$.data = result;
         this.tbSourceOS$.paginator = this.paginator;
         this.spiner = false;
@@ -229,7 +228,6 @@ export class OrdemDeServiceComponent implements OnInit {
           console.error(err);
         }
       });
-    //  this.tbData.splice(this.ruwSelec, 1);
   }
 
   salvarTotal(os: iServiceOrder) {
