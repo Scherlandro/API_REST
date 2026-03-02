@@ -19,5 +19,9 @@ export interface iServiceOrder {
   gestorDaOS:null
   tecnicoEncarregado:null
    */
-}
+};
+
+export type FaseOS = 'newOS' | 'editarOS' | 'addItemOS' | 'editarItemOS';
+
+
 

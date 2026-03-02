@@ -1,5 +1,19 @@
 package com.biontecapi.serviceImpl;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.List;
+import java.util.Optional;
+
+import javax.transaction.Transactional;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.springframework.boot.ansi.AnsiColor;
+import org.springframework.boot.ansi.AnsiOutput;
+import org.springframework.stereotype.Service;
+
 import com.biontecapi.dtos.FechamentoCaixaDto;
 import com.biontecapi.dtos.PagamentosDto;
 import com.biontecapi.dtos.PixRequestDTO;
@@ -8,17 +22,8 @@ import com.biontecapi.model.Pagamentos;
 import com.biontecapi.repository.PagamentosRepository;
 import com.biontecapi.service.EfiService;
 import com.biontecapi.service.PagamentosService;
-import lombok.extern.slf4j.Slf4j;
-import org.json.JSONArray;
-import org.json.JSONObject;
-import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.List;
-import java.util.Optional;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
@@ -45,6 +50,8 @@ public class PagamentosServiceImpl implements PagamentosService {
     @Override
     @Transactional
     public PixResponseDTO criarPix(PixRequestDTO dto) {
+        System.out.println( AnsiOutput.toString( AnsiColor.YELLOW, "DTO do pagamento -> "+ dto, AnsiColor.DEFAULT  ));
+
         Integer id = Optional.ofNullable(dto.idPagamento())
                 .map(Long::intValue)
                 .orElseThrow(() -> new RuntimeException("idPagamento obrigatório"));

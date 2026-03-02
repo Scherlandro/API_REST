@@ -1,21 +1,20 @@
-import {Component, Inject, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {FormControl, Validators} from "@angular/forms";
-import {PagamentoService} from "../../../services/pagmentos.service";
-import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog";
-import {iPagamento} from "../../../interfaces/pagamento";
-import {MatTable, MatTableDataSource} from "@angular/material/table";
-import {MatPaginator} from "@angular/material/paginator";
-import {MatSort} from "@angular/material/sort";
-import {TokenService} from "../../../services/token.service";
-import {NotificationMgsService} from "../../../services/notification-mgs.service";
-import {catchError, startWith} from "rxjs/operators";
-import {debounceTime, distinctUntilChanged, Observable, of, Subject, switchMap, takeUntil} from "rxjs";
-import {ErrorDiologComponent} from "../error-diolog/error-diolog.component";
+import { Component, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { FormControl, Validators } from "@angular/forms";
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from "@angular/material/dialog";
+import { MatPaginator } from "@angular/material/paginator";
+import { MatSort } from "@angular/material/sort";
+import { MatTable, MatTableDataSource } from "@angular/material/table";
+import { Observable, Subject, debounceTime, distinctUntilChanged, of, switchMap, takeUntil } from "rxjs";
+import { catchError, startWith } from "rxjs/operators";
+import { iPagamento } from "../../../interfaces/pagamento";
+import { NotificationMgsService } from "../../../services/notification-mgs.service";
+import { PagamentoService } from "../../../services/pagmentos.service";
+import { TokenService } from "../../../services/token.service";
+import { ErrorDiologComponent } from "../error-diolog/error-diolog.component";
 
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-import {DialogParcelamentosComponent} from "../dialog-parcelamentos/dialog-parcelamentos.component";
-import {EfiChargeRequest} from "../../../interfaces/efi-charge-request";
-import {DialogPixComponent} from "../dialog-pix/dialog-pix.component";
+import { DialogParcelamentosComponent } from "../dialog-parcelamentos/dialog-parcelamentos.component";
+import { DialogPixComponent } from "../dialog-pix/dialog-pix.component";
 
 
 @Component({

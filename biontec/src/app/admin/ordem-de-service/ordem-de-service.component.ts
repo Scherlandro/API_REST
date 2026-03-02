@@ -8,7 +8,7 @@ import {MatPaginator, PageEvent} from "@angular/material/paginator";
 import {MatSort} from "@angular/material/sort";
 import {MatDialog} from "@angular/material/dialog";
 import {OrdemDeServicosService} from "../../services/ordem-de-servicos.service";
-import {iServiceOrder} from "../../interfaces/service-order";
+import {FaseOS, iServiceOrder} from "../../interfaces/service-order";
 import {ICliente} from "../../interfaces/cliente";
 import {ItensOsService} from "../../services/itens-os.service";
 import {ErrorDiologComponent} from "../../shared/dialogs/error-diolog/error-diolog.component";
@@ -134,11 +134,6 @@ export class OrdemDeServiceComponent implements OnInit {
     });
   }
 
-  editarOS(elementOS: iServiceOrder) {
-    this.openDilogAddItenOS(elementOS);
-  }
-
-
   openDilogAddItenOS(os: iServiceOrder, item?: iItensOS) {
     const isEdit = !!item;
     const isNovaOS = !os.itensOS; // nova OS recém criada
@@ -214,8 +209,121 @@ export class OrdemDeServiceComponent implements OnInit {
         element.totalGeralOS = Math.round(soma * 100) / 100;
         this.updateOS(element);
       }
-
   }
+
+
+  openNewOS() {
+    this.executarFluxoOS('newOS');
+  }
+
+/*
+
+  editarOS(elementOS: iServiceOrder) {
+    this.openDilogAddItenOS(elementOS);
+  }
+*/
+
+
+  editarOS(elementOS: iServiceOrder) {
+    this.executarFluxoOS('editarOS', elementOS);
+  }
+
+  adicionarItenOS(elementOS: iServiceOrder) {
+    this.executarFluxoOS('addItemOS', elementOS);
+  }
+
+  editarItemOS(elementItem: iItensOS) {
+
+    this.executarFluxoOS('editarItemOS', null, elementItem);
+  }
+
+  executarFluxoOS(fase: FaseOS, elementMain?: any, elementItem?: any) {
+    let tagOS: boolean;
+    let tagItemOS: boolean;
+
+    switch (fase) {
+      case 'newOS':
+        tagOS = true;
+        tagItemOS = false;
+        break;
+      case 'editarOS':
+        tagOS = true;
+        tagItemOS = false;
+        break;
+      case 'addItemOS':
+        tagOS = true;
+        tagItemOS = true;
+        break;
+      case 'editarItemOS':
+        tagOS = false;
+        tagItemOS = true;
+        break;
+      default:
+        tagOS = false;
+        tagItemOS = false;
+    }
+
+    const osBase = {
+      idOS: elementMain?.idOS || 0,
+      cliente: elementMain?.cliente || null,
+      dtOS: elementMain?.dtOS || new Date().toISOString(),
+      ...elementMain // Mantém outras propriedades existentes
+    };
+
+    const itemBase = {
+      idItensDaOS: elementItem?.idItensDaOS || 0,
+      codProduto: elementItem?.codProduto || '',
+      descricao: elementItem?.descricao || '',
+      qtdVendidas: elementItem?.qtdVendidas || 1,
+      valOS: elementItem?.valOS || 0,
+      valorParcial: elementItem?.valorParcial || 0,
+      total: elementItem?.total || 0,
+      ...elementItem
+    };
+
+    const dialogRef =  this.dialog.open(DialogOpenOsComponent, {
+      data: {
+        fase: fase,
+        tagOS: tagOS,
+        tagItemOS: tagItemOS,
+        os: {
+          ...osBase,
+          itensOS: itemBase
+        },
+        itensOS: itemBase
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(res => {
+      if (res) {
+        // 1. Recarrega os dados para garantir que temos a lista de itens atualizada do banco
+        this.osService.getAll().subscribe(ossAtualizadas => {
+          this.tbSourceOS$.data = ossAtualizadas;
+
+          // 2. Localiza a os que foi alterada (usando o codOS do item retornado ou o id da os)
+          const idOSAlterada = res.codOS || res.idOS;
+          const osNoArray = this.tbSourceOS$.data.find(v => v.idOS === idOSAlterada);
+
+          if (osNoArray) {
+            // 3. Calcula o novo total com os itens que acabaram de chegar
+            const novoTotal = this.calcularTotalVenda(osNoArray);
+            osNoArray.totalGeralOS = novoTotal;
+
+            // 4. SALVA NO BANCO IMEDIATAMENTE
+            this.osService.update(osNoArray).subscribe({
+              next: () => {
+                this.notificationMsg.success('Total da os atualizado no servidor!');
+                // Abre a linha para o usuário ver o resultado
+                this.toggleRow(osNoArray);
+              },
+              error: () => this.onError('O item foi salvo, mas o total da os não pôde ser atualizado.')
+            });
+          }
+        });
+      }
+    });
+  }
+
 
   updateOS(os: iServiceOrder) {
     this.osService.update(os)
@@ -247,6 +355,12 @@ export class OrdemDeServiceComponent implements OnInit {
       case os:
         return os.subtotal + itens.total;
     } }
+
+  calcularTotalVenda(os: any): number {
+    const itens = os.itensVdDTO || os.itensVd || [];
+    if (itens.length === 0) return 0;
+    return itens.reduce((acc: number, item: any) => acc + (item.valorParcial || 0), 0);
+  }
 
 
   recalcularTotalOS(eventOS: iServiceOrder, eventItens: iItensOS): iServiceOrder {
