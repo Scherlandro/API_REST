@@ -27,7 +27,7 @@ public class Pagamentos {
     @Column(length = 25)
     private String formaPagamento; // Dinheiro, Cartão, Pix
 
-    private Integer status; // 0-Pendente, 1-Pago, 2-Cancelado
+    private Integer status; // 0-Pendente, ?- APROVADO, 1-Pago, 2-Cancelado
 
     // Campos para vínculo genérico
     private Integer origemId; // ID da Venda, ID da OS, etc.

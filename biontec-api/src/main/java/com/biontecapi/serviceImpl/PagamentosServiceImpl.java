@@ -120,8 +120,20 @@ public class PagamentosServiceImpl implements PagamentosService {
         }
     }
 
+    @Override
+    public Pagamentos salvarPagamentoCartao(PagamentosDto dto) {
+        // 1. Regra do cartão: Pagamento mínimo de R$ 1,00
+        if (dto.valorPago() < 1.0) {
+            throw new RuntimeException("Valor insuficiente para processar.");
+        }
+        Pagamentos pagamento = new Pagamentos();
+        pagamento.setValorPago(dto.valorPago());
+        pagamento.setStatus(1); // Simulação de aprovação
+        pagamento.setDtPagamento(LocalDateTime.now());
+        return repository.save(pagamento);
+    }
 
-    public List<PagamentosDto> listarPorOrigem(Integer id, String tipo) {
+public List<PagamentosDto> listarPorOrigem(Integer id, String tipo) {
         return repository.findByOrigemIdAndTipoOrigem(id, tipo);
     }
 

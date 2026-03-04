@@ -4,11 +4,13 @@ import com.biontecapi.dtos.PagamentosDto;
 import com.biontecapi.dtos.PixEstornoDTO;
 import com.biontecapi.dtos.PixRequestDTO;
 import com.biontecapi.dtos.PixResponseDTO;
+import com.biontecapi.model.Pagamentos;
 import com.biontecapi.security.EfiSecurityComponent;
 import com.biontecapi.service.EfiService;
 import com.biontecapi.service.PagamentosService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -40,6 +42,13 @@ public class PagamentosController {
     public ResponseEntity<PixResponseDTO> gerarPix(@RequestBody PixRequestDTO dto) {
         return ResponseEntity.ok(pagamentosService.criarPix(dto));
     }
+
+    @PostMapping("/cartao/")
+    public ResponseEntity<Pagamentos> pagarViaCartao(@RequestBody PagamentosDto dto) {
+        Pagamentos novoPagamento = pagamentosService.salvarPagamentoCartao(dto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(novoPagamento);
+    }
+
 
     @PostMapping("efi/webhook")
     public ResponseEntity<Void> receberWebhook(@RequestBody String payload, HttpServletRequest request) {

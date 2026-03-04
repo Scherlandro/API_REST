@@ -13,6 +13,8 @@ public interface PagamentosService {
 
      Pagamentos salvarPagamento(PagamentosDto dto);
 
+     Pagamentos salvarPagamentoCartao(PagamentosDto dto);
+
      PixResponseDTO criarPix(PixRequestDTO dto) ;
 
      void processarRetornoEfi(String payload);

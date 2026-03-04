@@ -176,9 +176,7 @@ export class DialogPagamentosComponent implements OnInit, OnDestroy{
         nomeCliente: dadosPagador.nome,
         cpf: dadosPagador.cpf || dadosPagador.cnpj
       };
-      console.log('DadosPagamento', this.pagamento, 'Payload montado:', payload);
-      /* PRECISO REVER se o ID da OS ou Venda deve ser a mesma do origemID
-      e retorno do gerarCobrancaEfiViaPix      */
+
       if(this.pagamento.dtPagamento != null) {
         this.pagamentoService.gerarCobrancaEfiViaPix(payload).subscribe({
           next: (res) => {
