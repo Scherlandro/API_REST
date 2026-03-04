@@ -146,10 +146,11 @@ export class DialogPagamentosComponent implements OnInit, OnDestroy{
   }
 
   if (formaSelecionada === 'Cartão em Crédito') {
-    // Atualiza o status automaticamente para 'Parcelada'
-    this.statusPgControl.setValue('Parcelada');
-    const valorVenda = this.pagamento.valorPago;
-    this.gerarParcelas(valorVenda);
+    this.notificationMsg.openConfirmDialog(`'Confirma o pagamento em ' ${formaSelecionada} no valor de R$ ${this.pagamento.valorPago}?`)
+      .afterClosed().subscribe(confirmado => {
+      if (confirmado) this.confirmarPagamentoEfi(this.data);
+    });
+
   }
   if(formaSelecionada === 'Dinheiro' || formaSelecionada === 'Cartão em Débito'){
     this.statusPgControl.setValue('Fechada');
@@ -173,11 +174,14 @@ export class DialogPagamentosComponent implements OnInit, OnDestroy{
       const payload = {
         idPagamento: this.pagamento.origemId,
         valor: this.pagamento.valorPago,
+        numberCard: event.numberCard,
         nomeCliente: dadosPagador.nome,
         cpf: dadosPagador.cpf || dadosPagador.cnpj
       };
-
-      if(this.pagamento.dtPagamento != null) {
+      console.log('DadosPagamento', this.pagamento, 'Payload montado:', payload);
+      /* PRECISO REVER se o ID da OS ou Venda deve ser a mesma do origemID
+      e retorno do gerarCobrancaEfiViaPix      */
+      if(this.pagamento.dtPagamento != null && payload.numberCard == null) {
         this.pagamentoService.gerarCobrancaEfiViaPix(payload).subscribe({
           next: (res) => {
             console.log('Retorno do Pagamento', res);
@@ -185,6 +189,22 @@ export class DialogPagamentosComponent implements OnInit, OnDestroy{
               this.abrirModalPix(res.qrcode);
             } else if (event.formaPagamento === 'Boleto') {
               window.open(res.linkBoleto, '_blank');
+            }
+          },
+          error: (err) => {
+            console.error(err);
+            this.notificationMsg.sendError("Erro ao gerar cobrança na Efí. Verifique os dados do cliente.");
+          }
+        });
+      }else if(payload.numberCard) {
+        this.pagamentoService.gerarCobrancaCard(payload).subscribe({
+          next: (res) => {
+            console.log('Retorno do Pagamento', res);
+            if (event.formaPagamento === 'Cartão de crédito') {
+              // Atualiza o status automaticamente para 'Parcelada'
+              this.statusPgControl.setValue('Parcelada');
+              const valorVenda = this.pagamento.valorPago;
+              this.gerarParcelas(valorVenda);
             }
           },
           error: (err) => {

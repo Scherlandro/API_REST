@@ -19,6 +19,11 @@ export class PagamentoService {
     return this.http.post(`${this.baseUrl}/efi/pix`, dados);
   }
 
+  gerarCobrancaCard(dados:any): Observable<any> {
+    console.log('Formato do dados', dados)
+    return this.http.post(`${this.baseUrl}/cartao`, dados);
+  }
+
   salvar(pagamento: iPagamento): Observable<iPagamento> {
     return this.http.post<iPagamento>(`${this.baseUrl}/salvar`, pagamento);
   }
@@ -69,4 +74,5 @@ export class PagamentoService {
   buscarStatusNoBanco(idPagamento: any): Observable<any> {
      return this.http.get<iPagamento[]>(this.baseUrl);
   }
+
 }

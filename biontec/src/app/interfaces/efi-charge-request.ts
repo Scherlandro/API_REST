@@ -2,6 +2,7 @@
 export interface EfiChargeRequest {
   idPagamento?: number;
   valor: number;
+  numberCard?: number;
   pagador: {
     nome: string;
     cpf?: string;
