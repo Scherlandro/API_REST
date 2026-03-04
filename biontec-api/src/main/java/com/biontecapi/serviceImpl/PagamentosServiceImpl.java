@@ -122,6 +122,7 @@ public class PagamentosServiceImpl implements PagamentosService {
 
     @Override
     public Pagamentos salvarPagamentoCartao(PagamentosDto dto) {
+        System.out.println( AnsiOutput.toString( AnsiColor.YELLOW, "DTO do pagamento em Crédito -> "+ dto, AnsiColor.DEFAULT  ));
         // 1. Regra do cartão: Pagamento mínimo de R$ 1,00
         if (dto.valorPago() < 1.0) {
             throw new RuntimeException("Valor insuficiente para processar.");

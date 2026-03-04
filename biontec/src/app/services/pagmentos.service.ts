@@ -3,7 +3,6 @@ import {HttpClient} from "@angular/common/http";
 import {iPagamento} from "../interfaces/pagamento";
 import {Observable, of} from "rxjs";
 import {environment} from "../../environments/environment";
-import {EfiChargeRequest} from "../interfaces/efi-charge-request";
 
 @Injectable({ providedIn: 'root' })
 export class PagamentoService {

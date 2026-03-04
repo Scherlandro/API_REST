@@ -19,7 +19,7 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/pagamentos/")
+@RequestMapping("/api/pagamentos")
 public class PagamentosController {
 
     @Autowired
@@ -38,19 +38,18 @@ public class PagamentosController {
         return ResponseEntity.ok(pagamentosService.listarPorOrigem(origemId, tipoOrigem));
     }
 
-    @PostMapping("efi/pix")
+    @PostMapping("/efi/pix")
     public ResponseEntity<PixResponseDTO> gerarPix(@RequestBody PixRequestDTO dto) {
         return ResponseEntity.ok(pagamentosService.criarPix(dto));
     }
 
-    @PostMapping("/cartao/")
+    @PostMapping("/cartao")
     public ResponseEntity<Pagamentos> pagarViaCartao(@RequestBody PagamentosDto dto) {
-        Pagamentos novoPagamento = pagamentosService.salvarPagamentoCartao(dto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(novoPagamento);
+        return ResponseEntity.status(HttpStatus.CREATED).body(pagamentosService.salvarPagamentoCartao(dto));
     }
 
 
-    @PostMapping("efi/webhook")
+    @PostMapping("/efi/webhook")
     public ResponseEntity<Void> receberWebhook(@RequestBody String payload, HttpServletRequest request) {
         // Chamada manual da validação de IP (Segurança por IP)
         if (!efiSecurity.isRequestFromEfi(request)) {
@@ -70,7 +69,7 @@ public class PagamentosController {
     }
 
 
-    @PostMapping("efi/estornarPix")
+    @PostMapping("/efi/estornarPix")
     public ResponseEntity<Void> estornarPix(@RequestBody PixEstornoDTO estornoDto) {
             efiService.estornarPix( estornoDto.idPagamento(), estornoDto.valor() );
         return ResponseEntity.ok().build();

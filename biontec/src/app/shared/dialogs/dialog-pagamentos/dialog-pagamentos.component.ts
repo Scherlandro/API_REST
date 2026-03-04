@@ -134,88 +134,93 @@ export class DialogPagamentosComponent implements OnInit, OnDestroy{
     );
   }
 
- onFormaPagamentoSelect(event: MatAutocompleteSelectedEvent) {
-  const formaSelecionada = event.option.value;
-  this.data.formaPagamento = formaSelecionada;
+  onFormaPagamentoSelect(event: MatAutocompleteSelectedEvent) {
+    const formaSelecionada = event.option.value;
+    this.data.formaPagamento = formaSelecionada;
+    const valor = this.pagamento.valorPago;
 
-  if (formaSelecionada === 'Pix' || formaSelecionada === 'Boleto') {
-    this.notificationMsg.openConfirmDialog(`Deseja gerar um ${formaSelecionada} no valor de R$ ${this.pagamento.valorPago}?`)
-      .afterClosed().subscribe(confirmado => {
-      if (confirmado) this.confirmarPagamentoEfi(this.data);
-    });
-  }
-
-  if (formaSelecionada === 'Cartão em Crédito') {
-    this.notificationMsg.openConfirmDialog(`'Confirma o pagamento em ' ${formaSelecionada} no valor de R$ ${this.pagamento.valorPago}?`)
-      .afterClosed().subscribe(confirmado => {
-      if (confirmado) this.confirmarPagamentoEfi(this.data);
-    });
-
-  }
-  if(formaSelecionada === 'Dinheiro' || formaSelecionada === 'Cartão em Débito'){
-    this.statusPgControl.setValue('Fechada');
-    const valorVenda = this.pagamento.valorPago;
-    this.notificationMsg.openConfirmDialog( 'Confirma o pagamento de  '+ valorVenda +' em forma de  '+formaSelecionada );
-  }
-}
-
-    confirmarPagamentoEfi(event: any) {
-
-      const dadosPagador: any = {
-        nome: event.pagador.nomeCliente
-      };
-
-      if (event.pagador.cnpj && event.pagador.cnpj !== "") {
-        dadosPagador.cnpj = event.pagador.cnpj.replace(/\D/g, "");
-      } else {
-        dadosPagador.cpf = event.pagador.cpf.replace(/\D/g, "");
-      }
-
-      const payload = {
-        idPagamento: this.pagamento.origemId,
-        valor: this.pagamento.valorPago,
-        numberCard: event.numberCard,
-        nomeCliente: dadosPagador.nome,
-        cpf: dadosPagador.cpf || dadosPagador.cnpj
-      };
-      console.log('DadosPagamento', this.pagamento, 'Payload montado:', payload);
-      /* PRECISO REVER se o ID da OS ou Venda deve ser a mesma do origemID
-      e retorno do gerarCobrancaEfiViaPix      */
-      if(this.pagamento.dtPagamento != null && payload.numberCard == null) {
-        this.pagamentoService.gerarCobrancaEfiViaPix(payload).subscribe({
-          next: (res) => {
-            console.log('Retorno do Pagamento', res);
-            if (event.formaPagamento === 'Pix') {
-              this.abrirModalPix(res.qrcode);
-            } else if (event.formaPagamento === 'Boleto') {
-              window.open(res.linkBoleto, '_blank');
-            }
-          },
-          error: (err) => {
-            console.error(err);
-            this.notificationMsg.sendError("Erro ao gerar cobrança na Efí. Verifique os dados do cliente.");
-          }
+    switch (formaSelecionada) {
+      case 'Pix':
+      case 'Boleto':
+        this.notificationMsg.openConfirmDialog(`Deseja gerar um ${formaSelecionada} no valor de R$ ${valor}?`)
+          .afterClosed().subscribe(confirmado => {
+          if (confirmado) this.confirmarPagamentoEfi(this.data);
         });
-      }else if(payload.numberCard) {
-        this.pagamentoService.gerarCobrancaCard(payload).subscribe({
-          next: (res) => {
-            console.log('Retorno do Pagamento', res);
-            if (event.formaPagamento === 'Cartão de crédito') {
-              // Atualiza o status automaticamente para 'Parcelada'
-              this.statusPgControl.setValue('Parcelada');
-              const valorVenda = this.pagamento.valorPago;
-              this.gerarParcelas(valorVenda);
-            }
-          },
-          error: (err) => {
-            console.error(err);
-            this.notificationMsg.sendError("Erro ao gerar cobrança na Efí. Verifique os dados do cliente.");
-          }
+        break;
+
+      case 'Cartão em Crédito':
+        this.notificationMsg.openConfirmDialog(`Confirma o pagamento em ${formaSelecionada} no valor de R$ ${valor}?`)
+          .afterClosed().subscribe(confirmado => {
+          if (confirmado) this.confirmarPagamentoEfi(this.data);
         });
-      }else {
-        this.listarPagamentos(this.data.origemId, this.data.tipoOrigem);
-      }
+        break;
+
+      case 'Dinheiro':
+      case 'Cartão em Débito':
+        this.statusPgControl.setValue('Fechada');
+        this.notificationMsg.openConfirmDialog(`Confirma o pagamento de R$ ${valor} em forma de ${formaSelecionada}`);
+        break;
+
+      default:
+        console.warn('Forma de pagamento não reconhecida:', formaSelecionada);
     }
+  }
+
+  confirmarPagamentoEfi(event: any) {
+    const documento = event.pagador.cnpj || event.pagador.cpf || "";
+
+    const payload = {
+      idPagamento: this.pagamento.origemId,
+      valor: this.pagamento.valorPago,
+      numberCard: event.numberCard,
+      nomeCliente: event.pagador.nomeCliente,
+      cpf: documento.replace(/\D/g, "")
+    };
+    console.log('DadosPagamento', this.pagamento, 'Payload montado:', payload);
+    /* PRECISO REVER se o ID da OS ou Venda deve ser a mesma do origemID
+    e retorno do gerarCobrancaEfiViaPix      */
+
+    // 1. Prioridade: Se a forma de pagamento for Cartão, chama o serviço de Cartão
+    // Verificamos tanto o nome da forma quanto se existe um número de cartão
+    if (event.formaPagamento.includes('Cartão') || payload.numberCard) {
+      this.pagamentoService.gerarCobrancaCard(payload).subscribe({
+        next: (res) => {
+          this.statusPgControl.setValue('Parcelada');
+          this.gerarParcelas(this.pagamento.valorPago);
+          console.log('Cobrança de cartão gerada:', res);
+        },
+        error: (err) => this.tratarErroPagamento(err)
+      });
+
+      // 2. Segunda opção: Pix ou Boleto (Cobrancas que usam o endpoint ViaPix/Efi)
+    } else if (this.pagamento.dtPagamento != null) {
+      this.pagamentoService.gerarCobrancaEfiViaPix(payload).subscribe({
+        next: (res) => {
+          switch (event.formaPagamento) {
+            case 'Pix':
+              this.abrirModalPix(res.qrcode);
+              break;
+            case 'Boleto':
+              window.open(res.linkBoleto, '_blank');
+              break;
+            default:
+              this.listarPagamentos(this.data.origemId, this.data.tipoOrigem);
+          }
+        },
+        error: (err) => this.tratarErroPagamento(err)
+      });
+
+      // 3. Caso não caia em nenhum dos fluxos de API
+    } else {
+      this.listarPagamentos(this.data.origemId, this.data.tipoOrigem);
+    }
+  }
+
+// Método auxiliar para evitar repetição de código
+  private tratarErroPagamento(err: any) {
+    console.error(err);
+    this.notificationMsg.sendError("Erro ao gerar cobrança na Efí. Verifique os dados do cliente.");
+  }
 
   gerarParcelas(valor: any) {
     const dialogRef = this.dialog.open(DialogParcelamentosComponent, {
