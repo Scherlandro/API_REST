@@ -38,6 +38,11 @@
     <p><b>Insensatos</b></p>
     <p class="label-descrition">Os insensatos, por causa do seu caminho de transgressão, e por causa das suas
       iniqüidades, são afligidos. </p>
+
+    <div *ngIf="userIp">
+      <h3>Seu endereço IP é: <strong>{{ userIp }}</strong></h3>
+    </div>
+
   </mat-card>
 
   <mat-card class="container-box ">

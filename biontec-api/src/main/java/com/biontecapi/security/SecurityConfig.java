@@ -49,7 +49,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests()
                 .antMatchers(POST, "/api/pagamentos/efi/webhook").permitAll() //PARA LIBERAR O WEBHOOK
-                .antMatchers(GET, "/api/user/token-refresh/**", "/api/produtos/**", "/api/paises/**","/api/nfe/**").permitAll()
+                .antMatchers(GET, "/api/user/token-refresh/**", "/api/produtos/**","/api/my-ip","/api/paises/**","/api/nfe/**").permitAll()
                 .antMatchers(POST, "/api/login/**", "/api/user/save-user","/api/nfe/**").permitAll()
                 .antMatchers(POST, "/api/user/save-role", "/api/user/role-addtouser").hasAnyAuthority("ROLE_ADMIN")
                 .anyRequest().authenticated().and()

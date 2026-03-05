@@ -2,6 +2,7 @@ import {
   Component, ElementRef, OnInit,
   AfterViewInit, ViewChild, ViewEncapsulation, OnDestroy, HostListener
 } from '@angular/core';
+import {IpService} from "../../services/ip.service";
 
 
 
@@ -26,10 +27,18 @@ export class HomeComponent implements AfterViewInit {
   ];
   private activeLogo: Particle[] = [];
 
+  userIp = '';
+
+  constructor(private ipService: IpService) {}
+
   ngAfterViewInit(): void {
     this.initCanvas();
     this.createParticles();
     this.animate();
+    this.ipService.getIpAddress().subscribe(data => {
+      this.userIp = data.ip;
+      console.log('Seu ip ', this.userIp);
+    });
   }
 
   private initCanvas(): void {

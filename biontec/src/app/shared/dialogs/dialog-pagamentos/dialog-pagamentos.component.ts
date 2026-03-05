@@ -70,9 +70,6 @@ export class DialogPagamentosComponent implements OnInit, OnDestroy{
 
 
   carregarPagamentos() {
- /*   this.pagamentoService.buscarPorOrigem(this.data.origemId, this.data.tipoOrigem)
-      .subscribe(dados => this.pagamentos = dados);
-    console.log('Carregando pagamentos => ', this.pagamentos) */
 
     this.pagamentoService.buscarPorOrigem(this.data.origemId, this.data.tipoOrigem)
       .pipe(catchError(error => {
@@ -86,7 +83,6 @@ export class DialogPagamentosComponent implements OnInit, OnDestroy{
         this.tbSourcePagamentos$.data = result;
         this.tbSourcePagamentos$.paginator = this.paginator;
       });
-
   }
 
   getLabelStatus(status: number) {
