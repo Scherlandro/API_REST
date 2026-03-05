@@ -3,7 +3,7 @@ import {Component, OnInit, ViewChild} from '@angular/core';
 import {ICredential} from 'src/app/interfaces/credential';
 import {AuthService} from 'src/app/services/auth.service';
 import {TokenService} from 'src/app/services/token.service';
-import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog";
+import { MatDialog} from "@angular/material/dialog";
 import {UserService} from "../../services/user.service";
 import {MatTable, MatTableDataSource} from "@angular/material/table";
 import {IUser} from "../../interfaces/user";
@@ -57,13 +57,31 @@ export class LoginComponent implements OnInit {
       password: ["", [Validators.required, Validators.minLength(6)]]
     })
   }
+  criarFormLogin2(): FormGroup {
+    return this.fb.group({
+      username: ["", [Validators.required,Validators.email,this.domainValidator ]],
+      password: ["", [Validators.required, Validators.minLength(6)]]
+    });
+  }
+  // validação simples
+  domainValidator(control: any) {
+    const email = control.value;
+    if (email && email.indexOf('@') !== -1) {
+      const [_, domain] = email.split('@');
+       if (domain !== 'empresa.com') { // Altere para o domínio desejado
+      console.log('Valor domain ', domain)
+      return { invalidDomain: true };
+         }
+    }
+    return null;
+  }
 
-  getErrorMessage() {
+  getErrorMessage2() {
     return this.username.hasError('required') ? 'You must enter a value' :
       this.username.hasError('email') ? 'Not a valid email' :   '';
   }
 
-  onSubmit(): void {
+  onSubmit2(): void {
     this.spiner = true;
     this.authService.login(this.form).pipe( delay(1500))
       .subscribe((data: { access_token: string; }) => {
@@ -111,12 +129,55 @@ export class LoginComponent implements OnInit {
 
   }
 
-  clearInput(){
+  clearInput2(){
 
      this.form = { username: '', password : '' };
      this.spiner = false;
      this.showErrorMessage = '';
 
    }
+
+  getErrorMessage() {
+    const emailControl = this.formLogin.get('username');
+
+    if (emailControl?.hasError('required')) {
+      return 'O e-mail é obrigatório';
+    }
+
+    // O validador 'email' do Angular já segue o padrão internacional (user@domain.com)
+    if (emailControl?.hasError('email')) {
+      return 'Formato de e-mail inválido (ex: usuario@email.com)';
+    }
+
+    return '';
+  }
+
+  onSubmit(): void {
+    if (this.formLogin.valid) {
+      this.spiner = true;
+
+      const loginData: ICredential = this.formLogin.value;
+
+      this.authService.login(loginData).pipe(delay(1500))
+        .subscribe(
+          (data: { access_token: string; }) => {
+            this.tokenService.saveToken(data.access_token);
+            this.spiner = false;
+          },
+          error => {
+            this.showErrorMessage = error.status;
+            this.spiner = false;
+          }
+        );
+    }
+  }
+
+  clearInput() {
+    this.formLogin.reset();
+    this.spiner = false;
+    this.showErrorMessage = '';
+  }
+
+
 
 }
