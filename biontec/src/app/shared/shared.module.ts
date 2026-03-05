@@ -7,7 +7,6 @@ import { FormsModule } from "@angular/forms";
 import { AppMaterialModule } from "./app-material/app-material.module";
 import { ConfirmDiologComponent } from "./dialogs/confirm-diolog/confirm-diolog.component";
 import { DialogOpenSalesComponent } from "./dialogs/dialog-open-sales/dialog-open-sales.component";
-import { DialogLoginComponent } from "./dialogs/dialog-login/dialog-login.component";
 import { DialogOpenOsComponent } from "./dialogs/dialog-open-os/dialog-open-os.component";
 import { DialogProdutoComponent } from "./dialogs/dialog-produto/dialog-produto.component";
 import { DialogUsuarioComponent } from "./dialogs/dialog-usuario/dialog-usuario.component";
@@ -31,7 +30,6 @@ registerLocaleData(localePt);
     DialogUsuarioComponent,
     DialogFuncionarioComponent,
     DialogClienteComponent,
-    DialogLoginComponent,
     DialogProdutoComponent,
     DialogOpenSalesComponent,
     DialogOpenOsComponent,

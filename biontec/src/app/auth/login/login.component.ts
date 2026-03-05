@@ -54,15 +54,11 @@ export class LoginComponent implements OnInit {
   criarFormLogin(): FormGroup {
     return this.fb.group({
       username: ["", [Validators.required, Validators.minLength(6), Validators.email]],
-      password: ["", [Validators.required, Validators.minLength(6)]]
-    })
-  }
-  criarFormLogin2(): FormGroup {
-    return this.fb.group({
-      username: ["", [Validators.required,Validators.email,this.domainValidator ]],
+     // username1: ["", [Validators.required,Validators.email,this.domainValidator ]],
       password: ["", [Validators.required, Validators.minLength(6)]]
     });
   }
+
   // validação simples
   domainValidator(control: any) {
     const email = control.value;
