@@ -11,7 +11,6 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
-@CrossOrigin(origins = "http://localhost:4200") // Permite o acesso do Angular
 public class IpController {
 
     @GetMapping("/my-ip")
@@ -24,8 +23,6 @@ public class IpController {
                 remoteAddr = request.getRemoteAddr();
             }
         }
-
-        // Retorna um JSON: {"ip": "0.0.0.0"}
         return Collections.singletonMap("ip", remoteAddr);
     }
 }

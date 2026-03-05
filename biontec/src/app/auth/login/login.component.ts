@@ -1,15 +1,16 @@
-import { NgModule } from '@angular/core';
+import {Inject, NgModule} from '@angular/core';
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {ICredential} from 'src/app/interfaces/credential';
 import {AuthService} from 'src/app/services/auth.service';
 import {TokenService} from 'src/app/services/token.service';
-import {MatDialog} from "@angular/material/dialog";
+import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {UserService} from "../../services/user.service";
 import {MatTable, MatTableDataSource} from "@angular/material/table";
 import {IUser} from "../../interfaces/user";
 import {DialogUsuarioComponent} from "../../shared/dialogs/dialog-usuario/dialog-usuario.component";
 import {delay} from "rxjs/operators";
 import {FormControl, Validators,FormBuilder, FormGroup} from '@angular/forms';
+import {IpService} from "../../services/ip.service";
 
 @Component({
   selector: 'app-login',
@@ -17,7 +18,7 @@ import {FormControl, Validators,FormBuilder, FormGroup} from '@angular/forms';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
-
+  userIp = '';
   @ViewChild(MatTable) tableUser!: MatTable<any>;
   tbSourceUsuarios$ = new MatTableDataSource<IUser>();
   showErrorMessage= '';
@@ -35,12 +36,19 @@ export class LoginComponent implements OnInit {
     private userService: UserService,
     public dialog: MatDialog,
     private fb: FormBuilder,
+    private ipService: IpService
     ) {
     this.formLogin = this.criarFormLogin();
     this.username = new FormControl('', [Validators.required, Validators.email]);
   }
 
+
+
   ngOnInit(): void {
+    this.ipService.getIpAddress().subscribe(data => {
+      this.userIp = data.ip;
+      console.log('Seu ip ', this.userIp);
+    });
   }
 
   criarFormLogin(): FormGroup {

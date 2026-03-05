@@ -1,6 +1,7 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {IUser} from "../../../interfaces/user";
+import {IpService} from "../../../services/ip.service";
 
 @Component({
   selector: 'app-dialog-login',
@@ -9,11 +10,13 @@ import {IUser} from "../../../interfaces/user";
 })
 export class DialogLoginComponent implements OnInit {
   isChange!: boolean;
+  userIp = '';
 
   constructor(
     @Inject(MAT_DIALOG_DATA)
     public dataLogin: IUser,
     public dialogRef: MatDialogRef<DialogLoginComponent>,
+    private ipService: IpService
   ) {}
 
 
@@ -25,7 +28,6 @@ export class DialogLoginComponent implements OnInit {
     } else {
       this.isChange = false;
     }
-
     */
   }
 
