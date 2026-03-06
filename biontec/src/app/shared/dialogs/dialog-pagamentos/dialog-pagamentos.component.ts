@@ -15,6 +15,7 @@ import { ErrorDiologComponent } from "../error-diolog/error-diolog.component";
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { DialogParcelamentosComponent } from "../dialog-parcelamentos/dialog-parcelamentos.component";
 import { DialogPixComponent } from "../dialog-pix/dialog-pix.component";
+import {EfiChargeRequest} from "../../../interfaces/efi-charge-request";
 
 
 @Component({
@@ -130,86 +131,70 @@ export class DialogPagamentosComponent implements OnInit, OnDestroy{
     );
   }
 
+
   onFormaPagamentoSelect(event: MatAutocompleteSelectedEvent) {
-    const formaSelecionada = event.option.value;
-    this.data.formaPagamento = formaSelecionada;
-    const valor = this.pagamento.valorPago;
-
-    switch (formaSelecionada) {
-      case 'Pix':
-      case 'Boleto':
-        this.notificationMsg.openConfirmDialog(`Deseja gerar um ${formaSelecionada} no valor de R$ ${valor}?`)
-          .afterClosed().subscribe(confirmado => {
-          if (confirmado) this.confirmarPagamentoEfi(this.data);
-        });
-        break;
-
-      case 'Cartão em Crédito':
-        this.notificationMsg.openConfirmDialog(`Confirma o pagamento em ${formaSelecionada} no valor de R$ ${valor}?`)
-          .afterClosed().subscribe(confirmado => {
-          if (confirmado) this.confirmarPagamentoEfi(this.data);
-        });
-        break;
-
-      case 'Dinheiro':
-      case 'Cartão em Débito':
-        this.statusPgControl.setValue('Fechada');
-        this.notificationMsg.openConfirmDialog(`Confirma o pagamento de R$ ${valor} em forma de ${formaSelecionada}`);
-        break;
-
-      default:
-        console.warn('Forma de pagamento não reconhecida:', formaSelecionada);
-    }
-  }
-
-  confirmarPagamentoEfi(event: any) {
-    const documento = event.pagador.cnpj || event.pagador.cpf || "";
+    const tipo = event.option.value;
+    const documento = this.pagamento.pagador.cnpj || this.pagamento.pagador.cpf || "";
 
     const payload = {
       idPagamento: this.pagamento.origemId,
       valor: this.pagamento.valorPago,
-      numberCard: event.numberCard,
-      nomeCliente: event.pagador.nomeCliente,
-      cpf: documento.replace(/\D/g, "")
+      numberCard: this.pagamento.numeroCartao,
+      nomeCliente: this.pagamento.pagador.nomeCliente,
+      cpf: documento.replace(/\D/g, ""),
+      tipoPagamento: tipo,
+      qrcodeImage: null,
+      copiaECola: null
     };
-    console.log('DadosPagamento', this.pagamento, 'Payload montado:', payload);
-    /* PRECISO REVER se o ID da OS ou Venda deve ser a mesma do origemID
-    e retorno do gerarCobrancaEfiViaPix      */
 
-    // 1. Prioridade: Se a forma de pagamento for Cartão, chama o serviço de Cartão
-    // Verificamos tanto o nome da forma quanto se existe um número de cartão
-    if (event.formaPagamento.includes('Cartão') || payload.numberCard) {
-      this.pagamentoService.gerarCobrancaCard(payload).subscribe({
-        next: (res) => {
-          this.statusPgControl.setValue('Parcelada');
-          this.gerarParcelas(this.pagamento.valorPago);
-          console.log('Cobrança de cartão gerada:', res);
-        },
-        error: (err) => this.tratarErroPagamento(err)
-      });
+    // 1. Define a mensagem de confirmação dinamicamente
+    const msgConfirma = tipo === 'Pix' || tipo === 'Boleto'
+      ? `Deseja gerar um ${tipo} no valor de R$ ${payload.valor}?`
+      : `Confirma o pagamento em ${tipo} no valor de R$ ${payload.valor}?`;
 
-      // 2. Segunda opção: Pix ou Boleto (Cobrancas que usam o endpoint ViaPix/Efi)
-    } else if (this.pagamento.dtPagamento != null) {
-      this.pagamentoService.gerarCobrancaEfiViaPix(payload).subscribe({
-        next: (res) => {
-          switch (event.formaPagamento) {
-            case 'Pix':
-              this.abrirModalPix(res.qrcode);
-              break;
-            case 'Boleto':
-              window.open(res.linkBoleto, '_blank');
-              break;
-            default:
-              this.listarPagamentos(this.data.origemId, this.data.tipoOrigem);
+    // 2. Abre o diálogo de confirmação
+    this.notificationMsg.openConfirmDialog(msgConfirma).afterClosed().subscribe(confirmado => {
+      if (!confirmado) return;
+
+      // 3. Execução da lógica baseada no tipo selecionado
+      switch (tipo) {
+        case 'Pix':
+        case 'Boleto':
+          // Lógica que estava no confirmarPagamentoEfi
+          if (this.pagamento.dtPagamento) {
+            this.pagamentoService.gerarCobrancaEfiViaPix(payload).subscribe({
+              next: (res) => {
+                if (tipo === 'Pix') this.abrirModalPix(res.qrcode);
+                else window.open(res.linkBoleto, '_blank');
+              },
+              error: (err) => this.tratarErroPagamento(err)
+            });
+          } else {
+            this.listarPagamentos(this.data.origemId, this.data.tipoOrigem);
           }
-        },
-        error: (err) => this.tratarErroPagamento(err)
-      });
+          break;
 
-      // 3. Caso não caia em nenhum dos fluxos de API
-    } else {
-      this.listarPagamentos(this.data.origemId, this.data.tipoOrigem);
-    }
+        case 'Cartão em Crédito':
+          this.pagamentoService.gerarCobrancaCard(payload).subscribe({
+            next: (res) => {
+              this.statusPgControl.setValue('Parcelada');
+              this.gerarParcelas(this.pagamento.valorPago);
+              console.log('Cobrança de cartão gerada:', res);
+            },
+            error: (err) => this.tratarErroPagamento(err)
+          });
+          break;
+
+        case 'Dinheiro':
+        case 'Cartão em Débito':
+          this.statusPgControl.setValue('Fechada');
+          // Se houver integração para débito/dinheiro, insira a chamada aqui
+          break;
+
+        default:
+          console.warn('Forma de pagamento não reconhecida:', tipo);
+      }
+    });
   }
 
 // Método auxiliar para evitar repetição de código

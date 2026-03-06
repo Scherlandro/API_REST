@@ -6,6 +6,7 @@ export interface iPagamento {
   valorPago: number;
   dtPagamento?: string;
   formaPagamento: string;
+  numeroCartao?: number;
   status: number;
   origemId: number;
   tipoOrigem: string; // Ex: 'VENDA', 'Ordem de Servico', 'Contas a Pagar'
