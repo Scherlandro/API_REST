@@ -7,6 +7,7 @@ import com.biontecapi.dtos.PixResponseDTO;
 import com.biontecapi.model.Pagamentos;
 
 import java.time.LocalDate;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 public interface PagamentosService {
@@ -23,5 +24,5 @@ public interface PagamentosService {
 
      void cancelarPagamento(Integer idPagamento);
 
-     List<FechamentoCaixaDto> gerarFechamento(LocalDate data);
+     List<FechamentoCaixaDto> gerarFechamento(OffsetDateTime data);
 }

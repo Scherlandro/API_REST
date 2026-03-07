@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
@@ -52,7 +53,7 @@ public class  ContasAReceberServiceImpl implements ContasAReceberService {
         // 2. Gera o registro financeiro em Pagamentos (Para o Fechamento de Caixa)
         Pagamentos pagamento = new Pagamentos();
         pagamento.setValorPago(conta.getValorParcela());
-        pagamento.setDtPagamento(LocalDateTime.now());
+        pagamento.setDtPagamento(OffsetDateTime.now());
         pagamento.setFormaPagamento(formaPagamento);
         pagamento.setOrigemId(conta.getIdContaReceber());
         pagamento.setTipoOrigem("CONTA_RECEBER");

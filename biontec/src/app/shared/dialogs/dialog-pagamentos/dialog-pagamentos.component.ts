@@ -136,27 +136,25 @@ export class DialogPagamentosComponent implements OnInit, OnDestroy{
     const tipo = event.option.value;
     const documento = this.pagamento.pagador.cnpj || this.pagamento.pagador.cpf || "";
 
-    const payload = {
+    const payload  = {
       idPagamento: this.pagamento.origemId,
-      valor: this.pagamento.valorPago,
+      valorPago: this.pagamento.valorPago,
+      dtPagamento: this.pagamento.dtPagamento,
+      formaPagamento: tipo,
       numberCard: this.pagamento.numeroCartao,
       nomeCliente: this.pagamento.pagador.nomeCliente,
       cpf: documento.replace(/\D/g, ""),
-      tipoPagamento: tipo,
       qrcodeImage: null,
       copiaECola: null
     };
 
-    // 1. Define a mensagem de confirmação dinamicamente
     const msgConfirma = tipo === 'Pix' || tipo === 'Boleto'
-      ? `Deseja gerar um ${tipo} no valor de R$ ${payload.valor}?`
-      : `Confirma o pagamento em ${tipo} no valor de R$ ${payload.valor}?`;
+      ? `Deseja gerar um ${tipo} no valor de R$ ${payload.valorPago}?`
+      : `Confirma o pagamento em ${tipo} no valor de R$ ${payload.valorPago}?`;
 
-    // 2. Abre o diálogo de confirmação
     this.notificationMsg.openConfirmDialog(msgConfirma).afterClosed().subscribe(confirmado => {
       if (!confirmado) return;
 
-      // 3. Execução da lógica baseada no tipo selecionado
       switch (tipo) {
         case 'Pix':
         case 'Boleto':

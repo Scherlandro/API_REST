@@ -45,7 +45,8 @@ public class PagamentosController {
 
     @PostMapping("/cartao")
     public ResponseEntity<Pagamentos> pagarViaCartao(@RequestBody PagamentosDto dto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(pagamentosService.salvarPagamentoCartao(dto));
+       // return ResponseEntity.status(HttpStatus.CREATED).body(pagamentosService.salvarPagamentoCartao(dto));
+        return ResponseEntity.ok(pagamentosService.salvarPagamentoCartao(dto));
     }
 
 

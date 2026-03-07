@@ -1,13 +1,12 @@
 package com.biontecapi.model;
 
 import com.biontecapi.dtos.PagamentosDto;
-import com.biontecapi.dtos.PixResponseDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 @Entity
 @Table(name = "pagamentos")
@@ -22,7 +21,7 @@ public class Pagamentos {
 
     private Double valorPago;
 
-    private LocalDateTime dtPagamento;
+    private OffsetDateTime dtPagamento;
 
     @Column(length = 25)
     private String formaPagamento; // Dinheiro, Cartão, Pix
@@ -42,7 +41,7 @@ public class Pagamentos {
 
     @PrePersist
     protected void onCreate() {
-        this.dtPagamento = LocalDateTime.now();
+        this.dtPagamento = OffsetDateTime.now();
     }
 
     public PagamentosDto toDTO() {

@@ -3,6 +3,7 @@ package com.biontecapi.serviceImpl;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -105,7 +106,7 @@ public class PagamentosServiceImpl implements PagamentosService {
                     // Prioridade 2: Se não foi estornado, marcar como Pago
                     if (p.getStatus() != 1) {
                         p.setStatus(1);
-                        p.setDtPagamento(LocalDateTime.now());
+                        p.setDtPagamento(OffsetDateTime.now());
                         repository.save(p);
                         System.out.println("Pagamento TXID " + txid + " confirmado e salvo.");
                     }
@@ -130,7 +131,7 @@ public class PagamentosServiceImpl implements PagamentosService {
         Pagamentos pagamento = new Pagamentos();
         pagamento.setValorPago(dto.valorPago());
         pagamento.setStatus(1); // Simulação de aprovação
-        pagamento.setDtPagamento(LocalDateTime.now());
+        pagamento.setDtPagamento(OffsetDateTime.now());
         return repository.save(pagamento);
     }
 
@@ -151,9 +152,13 @@ public List<PagamentosDto> listarPorOrigem(Integer id, String tipo) {
     }
 
     @Override
-    public List<FechamentoCaixaDto> gerarFechamento(LocalDate data) {
-        LocalDateTime inicio = data.atStartOfDay();
-        LocalDateTime fim = data.atTime(LocalTime.MAX);
+    public List<FechamentoCaixaDto> gerarFechamento(OffsetDateTime data) {
+        // Define o início do dia (00:00:00) mantendo o mesmo offset
+        OffsetDateTime inicio = data.with(LocalTime.MIN);
+
+        // Define o fim do dia (23:59:59.999...) mantendo o mesmo offset
+        OffsetDateTime fim = data.with(LocalTime.MAX);
+
         return repository.resumoFechamento(inicio, fim);
     }
 
