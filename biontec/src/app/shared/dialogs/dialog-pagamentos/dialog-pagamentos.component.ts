@@ -139,7 +139,9 @@ export class DialogPagamentosComponent implements OnInit, OnDestroy{
     const payload  = {
       idPagamento: this.pagamento.origemId,
       valorPago: this.pagamento.valorPago,
-      dtPagamento: this.pagamento.dtPagamento,
+      dtPagamento: this.pagamento.dtPagamento
+        ? new Date(this.pagamento.dtPagamento).toISOString()
+        : new Date().toISOString(),
       formaPagamento: tipo,
       numberCard: this.pagamento.numeroCartao,
       nomeCliente: this.pagamento.pagador.nomeCliente,
