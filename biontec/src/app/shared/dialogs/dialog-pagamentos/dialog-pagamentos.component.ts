@@ -160,7 +160,7 @@ export class DialogPagamentosComponent implements OnInit, OnDestroy{
       switch (tipo) {
         case 'Pix':
         case 'Boleto':
-          // Lógica que estava no confirmarPagamentoEfi
+
           if (this.pagamento.dtPagamento) {
             this.pagamentoService.gerarCobrancaEfiViaPix(payload).subscribe({
               next: (res) => {
@@ -188,7 +188,7 @@ export class DialogPagamentosComponent implements OnInit, OnDestroy{
         case 'Dinheiro':
         case 'Cartão em Débito':
           this.statusPgControl.setValue('Fechada');
-          // Se houver integração para débito/dinheiro, insira a chamada aqui
+          // Depois vou fazer integração para débito/dinheiro aqui
           break;
 
         default:

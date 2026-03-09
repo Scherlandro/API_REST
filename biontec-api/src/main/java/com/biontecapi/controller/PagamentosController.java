@@ -58,7 +58,7 @@ public class PagamentosController {
            // return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
             return ResponseEntity.status(403).build();
         }
-        // Processar o pagamento
+
         try {
             pagamentosService.processarRetornoEfi(payload);
             // Deve retornar 200 OK para a Efí parar de reenviar a notificação
