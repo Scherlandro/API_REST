@@ -3,7 +3,9 @@
   <mat-card class="container-box-os ">
     <h1 *ngIf="isChange" mat-dialog-title>Abrir Serviço</h1>
     <h1 *ngIf="!isChange" mat-dialog-title>Editar Serviço</h1>
-
+    <h1 mat-dialog-title>
+      {{ faseOS === 'newOS' ? 'Abrir Nova Ordem de Serviço' : 'Dados da Ordem de Serviço' }}
+    </h1>
 
     <mat-form-field appearance="fill">
       <mat-label>Código da OS</mat-label>

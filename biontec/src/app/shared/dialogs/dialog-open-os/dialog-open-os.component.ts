@@ -1,7 +1,7 @@
 import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
 import {FormControl, Validators} from "@angular/forms";
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from "@angular/material/dialog";
-import { iServiceOrder } from 'src/app/interfaces/service-order';
+import {FaseOS, iServiceOrder} from 'src/app/interfaces/service-order';
 import { OrdemDeServicosService } from 'src/app/services/ordem-de-servicos.service';
 import {ICliente} from "../../../interfaces/cliente";
 import {debounceTime, distinctUntilChanged, Observable, of, Subject, switchMap, takeUntil} from "rxjs";
@@ -27,6 +27,7 @@ export class DialogOpenOsComponent implements  OnInit, OnDestroy  {
   itensOS: iItensOS;
   isNewOS : boolean;
   isChange: boolean;
+  faseOS: FaseOS;
   osSelecionada!: iServiceOrder;
   funcionarioControl = new FormControl('', [Validators.required]);
   funcionarioFilted!: Observable<IFuncionario[]>;
@@ -46,12 +47,12 @@ export class DialogOpenOsComponent implements  OnInit, OnDestroy  {
 
   constructor(
     @Inject(MAT_DIALOG_DATA)
-    public data: {
+    public data: any /*{
       modoNew: 'adicionar' | 'editar' ;
       modo:'editar' |'adicionar'  ;
       os: iServiceOrder;
       itensOS: iItensOS;
-    },
+    }*/,
     public dialogRef: MatDialogRef<DialogOpenOsComponent>,
     public osServices: OrdemDeServicosService,
     public dialog: MatDialog,
@@ -64,6 +65,7 @@ export class DialogOpenOsComponent implements  OnInit, OnDestroy  {
     this.itensOS = data.itensOS;  // item selecionado (ou item vazio)
    this.isChange = data.modo === 'adicionar';
     this.isNewOS = data.modoNew === 'editar';
+    this.faseOS = data.faseOS;
     this.produtoControl = new FormControl();
     this.quantidadeControl = new FormControl(
       this.itensOS?.quantidade || 1,      [Validators.required, Validators.min(1)]

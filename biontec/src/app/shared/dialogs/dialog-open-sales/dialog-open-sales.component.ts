@@ -73,10 +73,7 @@ export class DialogOpenSalesComponent implements OnInit {
     this.quantidadeControl = new FormControl(
       this.itensVd?.qtdVendidas || 1,      [Validators.required, Validators.min(1)]
     );
-
-    console.log('Dados em OpenSales ', data)
   }
-
 
   ngOnInit(): void {
     if (this.data) {
