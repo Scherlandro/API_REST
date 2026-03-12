@@ -47,12 +47,7 @@ export class DialogOpenOsComponent implements  OnInit, OnDestroy  {
 
   constructor(
     @Inject(MAT_DIALOG_DATA)
-    public data: any /*{
-      modoNew: 'adicionar' | 'editar' ;
-      modo:'editar' |'adicionar'  ;
-      os: iServiceOrder;
-      itensOS: iItensOS;
-    }*/,
+    public data: any ,
     public dialogRef: MatDialogRef<DialogOpenOsComponent>,
     public osServices: OrdemDeServicosService,
     public dialog: MatDialog,
@@ -62,10 +57,10 @@ export class DialogOpenOsComponent implements  OnInit, OnDestroy  {
     private productService: ProductService
   ) {
     this.os = data as any;
-    this.itensOS = data.itensOS;  // item selecionado (ou item vazio)
-   this.isChange = data.modo === 'adicionar';
-    this.isNewOS = data.modoNew === 'editar';
+    this.itensOS = data.itensOS;
+    this.isNewOS = data.isNewOS;
     this.faseOS = data.faseOS;
+
     this.produtoControl = new FormControl();
     this.quantidadeControl = new FormControl(
       this.itensOS?.quantidade || 1,      [Validators.required, Validators.min(1)]
@@ -74,6 +69,7 @@ export class DialogOpenOsComponent implements  OnInit, OnDestroy  {
 
 
   ngOnInit(): void {
+    console.log('Valor da faseOS ', this.faseOS)
     this.listarProdutos();
     this.setupAutocompleteFilters();
 
