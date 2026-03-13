@@ -1,8 +1,8 @@
 <div class="div-os">
 
   <mat-card class="container-box-os ">
-    <h1 *ngIf="isChange" mat-dialog-title>Abrir Serviço</h1>
-    <h1 *ngIf="!isChange" mat-dialog-title>Editar Serviço</h1>
+    <h1 *ngIf="tagItemOS" mat-dialog-title>Abrir Serviço</h1>
+    <h1 *ngIf="!tagItemOS" mat-dialog-title>Editar Serviço</h1>
     <h1 mat-dialog-title>
       {{ faseOS === 'newOS' ? 'Abrir Nova Ordem de Serviço' : 'Dados da Ordem de Serviço' }}
     </h1>
@@ -12,7 +12,7 @@
       <input matInput [(ngModel)]="os.idOS" disabled>
     </mat-form-field>
 
-    <mat-form-field *ngIf="!isNewOS" appearance="fill">
+    <mat-form-field *ngIf="!tagOS" appearance="fill">
       <mat-label>Atendente</mat-label>
       <input type="text"
              placeholder="Atendente"
@@ -28,40 +28,40 @@
       </mat-autocomplete>
     </mat-form-field>
 
-    <mat-form-field appearance="fill" *ngIf="isNewOS" >
+    <mat-form-field appearance="fill" *ngIf="tagOS" >
       <mat-label>Atendente</mat-label>
       <input matInput [value]="os.nomeFuncionario" disabled>
     </mat-form-field>
 
     <!-- Data de Entrada -->
-    <mat-form-field appearance="fill" *ngIf="!isNewOS" >
+    <mat-form-field appearance="fill" *ngIf="!tagOS" >
       <mat-label>Data</mat-label>
       <input matInput [matDatepicker]="picker" [(ngModel)]="os.dataDeEntrada" >
       <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
       <mat-datepicker #picker></mat-datepicker>
     </mat-form-field>
 
-    <mat-form-field *ngIf="isNewOS" appearance="fill">
+    <mat-form-field *ngIf="tagOS" appearance="fill">
       <mat-label>Data</mat-label>
       <input matInput [value]="os.dataDeEntrada | date:'dd/MM/yyyy'" disabled>
     </mat-form-field>
 
     <!-- Data de Corrente -->
-    <mat-form-field appearance="fill" *ngIf="isNewOS && isChange" >
+    <mat-form-field appearance="fill" *ngIf="tagOS && tagItemOS" >
       <mat-label>Data Corrente</mat-label>
       <input matInput [matDatepicker]="picker" [(ngModel)]="os.ultimaAtualizacao" >
       <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
       <mat-datepicker #picker></mat-datepicker>
     </mat-form-field>
 
-    <mat-form-field *ngIf="isNewOS && !isChange" appearance="fill">
+    <mat-form-field *ngIf="tagOS && !tagItemOS" appearance="fill">
       <mat-label>Data Corrente</mat-label>
       <input matInput [value]="os.ultimaAtualizacao | date:'dd/MM/yyyy'"  disabled>
     </mat-form-field>
 
 
     <!-- Cliente -->
-    <mat-form-field  *ngIf="!isNewOS" appearance="fill">
+    <mat-form-field *ngIf="!tagOS" appearance="fill">
       <mat-label>Cliente</mat-label>
       <input type="text"
              placeholder="Digite o Cliente"
@@ -77,7 +77,7 @@
       </mat-autocomplete>
     </mat-form-field>
 
-    <mat-form-field appearance="fill"*ngIf="isNewOS" >
+    <mat-form-field appearance="fill"*ngIf="tagOS" >
       <mat-label>Cliente</mat-label>
       <input matInput [value]="os.cliente.nomeCliente" disabled>
     </mat-form-field>
@@ -99,7 +99,7 @@
     </mat-form-field>
 
     <div>
-    <button mat-button *ngIf="isChange" cdkFocusInitial [mat-dialog-close]="osSelecionada"
+    <button mat-button *ngIf="tagItemOS" cdkFocusInitial [mat-dialog-close]="osSelecionada"
             (click)="save(os)">Savar OS
     </button>
 
@@ -108,7 +108,7 @@
   </mat-card>
 
 
-  <mat-card  *ngIf="isNewOS || !isChange" class="container-box-itens " >
+  <mat-card *ngIf="tagOS || !tagItemOS" class="container-box-itens " >
     <!-- Itens -->
     <mat-form-field>
       <mat-label>ID</mat-label>
@@ -120,7 +120,7 @@
       <input matInput [value]="os.itensOS.codProduto" disabled>
     </mat-form-field>
 
-   <mat-form-field *ngIf="isChange" appearance="fill" >
+   <mat-form-field *ngIf="tagItemOS" appearance="fill" >
       <mat-label>Produto</mat-label>
       <input type="text" matInput placeholder="Digite o nome do produto"
              [formControl]="produtoControl"
@@ -136,7 +136,7 @@
       </mat-autocomplete>
     </mat-form-field>
 
-    <mat-form-field *ngIf="!isChange" appearance="fill">
+    <mat-form-field *ngIf="!tagItemOS" appearance="fill">
       <mat-label>Descrição</mat-label>
       <input matInput [value]="os.itensOS.descricao" disabled>
     </mat-form-field>
@@ -163,10 +163,10 @@
     <div mat-dialog-content> <!-- *ngIf="itensOS$.length > 0">-->
 
 
-      <button mat-raised-button *ngIf="!isNewOS || isChange" (click)="addItem()" [disabled]="isSaveButtonDisabled()">
+      <button mat-raised-button *ngIf="!tagOS || tagItemOS" (click)="addItem()" [disabled]="isSaveButtonDisabled()">
         Adicionar Item
       </button>
-      <button mat-raised-button *ngIf="!isChange" (click)="editarItem(itensOS)" [disabled]="isSaveButtonDisabled()">
+      <button mat-raised-button *ngIf="!tagItemOS" (click)="editarItem(itensOS)" [disabled]="isSaveButtonDisabled()">
         Atualizar Item
       </button>
 

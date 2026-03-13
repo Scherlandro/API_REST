@@ -25,8 +25,8 @@ export class DialogOpenOsComponent implements  OnInit, OnDestroy  {
   destroy$ = new Subject<void>();
   os!: iServiceOrder;
   itensOS: iItensOS;
-  isNewOS : boolean;
-  isChange: boolean;
+  tagOS : boolean;
+  tagItemOS: boolean;
   faseOS: FaseOS;
   osSelecionada!: iServiceOrder;
   funcionarioControl = new FormControl('', [Validators.required]);
@@ -58,7 +58,7 @@ export class DialogOpenOsComponent implements  OnInit, OnDestroy  {
   ) {
     this.os = data as any;
     this.itensOS = data.itensOS;
-    this.isNewOS = data.isNewOS;
+    this.tagOS = data.tagOS;
     this.faseOS = data.faseOS;
 
     this.produtoControl = new FormControl();
@@ -88,7 +88,7 @@ export class DialogOpenOsComponent implements  OnInit, OnDestroy  {
       }
     });
     // Se estiver editando, força o cálculo inicial do total
-    if (this.isChange) {
+    if (this.tagItemOS) {
       this.updateTotal();
     }
 
@@ -209,8 +209,8 @@ export class DialogOpenOsComponent implements  OnInit, OnDestroy  {
     this.osServices.create(osParaCriar).subscribe({
       next: (osCriada) => {
         this.os = osCriada;
-        this.isChange = false;
-        this.isNewOS = true;
+        this.tagItemOS = false;
+        this.tagOS = true;
       },
       error: () => this.onError('Erro ao iniciar OS')
     });
@@ -263,7 +263,7 @@ export class DialogOpenOsComponent implements  OnInit, OnDestroy  {
         });
     }
     if (os.modo === 'adicionar' && os.modoNew === 'editar') {
-      console.log('isChange no save ', this.isChange)
+      console.log('isChange no save ', this.tagItemOS)
       this.osServices.update(os).pipe(takeUntil(this.destroy$))
         .subscribe({
           next: (osAtualizada) => {
