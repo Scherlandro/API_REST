@@ -17,7 +17,6 @@ import {TokenService} from "../../services/token.service";
 import {NotificationMgsService} from "../../services/notification-mgs.service";
 import {iPagamento} from "../../interfaces/pagamento";
 import {DialogPagamentosComponent} from "../../shared/dialogs/dialog-pagamentos/dialog-pagamentos.component";
-import {error} from "@angular/compiler-cli/src/transformers/util";
 
 
 @Component({
@@ -70,7 +69,6 @@ export class VendaComponent implements OnInit {
     this.listarVenda();
     this.adapterFilterPredicate();
   }
-
 
   listarVenda() {
     this.spiner = true;

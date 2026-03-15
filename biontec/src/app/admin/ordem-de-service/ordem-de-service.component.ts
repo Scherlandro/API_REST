@@ -94,7 +94,8 @@ export class OrdemDeServiceComponent implements OnInit {
       });
   }
 
-  openDilogOS() {
+
+ /* openDilogOS() {
 
     const os: iServiceOrder = {
       idOS: 0, cliente: this.cliente$, idFuncionario: 0, nomeFuncionario: '',
@@ -133,7 +134,7 @@ export class OrdemDeServiceComponent implements OnInit {
       }
     });
   }
-
+*/
   openDilogAddItenOS(os: iServiceOrder, item?: iItensOS) {
     const isEdit = !!item;
     const isNovaOS = !os.itensOS; // nova OS recém criada
@@ -211,18 +212,9 @@ export class OrdemDeServiceComponent implements OnInit {
       }
   }
 
-
   openNewOS() {
     this.executarFluxoOS('newOS');
   }
-
-/*
-
-  editarOS(elementOS: iServiceOrder) {
-    this.openDilogAddItenOS(elementOS);
-  }
-*/
-
 
   editarOS(elementOS: iServiceOrder) {
     this.executarFluxoOS('editarOS', elementOS);
@@ -267,7 +259,7 @@ export class OrdemDeServiceComponent implements OnInit {
       idOS: elementMain?.idOS || 0,
       cliente: elementMain?.cliente || null,
       dtOS: elementMain?.dtOS || new Date().toISOString(),
-      ...elementMain // Mantém outras propriedades existentes
+      ...elementMain
     };
 
     const itemBase = {
@@ -281,6 +273,7 @@ export class OrdemDeServiceComponent implements OnInit {
       ...elementItem
     };
 
+    console.log('OSBASE', osBase, 'ItensOS', itemBase)
     const dialogRef =  this.dialog.open(DialogOpenOsComponent, {
       data: {
         fase: fase,

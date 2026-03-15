@@ -24,7 +24,7 @@ export class DialogOpenOsComponent implements  OnInit, OnDestroy  {
 
   destroy$ = new Subject<void>();
   os!: iServiceOrder;
-  itensOS: iItensOS;
+  itensOS!: iItensOS;
   tagOS : boolean;
   tagItemOS: boolean;
   faseOS: FaseOS;
@@ -57,8 +57,14 @@ export class DialogOpenOsComponent implements  OnInit, OnDestroy  {
     private productService: ProductService
   ) {
     this.os = data as any;
-    this.itensOS = data.itensOS;
+
+    console.log('this.os', this.os, 'data', data)
+    if (!this.os.cliente) {
+      this.os.cliente = {} as ICliente;
+    }
+
     this.tagOS = data.tagOS;
+    this.tagItemOS = data.tagItemOS;
     this.faseOS = data.faseOS;
 
     this.produtoControl = new FormControl();
