@@ -24,7 +24,7 @@ public record OrdemDeServicoDTO(
 
         Funcionario gestorDaOS,
         Funcionario tecnicoEncarregado,
-        Collection<ItensDoServicoDTO> itensOSdto
+        Collection<ItensDoServicoDTO> itensOS
 ) {
 
 }

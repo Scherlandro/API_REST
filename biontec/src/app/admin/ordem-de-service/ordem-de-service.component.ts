@@ -264,11 +264,11 @@ export class OrdemDeServiceComponent implements OnInit {
 
     const itemBase = {
       idItensDaOS: elementItem?.idItensDaOS || 0,
+      codOS: elementItem?.codOS,
       codProduto: elementItem?.codProduto || '',
       descricao: elementItem?.descricao || '',
-      qtdVendidas: elementItem?.qtdVendidas || 1,
-      valOS: elementItem?.valOS || 0,
-      valorParcial: elementItem?.valorParcial || 0,
+      valorUnitario: elementItem?.valorUnitario || 0,
+      quantidade: elementItem?.quantidade || 1,
       total: elementItem?.total || 0,
       ...elementItem
     };
