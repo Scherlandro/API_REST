@@ -135,7 +135,8 @@ export class OrdemDeServiceComponent implements OnInit {
     });
   }
 */
-  openDilogAddItenOS(os: iServiceOrder, item?: iItensOS) {
+
+  /* openDilogAddItenOS(os: iServiceOrder, item?: iItensOS) {
     const isEdit = !!item;
     const isNovaOS = !os.itensOS; // nova OS recém criada
 
@@ -161,7 +162,7 @@ export class OrdemDeServiceComponent implements OnInit {
     });
 
   }
-
+*/
   onSearch() {
     const params = this.prepareSearchParams();
     this.osService.search(params).subscribe(orders => this.orders = orders);

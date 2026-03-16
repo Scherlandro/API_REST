@@ -58,15 +58,15 @@ export class DialogOpenOsComponent implements  OnInit, OnDestroy  {
   ) {
     this.os = data as any;
 
-    console.log('this.os', this.os, 'data', data)
     if (!this.os.cliente) {
       this.os.cliente = {} as ICliente;
     }
 
     this.tagOS = data.tagOS;
     this.tagItemOS = data.tagItemOS;
-    this.faseOS = data.faseOS;
+    this.faseOS = data.fase;
 
+    console.log('data', data)
     this.produtoControl = new FormControl();
     this.quantidadeControl = new FormControl(
       this.itensOS?.quantidade || 1,      [Validators.required, Validators.min(1)]
