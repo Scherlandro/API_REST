@@ -94,75 +94,6 @@ export class OrdemDeServiceComponent implements OnInit {
       });
   }
 
-
- /* openDilogOS() {
-
-    const os: iServiceOrder = {
-      idOS: 0, cliente: this.cliente$, idFuncionario: 0, nomeFuncionario: '',
-      dataDeEntrada: '', ultimaAtualizacao: '', status: '', subtotal: 0,
-      desconto: 0, totalGeralOS: 0, porConta: 0, restante: 0,
-
-      itensOS : {
-        idItensDaOS: 0, codOS: 0, codProduto: '', descricao: '', valorUnitario: 0,
-        quantidade: 1, total: 0
-      }
-    };
-
-    const itens: iItensOS = os.itensOS;
-
-    const dialogRef = this.dialog.open(DialogOpenOsComponent, {
-      data: {
-        modoNew: 'adicionar', modoAdd: 'adicionar',
-        ...os,
-        itensOS: { ...itens, codOS: os.idOS }
-      }
-    });
-
-    dialogRef.afterClosed().subscribe((result: iServiceOrder) => {
-      if (result) {
-        const data = [...this.tbSourceOS$.data]; // Cria cópia do array atual
-        const index = data.findIndex(os => os.idOS === result.idOS);
-        if (index > -1) {
-          // MODO EDIÇÃO: Substitui o item antigo pelo novo
-          data[index] = result;
-        } else {
-          // MODO ADIÇÃO: Adiciona ao início ou fim da lista
-          data.unshift(result);
-        }
-        this.tbSourceOS$.data = data; // Atualiza o DataSource (refresca a tela)
-        this.notificationMsg.success('Operação realizada com sucesso!');
-      }
-    });
-  }
-*/
-
-  /* openDilogAddItenOS(os: iServiceOrder, item?: iItensOS) {
-    const isEdit = !!item;
-    const isNovaOS = !os.itensOS; // nova OS recém criada
-
-    const emptyItem: iItensOS = {
-      idItensDaOS: 0,
-      codOS: os.idOS ?? 0,
-      codProduto: '',
-      descricao: '',
-      valorUnitario: 0,
-      quantidade: 1,
-      total: 0
-    };
-    // Define o item a ser enviado (novo ou existente)
-    const itens = isEdit ? item : emptyItem;
-
-    const dialogRef = this.dialog.open(DialogOpenOsComponent, {
-      data: {
-        modoNew: isNovaOS ? 'adicionar' : 'editar',
-        modoAdd: isEdit ? 'editar' : 'adicionar',
-         ...os,
-        itensOS: { ...itens, codOS: os.idOS }
-      }
-    });
-
-  }
-*/
   onSearch() {
     const params = this.prepareSearchParams();
     this.osService.search(params).subscribe(orders => this.orders = orders);
@@ -213,6 +144,77 @@ export class OrdemDeServiceComponent implements OnInit {
       }
   }
 
+  /* openDilogOS() {
+
+   const os: iServiceOrder = {
+     idOS: 0, cliente: this.cliente$, idFuncionario: 0, nomeFuncionario: '',
+     dataDeEntrada: '', ultimaAtualizacao: '', status: '', subtotal: 0,
+     desconto: 0, totalGeralOS: 0, porConta: 0, restante: 0,
+
+     itensOS : {
+       idItensDaOS: 0, codOS: 0, codProduto: '', descricao: '', valorUnitario: 0,
+       quantidade: 1, total: 0
+     }
+   };
+
+   const itens: iItensOS = os.itensOS;
+
+   const dialogRef = this.dialog.open(DialogOpenOsComponent, {
+     data: {
+       modoNew: 'adicionar', modoAdd: 'adicionar',
+       ...os,
+       itensOS: { ...itens, codOS: os.idOS }
+     }
+   });
+
+   dialogRef.afterClosed().subscribe((result: iServiceOrder) => {
+     if (result) {
+       const data = [...this.tbSourceOS$.data]; // Cria cópia do array atual
+       const index = data.findIndex(os => os.idOS === result.idOS);
+       if (index > -1) {
+         // MODO EDIÇÃO: Substitui o item antigo pelo novo
+         data[index] = result;
+       } else {
+         // MODO ADIÇÃO: Adiciona ao início ou fim da lista
+         data.unshift(result);
+       }
+       this.tbSourceOS$.data = data; // Atualiza o DataSource (refresca a tela)
+       this.notificationMsg.success('Operação realizada com sucesso!');
+     }
+   });
+ }
+*/
+
+  /* openDilogAddItenOS(os: iServiceOrder, item?: iItensOS) {
+    const isEdit = !!item;
+    const isNovaOS = !os.itensOS; // nova OS recém criada
+
+    const emptyItem: iItensOS = {
+      idItensDaOS: 0,
+      codOS: os.idOS ?? 0,
+      codProduto: '',
+      descricao: '',
+      valorUnitario: 0,
+      quantidade: 1,
+      total: 0
+    };
+    // Define o item a ser enviado (novo ou existente)
+    const itens = isEdit ? item : emptyItem;
+
+    const dialogRef = this.dialog.open(DialogOpenOsComponent, {
+      data: {
+        modoNew: isNovaOS ? 'adicionar' : 'editar',
+        modoAdd: isEdit ? 'editar' : 'adicionar',
+         ...os,
+        itensOS: { ...itens, codOS: os.idOS }
+      }
+    });
+
+  }
+*/
+
+
+
   openNewOS() {
     this.executarFluxoOS('newOS');
   }
@@ -226,7 +228,7 @@ export class OrdemDeServiceComponent implements OnInit {
   }
 
   editarItemOS(elementItem: iItensOS) {
-
+   console.log('Itens para edtar', elementItem)
     this.executarFluxoOS('editarItemOS', null, elementItem);
   }
 
@@ -274,7 +276,7 @@ export class OrdemDeServiceComponent implements OnInit {
       ...elementItem
     };
 
-    console.log('OSBASE', osBase, 'ItensOS', itemBase)
+   // console.log('OSBASE', osBase, 'ItensOS', itemBase)
     const dialogRef =  this.dialog.open(DialogOpenOsComponent, {
       data: {
         fase: fase,
