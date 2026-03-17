@@ -75,7 +75,15 @@ export class DialogOpenOsComponent implements  OnInit, OnDestroy  {
 
 
   ngOnInit(): void {
-    console.log('Valor da faseOS ', this.faseOS)
+    if(this.data){
+      this.faseOS = this.data.fase;
+      this.os = this.data.os;
+      this.itensOS = this.data.itensOS;
+      if (!this.os.cliente) {
+        this.os.cliente = {} as ICliente;
+      }
+    }
+    console.log('Valor da this.faseOS ', this.faseOS)
     this.listarProdutos();
     this.setupAutocompleteFilters();
 

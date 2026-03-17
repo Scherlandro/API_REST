@@ -69,7 +69,7 @@ export class TokenInterceptor implements HttpInterceptor {
 
       return next.handle(clone).pipe(
         catchError(error => {
-          console.log('No catchError do Interceptor',error)
+          console.log('No catchError do Interceptor',error.status)
           if(error.status === 401){
             this.tokenService.clearTokenExpired();
           }
