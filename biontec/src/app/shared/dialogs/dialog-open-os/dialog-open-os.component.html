@@ -3,9 +3,9 @@
 
   <mat-card class="container-box-os " *ngIf="tagOS">
 
-    <h6 mat-dialog-title>
-      {{ faseOS === 'newOS' ? 'Abrir Nova Ordem de Serviço' : 'Dados Ordem de Serviço' }}
-    </h6>
+    <label mat-dialog-title>
+      {{ faseOS === 'newOS' ? 'Abrir Nova Ordem de Serviço' : 'Ordem de Serviço' }}
+    </label>
 
     <mat-form-field appearance="fill" *ngIf="faseOS == 'editarOS' || faseOS == 'addItemOS'">
       <mat-label>Código da OS</mat-label>
@@ -159,15 +159,27 @@
     </mat-form-field>
 
     <!-- Itens da Ordem de Serviço -->
+
     <div mat-dialog-content> <!-- *ngIf="itensOS$.length > 0">-->
 
+      <form>
+        <button mat-raised-button
+                (click)="faseOS === 'addItemOS' ? addItem() : editarItem(itensOS)"
+                [disabled]="isSaveButtonDisabled()">
+          {{ faseOS === 'addItemOS' ? 'Adicionar Item' : 'Salvar' }}
+        </button>
+        <button mat-button *ngIf="faseOS === 'editarItemOS' " (click)="onCancel()">Cancelar</button>
+      </form>
 
-      <button mat-raised-button *ngIf="!tagOS || tagItemOS" (click)="addItem()" [disabled]="isSaveButtonDisabled()">
+<!--
+
+      <button mat-raised-button *ngIf="tagOS || tagItemOS" (click)="addItem()" [disabled]="isSaveButtonDisabled()">
         Adicionar Item
       </button>
       <button mat-raised-button *ngIf="!tagItemOS" (click)="editarItem(itensOS)" [disabled]="isSaveButtonDisabled()">
         Atualizar Item
       </button>
+-->
 
     <!--  <div *ngFor="let item of itensOS$">
         <div>{{ item.descricao }} - {{ formatter(item.total) }}</div>
