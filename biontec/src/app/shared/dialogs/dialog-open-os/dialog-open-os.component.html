@@ -3,9 +3,9 @@
 
   <mat-card class="container-box-os " *ngIf="tagOS">
 
-    <h1 mat-dialog-title>
-      {{ faseOS === 'newOS' ? 'Abrir Nova Ordem de Serviço' : 'Dados da Ordem de Serviço' }}
-    </h1>
+    <h6 mat-dialog-title>
+      {{ faseOS === 'newOS' ? 'Abrir Nova Ordem de Serviço' : 'Dados Ordem de Serviço' }}
+    </h6>
 
     <mat-form-field appearance="fill" *ngIf="faseOS == 'editarOS' || faseOS == 'addItemOS'">
       <mat-label>Código da OS</mat-label>
@@ -54,11 +54,6 @@
       <mat-datepicker #picker></mat-datepicker>
     </mat-form-field>
 
-    <mat-form-field *ngIf="tagOS && !tagItemOS" appearance="fill">
-      <mat-label>Data Corrente</mat-label>
-      <input matInput [value]="os.ultimaAtualizacao | date:'dd/MM/yyyy'"  disabled>
-    </mat-form-field>
-
 
     <!-- Cliente -->
     <mat-form-field *ngIf="faseOS == 'newOS'" appearance="fill">
@@ -77,7 +72,7 @@
       </mat-autocomplete>
     </mat-form-field>
 
-    <mat-form-field appearance="fill"*ngIf="tagOS" >
+    <mat-form-field appearance="fill"*ngIf="faseOS == 'editarOS' || faseOS == 'addItemOS'" >
       <mat-label>Cliente</mat-label>
       <input matInput [value]="os.cliente.nomeCliente" disabled>
     </mat-form-field>
@@ -98,17 +93,21 @@
       </mat-autocomplete>
     </mat-form-field>
 
-    <div>
-    <button mat-button *ngIf="tagItemOS" cdkFocusInitial [mat-dialog-close]="osSelecionada"
-            (click)="save(os)">Savar OS
+  <div class="actions">
+    <button mat-button *ngIf="faseOS === 'newOS' " [disabled]="clienteControl.invalid || funcionarioControl.invalid"
+            (click)="save(os)">
+      {{ faseOS === 'newOS' ? 'Iniciar OS' : '' }}
     </button>
-
+    <button mat-button *ngIf=" faseOS === 'editarOS'" (click)="save(os)">
+      {{ faseOS === 'editarOS' ? 'Atualizar Dados' : '' }}
+    </button>
     <button mat-button (click)="onCancel()">Cancelar</button>
-    </div>
+  </div>
+
   </mat-card>
 
 
-  <mat-card *ngIf="tagOS || !tagItemOS" class="container-box-itens " >
+  <mat-card *ngIf="tagItemOS" class="container-box-itens " >
     <!-- Itens -->
     <mat-form-field>
       <mat-label>ID</mat-label>
