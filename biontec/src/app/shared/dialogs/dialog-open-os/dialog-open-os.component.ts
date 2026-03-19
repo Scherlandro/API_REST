@@ -89,6 +89,9 @@ export class DialogOpenOsComponent implements  OnInit, OnDestroy  {
 
     this.clienteControl.setValue(this.os.cliente.nomeCliente);
     this.funcionarioControl.setValue(this.os.nomeFuncionario);
+    if (this.os.status) {
+      this.statusOsControl.setValue(this.os.status);
+    }
     if (this.itensOS && this.itensOS.quantidade) {
       // emitEvent: false evita que o subscribe abaixo seja disparado desnecessariamente na inicialização
       this.quantidadeControl.setValue(this.itensOS.quantidade, { emitEvent: false });
