@@ -57,7 +57,34 @@
           <mat-icon>build</mat-icon> Opções
         </th>
         <td mat-cell *matCellDef="let elementOS">
-          <button class="button-add-item" (click)="adicionarItenOS(elementOS)">
+
+
+          <mat-icon class="button-edite" (click)="editarOS(elementOS); $event.stopPropagation() "
+                    type="hidden" title="Editar OS" >
+            edite
+          </mat-icon>
+          <span></span>
+
+          <mat-icon class="button-add-item" (click)="adicionarItenOS(elementOS); $event.stopPropagation()"
+                    type="hidden" title="Adicionar mais Item" >
+            playlist_add
+          </mat-icon>
+          <span></span>
+
+          <mat-icon class="button-delete" (click)="deleteOS(elementOS); $event.stopPropagation() "
+                    type="hidden" title="Remover OS" >
+            delete
+          </mat-icon>
+
+          <span></span>
+
+          <mat-icon type="hidden" title="Finalizar OS"  (click)="finalizarOperacao(elementOS); $event.stopPropagation() "
+                    class="button-finalizar">
+            payment
+          </mat-icon>
+
+
+     <!--     <button class="button-add-item" (click)="adicionarItenOS(elementOS)">
             <mat-icon type="hidden" title="Adicionar mais Item" class="edit">
               add_shopping_cart
             </mat-icon>
@@ -83,7 +110,7 @@
                     class="button-finalizar">
             payment
           </mat-icon>
-
+-->
         </td>
       </ng-container>
 

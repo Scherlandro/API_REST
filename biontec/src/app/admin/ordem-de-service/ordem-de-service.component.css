@@ -72,13 +72,10 @@
 }
 
 .button-add-item {
-  min-width: 40px;
-  width: auto;
-  height: 35px;
+  width: 25px;
+  height: 25px;
   background-color: rgba(51, 33, 83, 0.07);
-  -webkit-border-radius: 14px;
-  -moz-border-radius: 14px;
-  border-radius: 14px;
+  border-radius: 5px;
 
 }
 
@@ -87,13 +84,10 @@
 }
 
 .button-edite {
-  min-width: 40px;
-  width: auto;
-  height: 35px;
+  width: 25px;
+  height: 25px;
   background-color: rgba(51, 33, 83, 0.07);
-  -webkit-border-radius: 14px;
-  -moz-border-radius: 14px;
-  border-radius: 14px;
+  border-radius: 5px;
 }
 
 .button-edite:hover {
@@ -101,12 +95,10 @@
 }
 
 .button-delete {
-  width: auto;
-  height: 35px;
+  width: 25px;
+  height: 25px;
   background-color: rgba(51, 33, 83, 0.07);
-  -webkit-border-radius: 14px;
-  -moz-border-radius: 14px;
-  border-radius: 14px;
+  border-radius: 5px;
 }
 
 .button-delete:hover {
@@ -114,8 +106,8 @@
 }
 
 .button-finalizar {
-  padding-left: 10px;
-  padding-right: 10px;
+  padding-left: 6px;
+  padding-right: 6px;
   width: 25px;
   height: 25px;
   background-color: rgba(51, 33, 83, 0.07);
