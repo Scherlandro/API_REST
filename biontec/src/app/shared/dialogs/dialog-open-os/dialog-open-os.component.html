@@ -158,9 +158,8 @@
       <input matInput [value]="formatter(os.itensOS.total || 0)" disabled [(ngModel)]="os.itensOS.valorUnitario">
     </mat-form-field>
 
-    <!-- Itens da Ordem de Serviço -->
 
-    <div mat-dialog-content> <!-- *ngIf="itensOS$.length > 0">-->
+    <div>
 
       <form>
         <button mat-raised-button
@@ -171,27 +170,6 @@
         <button mat-button *ngIf="faseOS === 'editarItemOS' " (click)="onCancel()">Cancelar</button>
       </form>
 
-<!--
-
-      <button mat-raised-button *ngIf="tagOS || tagItemOS" (click)="addItem()" [disabled]="isSaveButtonDisabled()">
-        Adicionar Item
-      </button>
-      <button mat-raised-button *ngIf="!tagItemOS" (click)="editarItem(itensOS)" [disabled]="isSaveButtonDisabled()">
-        Atualizar Item
-      </button>
--->
-
-    <!--  <div *ngFor="let item of itensOS$">
-        <div>{{ item.descricao }} - {{ formatter(item.total) }}</div>
-        <button mat-button (click)="removeItem(item)">Remover</button>
-      </div>
-      &lt;!&ndash; Adicionar Produto &ndash;&gt;
-      <button mat-raised-button (click)="addItem()"> + item  </button>
-
-      <button mat-button *ngIf="isChange" [mat-dialog-close]="itensOS" cdkFocusInitial>Editar</button>
-      <button mat-button *ngIf="!isChange" [mat-dialog-close]="itensOS" cdkFocusInitial (click)="addItem()"
-              [disabled]="isSaveButtonDisabled()">Salvar
-      </button>-->
     </div>
 
   </mat-card>
