@@ -51,4 +51,10 @@ export class TokenService {
     return user
 
   }
+
+  hasToken() {
+    const token = localStorage.getItem('token')
+
+    return !! token;
+  }
 }

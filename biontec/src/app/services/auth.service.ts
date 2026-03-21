@@ -24,7 +24,11 @@ const httpOptions = {
   private baseUrl: string = environment.API_PATH+'api/';
 
     private currentUserSubject: BehaviorSubject<IUser>;
-    public currentUser: Observable<IUser>;
+
+  private isAuthenticatedSubject = new BehaviorSubject<boolean>(this.tokenService.hasToken());
+  public isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
+
+  public currentUser: Observable<IUser>;
     public usuarioAutenticado: boolean = false;
     mostrarMenuEmitter = new EventEmitter<boolean>();
 
@@ -38,10 +42,20 @@ const httpOptions = {
     this.currentUser = this.currentUserSubject.asObservable();
   }
 
-  login(credentials: ICredential): Observable<IToken>{
+  login(credentials: ICredential): Observable<IToken> {
+      console.log('Credenciais', credentials)
+    return this._http.post<IToken>(`${this.baseUrl}login`, credentials).pipe(
+      tap(res => {
+        this.tokenService.saveToken(res.access_token);
+        this.isAuthenticatedSubject.next(true);
+      })
+    );
+  }
+
+/*  login(credentials: ICredential): Observable<IToken>{
    this.setUserName(credentials.username);
     return this._http.post<IToken>(this.baseUrl+'login/?username='+credentials.username+'&password='+credentials.password+'','')
-  }
+  }*/
 
   logout() {
     localStorage.removeItem('token');
