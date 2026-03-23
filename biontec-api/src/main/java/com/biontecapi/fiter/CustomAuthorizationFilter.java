@@ -31,14 +31,10 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-      /*
-        response.addHeader("Access-Control-Allow-Origin", "*");
-        response.addHeader("Access-Control-Allow-Headers", "Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers,authorization");
-        response.addHeader("Access-Control-Expose-Headers", "Access-Control-Allow-Origin, Access-Control-Allow-Credentials, authorization");
-        */
+
         // Lista de caminhos que NÃO precisam de Token JWT
         String path = request.getServletPath();
-        if (path.equals("/api/login/") ||
+        if (path.equals("/api/login") ||
                 path.equals("/api/user/token-refresh") ||
        /* Para evitar erros de log quando a Efí chamar seu endpoint,
             você pode adicionar uma exceção aqui no filtro de autorização */
@@ -73,7 +69,6 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
                     new ObjectMapper().writeValue(response.getOutputStream(), error);
                 }
                 }else {
-                // Se cair aqui, o Spring Security vai barrar baseado na SecurityConfig
                 filterChain.doFilter(request,response);
             }
 

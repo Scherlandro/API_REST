@@ -17,9 +17,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
-/* import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer; */
 
 import com.biontecapi.config.PasswordEnconderConfig;
 import com.biontecapi.fiter.CustomAuthenticationFilter;
@@ -44,38 +41,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         CustomAuthenticationFilter customAuthenticationFilter = new CustomAuthenticationFilter(authenticationManagerBean());
-        customAuthenticationFilter.setFilterProcessesUrl("/api/login/");
+        customAuthenticationFilter.setFilterProcessesUrl("/api/login");
         http.csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests()
                 .antMatchers(POST, "/api/pagamentos/efi/webhook").permitAll() //PARA LIBERAR O WEBHOOK
                 .antMatchers(GET, "/api/user/token-refresh/**", "/api/produtos/**","/api/my-ip","/api/paises/**","/api/nfe/**").permitAll()
-                .antMatchers(POST, "/api/login/**", "/api/user/save-user","/api/nfe/**").permitAll()
+                .antMatchers(POST, "/api/login**", "/api/user/save-user","/api/nfe/**").permitAll()
                 .antMatchers(POST, "/api/user/save-role", "/api/user/role-addtouser").hasAnyAuthority("ROLE_ADMIN")
                 .anyRequest().authenticated().and()
                 .addFilter(customAuthenticationFilter).cors();
         http.addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
     }
-
-     /*   @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        CustomAuthenticationFilter customAuthenticationFilter = new CustomAuthenticationFilter(authenticationManagerBean());
-        customAuthenticationFilter.setFilterProcessesUrl("/api/login/");
-
-        http.csrf().disable()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-                .authorizeRequests()
-                .antMatchers(GET, "/api/user/token-refresh/**", "/api/produtos/**", "/api/paises/**","/api/nfe/**").permitAll()
-                .antMatchers(POST, "/api/login/**", "/api/user/save-user","/api/nfe/**").permitAll()
-                // ADICIONE ESTA LINHA se quiser permitir salvar itens sem validar token (para teste)
-                // Caso contrário, certifique-se que o Angular Interceptor está enviando o Bearer Token
-                .antMatchers(POST, "/api/itensDaVenda/salvar").authenticated()
-                .antMatchers(POST, "/api/user/save-role", "/api/user/role-addtouser").hasAnyAuthority("ROLE_ADMIN")
-                .anyRequest().authenticated().and()
-                .addFilter(customAuthenticationFilter).cors();
-        http.addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
-    }
-*/
 
     @Bean
     @Override

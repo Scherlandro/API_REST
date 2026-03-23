@@ -15,14 +15,15 @@ public class UserDto {
 
     private Long id_user;
     @NotNull
-    @NotBlank
+    @NotBlank(message = "O nome é obrigatório")
     private String name;
     @NotNull
-    @NotBlank
-    @Size(max = 10)
+    @NotBlank(message = "O username é obrigatório")
+    @Size(min = 3, max = 50, message = "O username deve ter entre 3 e 50 caracteres")
     private String username;
     @NotNull
-    @NotBlank
+    @NotBlank(message = "A senha é obrigatória")
+    @Size(min = 6, message = "A senha deve ter no mínimo 6 caracteres")
     private String password;
     // @NotNull
     // private List<Role> listRoles;

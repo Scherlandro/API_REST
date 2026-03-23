@@ -43,7 +43,6 @@ const httpOptions = {
   }
 
   login(credentials: ICredential): Observable<IToken> {
-      console.log('Credenciais', credentials)
     return this._http.post<IToken>(`${this.baseUrl}login`, credentials).pipe(
       tap(res => {
         this.tokenService.saveToken(res.access_token);

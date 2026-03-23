@@ -34,16 +34,40 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
         this.authenticationManager = authenticationManager;
     }
 
+   /* Para ler dados no corpo da requisição (JSON)*/
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
-   /*     request.getHeader("Access-Control-Allow-Origin: *");
-        response.addHeader("Access-Control-Allow-Origin", "*");*/
-        String username = request.getParameter("username");
+        try {
+            // Lê o JSON vindo do Angular e mapeia para um Map ou DTO
+            ObjectMapper mapper = new ObjectMapper();
+            Map<String, String> credentials = mapper.readValue(request.getInputStream(), Map.class);
+
+            String username = credentials.get("username");
+            String password = credentials.get("password");
+
+            log.info("Username interceptado: {}", username);
+
+            UsernamePasswordAuthenticationToken authenticationToken =
+                    new UsernamePasswordAuthenticationToken(username, password);
+
+            return authenticationManager.authenticate(authenticationToken);
+        } catch (IOException e) {
+            log.error("Erro ao ler credenciais do corpo da requisição: {}", e.getMessage());
+            throw new RuntimeException(e);
+        }
+    }
+
+/*
+ Para ler os dados de parâmetros de URL (Query Params).
+    @Override
+    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
+         String username = request.getParameter("username");
         String password = request.getParameter("password");
         log.info("Username here is: {}",username); log.info("Password here is {}", password);
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, password);
         return authenticationManager.authenticate(authenticationToken);
     }
+*/
 
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws IOException, ServletException {
