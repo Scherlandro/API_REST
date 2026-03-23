@@ -59,12 +59,11 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  // validação simples
   domainValidator(control: any) {
     const email = control.value;
     if (email && email.indexOf('@') !== -1) {
       const [_, domain] = email.split('@');
-       if (domain !== 'empresa.com') { // Altere para o domínio desejado
+       if (domain !== 'empresa.com') { // Depois alterar para o domínio desejado
       console.log('Valor domain ', domain)
       return { invalidDomain: true };
          }
@@ -140,7 +139,6 @@ export class LoginComponent implements OnInit {
       return 'O e-mail é obrigatório';
     }
 
-    // O validador 'email' do Angular já segue o padrão internacional (user@domain.com)
     if (emailControl?.hasError('email')) {
       return 'Formato de e-mail inválido (ex: usuario@email.com)';
     }
