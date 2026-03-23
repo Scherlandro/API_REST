@@ -13,7 +13,7 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 public class UserDto {
 
-    private Long id_user;
+    private Long idUser;
     @NotNull
     @NotBlank(message = "O nome é obrigatório")
     private String name;

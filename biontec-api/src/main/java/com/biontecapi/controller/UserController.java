@@ -21,6 +21,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.io.IOException;
 import java.net.URI;
 import java.util.*;
@@ -60,9 +61,9 @@ public class UserController {
 */
 
     @PostMapping(path = "/save-user/")
-    public ResponseEntity salvar(@RequestBody UserDto userDto){
+    public ResponseEntity salvar(@Valid @RequestBody UserDto userDto){
         userService.saveUser(mapper.map(userDto, User.class));
-        Optional<User> profissionais = userService.findById(userDto.getId_user());
+        Optional<User> profissionais = userService.findById(userDto.getIdUser());
         return ResponseEntity.ok(profissionais.map(e->mapper.map(e,
                 User.class)).map(record -> ResponseEntity.ok().body(record))
                 .orElse(ResponseEntity.notFound().build()));
