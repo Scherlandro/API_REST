@@ -1,9 +1,7 @@
 import { Injectable, EventEmitter } from '@angular/core';
 import {HttpClient, HttpHeaders} from "@angular/common/http";
-import {Observable} from "rxjs/index";
-import {map, tap} from "rxjs/operators";
+import { Observable,tap,BehaviorSubject } from 'rxjs';
 import {environment} from "../../environments/environment";
-import {BehaviorSubject} from "rxjs";
 import {Router} from "@angular/router";
 import {BaseService} from "./base.service";
 import {IUser} from "../interfaces/user";
