@@ -14,7 +14,6 @@ import {MatPaginatorModule} from "@angular/material/paginator";
 import {MatSortModule} from "@angular/material/sort";
 import {MatProgressBarModule} from "@angular/material/progress-bar";
 import {AuthService} from "./services/auth.service";
-import {AuthGuard} from "./guards/auth.guard.ts";
 import {BaseService} from "./services/base.service";
 import { ErrorComponent } from './utils/error/error.component';
 import { TokenInterceptorProvider} from "./services/interceptors/token.interceptor";
@@ -46,7 +45,7 @@ import {MatDialogModule} from "@angular/material/dialog";
     MatSnackBarModule,
     MatDialogModule
     ],
-  providers: [AuthService, AuthGuard, BaseService,TokenInterceptorProvider ],
+  providers: [AuthService, BaseService,TokenInterceptorProvider ],
   schemas:[CUSTOM_ELEMENTS_SCHEMA],
   bootstrap: [AppComponent]
 })

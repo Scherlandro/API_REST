@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import {
   HttpRequest,
   HttpHandler,
@@ -11,14 +11,17 @@ import {catchError} from "rxjs/operators";
 import {TokenService} from "../token.service";
 import {NotificationMgsService} from "../notification-mgs.service";
 import {environment} from "../../../environments/environment";
+import {AuthService} from "../auth.service";
 
 @Injectable()
 export class TokenInterceptor implements HttpInterceptor {
-
-  constructor(
+  private authService = inject(AuthService);
+  private notification = inject(NotificationMgsService);
+  private tokenService= inject(TokenService);
+  /*constructor(
     private tokenService: TokenService,
     private apiErrorService: NotificationMgsService
-  ) {}
+  ) {}*/
 
   /*
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
@@ -59,15 +62,21 @@ export class TokenInterceptor implements HttpInterceptor {
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
 
     const token = this.tokenService.getToken();
-    const requestUrl: Array<any> = request.url.split('/');
-    const apiUrl: Array<any> = environment.API_PATH.split('/');
-
-    if(token !== null){
+   // const requestUrl: Array<any> = request.url.split('/');
+  //  const apiUrl: Array<any> = environment.API_PATH.split('/');
+    let authReq = request;
+   /* if(token !== null){
       let clone = request.clone({
         headers: request.headers.set('Authorization', 'Bearer '+token)
-      });
+      });*/
 
-      return next.handle(clone).pipe(
+      if (token) {
+        authReq = request.clone({
+          setHeaders: { Authorization: `Bearer ${token}` }
+        });
+      }
+
+      /*return next.handle(clone).pipe(
         catchError(error => {
           console.log('No catchError do Interceptor',error.status)
           if(error.status === 401){
@@ -76,7 +85,22 @@ export class TokenInterceptor implements HttpInterceptor {
           this.apiErrorService.sendError(error.error.message)
           return throwError('Session Expired');
         }) )  }
-    return next.handle(request);
+    return next.handle(request);*/
+
+    return next.handle(authReq).pipe(
+      catchError((error: HttpErrorResponse) => {
+        if (error.status === 401) {
+          // Se o token expirou ou é inválido, desloga o usuário
+          this.authService.logout();
+        }
+
+        const errorMessage = error.error?.message || 'Erro de conexão com o servidor';
+        this.notification.sendError(errorMessage);
+
+        return throwError(() => error);
+      })
+    );
+
   }
 }
 

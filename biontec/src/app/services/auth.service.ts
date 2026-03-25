@@ -1,4 +1,4 @@
-import { Injectable, EventEmitter } from '@angular/core';
+import {Injectable, EventEmitter, inject, signal, computed} from '@angular/core';
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import { Observable,tap,BehaviorSubject } from 'rxjs';
 import {environment} from "../../environments/environment";
@@ -9,42 +9,49 @@ import {IToken} from "../interfaces/token";
 import {ICredential} from "../interfaces/credential";
 import {TokenService} from "./token.service";
 
-const httpOptions = {
-  headers: new HttpHeaders(
-    { 'Content-Type': 'application/json' })
-};
 
-@Injectable({
-    providedIn:'root'
-  })
+@Injectable({ providedIn:'root' })
   export class AuthService extends BaseService{
 
-  private baseUrl: string = environment.API_PATH+'api/';
+  private readonly _http = inject(HttpClient);
+  private readonly router = inject(Router);
+  private tokenService= inject(TokenService);
+  private readonly baseUrl = `${environment.API_PATH}api/`;
 
-    private currentUserSubject: BehaviorSubject<IUser>;
+  private _currentUser = signal<IUser | null>(this.getUserFromStorage());
+  public currentUser = this._currentUser.asReadonly();
+  public usuarioAutenticado: boolean = false;
+  mostrarMenuEmitter = new EventEmitter<boolean>();
 
-  private isAuthenticatedSubject = new BehaviorSubject<boolean>(this.tokenService.hasToken());
-  public isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
+  // Computed: Reage automaticamente sempre que _currentUser mudar
+  public isAuthenticated = computed(() => !!this._currentUser());
+//  private currentUserSubject;
+ // private currentUserSubject= inject(BehaviorSubject<IUser>);
 
-  public currentUser: Observable<IUser>;
-    public usuarioAutenticado: boolean = false;
-    mostrarMenuEmitter = new EventEmitter<boolean>();
+// private isAuthenticatedSubject = new BehaviorSubject<boolean>(this.tokenService.hasToken());
+ // public isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
 
-    constructor(private _http: HttpClient,
-            private router: Router,
-            private tokenService: TokenService
-                )
-   {
-     super('auth')
-    this.currentUserSubject = new BehaviorSubject<IUser>(JSON.parse(<string>localStorage.getItem('currentUser')));
-    this.currentUser = this.currentUserSubject.asObservable();
+
+      constructor( )     {   super('auth')
+     // this.currentUserSubject = new BehaviorSubject<IUser>(JSON.parse(<string>localStorage.getItem('currentUser')));
+    //  this.currentUser = this.currentUserSubject.asObservable();
+    }
+
+  private getUserFromStorage(): IUser | null {
+    const userJson = localStorage.getItem('currentUser');
+    try {
+      return userJson ? JSON.parse(userJson) : null;
+    } catch {
+      return null;
+    }
   }
 
   login(credentials: ICredential): Observable<IToken> {
     return this._http.post<IToken>(`${this.baseUrl}login`, credentials).pipe(
       tap(res => {
-        this.tokenService.saveToken(res.access_token);
-        this.isAuthenticatedSubject.next(true);
+        this.saveSession(res);
+       // this.tokenService.saveToken(res.access_token);
+       // this.isAuthenticatedSubject.next(true);
       })
     );
   }
@@ -56,15 +63,35 @@ const httpOptions = {
 
   logout() {
     localStorage.removeItem('token');
+    localStorage.removeItem('currentUser');
+    localStorage.removeItem('username');
+    this._currentUser.set(null);
     this.router.navigate(['/'])
     // @ts-ignore
-    this.currentUserSubject.next(null);
+    //this.currentUserSubject.next(null);
     this.usuarioAutenticado = false;
     this.mostrarMenuEmitter.emit(false);
   }
 
+  private saveSession(data: IToken) {
+
+    localStorage.setItem('token', data.access_token);
+    const payload = this.tokenService.getPayload();
+    const user: IUser = {
+      id_usuario: payload.id,
+      name: payload.name,
+      username: payload.username,
+      password: ''
+    };
+  localStorage.setItem('currentUser', JSON.stringify(user));
+    this._currentUser.set(user);
+
+    // Opcional: Redirecionar após login bem sucedido
+    // this.router.navigate(['/dashboard']);
+  }
+
    currentUserValue() {
-    console.log('USUARIO LOGADO -->', this.currentUser, this.currentUserSubject.getValue())
+  //  console.log('USUARIO LOGADO -->', this.currentUser, this.currentUserSubject.getValue())
    // return this.currentUserSubject.getValue();
   }
 
