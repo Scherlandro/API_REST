@@ -77,6 +77,7 @@ export class VendaComponent implements OnInit {
         if (error === 'Session Expired')
         this.onError('Sua sessão expirou!');
         this.tokenServer.clearTokenExpired();
+        console.log(this.onError('Sua sessão expirou!'));
         return of([])
       }))
       .subscribe((data: iVendas[]) => {

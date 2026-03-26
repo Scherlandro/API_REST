@@ -81,10 +81,11 @@ export class OrdemDeServiceComponent implements OnInit {
   loadOrders() {
     this.spiner = true;
     this.osService.getAll()
-      .pipe(first(), catchError(error => {
+      .pipe(first(), delay(2000),catchError(error => {
         if (error === 'Session Expired')
           this.onError('Sua sessão expirou!');
-        this.tokenServer.clearTokenExpired();
+          this.tokenServer.clearTokenExpired();
+        console.log(this.onError('Sua sessão expirou!'));
         return of([])
       })).subscribe(
       (result: iServiceOrder[]) => {
