@@ -60,13 +60,10 @@ public class UserController {
     }
 */
 
-    @PostMapping(path = "/save-user/")
+    @PostMapping(path = "/save-user")
     public ResponseEntity salvar(@Valid @RequestBody UserDto userDto){
-        userService.saveUser(mapper.map(userDto, User.class));
-        Optional<User> usuario = userService.findById(userDto.getIdUser());
-        return ResponseEntity.ok(usuario.map(e->mapper.map(e,
-                User.class)).map(record -> ResponseEntity.ok().body(record))
-                .orElse(ResponseEntity.notFound().build()));
+        User user = mapper.map(userDto, User.class);
+         return ResponseEntity.ok(userService.saveUser(user));
     }
 
     @PutMapping(path = "/edit-user")

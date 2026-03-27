@@ -43,7 +43,7 @@ export class UserService {
   }
 
   createUsuario(user: IUser): Observable<IUser> {
-    return this._http.post<IUser>(this.baseUrl+'/save-user/',user);
+    return this._http.post<IUser>(this.baseUrl+'/save-user',user);
   }
 
   deleteUsuario(user: IUser): Observable<IUser> {

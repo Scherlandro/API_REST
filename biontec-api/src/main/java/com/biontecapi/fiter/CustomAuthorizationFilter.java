@@ -38,7 +38,8 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
                 path.equals("/api/user/token-refresh") ||
        /* Para evitar erros de log quando a Efí chamar seu endpoint,
             você pode adicionar uma exceção aqui no filtro de autorização */
-                path.equals("/api/pagamentos/efi/webhook")) {
+                path.equals("/api/pagamentos/efi/webhook")||
+                path.startsWith("/api/user/save-user")) {
             filterChain.doFilter(request, response);
         }else {
             String authorizationHeader = request.getHeader(AUTHORIZATION);
