@@ -1,9 +1,10 @@
+<div class="body">
 <h1 *ngIf="!isChange" mat-dialog-title>Adicionar Usuario</h1>
 <h1 *ngIf="isChange" mat-dialog-title>Editar Usuario</h1>
 
 <div mat-dialog-content>
 
-  <mat-form-field appearance="fill" >
+  <mat-form-field appearance="fill" *ngIf="isChange" >
     <mat-label>ID</mat-label>
     <input matInput [(ngModel)]="iUser.id_usuario">
   </mat-form-field>
@@ -24,15 +25,11 @@
   </mat-form-field>
 
   <span>
- <button  mat-raised-button [mat-dialog-close]="iUser" cdkFocusInitial
-          [disabled]="isSaveButtonDisabled()" (click)="save(iUser)" > Salvar
- </button>
+    <button mat-raised-button [disabled]="isSaveButtonDisabled()"
+                (click)="save(iUser)">  Salvar </button>
+
   <button mat-raised-button (click)="onCancel()">Cancel</button>
  </span>
-
-
-
-
-
 </div>
 
+</div>

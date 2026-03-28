@@ -11,6 +11,7 @@ import {DialogUsuarioComponent} from "../../shared/dialogs/dialog-usuario/dialog
 import {delay} from "rxjs/operators";
 import {FormControl, Validators,FormBuilder, FormGroup} from '@angular/forms';
 import {IpService} from "../../services/ip.service";
+import {NotificationMgsService} from "../../services/notification-mgs.service";
 
 @Component({
   selector: 'app-login',
@@ -36,7 +37,8 @@ export class LoginComponent implements OnInit {
     private userService: UserService,
     public dialog: MatDialog,
     private fb: FormBuilder,
-    private ipService: IpService
+    private ipService: IpService,
+    public notificationMsg: NotificationMgsService,
     ) {
     this.formLogin = this.criarFormLogin();
     this.username = new FormControl('', [Validators.required, Validators.email]);
@@ -113,12 +115,10 @@ export class LoginComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if (result !== undefined) {
-        this.userService.createUsuario(result)
-          .subscribe((data: IUser) => {
-            this.tbSourceUsuarios$.data.push(result);
-            this.tableUser.renderRows();
-          });
+      if (result) {
+
+
+        this.notificationMsg.success('Novo usuário criado com sucesso!');
       }
     });
 
