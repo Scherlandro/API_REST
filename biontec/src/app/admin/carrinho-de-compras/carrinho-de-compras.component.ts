@@ -12,11 +12,7 @@ import {IUser} from "../../interfaces/user";
 import {UserService} from "../../services/user.service";
 import {ICliente} from "../../interfaces/cliente";
 
-interface Vendedor {
-  vendedor: string;
-  selecionado: boolean;
-  produtos: iProduto[];
-}
+
 
 @Component({
   selector: 'app-carrinho-de-compras',
@@ -26,8 +22,7 @@ interface Vendedor {
 export class CarrinhoDeComprasComponent implements OnInit {
   selecionarTodos: boolean = false;
   cliente$!: ICliente;
-//  vendedores: Vendedor[] = [];
-  vendedores: iVendas[] = [];
+  listVds: iVendas[] = [];
   nomeVendedor = '';
   total: number = 0;
   selectedProducts: iProduto[] = [];
@@ -80,7 +75,7 @@ export class CarrinhoDeComprasComponent implements OnInit {
     });
   }
 
-  // Carrega múltiplos produtos
+
   loadMultipleProductDetails(productIds: number) {
     this.carregando = true;
     this.selectedProducts = [];
@@ -147,16 +142,10 @@ export class CarrinhoDeComprasComponent implements OnInit {
 
     if (idVenda == true) {
       if (this.selectedProducts) {
-        console.log('SelectedProducts. ', this.selectedProducts);
-        // Garantir que produtos seja um array
+
         const produtosArray = Array.isArray(this.selectedProducts) ? this.selectedProducts : [this.selectedProducts];
-        // Criar array de vendedores
-      /*  this.vendedores = [{
-          vendedor: this.nomeVendedor,
-          selecionado: false,
-          produtos: produtosArray
-        }];*/
-        this.vendedores = [{
+
+        this.listVds = [{
           idVenda: 0,
           cliente: this.cliente$,
           idFuncionario: 0,
@@ -241,8 +230,7 @@ export class CarrinhoDeComprasComponent implements OnInit {
     const itemId = item.idItensVd;
 
     if (itemId) {
-      // Na API real precisarei de um método para deletar itens
-      // Enquanto não tenho no serviço, vou simular com o editElement
+
       this.itensVdService.editElement(item).subscribe({
         next: () => {
           this.venda.itensVd.splice(index, 1);
@@ -342,7 +330,7 @@ export class CarrinhoDeComprasComponent implements OnInit {
   }
 
   toggleTodos() {
-    this.vendedores.forEach(vendedor => {
+    this.listVds.forEach(vendedor => {
       vendedor.selecionado = this.selecionarTodos;
     });
     this.calcularTotal();
@@ -351,13 +339,13 @@ export class CarrinhoDeComprasComponent implements OnInit {
   toggleVendedor(vendedor: iVendas) {
     vendedor.selecionado = !vendedor.selecionado;
     // Verificar se todos os vendedores estão selecionados
-    this.selecionarTodos = this.vendedores.every(v => v.selecionado);
+    this.selecionarTodos = this.listVds.every(v => v.selecionado);
     this.calcularTotal();
   }
 
   verificarSelecao() {
-    this.selecionarTodos = this.vendedores.every(v => v.produtos.every((p:iProduto) => p.highlighted = this.highlighted));
-    this.vendedores.forEach(v => {
+    this.selecionarTodos = this.listVds.every(v => v.produtos.every((p:iProduto) => p.highlighted = this.highlighted));
+    this.listVds.forEach(v => {
       v.selecionado = v.produtos.every((p:iProduto) => p.highlighted);
     });
     this.calcularTotal();
@@ -372,16 +360,16 @@ export class CarrinhoDeComprasComponent implements OnInit {
   }
 
   removerProduto(produto: iProduto) {
-    this.vendedores.forEach(vendedor => {
-      vendedor.produtos = vendedor.produtos.filter((p:iProduto) => p !== produto);
+    this.listVds.forEach(v => {
+      v.produtos = v.produtos.filter((p:iProduto) => p !== produto);
     });
     // Remover vendedores sem produtos
-    this.vendedores = this.vendedores.filter(v => v.produtos.length > 0);
+    this.listVds = this.listVds.filter(v => v.produtos.length > 0);
      this.calcularTotal();
   }
 
   calcularTotal() {
-    this.total = this.vendedores.reduce((acc, vendedor) => {
+    this.total = this.listVds.reduce((acc, vendedor) => {
       return acc + vendedor.produtos.reduce((sum:any, produto:iProduto) => {
         const quantidade = produto.qtdVd || 1;
         const valor = produto.valorVenda || 0;
@@ -391,7 +379,7 @@ export class CarrinhoDeComprasComponent implements OnInit {
   }
 
   continuarCompra() {
-    const produtosSelecionados = this.vendedores
+    const produtosSelecionados = this.listVds
       .flatMap(v => v.produtos)
       .filter(p => p.highlighted);
 

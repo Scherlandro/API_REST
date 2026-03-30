@@ -9,7 +9,7 @@
     </div>
 
     <!-- Agrupamento por vendedor -->
-    <div class="grupo-vendedor" *ngFor="let vendedor of vendedores">
+    <div class="grupo-vendedor" *ngFor="let vendedor of listVds">
       <div class="vendedor-header">
         <input type="checkbox" [(ngModel)]="vendedor.selecionado" (change)="toggleVendedor(vendedor)">
         <span class="nome-vendedor">{{ vendedor.nomeFuncionario }}</span>

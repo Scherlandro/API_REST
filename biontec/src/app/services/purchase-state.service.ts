@@ -20,8 +20,9 @@ export class PurchaseStateService {
   addSelectedProduct(id: number) {
     const currentIds = this.selectedProductsIds.value;
     if (!currentIds.includes(id)) {
-      const newIds = [...currentIds, id];
-      this.selectedProductsIds.next(newIds);
+     /* const newIds = [...currentIds, id];
+      this.selectedProductsIds.next(newIds);*/
+      this.selectedProductsIds.next([...currentIds, id]);
       localStorage.setItem('selectedProductsIds', JSON.stringify(newIds));
       console.log('Produto adicionado ao carrinho. IDs atuais:', newIds);
     } else {

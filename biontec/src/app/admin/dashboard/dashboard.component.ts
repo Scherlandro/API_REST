@@ -111,8 +111,16 @@ export class DashboardComponent implements OnInit {
 
   // Prepara a compra com todos os produtos do carrinho
   preparePurchase(productId: number) {
-    this.purchaseState.setSelectedProduct(productId);
+    // 1. Adiciona o produto atual ao "estado" global do carrinho
+    this.purchaseState.addSelectedProduct(productId);
+    //this.purchaseState.setSelectedProduct(productId);
     //const productIds = this.purchaseState.getSelectedProducts(); // Isso retorna o BehaviorSubject value
+    // 2. Recupera a lista completa de IDs acumulados
+    const allIds = this.purchaseState.getSelectedProducts().var; // Crie um getter para o .value no service
+    if (allIds.length > 0) {
+      this.purchaseState.startSaleOfSelectedProduct(this.selectedUser, allIds);
+      this.router.navigate(['/admin/carrinho-de-compras']);
+    }
     const idsArray = this.purchaseState['selectedProductsIds'].value; // Acessando o value diretamente
     console.log('Vlor do idsArray', idsArray,'productId', productId);
     if (idsArray.length > 0) {
