@@ -21,187 +21,119 @@ import {AuthService} from "../../services/auth.service";
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css'],
-
 })
 export class DashboardComponent implements OnInit {
-  events = new FormControl();
-  selectedProduct: iProduto | null = null; // Alterado para armazenar o produto completo
+
   selectedUser!: string;
   cartProducts: iProduto[] = [];
 
-  mensagens!: Observable<string>;
   spiner = false;
   pageSize = 20;
   currentPage = 0;
+
   produtosFiltrados: iProduto[] = [];
   pagedProdutosFiltrados: iProduto[] = [];
   products: iProduto[] = [];
+
   produtoControl = new FormControl();
-  imageUrl: SafeUrl | undefined;
 
   constructor(
-    private tokenServer: TokenService,
     private authService: AuthService,
     private router: Router,
-    public notificationMsg: NotificationMgsService,
     private prodService: ProductService,
     private purchaseState: PurchaseStateService,
     public dialog: MatDialog,
     private sanitizer: DomSanitizer
-  ) {
-  }
+  ) {}
 
   ngOnInit(): void {
     this.selectedUser = this.authService.getUserName();
     this.listarProdutos();
-    this.prodSelecionado();
     this.loadCartProducts();
   }
 
-  prodSelecionado(){
-    this.purchaseState.getSelectedProduct().subscribe(productId => {
-      if (productId) {  this.loadProductDetails(productId);  }  });
-  }
+  // -------------------------
+  // 🔹 CARRINHO
+  // -------------------------
 
-  loadProductDetails(productId: number) {
-    this.prodService.getIdProduto(productId).subscribe({
-      next: (response) => {
-        this.selectedProduct = response.body || response;
-      },
-      error: (err) => {
-        console.error('Erro ao carregar produto:', err);
-      }
+  loadCartProducts() {
+    this.purchaseState.getSelectedProducts().subscribe(ids => {
+      this.cartProducts = [];
+
+      ids.forEach(id => {
+        this.prodService.getIdProduto(id).subscribe(res => {
+          this.cartProducts.push(res.body || res);
+        });
+      });
     });
   }
 
-  // Carrega os produtos do carrinho
-  loadCartProducts() {
-    this.purchaseState.getSelectedProducts().subscribe(productIds => {
-     if (productIds && productIds.length > 0) {
-       // Carrega os detalhes de todos os produtos no carrinho
-        this.cartProducts = [];
-        productIds.forEach(id => {
-          this.prodService.getIdProduto(id).subscribe({
-            next: (response) => {
-              const product = response.body || response;
-              this.cartProducts.push(product);
-            },
-            error: (err) => {
-              console.error('Erro ao carregar produto:', err);
-            }
-          });});}});
-  }
-
-  // Adiciona produto ao carrinho
   addToCart(productId: number) {
     this.purchaseState.addSelectedProduct(productId);
-    this.loadCartProducts(); // Atualiza a lista local
   }
 
-  // Remove produto do carrinho
   removeFromCart(productId: number) {
     this.purchaseState.removeSelectedProduct(productId);
-    this.cartProducts = this.cartProducts.filter(p => p.idProduto !== productId);
   }
 
-  // Verifica se o produto está no carrinho
   isInCart(productId: number): boolean {
     return this.purchaseState.isProductInCart(productId);
   }
 
-  // Prepara a compra com todos os produtos do carrinho
-  preparePurchase(productId: number) {
-    // 1. Adiciona o produto atual ao "estado" global do carrinho
-    this.purchaseState.addSelectedProduct(productId);
-    //this.purchaseState.setSelectedProduct(productId);
-    //const productIds = this.purchaseState.getSelectedProducts(); // Isso retorna o BehaviorSubject value
-    // 2. Recupera a lista completa de IDs acumulados
-    const allIds = this.purchaseState.getSelectedProducts().var; // Crie um getter para o .value no service
-    if (allIds.length > 0) {
-      this.purchaseState.startSaleOfSelectedProduct(this.selectedUser, allIds);
-      this.router.navigate(['/admin/carrinho-de-compras']);
-    }
-    const idsArray = this.purchaseState['selectedProductsIds'].value; // Acessando o value diretamente
-    console.log('Vlor do idsArray', idsArray,'productId', productId);
-    if (idsArray.length > 0) {
-      this.purchaseState.startSaleOfSelectedProduct(this.selectedUser, idsArray);
-      this.router.navigate(['/admin/carrinho-de-compras']);
-    } else {
-      console.info('Nenhum produto no carrinho');
-      // Depois mostrar uma mensagem para o usuário aqui
-    }
-  }
+  // 👉 FINALIZA COMPRA COM TODOS
+  goToCart() {
+    const ids = this.purchaseState.getSelectedProductsValue();
 
-  // Prepara compra de um produto específico (adiciona ao carrinho e vai para o carrinho)
-  prepareSinglePurchase(productId: number) {
-    this.addToCart(productId);
-    this.purchaseState.startSaleOfSelectedProduct(this.selectedUser, [productId]);
+    if (ids.length === 0) {
+      console.warn('Carrinho vazio');
+      return;
+    }
+
+    this.purchaseState.startSale(this.selectedUser);
     this.router.navigate(['/admin/carrinho-de-compras']);
   }
 
-  // Método para destacar o produto na lista
-  highlightProductInList(productId: number) {
-    // Remove o destaque de todos os produtos primeiro
-    this.products = this.products.map(p => ({
-      ...p,  highlighted: false
-    }));
-    // Aplica o destaque apenas ao produto selecionado
-    this.products = this.products.map(p => {
-      if (p.idProduto === productId) {
-        return { ...p, highlighted: true   };
-      }
-      return p;
-    });
-    // Atualiza a lista filtrada e paginada
-    this.produtosFiltrados = [...this.products];
-    this.updatePagedProdutos();
+  // 👉 COMPRA DIRETA
+  buyNow(productId: number) {
+    this.purchaseState.clearCart();
+    this.purchaseState.addSelectedProduct(productId);
+
+    this.purchaseState.startSale(this.selectedUser);
+    this.router.navigate(['/admin/carrinho-de-compras']);
   }
+
+  // -------------------------
+  // 🔹 PRODUTOS
+  // -------------------------
 
   listarProdutos() {
     this.spiner = true;
-    this.prodService.getTodosProdutos()
-      .pipe(catchError(error => {
-        if (error === 'Session Expired')
-          this.onError('Sua sessão expirou!');
-        this.tokenServer.clearTokenExpired();
-        return of([])
-      }))
-      .subscribe((rest: iProduto[]) => {
-        this.products = rest;
-        this.produtosFiltrados = rest;
+
+    this.prodService.getTodosProdutos().subscribe({
+      next: (res: iProduto[]) => {
+        this.products = res;
+        this.produtosFiltrados = res;
         this.updatePagedProdutos();
         this.spiner = false;
-      });
+      },
+      error: () => {
+        this.spiner = false;
+        this.onError('Erro ao carregar produtos');
+      }
+    });
   }
 
-  getImageUrl(fotoProduto: string): SafeUrl {
-    if (!fotoProduto) return '';
-    const objectURL = 'data:image/jpeg;base64,' + fotoProduto;
-    return this.sanitizer.bypassSecurityTrustUrl(objectURL);
-  }
-
-  consultarPorNome(nomeProd: string) {
-    if (!nomeProd || nomeProd.trim() === '') {
+  consultarPorNome(nome: string) {
+    if (!nome) {
       this.produtosFiltrados = this.products;
     } else {
-      nomeProd = nomeProd.toLowerCase().trim();
+      nome = nome.toLowerCase();
       this.produtosFiltrados = this.products.filter(p =>
-        p.nomeProduto.toLowerCase().includes(nomeProd)
+        p.nomeProduto.toLowerCase().includes(nome)
       );
     }
-    this.currentPage = 0; // Reset para a primeira página ao filtrar
-    this.updatePagedProdutos();
-  }
 
-  consultarPorID(id:number) {
-    if (!id || id == null) {
-      this.produtosFiltrados = this.products;
-    } else {
-      this.produtosFiltrados = this.products.filter(p =>
-        p.idProduto.toString(id)
-      );
-    }
-    this.currentPage = 0; // Reset para a primeira página ao filtrar
+    this.currentPage = 0;
     this.updatePagedProdutos();
   }
 
@@ -212,37 +144,18 @@ export class DashboardComponent implements OnInit {
   }
 
   updatePagedProdutos() {
-    const startIndex = this.currentPage * this.pageSize;
-    this.pagedProdutosFiltrados = this.produtosFiltrados.slice(
-      startIndex,
-      startIndex + this.pageSize
+    const start = this.currentPage * this.pageSize;
+    this.pagedProdutosFiltrados =
+      this.produtosFiltrados.slice(start, start + this.pageSize);
+  }
+
+  getImageUrl(foto: string): SafeUrl {
+    return this.sanitizer.bypassSecurityTrustUrl(
+      'data:image/jpeg;base64,' + foto
     );
   }
 
-  onError(errrorMsg: string) {
-    this.dialog.open(ErrorDiologComponent, {
-      data: errrorMsg
-    });
+  onError(msg: string) {
+    this.dialog.open(ErrorDiologComponent, { data: msg });
   }
-
-  launchingPurchaseToShoppingCart(userName:string, productId: number) {
-    if(userName == null || productId == null){
-      console.info('Usuário ou produto nulo',  userName , productId)
-    }
-    var prodId:number[] =[];
-    for (const id of [productId]) {
-      prodId.push(...[id]);
-      }
-    this.purchaseState.startSaleOfSelectedProduct(userName, prodId);
-    this.router.navigate(['/admin/carrinho-de-compras']);
-  }
-
-
-  clearHighlight() {
-    this.selectedProduct = null;
-    this.purchaseState.clearSelectedProduct();
-    this.highlightProductInList(-1); // Passa um ID inválido para remover todos os destaques
-  }
-
-
 }

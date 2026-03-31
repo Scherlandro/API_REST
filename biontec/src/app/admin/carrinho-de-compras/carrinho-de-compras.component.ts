@@ -7,11 +7,7 @@ import {PurchaseStateService} from "../../services/purchase-state.service";
 import {ProductService} from "../../services/product.service";
 import {iProduto} from "../../interfaces/product";
 import {forkJoin, of} from "rxjs";
-import {catchError, map} from "rxjs/operators";
-import {IUser} from "../../interfaces/user";
-import {UserService} from "../../services/user.service";
 import {ICliente} from "../../interfaces/cliente";
-
 
 
 @Component({
@@ -20,373 +16,176 @@ import {ICliente} from "../../interfaces/cliente";
   styleUrls: ['./carrinho-de-compras.component.css']
 })
 export class CarrinhoDeComprasComponent implements OnInit {
-  selecionarTodos: boolean = false;
-  cliente$!: ICliente;
+
+  selecionarTodos = true;
   listVds: iVendas[] = [];
-  nomeVendedor = '';
-  total: number = 0;
-  selectedProducts: iProduto[] = [];
-
-  highlighted = true;
-    venda: iVendas = {
-    idVenda: 0,
-    cliente: this.cliente$ ,
-    idFuncionario: 0,
-    nomeFuncionario: '',
-    dtVenda: new Date().toISOString(),
-    subtotal: 0,
-    desconto: 0,
-    totalgeral: 0,
-    formasDePagamento: "Cartão de Crédito",
-    qtdDeParcelas: 1,
-    itensVd: [],
-      produtos:[]
-  };
-
-  carregando: boolean = true;
-  erroCarregamento: string | null = null;
+  total = 0;
+  carregando = true;
+  cliente$!: ICliente;
 
   constructor(
     private purchaseState: PurchaseStateService,
-    private userService: UserService,
-    private vendasService: VendasService,
-    private itensVdService: ItensVdService,
     private prodService: ProductService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
-   this.launchingPurchaseToShoppingCarts();
+    this.loadCart();
+  }
+
+  // -------------------------
+  // 🛒 CARREGAR CARRINHO
+  // -------------------------
+
+  loadCart() {
+    this.purchaseState.getSale().subscribe(sale => {
+
+      if (!sale || !sale.productIds?.length) {
+        this.carregando = false;
+        return;
+      }
+
+      const requests = sale.productIds.map((id: number) =>
+        this.prodService.getIdProduto(id)
+      );
+
+      forkJoin(requests).subscribe({
+        next: (responses:any) => {
+
+          const produtos = responses.map((res:any) => {
+            const p = res.body || res;
+            return {
+              ...p,
+              qtdVd: p.qtdVd || 1,
+              highlighted: true
+            };
+          });
+
+          this.listVds = [{
+            idVenda: 0,
+            cliente: this.cliente$,
+            idFuncionario: 0,
+            nomeFuncionario: sale.userName,
+            dtVenda: new Date().toISOString(),
+            subtotal: 0,
+            desconto: 0,
+            totalgeral: 0,
+            formasDePagamento: "Cartão de Crédito",
+            qtdDeParcelas: 1,
+            itensVd: [],
+            produtos: produtos,
+            selecionado: true
+          }];
+
+          this.calcularTotal();
+          this.carregando = false;
+        },
+        error: (err) => {
+          console.error('Erro ao carregar carrinho', err);
+          this.carregando = false;
+        }
+      });
+    });
+  }
+
+  // -------------------------
+  // 💰 TOTAL
+  // -------------------------
+
+  calcularTotal() {
+    this.total = this.listVds.reduce((acc, vendedor) => {
+      return acc + vendedor.produtos.reduce((sum: number, p: iProduto) => {
+        return sum + (p.valorVenda || 0) * (p.qtdVd || 1);
+      }, 0);
+    }, 0);
+  }
+
+  // -------------------------
+  // ➕ QUANTIDADE
+  // -------------------------
+
+  alterarQuantidade(produto: iProduto, delta: number) {
+    produto.qtdVd = (produto.qtdVd || 1) + delta;
+
+    if (produto.qtdVd < 1) produto.qtdVd = 1;
+
     this.calcularTotal();
   }
 
+  // -------------------------
+  // ❌ REMOVER
+  // -------------------------
 
-  launchingPurchaseToShoppingCarts() {
-    this.purchaseState.getSaleOfSelectedProduct().subscribe(saleData => {
+  removerProduto(produto: iProduto) {
 
-      if (saleData && saleData.userName) {
-        this.consultarPorNome(saleData.userName);
-      }
-
-      if (saleData && saleData.productIds > 0) {
-        this.loadMultipleProductDetails(saleData.productIds);
-      }
-
-      this.calcularTotal();
+    this.listVds.forEach(v => {
+      v.produtos = v.produtos.filter((p:any) => p.idProduto !== produto.idProduto);
     });
+
+    // remove do service também 🔥
+    this.purchaseState.removeSelectedProduct(produto.idProduto);
+
+    this.listVds = this.listVds.filter(v => v.produtos.length > 0);
+
+    this.calcularTotal();
   }
 
-
-  loadMultipleProductDetails(productIds: number) {
-    this.carregando = true;
-    this.selectedProducts = [];
-
-    this.prodService.getIdProduto(productIds).subscribe({
-        next: (response) => {
-         const product = response.body || response;
-          this.selectedProducts.push(product);
-
-          if (this.selectedProducts.length > 0) {
-            this.carregando = false;
-            this.carregarVenda(this.highlighted);
-          }
-        },
-        error: (err) => {
-          console.error('Erro ao carregar produto:', err);
-          this.carregando = false;
-        }
-      });
-  }
-
-  launchingPurchaseToShoppingCart() {
-    this.purchaseState.getSaleOfSelectedProduct().subscribe(vetor => {
-      console.log('Vetor atual', vetor);
-      if (vetor[0]) { this.consultarPorNome(vetor[0]); }
-      if (vetor[1]) { this.loadProductDetails(vetor[1]); }
-      this.calcularTotal();
-    });
-  }
-
-  consultarPorNome(nome: string) {
-      this.userService.getUserByUserName(nome)
-        .subscribe((res:IUser) => {
-          this.nomeVendedor = res.name;
-        });
-  }
-
-  loadProductDetails(productId: number) {
-    this.prodService.getIdProduto(productId).subscribe({
-      next: (response) => {
-        if (response) {
-          this.carregando = true;
-          // Garantir que selectedProduct seja um array
-          this.selectedProducts = Array.isArray(response.body) ? response.body : [response.body];
-          // Rolagem automática para o produto destacado (opcional)
-          setTimeout(() => {
-            const element = document.querySelector('.highlighted');
-            if (element) {
-              element.scrollIntoView({behavior: 'smooth', block: 'center'});
-            }
-          }, 500);
-        }
-        this.carregarVenda(this.highlighted);
-      },
-      error: (err) => {
-        console.error('Erro ao carregar produto:', err);
-      }
-    });
-  }
-
-  carregarVenda(idVenda: any): void {
-    this.carregando = true;
-    this.erroCarregamento = null;
-
-    if (idVenda == true) {
-      if (this.selectedProducts) {
-
-        const produtosArray = Array.isArray(this.selectedProducts) ? this.selectedProducts : [this.selectedProducts];
-
-        this.listVds = [{
-          idVenda: 0,
-          cliente: this.cliente$,
-          idFuncionario: 0,
-          nomeFuncionario: this.nomeVendedor,
-          dtVenda: new Date().toISOString(),
-          subtotal: 0,
-          desconto: 0,
-          totalgeral: 0,
-          formasDePagamento: "Cartão de Crédito",
-          qtdDeParcelas: 1,
-          itensVd: [],
-          produtos:produtosArray,
-          selecionado: false,
-        }];
-
-
-        this.calcularTotal();
-      }
-    } else {
-      this.vendasService.getVendaPorCod(idVenda).subscribe({
-        next: (venda) => {
-          this.venda = venda;
-          this.carregarItensVenda(idVenda);
-        },
-        error: (err) => {
-          this.erroCarregamento = 'Erro ao carregar a venda';
-          this.carregando = false;
-          console.error(err);
-        }
-      });
-    }
-  }
-
-  carregarItensVenda2(idVenda: string): void {
-    this.itensVdService.listarItensVdPorCodVenda(idVenda).subscribe({
-      next: (itens: iItensVd[]) => {
-        this.venda.itensVd = itens;
-        this.calcularTotais();
-        this.carregando = false;
-      },
-      error: (err) => {
-        this.erroCarregamento = 'Erro ao carregar os itens da venda';
-        this.carregando = false;
-        console.error(err);
-      }
-    });
-  }
-
-  inicializarNovaVenda(): void {
-    // Nova venda com dados padrão
-    // ou carrega do localStorage se for um carrinho temporário
-    this.venda = {
-      idVenda: 0,
-      cliente: this.cliente$, // pode obter do serviço de autenticação
-      idFuncionario: 0, // pode obter do serviço de autenticação
-      nomeFuncionario: 'Atendente Virtual',
-      dtVenda: new Date().toISOString(),
-      subtotal: 0,
-      desconto: 0,
-      totalgeral: 0,
-      formasDePagamento: "Cartão de Crédito",
-      qtdDeParcelas: 1,
-      itensVd: [],
-      produtos: []
-    };
-    this.carregando = false;
-  }
-
-  calcularTotais(): void {
-    const subtotal = this.venda.itensVd.reduce((sum:any, item:any) => sum + item.valorParcial, 0);
-    this.venda.subtotal = subtotal.toFixed(2);
-    // Simulando desconto de 10% para compras acima de R$ 1000
-    const desconto = subtotal > 1000 ? subtotal * 0.1 : 0;
-    this.venda.desconto = Number(desconto.toFixed(2));
-
-    const total = subtotal - desconto;
-    this.venda.totalgeral = Number(total.toFixed(2));
-  }
-
-  removerItem(index: number): void {
-    const item = this.venda.itensVd[index];
-    const itemId = item.idItensVd;
-
-    if (itemId) {
-
-      this.itensVdService.editElement(item).subscribe({
-        next: () => {
-          this.venda.itensVd.splice(index, 1);
-          this.calcularTotais();
-        },
-        error: (err) => console.error('Erro ao remover item:', err)
-      });
-    } else {
-      this.venda.itensVd.splice(index, 1);
-      this.calcularTotais();
-    }
-  }
-
-  adicionarItem(novoItem: iItensVd): void {
-    this.itensVdService.createElements(novoItem).subscribe({
-      next: (itemCriado) => {
-        this.venda.itensVd.push(itemCriado);
-        this.calcularTotais();
-      },
-      error: (err) => console.error('Erro ao adicionar item:', err)
-    });
-  }
-
-  parseFloat(value: string): number {
-    return parseFloat(value);
-  }
-
-  finalizarCompra(): void {
-    if (this.venda.idVenda) {
-      // Atualizar venda existente
-      this.vendasService.updateVd(this.venda).subscribe({
-        next: () => {
-          alert('Compra atualizada com sucesso!');
-          // Redirecionar ou fazer outra ação
-        },
-        error: (err) => console.error('Erro ao atualizar venda:', err)
-      });
-    } else {
-      // Criar nova venda
-      this.vendasService.addVenda(this.venda).subscribe({
-        next: (vendaCriada) => {
-          alert('Compra finalizada com sucesso!');
-          this.venda = vendaCriada;
-          // Redirecionar ou fazer outra ação
-        },
-        error: (err) => console.error('Erro ao criar venda:', err)
-      });
-    }
-  }
-
-  carregarItensVenda(idVenda: string): void {
-    this.itensVdService.listarItensVdPorCodVenda(idVenda).subscribe({
-      next: (itens: iItensVd[]) => {
-        // Buscar imagem de cada item
-        const requisicoes = itens.map(item =>
-          this.prodService.getProdutoPorCod(item.codProduto).pipe(
-            map(prod => {
-              console.log('Item carregado', prod)
-              const produto = prod.body || prod;
-              item.fotoProduto = produto.fotoProduto
-                ? this.getImageUrl(produto.fotoProduto)
-                : 'assets/img/no-image.jpg';
-              return item;
-            }),
-            catchError(() => {
-              item.fotoProduto = 'assets/img/no-image.jpg';
-              return of(item);
-            })
-          )
-        );
-
-        forkJoin(requisicoes).subscribe({
-          next: (itensComImagem) => {
-            this.venda.itensVd = itensComImagem;
-            this.calcularTotais();
-            this.carregando = false;
-          },
-          error: (err) => {
-            console.error('Erro ao carregar imagens:', err);
-            this.venda.itensVd = itens; // fallback sem imagens
-            this.calcularTotais();
-            this.carregando = false;
-          }
-        });
-      },
-      error: (err) => {
-        this.erroCarregamento = 'Erro ao carregar os itens da venda';
-        this.carregando = false;
-        console.error(err);
-      }
-    });
-  }
-
-  getImageUrl(fotoProduto: string): string {
-    if (!fotoProduto) return 'assets/img/no-image.jpg';
-    return 'data:image/jpeg;base64,' + fotoProduto;
-  }
+  // -------------------------
+  // ✔ SELEÇÃO
+  // -------------------------
 
   toggleTodos() {
-    this.listVds.forEach(vendedor => {
-      vendedor.selecionado = this.selecionarTodos;
+    this.listVds.forEach(v => {
+      v.selecionado = this.selecionarTodos;
+
+      v.produtos.forEach((p:any) => p.highlighted = this.selecionarTodos);
     });
+
     this.calcularTotal();
   }
 
   toggleVendedor(vendedor: iVendas) {
     vendedor.selecionado = !vendedor.selecionado;
-    // Verificar se todos os vendedores estão selecionados
+
+    vendedor.produtos.forEach((p:any) => p.highlighted = vendedor.selecionado);
+
     this.selecionarTodos = this.listVds.every(v => v.selecionado);
+
     this.calcularTotal();
   }
 
   verificarSelecao() {
-    this.selecionarTodos = this.listVds.every(v => v.produtos.every((p:iProduto) => p.highlighted = this.highlighted));
+    this.selecionarTodos = this.listVds.every(v =>
+      v.produtos.every((p:any) => p.highlighted)
+    );
+
     this.listVds.forEach(v => {
-      v.selecionado = v.produtos.every((p:iProduto) => p.highlighted);
+      v.selecionado = v.produtos.every((p:any) => p.highlighted);
     });
+
     this.calcularTotal();
   }
 
-  alterarQuantidade(produto: iProduto, delta: number) {
-    let qtd = 1;
-    produto.qtdVd = (produto.qtdVd || 1) + delta;
-    // produto.qtdVendidas = Math.max(1, produto.qtdVendidas + delta);
-    if (produto.qtdVd < 1) produto.qtdVd = 1;
-    this.calcularTotal();
-  }
-
-  removerProduto(produto: iProduto) {
-    this.listVds.forEach(v => {
-      v.produtos = v.produtos.filter((p:iProduto) => p !== produto);
-    });
-    // Remover vendedores sem produtos
-    this.listVds = this.listVds.filter(v => v.produtos.length > 0);
-     this.calcularTotal();
-  }
-
-  calcularTotal() {
-    this.total = this.listVds.reduce((acc, vendedor) => {
-      return acc + vendedor.produtos.reduce((sum:any, produto:iProduto) => {
-        const quantidade = produto.qtdVd || 1;
-        const valor = produto.valorVenda || 0;
-        return sum + (valor * quantidade);
-      }, 0);
-    }, 0);
-  }
+  // -------------------------
+  // 🧾 FINALIZAR
+  // -------------------------
 
   continuarCompra() {
     const produtosSelecionados = this.listVds
       .flatMap(v => v.produtos)
-      .filter(p => p.highlighted);
+      .filter((p:any) => p.highlighted);
 
-    console.log('Produtos para compra:', produtosSelecionados);
-    alert(`Você está comprando ${produtosSelecionados.length} produto(s).`);
+    console.log('Compra:', produtosSelecionados);
+
+    alert(`Total: R$ ${this.total.toFixed(2)}`);
   }
 
+  // -------------------------
+  // 🖼️ IMAGEM
+  // -------------------------
 
-
+  getImageUrl(foto: string): string {
+    return foto
+      ? 'data:image/jpeg;base64,' + foto
+      : 'assets/img/no-image.jpg';
+  }
 }

@@ -100,7 +100,7 @@ export class ProductsPComponent implements OnInit {
   }
 
   preparePurchase(productId: number) {
-    this.purchaseState.setSelectedProduct(productId);
+    this.purchaseState.addSelectedProduct(productId);
     this.router.navigate(['/auth/login']);
   }
 
