@@ -102,10 +102,6 @@ export class DashboardComponent implements OnInit {
     this.router.navigate(['/admin/carrinho-de-compras']);
   }
 
-  // -------------------------
-  // 🔹 PRODUTOS
-  // -------------------------
-
   listarProdutos() {
     this.spiner = true;
 
