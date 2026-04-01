@@ -2,7 +2,7 @@ import {Component, OnInit, ViewChild} from '@angular/core';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MatCalendar} from "@angular/material/datepicker";
 import {FormControl, FormGroup} from "@angular/forms";
-import {Observable, of} from "rxjs";
+import {forkJoin, Observable, of, switchMap} from "rxjs";
 import {NotificationMgsService} from "../../services/notification-mgs.service";
 import { PageEvent} from "@angular/material/paginator";
 import {iProduto} from "../../interfaces/product";
@@ -77,14 +77,21 @@ export class DashboardComponent implements OnInit {
   // -------------------------
 
   loadCartProducts() {
-    this.purchaseState.getSelectedProducts().subscribe(ids => {
-      this.cartProducts = [];
-
-      ids.forEach(id => {
-        this.prodService.getIdProduto(id).subscribe(res => {
-          this.cartProducts.push(res.body || res);
-        });
-      });
+    this.purchaseState.getSelectedProducts().pipe(
+      switchMap(ids => {
+        if (!ids || ids.length === 0) {
+          return of([]);
+        }
+        const req = ids.map(id =>
+          this.prodService.getIdProduto(id)
+        );
+        return forkJoin([...req]);
+      })
+    ).subscribe({
+      next: (responses: any[]) => {
+        this.cartProducts = responses.map(res => res.body || res);
+      },
+      error: (err) => console.error(err)
     });
   }
 

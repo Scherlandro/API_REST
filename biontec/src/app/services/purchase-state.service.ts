@@ -63,11 +63,6 @@ export class PurchaseStateService {
     this.updateStorage(updated);
   }
 
-  clearCart() {
-    this.selectedProductsIds.next([]);
-    localStorage.removeItem('selectedProductsIds');
-  }
-
   isProductInCart(id: number): boolean {
     return this.selectedProductsIds.value.includes(id);
   }
@@ -102,4 +97,10 @@ export class PurchaseStateService {
     this.saleData.next(null);
     localStorage.removeItem('saleData');
   }
+
+  clearCart() {
+    this.selectedProductsIds.next([]);
+    localStorage.removeItem('selectedProductsIds');
+  }
+
 }
