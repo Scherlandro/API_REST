@@ -36,13 +36,24 @@ export class PurchaseStateService {
     return this.selectedProductsIds.value;
   }
 
+  // No PurchaseStateService
   addSelectedProduct(id: number) {
     const current = this.selectedProductsIds.value;
-
     if (!current.includes(id)) {
       const updated = [...current, id];
       this.selectedProductsIds.next(updated);
       this.updateStorage(updated);
+      // Opcional: atualiza "saleData" automaticamente
+      this.refreshSaleData();
+    }
+  }
+
+  private refreshSaleData() {
+    const currentSale = this.saleData.value;
+    if (currentSale) {
+      currentSale.productIds = this.selectedProductsIds.value;
+      this.saleData.next(currentSale);
+      localStorage.setItem('saleData', JSON.stringify(currentSale));
     }
   }
 

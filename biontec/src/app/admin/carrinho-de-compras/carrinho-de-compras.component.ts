@@ -38,8 +38,8 @@ export class CarrinhoDeComprasComponent implements OnInit {
 
   loadCart() {
     this.purchaseState.getSale().subscribe(sale => {
-
-      if (!sale || !sale.productIds?.length) {
+      if (!sale || !sale.productIds || sale.productIds.length === 0) {
+        this.listVds = []; // Limpa a lista visual
         this.carregando = false;
         return;
       }
@@ -50,14 +50,9 @@ export class CarrinhoDeComprasComponent implements OnInit {
 
       forkJoin(requests).subscribe({
         next: (responses:any) => {
-
           const produtos = responses.map((res:any) => {
             const p = res.body || res;
-            return {
-              ...p,
-              qtdVd: p.qtdVd || 1,
-              highlighted: true
-            };
+            return { ...p, qtdVd: p.qtdVd || 1, highlighted: true };
           });
 
           this.listVds = [{
@@ -75,14 +70,13 @@ export class CarrinhoDeComprasComponent implements OnInit {
             produtos: produtos,
             selecionado: true
           }];
-
           this.calcularTotal();
           this.carregando = false;
         },
-        error: (err) => {
+        /*error: (err) => {
           console.error('Erro ao carregar carrinho', err);
           this.carregando = false;
-        }
+        }*/
       });
     });
   }

@@ -55,7 +55,10 @@ export class DashboardComponent implements OnInit {
 
   prodSelecionado(){
     this.purchaseState.getSelectedProducts().subscribe(productId => {
-      if (productId) {  this.loadProductDetails(productId);  }  });
+      if (productId && productId.length > 0) {
+        const lastId = productId[productId.length - 1];
+        this.loadProductDetails(lastId);
+      }  });
   }
 
   loadProductDetails(productId: number) {
@@ -125,19 +128,18 @@ export class DashboardComponent implements OnInit {
   // 👉 FINALIZA COMPRA COM TODOS
   goToCart() {
     const ids = this.purchaseState.getSelectedProductsValue();
-
     if (ids.length === 0) {
-      console.warn('Carrinho vazio');
+      //console.warn('Carrinho vazio');
+      alert('Seu carrinho está vazio!');
       return;
     }
-
     this.purchaseState.startSale(this.selectedUser);
     this.router.navigate(['/admin/carrinho-de-compras']);
   }
 
   // 👉 COMPRA DIRETA
   buyNow(productId: number) {
-    this.purchaseState.clearCart();
+   // this.purchaseState.clearCart();
     this.purchaseState.addSelectedProduct(productId);
 
     this.purchaseState.startSale(this.selectedUser);
