@@ -5,9 +5,15 @@
     <h3>Continue sua compra:</h3>
   <div class="product-card">
 
-    <button mat-raised-button color="error" class="remove-cart"
+   <button mat-raised-button color="error" class="remove-cart"
             (click)="clearHighlight()" matTooltip="Fechar">
       <mat-icon>delete</mat-icon>
+    </button>
+    <button mat-raised-button color="warn"
+            class="remove-cart"
+            (click)="selectedProduct = null"
+            matTooltip="Fechar">
+      <mat-icon>close</mat-icon>
     </button>
 
     <div class="spinner-container2">
@@ -34,10 +40,17 @@
       </div>
     </div>
 
-    <div class="product-actions">
+   <!-- <div class="product-actions">
       <button mat-raised-button color="primary" class="add-to-cart"
               (click)="launchingPurchaseToShoppingCart(selectedUser, selectedProduct.idProduto)">
         <mat-icon>add_shopping_cart</mat-icon>
+        Finalizar Compra
+      </button>
+    </div>-->
+
+    <div class="product-actions">
+      <button mat-raised-button color="primary"
+              (click)="buyNow(selectedProduct.idProduto)">
         Finalizar Compra
       </button>
     </div>
@@ -102,12 +115,14 @@
           </mat-card-content>
 
           <mat-card-actions class="product-actions">
-            <button mat-raised-button color="primary" class="add-to-cart"
-                    (click)="preparePurchase(produto.idProduto)">
-              <!--  (click)="preparePurchase()">-->
+           <button mat-raised-button color="primary" class="add-to-cart"
+                    (click)="addToCart(produto.idProduto)">
+             <!-- (click)="preparePurchase(produto.idProduto)">-->
               <mat-icon>add_shopping_cart</mat-icon>
               Comprar
             </button>
+
+
           </mat-card-actions>
         </mat-card>
       </div>

@@ -26,7 +26,7 @@ export class DashboardComponent implements OnInit {
 
   selectedUser!: string;
   cartProducts: iProduto[] = [];
-
+  selectedProduct: iProduto | null = null;
   spiner = false;
   pageSize = 20;
   currentPage = 0;
@@ -49,9 +49,26 @@ export class DashboardComponent implements OnInit {
   ngOnInit(): void {
     this.selectedUser = this.authService.getUserName();
     this.listarProdutos();
+    this.prodSelecionado();
     this.loadCartProducts();
   }
 
+  prodSelecionado(){
+    this.purchaseState.getSelectedProducts().subscribe(productId => {
+      if (productId) {  this.loadProductDetails(productId);  }  });
+  }
+
+  loadProductDetails(productId: number) {
+
+    this.prodService.getIdProduto(productId).subscribe({
+      next: (response) => {
+        this.selectedProduct = response.body || response;
+      },
+      error: (err) => {
+        console.error('Erro ao carregar produto:', err);
+      }
+    });
+  }
   // -------------------------
   // 🔹 CARRINHO
   // -------------------------
@@ -68,7 +85,32 @@ export class DashboardComponent implements OnInit {
     });
   }
 
+
+  launchingPurchaseToShoppingCart(userName:string, productId: number) {
+    if(userName == null || productId == null){
+      console.info('Usuário ou produto nulo',  userName , productId)
+    }
+    var prodId:number[] =[];
+    for (const id of [productId]) {
+      prodId.push(...[id]);
+    }
+    //this.purchaseState.startSaleOfSelectedProduct(userName, prodId);
+    this.purchaseState.startSale(userName);
+    this.router.navigate(['/admin/carrinho-de-compras']);
+  }
+
+
+  clearHighlight() {
+    this.selectedProduct = null;
+   // this.purchaseState.clearSelectedProduct();
+    this.purchaseState.clearSale();
+    this.highlightProductInList(-1); // Passa um ID inválido para remover todos os destaques
+  }
+
+
+
   addToCart(productId: number) {
+    console.log('IDPRO ADD ->', productId)
     this.purchaseState.addSelectedProduct(productId);
   }
 
@@ -101,6 +143,23 @@ export class DashboardComponent implements OnInit {
     this.purchaseState.startSale(this.selectedUser);
     this.router.navigate(['/admin/carrinho-de-compras']);
   }
+
+  highlightProductInList(productId: number) {
+
+    this.products = this.products.map(p => ({
+      ...p,  highlighted: false
+    }));
+
+    this.products = this.products.map(p => {
+      if (p.idProduto === productId) {
+        return { ...p, highlighted: true   };
+      }
+      return p;
+    });
+    this.produtosFiltrados = [...this.products];
+    this.updatePagedProdutos();
+  }
+
 
   listarProdutos() {
     this.spiner = true;
