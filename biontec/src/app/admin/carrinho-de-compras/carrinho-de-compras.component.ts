@@ -76,8 +76,12 @@ export class CarrinhoDeComprasComponent implements OnInit {
 
   calcularTotal() {
     this.total = this.listVds.reduce((acc, vendedor) => {
-      return acc + vendedor.produtos.reduce((sum: number, p: iProduto) => {
-        return sum + (p.valorVenda || 0) * (p.qtdVd || 1);
+      return acc + vendedor.produtos.reduce((sum: number, p: any) => {
+        // Somente soma se o produto estiver marcado
+        if (p.highlighted) {
+          return sum + (p.valorVenda || 0) * (p.qtdVd || 1);
+        }
+        return sum;
       }, 0);
     }, 0);
   }
@@ -106,8 +110,9 @@ export class CarrinhoDeComprasComponent implements OnInit {
   }
 
   toggleVendedor(vendedor: iVendas) {
-    vendedor.selecionado = !vendedor.selecionado;
-    vendedor.produtos.forEach((p:any) => p.highlighted = vendedor.selecionado);
+    // O checkbox já alterou o vendedor.selecionado via ngModel
+    vendedor.produtos.forEach((p: any) => p.highlighted = vendedor.selecionado);
+
     this.selecionarTodos = this.listVds.every(v => v.selecionado);
     this.calcularTotal();
   }

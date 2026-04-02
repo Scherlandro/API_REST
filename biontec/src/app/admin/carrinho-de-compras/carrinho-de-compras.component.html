@@ -16,9 +16,10 @@
       </div>
 
       <!-- Lista de produtos do vendedor -->
-       <div class="produto-item" *ngFor="let produto of  vendedor.produtos">
-       <input type="checkbox" [(ngModel)]="carregando" (change)="verificarSelecao()">
-         <img [src]="getImageUrl(produto.fotoProduto)" *ngIf="produto.fotoProduto">
+      <div class="produto-item" *ngFor="let produto of vendedor.produtos">
+        <input type="checkbox" [(ngModel)]="produto.highlighted" (change)="verificarSelecao()">
+
+        <img [src]="getImageUrl(produto.fotoProduto)" *ngIf="produto.fotoProduto">
 
          <div class="produto-info">
          <span class="produto-nome">{{ produto.nomeProduto }}</span>
