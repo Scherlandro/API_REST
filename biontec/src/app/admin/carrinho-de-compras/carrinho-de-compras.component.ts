@@ -1,7 +1,4 @@
 import {Component, OnInit} from '@angular/core';
-import {VendasService} from "../../services/vendas.service";
-import {ItensVdService} from "../../services/itens-vd.service";
-import {iItensVd} from "../../interfaces/itens-vd";
 import {iVendas} from "../../interfaces/vendas";
 import {PurchaseStateService} from "../../services/purchase-state.service";
 import {ProductService} from "../../services/product.service";
@@ -32,14 +29,10 @@ export class CarrinhoDeComprasComponent implements OnInit {
     this.loadCart();
   }
 
-  // -------------------------
-  // 🛒 CARREGAR CARRINHO
-  // -------------------------
-
   loadCart() {
     this.purchaseState.getSale().subscribe(sale => {
       if (!sale || !sale.productIds || sale.productIds.length === 0) {
-        this.listVds = []; // Limpa a lista visual
+        this.listVds = [];
         this.carregando = false;
         return;
       }
@@ -81,10 +74,6 @@ export class CarrinhoDeComprasComponent implements OnInit {
     });
   }
 
-  // -------------------------
-  // 💰 TOTAL
-  // -------------------------
-
   calcularTotal() {
     this.total = this.listVds.reduce((acc, vendedor) => {
       return acc + vendedor.produtos.reduce((sum: number, p: iProduto) => {
@@ -93,57 +82,33 @@ export class CarrinhoDeComprasComponent implements OnInit {
     }, 0);
   }
 
-  // -------------------------
-  // ➕ QUANTIDADE
-  // -------------------------
-
   alterarQuantidade(produto: iProduto, delta: number) {
     produto.qtdVd = (produto.qtdVd || 1) + delta;
-
     if (produto.qtdVd < 1) produto.qtdVd = 1;
-
     this.calcularTotal();
   }
 
-  // -------------------------
-  // ❌ REMOVER
-  // -------------------------
-
   removerProduto(produto: iProduto) {
-
     this.listVds.forEach(v => {
       v.produtos = v.produtos.filter((p:any) => p.idProduto !== produto.idProduto);
     });
-
-    // remove do service também 🔥
     this.purchaseState.removeSelectedProduct(produto.idProduto);
-
     this.listVds = this.listVds.filter(v => v.produtos.length > 0);
-
     this.calcularTotal();
   }
-
-  // -------------------------
-  // ✔ SELEÇÃO
-  // -------------------------
 
   toggleTodos() {
     this.listVds.forEach(v => {
       v.selecionado = this.selecionarTodos;
-
       v.produtos.forEach((p:any) => p.highlighted = this.selecionarTodos);
     });
-
     this.calcularTotal();
   }
 
   toggleVendedor(vendedor: iVendas) {
     vendedor.selecionado = !vendedor.selecionado;
-
     vendedor.produtos.forEach((p:any) => p.highlighted = vendedor.selecionado);
-
     this.selecionarTodos = this.listVds.every(v => v.selecionado);
-
     this.calcularTotal();
   }
 
@@ -159,23 +124,13 @@ export class CarrinhoDeComprasComponent implements OnInit {
     this.calcularTotal();
   }
 
-  // -------------------------
-  // 🧾 FINALIZAR
-  // -------------------------
-
   continuarCompra() {
     const produtosSelecionados = this.listVds
       .flatMap(v => v.produtos)
       .filter((p:any) => p.highlighted);
-
     console.log('Compra:', produtosSelecionados);
-
     alert(`Total: R$ ${this.total.toFixed(2)}`);
   }
-
-  // -------------------------
-  // 🖼️ IMAGEM
-  // -------------------------
 
   getImageUrl(foto: string): string {
     return foto

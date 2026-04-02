@@ -95,7 +95,6 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-
   launchingPurchaseToShoppingCart(userName:string, productId: number) {
     if(userName == null || productId == null){
       console.info('Usuário ou produto nulo',  userName , productId)
@@ -117,8 +116,6 @@ export class DashboardComponent implements OnInit {
     this.highlightProductInList(-1); // Passa um ID inválido para remover todos os destaques
   }
 
-
-
   addToCart(productId: number) {
     console.log('IDPRO ADD ->', productId)
     this.purchaseState.addSelectedProduct(productId);
@@ -132,7 +129,7 @@ export class DashboardComponent implements OnInit {
     return this.purchaseState.isProductInCart(productId);
   }
 
-  // 👉 FINALIZA COMPRA COM TODOS
+  // FINALIZA COMPRA COM TODOS
   goToCart() {
     const ids = this.purchaseState.getSelectedProductsValue();
     if (ids.length === 0) {
@@ -140,25 +137,38 @@ export class DashboardComponent implements OnInit {
       alert('Seu carrinho está vazio!');
       return;
     }
+
+    this.spiner = true; // Mostra um carregando enquanto salva no banco
+
+  this.purchaseState.saveSaleToDatabase(this.selectedUser).subscribe({
+    next: (res) => {
+      this.spiner = false;
+      console.log('Venda salva no banco com ID:', res.id);
+      this.router.navigate(['/admin/carrinho-de-compras']);
+    },
+    error: (err) => {
+      this.spiner = false;
+      console.error('Erro ao salvar no banco:', err);
+      alert('Não foi possível salvar seu carrinho no momento. Tente novamente.');
+    }
+  });
+ /*
     this.purchaseState.startSale(this.selectedUser);
     this.router.navigate(['/admin/carrinho-de-compras']);
+ */
   }
-
-  // 👉 COMPRA DIRETA
+  //  COMPRA DIRETA
   buyNow(productId: number) {
    // this.purchaseState.clearCart();
     this.purchaseState.addSelectedProduct(productId);
-
     this.purchaseState.startSale(this.selectedUser);
     this.router.navigate(['/admin/carrinho-de-compras']);
   }
 
   highlightProductInList(productId: number) {
-
     this.products = this.products.map(p => ({
       ...p,  highlighted: false
     }));
-
     this.products = this.products.map(p => {
       if (p.idProduto === productId) {
         return { ...p, highlighted: true   };
@@ -168,7 +178,6 @@ export class DashboardComponent implements OnInit {
     this.produtosFiltrados = [...this.products];
     this.updatePagedProdutos();
   }
-
 
   listarProdutos() {
     this.spiner = true;
@@ -196,7 +205,6 @@ export class DashboardComponent implements OnInit {
         p.nomeProduto.toLowerCase().includes(nome)
       );
     }
-
     this.currentPage = 0;
     this.updatePagedProdutos();
   }

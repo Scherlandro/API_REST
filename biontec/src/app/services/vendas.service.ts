@@ -32,6 +32,11 @@ export class VendasService {
     return this._http.post<iVendas>(this.baseUrl +'salvar', venda)
   }
 
+  storesCartInBase(cart: any): Observable<iVendas>{
+    console.log('salvando carrinho de compras no bd', cart);
+    return this._http.post<iVendas>( 'salvar', cart);
+  }
+
   updateVd(venda: iVendas): Observable<iVendas>{
     console.log('Venda atualizada', venda);
     return this._http.put<iVendas>(this.baseUrl +'editar', venda)

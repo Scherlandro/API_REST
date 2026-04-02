@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import {BehaviorSubject, Observable, Subject} from "rxjs";
+import {VendasService} from "./vendas.service";
 
 @Injectable({
   providedIn: 'root'
@@ -9,12 +10,14 @@ export class PurchaseStateService {
   private selectedProductsIds = new BehaviorSubject<number[]>([]);
   private saleData = new BehaviorSubject<any>(null);
 
-  constructor() {
+  constructor(
+    private vendaService: VendasService,
+  ) {
     this.loadFromStorage();
   }
 
   // -------------------------
-  // 🔹 CARRINHO
+  // CARRINHO
   // -------------------------
 
   private loadFromStorage() {
@@ -36,7 +39,6 @@ export class PurchaseStateService {
     return this.selectedProductsIds.value;
   }
 
-  // No PurchaseStateService
   addSelectedProduct(id: number) {
     const current = this.selectedProductsIds.value;
     if (!current.includes(id)) {
@@ -59,6 +61,7 @@ export class PurchaseStateService {
 
   removeSelectedProduct(id: number) {
     const updated = this.selectedProductsIds.value.filter(p => p !== id);
+   // localStorage.setItem('selectedProductsIds', JSON.stringify(updated));
     this.selectedProductsIds.next(updated);
     this.updateStorage(updated);
   }
@@ -72,7 +75,7 @@ export class PurchaseStateService {
   }
 
   // -------------------------
-  // 🔹 VENDA
+  // VENDA
   // -------------------------
 
   startSale(userName: string) {
@@ -80,9 +83,13 @@ export class PurchaseStateService {
       userName,
       productIds: this.selectedProductsIds.value
     };
-
     this.saleData.next(sale);
     localStorage.setItem('saleData', JSON.stringify(sale));
+    this.saveSaleToDatabase(sale);
+  }
+
+  saveSaleToDatabase(sale:any):Observable<any>{
+   return  this.vendaService.storesCartInBase(sale);
   }
 
   getSale(): Observable<any> {
@@ -98,9 +105,9 @@ export class PurchaseStateService {
     localStorage.removeItem('saleData');
   }
 
-  clearCart() {
+ /* clearCart() {
     this.selectedProductsIds.next([]);
     localStorage.removeItem('selectedProductsIds');
-  }
+  }*/
 
 }
