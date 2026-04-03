@@ -135,3 +135,161 @@ radial-gradient(ellipse farthest-corner at left top, #FFFFFF 0%, #FFFFAC 8%, #D1
   display: flex;
   flex-wrap: wrap;
 }
+
+
+/* Estilos para o banner lateral do carrinho */
+.selected-product-banner {
+  position: fixed;
+  right: 0;
+  top: 0;
+  width: 320px;
+  height: 100vh;
+  background: white;
+  box-shadow: -2px 0 8px rgba(0,0,0,0.1);
+  z-index: 1000;
+  padding: 16px;
+  overflow-y: auto;
+  animation: slideIn 0.3s ease-out;
+}
+
+.selected-product-banner .banner-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #eee;
+}
+
+.selected-product-banner .banner-header h3 {
+  color: #00a650;
+  margin: 0;
+}
+
+.selected-product-banner .banner-products {
+  margin-bottom: 16px;
+}
+
+.selected-product-banner .banner-products .banner-product-item {
+  display: flex;
+  align-items: center;
+  padding: 12px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.selected-product-banner .banner-products .banner-product-item .cubo-mini {
+  width: 50px;
+  height: 50px;
+  margin-right: 12px;
+}
+
+.selected-product-banner .banner-products .banner-product-item .cubo-mini img {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+}
+
+.selected-product-banner .banner-products .banner-product-item .banner-product-info {
+  flex: 1;
+}
+
+.selected-product-banner .banner-products .banner-product-item .banner-product-info .product-name {
+  display: block;
+  font-size: 14px;
+  margin-bottom: 4px;
+}
+
+.selected-product-banner .banner-products .banner-product-item .banner-product-info .product-price {
+  font-weight: bold;
+  color: #00a650;
+}
+
+.selected-product-banner .banner-actions button {
+  width: 100%;
+  margin-bottom: 8px;
+}
+
+/* Animação de entrada do banner */
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+/* Botão flutuante do carrinho */
+.floating-cart-btn {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 999;
+}
+
+.floating-cart-btn .cart-badge {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: #ff5722;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: bold;
+  color: white;
+}
+
+/* Estilos responsivos para mobile */
+@media (max-width: 768px) {
+  .selected-product-banner {
+    width: 100%;
+    height: auto;
+    max-height: 80vh;
+    bottom: 0;
+    top: auto;
+    border-radius: 16px 16px 0 0;
+  }
+
+  @keyframes slideIn {
+    from {
+      transform: translateY(100%);
+    }
+    to {
+      transform: translateY(0);
+    }
+  }
+
+  .floating-cart-btn {
+    bottom: 16px;
+    right: 16px;
+  }
+}
+
+/* Estilo para o destaque do produto (se ainda for usado) */
+.product-card.highlighted {
+  border: 2px solid #00a650;
+  box-shadow: 0 0 10px rgba(0, 166, 80, 0.3);
+  transition: all 0.3s ease;
+}
+
+/* Estilo adicional para o container do banner */
+.selected-product-banner::-webkit-scrollbar {
+  width: 6px;
+}
+
+.selected-product-banner::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.selected-product-banner::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 3px;
+}
+
+.selected-product-banner::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}

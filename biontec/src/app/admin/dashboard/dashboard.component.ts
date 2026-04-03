@@ -4,7 +4,7 @@ import {MatCalendar} from "@angular/material/datepicker";
 import {FormControl, FormGroup} from "@angular/forms";
 import {forkJoin, Observable, of, switchMap} from "rxjs";
 import {NotificationMgsService} from "../../services/notification-mgs.service";
-import { PageEvent} from "@angular/material/paginator";
+import {PageEvent} from "@angular/material/paginator";
 import {iProduto} from "../../interfaces/product";
 import {DomSanitizer, SafeUrl} from "@angular/platform-browser";
 import {ProductService} from "../../services/product.service";
@@ -44,7 +44,8 @@ export class DashboardComponent implements OnInit {
     private purchaseState: PurchaseStateService,
     public dialog: MatDialog,
     private sanitizer: DomSanitizer
-  ) {}
+  ) {
+  }
 
   ngOnInit(): void {
     this.selectedUser = this.authService.getUserName();
@@ -53,12 +54,13 @@ export class DashboardComponent implements OnInit {
     this.loadCartProducts();
   }
 
-  prodSelecionado(){
+  prodSelecionado() {
     this.purchaseState.getSelectedProducts().subscribe(productId => {
       if (productId && productId.length > 0) {
         const lastId = productId[productId.length - 1];
         this.loadProductDetails(lastId);
-      }  });
+      }
+    });
   }
 
   loadProductDetails(productId: number) {
@@ -72,6 +74,7 @@ export class DashboardComponent implements OnInit {
       }
     });
   }
+
   // -------------------------
   // 🔹 CARRINHO
   // -------------------------
@@ -95,30 +98,80 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  launchingPurchaseToShoppingCart(userName:string, productId: number) {
-    if(userName == null || productId == null){
-      console.info('Usuário ou produto nulo',  userName , productId)
+  public getCartCount(): number {
+    return this.purchaseState.getCartCount();
+  }
+
+  public isProductInCart(productId: number): boolean {
+    return this.purchaseState.isProductInCart(productId);
+  }
+
+  //  COMPRA DIRETA
+  showCard() {
+     // this.purchaseState.clearCart();
+   //  this.purchaseState.addSelectedProduct(productId);
+     this.purchaseState.startSale(this.selectedUser);
+     this.router.navigate(['/admin/carrinho-de-compras']);
+   }
+
+
+
+
+  buyNow(productId: number) {
+    this.purchaseState.addSelectedProduct(productId);
+    this.loadProductDetails(productId);
+    this.showAddToCartNotification();
+    // this.router.navigate(['/admin/carrinho-de-compras']); // REMOVA ESTA LINHA
+  }
+
+  showAddToCartNotification() {
+    // Você pode implementar um snackbar ou toast aqui
+    console.log('Produto adicionado ao carrinho!');
+  }
+
+
+  launchingPurchaseToShoppingCart(userName: string, productId: number) {
+    if (userName == null || productId == null) {
+      console.info('Usuário ou produto nulo', userName, productId)
+    return;
     }
-    var prodId:number[] =[];
+ /*   var prodId: number[] = [];
     for (const id of [productId]) {
       prodId.push(...[id]);
-    }
+    }*/
+
+    this.purchaseState.addSelectedProduct(productId);
+    // Carrega os detalhes para mostrar no banner
+    this.loadProductDetails(productId);
+    // NÃO redireciona - mantém na mesma página
+    console.log('Produto adicionado ao carrinho com sucesso');
+
     //this.purchaseState.startSaleOfSelectedProduct(userName, prodId);
     this.purchaseState.startSale(userName);
     this.router.navigate(['/admin/carrinho-de-compras']);
   }
 
-
   clearHighlight() {
     this.selectedProduct = null;
-   // this.purchaseState.clearSelectedProduct();
-    this.purchaseState.clearSale();
-    this.highlightProductInList(-1); // Passa um ID inválido para remover todos os destaques
+    // this.purchaseState.clearSelectedProduct();
+   // this.purchaseState.clearSale();
+ //   this.highlightProductInList(-1); // Passa um ID inválido para remover todos os destaques
   }
 
   addToCart(productId: number) {
     console.log('IDPRO ADD ->', productId)
     this.purchaseState.addSelectedProduct(productId);
+
+    this.loadProductDetails(productId);
+
+    // Scroll suave para o banner (opcional)
+    setTimeout(() => {
+      const banner = document.querySelector('.selected-product-banner');
+      if (banner) {
+        banner.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+    }, 100);
+
   }
 
   removeFromCart(productId: number) {
@@ -140,38 +193,31 @@ export class DashboardComponent implements OnInit {
 
     this.spiner = true; // Mostra um carregando enquanto salva no banco
 
-  this.purchaseState.saveSaleToDatabase(this.selectedUser).subscribe({
-    next: (res) => {
-      this.spiner = false;
-      console.log('Venda salva no banco com ID:', res.id);
-      this.router.navigate(['/admin/carrinho-de-compras']);
-    },
-    error: (err) => {
-      this.spiner = false;
-      console.error('Erro ao salvar no banco:', err);
-      alert('Não foi possível salvar seu carrinho no momento. Tente novamente.');
-    }
-  });
- /*
-    this.purchaseState.startSale(this.selectedUser);
-    this.router.navigate(['/admin/carrinho-de-compras']);
- */
-  }
-  //  COMPRA DIRETA
-  buyNow(productId: number) {
-   // this.purchaseState.clearCart();
-    this.purchaseState.addSelectedProduct(productId);
-    this.purchaseState.startSale(this.selectedUser);
-    this.router.navigate(['/admin/carrinho-de-compras']);
+    this.purchaseState.saveSaleToDatabase(this.selectedUser).subscribe({
+      next: (res) => {
+        this.spiner = false;
+        console.log('Venda salva no banco com ID:', res.id);
+        this.router.navigate(['/admin/carrinho-de-compras']);
+      },
+      error: (err) => {
+        this.spiner = false;
+        console.error('Erro ao salvar no banco:', err);
+        alert('Não foi possível salvar seu carrinho no momento. Tente novamente.');
+      }
+    });
+    /*
+       this.purchaseState.startSale(this.selectedUser);
+       this.router.navigate(['/admin/carrinho-de-compras']);
+    */
   }
 
   highlightProductInList(productId: number) {
     this.products = this.products.map(p => ({
-      ...p,  highlighted: false
+      ...p, highlighted: false
     }));
     this.products = this.products.map(p => {
       if (p.idProduto === productId) {
-        return { ...p, highlighted: true   };
+        return {...p, highlighted: true};
       }
       return p;
     });
@@ -228,6 +274,6 @@ export class DashboardComponent implements OnInit {
   }
 
   onError(msg: string) {
-    this.dialog.open(ErrorDiologComponent, { data: msg });
+    this.dialog.open(ErrorDiologComponent, {data: msg});
   }
 }
