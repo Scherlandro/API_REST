@@ -99,6 +99,7 @@ export class CarrinhoDeComprasComponent implements OnInit {
     this.purchaseState.removeSelectedProduct(produto.idProduto);
     this.listVds = this.listVds.filter(v => v.produtos.length > 0);
     this.calcularTotal();
+   // this.loadCart();
   }
 
   toggleTodos() {
@@ -110,8 +111,7 @@ export class CarrinhoDeComprasComponent implements OnInit {
   }
 
   toggleVendedor(vendedor: iVendas) {
-    // O checkbox já alterou o vendedor.selecionado via ngModel
-    vendedor.produtos.forEach((p: any) => p.highlighted = vendedor.selecionado);
+   vendedor.produtos.forEach((p: any) => p.highlighted = vendedor.selecionado);
 
     this.selecionarTodos = this.listVds.every(v => v.selecionado);
     this.calcularTotal();

@@ -51,8 +51,9 @@ export class PurchaseStateService {
   }
 
   private refreshSaleData() {
-    const currentSale = this.saleData.value;
-    if (currentSale) {
+    const currentSale = this.saleData.value || JSON.parse(localStorage.getItem('saleData') || '{}');
+
+    if (currentSale && currentSale.productIds) {
       currentSale.productIds = this.selectedProductsIds.value;
       this.saleData.next(currentSale);
       localStorage.setItem('saleData', JSON.stringify(currentSale));
@@ -61,9 +62,9 @@ export class PurchaseStateService {
 
   removeSelectedProduct(id: number) {
     const updated = this.selectedProductsIds.value.filter(p => p !== id);
-   // localStorage.setItem('selectedProductsIds', JSON.stringify(updated));
-    this.selectedProductsIds.next(updated);
+   this.selectedProductsIds.next(updated);
     this.updateStorage(updated);
+    this.refreshSaleData();
   }
 
   isProductInCart(id: number): boolean {
