@@ -40,25 +40,27 @@
 <form *ngIf="mostrarMenuHeader" class="nav-head componet-table ">
 
   <!---  Menu horizontal   --->
-  <mat-icon class="lable-link body" title="home"  routerLink="dashboard">home</mat-icon>
+  <mat-icon class="  body" title="home"  routerLink="dashboard">home</mat-icon>
 
-  <mat-icon class="lable-link body" title="Usuários" routerLink="usuarios">person</mat-icon>
+  <mat-icon class="  body" title="Usuários" routerLink="usuarios">person</mat-icon>
 
-  <mat-icon class="lable-link body" title="Funcinários" routerLink="funcionarios">engineering</mat-icon> <!-- managers-->
+  <mat-icon class="  body" title="Funcinários" routerLink="funcionarios">engineering</mat-icon> <!-- managers-->
 
-  <mat-icon class="lable-link body" title="Clientes" routerLink="clientes">group_add | workman</mat-icon>
+  <mat-icon class="  body" title="Clientes" routerLink="clientes">group_add | workman</mat-icon>
 
-  <mat-icon class="lable-link body" title="Produtos" routerLink="produtos">redeem | store_mall_directory</mat-icon>
+  <mat-icon class="  body" title="Produtos" routerLink="produtos">redeem | store_mall_directory</mat-icon>
 
-  <mat-icon class="lable-link body" title="Vendas" routerLink="vendas">point_of_sale | local_atm | payment</mat-icon>
+  <mat-icon class="  body" title="Vendas" routerLink="vendas">point_of_sale | local_atm | payment</mat-icon>
 
-  <mat-icon class="lable-link body" title="Carrinho de Compras" routerLink="carrinho-de-compras" >shopping_cart</mat-icon>
+  <!--<mat-icon class="  body" title="Carrinho de Compras" routerLink="carrinho-de-compras" >shopping_cart</mat-icon> -->
+  <span> <mat-icon class="body" title="Carrinho de Compras" routerLink="carrinho-de-compras">shopping_cart
+    </mat-icon><span  *ngIf="getCartCount() > 0"  class="menu-badge">{{getCartCount()}}</span></span>
 
-  <mat-icon class="lable-link body" title="Ordem de Serviços" routerLink="os">handyman</mat-icon>
+  <mat-icon class="  body" title="Ordem de Serviços" routerLink="os">handyman</mat-icon>
 
-  <mat-icon class="icon-balance lable-link body" title="Contabilidade" routerLink="contabilidade">timeline<mat-icon>balance</mat-icon></mat-icon>
+  <mat-icon class="icon-balance   body" title="Contabilidade" routerLink="contabilidade">timeline<mat-icon>balance</mat-icon></mat-icon>
 
-  <mat-icon class="lable-link body" title="Nfe" routerLink="nfe">receipt_long | receipt</mat-icon>
+  <mat-icon class="  body" title="Nfe" routerLink="nfe">receipt_long | receipt</mat-icon>
 
 
 </form>

@@ -90,4 +90,22 @@ a {
 }
 
 
+ .menu-badge {
+  position: relative;
+  top: -45px;
+  right: -20px;
+  background: #ff5722;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: bold;
+  color: white;
+}
+
+
+
 

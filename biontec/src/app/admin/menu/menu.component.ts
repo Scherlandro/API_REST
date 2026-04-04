@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {TokenService} from "../../services/token.service";
 import {AuthService} from "../../services/auth.service";
 import {ITokenUser, IUser} from "../../interfaces/user";
+import {PurchaseStateService} from "../../services/purchase-state.service";
 
 @Component({
   selector: 'app-sidemenu',
@@ -19,6 +20,7 @@ export class MenuComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private tokenService: TokenService,
+    private purchaseState: PurchaseStateService
   ) { }
 
   ngOnInit(): void {
@@ -33,4 +35,7 @@ export class MenuComponent implements OnInit {
   }
 
 
+  public getCartCount(): number {
+    return this.purchaseState.getCartCount();
+  }
 }
