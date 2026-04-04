@@ -231,10 +231,15 @@ radial-gradient(ellipse farthest-corner at left top, #FFFFFF 0%, #FFFFAC 8%, #D1
 
 /* Botão flutuante do carrinho */
 .floating-cart-btn {
+  background: radial-gradient(ellipse farthest-corner at right bottom, #FEDB37 0%, #FDB931 8%, #9f7928 30%, #8A6E2F 40%, transparent 80%),
+  radial-gradient(ellipse farthest-corner at left top, #FFFFFF 0%, #FFFFAC 8%, #D1B464 25%, #5d4a1f 62.5%, #5d4a1f 100%);
+  border-radius: 10px;
+
+  padding: 5px;
   position: fixed;
-  bottom: 24px;
-  right: 24px;
-  z-index: 999;
+   bottom: 20px;
+  right: 4%;
+   z-index: 999;
 }
 
 .floating-cart-btn .cart-badge {
@@ -256,6 +261,7 @@ radial-gradient(ellipse farthest-corner at left top, #FFFFFF 0%, #FFFFAC 8%, #D1
 /* Estilos responsivos para mobile */
 @media (max-width: 768px) {
   .selected-product-banner {
+    max-width: 400px;
     width: 100%;
     height: auto;
     max-height: 80vh;
@@ -273,10 +279,6 @@ radial-gradient(ellipse farthest-corner at left top, #FFFFFF 0%, #FFFFAC 8%, #D1
     }
   }
 
-  .floating-cart-btn {
-    bottom: 16px;
-    right: 16px;
-  }
 }
 
 /* Estilo para o destaque do produto (se ainda for usado) */

@@ -1,8 +1,21 @@
+
+
+
+
 <div *ngIf="selectedProduct" class="selected-product-banner">
 
  <!-- <div class="products-grid">-->
  <mat-card appearance="outlined" *ngIf="selectedProduct" class="body">
    <!-- <h3>Continue sua compra:</h3>-->
+
+
+   <button *ngIf="getCartCount() > 0"
+           class="floating-cart-btn"
+           (click)="showCard()">
+     <mat-icon>shopping_cart</mat-icon>
+     <span class="cart-badge">{{getCartCount()}}</span>
+   </button>
+
   <div class="product-card">
 
     <div class="banner-header">
@@ -11,18 +24,6 @@
         <mat-icon>close</mat-icon>
       </button>
     </div>
-
- <!--  <button mat-raised-button color="error" class="remove-cart"
-            (click)="clearHighlight()" matTooltip="Fechar">
-      <mat-icon>delete</mat-icon>
-    </button>
-
-    <button mat-raised-button color="warn"
-            class="remove-cart"
-            (click)="selectedProduct = null"
-            matTooltip="Fechar">
-      <mat-icon>close</mat-icon>
-    </button>-->
 
     <div class="spinner-container2">
     <div class="cubo-main-p">
@@ -48,14 +49,6 @@
       </div>
     </div>
 
- <!--  <div class="product-actions">
-      <button mat-raised-button color="primary" class="add-to-cart"
-              (click)="launchingPurchaseToShoppingCart(selectedUser, selectedProduct.idProduto)">
-        <mat-icon>add_shopping_cart</mat-icon>
-        Finalizar Compra
-      </button>
-    </div>-->
-
  <!--   <div class="banner-products">
       <div *ngFor="let product of cartProducts" class="banner-product-item">
         <div class="cubo-mini">
@@ -69,10 +62,7 @@
     </div>-->
 
     <mat-list class="banner-products" *ngFor="let product of cartProducts"   >
- <!--     <mat-icon mat-raised-button color="error" class="remove-cart"
-                (click)="clearHighlight()" matTooltip="Fechar">
-        delete</mat-icon>
--->
+
       <mat-list-item class="banner-product-item"  >
         <img matListItemAvatar [src]="getImageUrl(product.fotoProduto)" *ngIf="product.fotoProduto">
         <span class="product-descrision">{{product.nomeProduto}}</span>
@@ -82,35 +72,26 @@
     </mat-list>
 
     <div class="banner-actions">
-      <button mat-raised-button color="primary" (click)="showCard()">
-        Ver carrinho ({{getCartCount()}})
-      </button>
+
       <button mat-button (click)="clearHighlight()">
         Continuar comprando
       </button>
     </div>
 
-    <div class="product-actions">
+<!--    <div class="product-actions">
       <button mat-raised-button color="primary"
               (click)="buyNow(selectedProduct.idProduto)">
         Finalizar Compra
       </button>
-    </div>
+    </div>-->
 
-
-
+    <button mat-raised-button color="primary" (click)="showCard()">
+      Ver carrinho ({{getCartCount()}})
+    </button>
   </div>
   </mat-card>
 
 
-  <button *ngIf="getCartCount() > 0"
-          class="floating-cart-btn"
-          mat-fab
-          color="primary"
-          (click)="goToCart()">
-    <mat-icon>shopping_cart</mat-icon>
-    <span class="cart-badge">{{getCartCount()}}</span>
-  </button>
 
 
 </div>
