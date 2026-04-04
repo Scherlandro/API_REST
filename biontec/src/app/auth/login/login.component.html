@@ -22,20 +22,28 @@
                  (dblclick)="clearInput()"
                  formControlName="username">
           <mat-error class="form_error" *ngIf="formLogin.get('username')?.invalid && formLogin.get('username')?.touched">
-            <span *ngIf="formLogin.get('username')?.hasError('required')">O e-mail é obrigatório</span>
-            <span *ngIf="formLogin.get('username')?.hasError('email')">Formato inválido (user@email.com)</span>
-            <span *ngIf="formLogin.get('username')?.hasError('invalidDomain')">Apenas e-mails @empresa.com são permitidos</span>
-               {{ getErrorMessage() }}
+              {{ getErrorMessage() }}
           </mat-error>
         </mat-card>
 
         <mat-icon>vpn_key</mat-icon>
         <mat-card class="component-g">
-          <label>Senha</label>
-          <input class="input-login" type="password" name="password" id="password"
-                 (dblclick)="clearInput()"
-                 formControlName="password">
 
+          <label>Senha</label>
+          <div>
+          <input  class="input-login"  [type]="hide() ? 'password' : 'text'"
+                  (dblclick)="clearInput()"
+                  formControlName="password"
+                  name="password" id="password"
+          />
+          <mat-icon
+            (click)="clickEvent($event)"
+            [attr.aria-label]="'Hide password'"
+            [attr.aria-pressed]="hide()"
+          >
+            {{hide() ? 'visibility_off' : 'visibility'}}
+          </mat-icon>
+          </div>
           <mat-error class="form_error" *ngIf="formLogin.get('password')?.invalid && formLogin.get('password')?.touched">
             <span *ngIf="formLogin.get('password')?.errors?.['required']">Senha é obrigatória</span>
             <span *ngIf="formLogin.get('password')?.errors?.['minlength']">Mínimo de 6 caracteres</span>

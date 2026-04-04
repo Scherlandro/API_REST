@@ -1,12 +1,12 @@
 <div *ngIf="selectedProduct" class="selected-product-banner">
 
  <!-- <div class="products-grid">-->
- <div *ngIf="selectedProduct" class="selected-product-banner">
+ <mat-card appearance="outlined" *ngIf="selectedProduct" class="body">
    <!-- <h3>Continue sua compra:</h3>-->
   <div class="product-card">
 
     <div class="banner-header">
-      <h3>Adicionado ao carrinho!</h3>
+      <label class="banner-title" >Adicionado ao carrinho!</label>
       <button mat-icon-button (click)="clearHighlight()" matTooltip="Fechar">
         <mat-icon>close</mat-icon>
       </button>
@@ -56,7 +56,7 @@
       </button>
     </div>-->
 
-    <div class="banner-products">
+ <!--   <div class="banner-products">
       <div *ngFor="let product of cartProducts" class="banner-product-item">
         <div class="cubo-mini">
           <img class="face-p" [src]="getImageUrl(product.fotoProduto)" *ngIf="product.fotoProduto">
@@ -66,7 +66,20 @@
           <span class="product-price">{{product.valorVenda | currency: 'BRL'}}</span>
         </div>
       </div>
-    </div>
+    </div>-->
+
+    <mat-list class="banner-products" *ngFor="let product of cartProducts"   >
+ <!--     <mat-icon mat-raised-button color="error" class="remove-cart"
+                (click)="clearHighlight()" matTooltip="Fechar">
+        delete</mat-icon>
+-->
+      <mat-list-item class="banner-product-item"  >
+        <img matListItemAvatar [src]="getImageUrl(product.fotoProduto)" *ngIf="product.fotoProduto">
+        <span class="product-descrision">{{product.nomeProduto}}</span>
+        <span class="product-price">{{product.valorVenda | currency: 'BRL'}}</span>
+
+      </mat-list-item >
+    </mat-list>
 
     <div class="banner-actions">
       <button mat-raised-button color="primary" (click)="showCard()">
@@ -87,9 +100,9 @@
 
 
   </div>
-  </div>
+  </mat-card>
 
-  <!-- Adicione no final do template, fora de todas as divs -->
+
   <button *ngIf="getCartCount() > 0"
           class="floating-cart-btn"
           mat-fab

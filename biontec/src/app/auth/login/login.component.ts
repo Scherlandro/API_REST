@@ -1,4 +1,4 @@
-import {Inject, NgModule} from '@angular/core';
+import {Inject, NgModule, signal} from '@angular/core';
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {ICredential} from 'src/app/interfaces/credential';
 import {AuthService} from 'src/app/services/auth.service';
@@ -24,6 +24,7 @@ export class LoginComponent implements OnInit {
   tbSourceUsuarios$ = new MatTableDataSource<IUser>();
   showErrorMessage= '';
   spiner = false;
+  hide = signal(true);
   formLogin!: FormGroup;
   form: ICredential = {
     username: '',
@@ -43,8 +44,6 @@ export class LoginComponent implements OnInit {
     this.formLogin = this.criarFormLogin();
     this.username = new FormControl('', [Validators.required, Validators.email]);
   }
-
-
 
   ngOnInit(): void {
     this.ipService.getIpAddress().subscribe(data => {
@@ -68,93 +67,37 @@ export class LoginComponent implements OnInit {
        if (domain !== 'empresa.com') { // Depois alterar para o domínio desejado
       console.log('Valor domain ', domain)
       return { invalidDomain: true };
-         }
-    }
+       }  }
     return null;
   }
 
-  getErrorMessage2() {
-    return this.username.hasError('required') ? 'You must enter a value' :
-      this.username.hasError('email') ? 'Not a valid email' :   '';
+  clickEvent(event: MouseEvent) {
+    this.hide.set(!this.hide());
+    event.stopPropagation();
   }
-
-  onSubmit2(): void {
-    this.spiner = true;
-    this.authService.login(this.form).pipe( delay(1500))
-      .subscribe((data: { access_token: string; }) => {
-        this.tokenService.saveToken(data.access_token); },
-      error => {
-        console.log('VALOR DO ERROR --->', error)
-        this.showErrorMessage = error.status;
-        delay(5000)
-         this.spiner = false;
-      } ) ;
-    /*  catchError(error => {  console.error( error);
-     // this.error$.next(true);
-      return of();  })*/
-    /*
-     this.tokenService.saveToken(data.access_token)
-     localStorage.setItem('currentUser',JSON.stringify(data));
-      if(data.user.role==='ADMIN') {
-        this.data.navigate(['/admindashboard']);
-      } else {
-        this.data.navigate(['/userdashboard']);
-      }*/
-  }
-
 
   newAccount(): void {
     const dialogRef = this.dialog.open(DialogUsuarioComponent, {
       width: '300px',
-      data: {
-        id: null,
-        name: '',
-        username: '',
-        password: ''
-      }
+      data: { id: null, name: '', username: '',  password: ''   }
     });
-
     dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-
-
-        this.notificationMsg.success('Novo usuário criado com sucesso!');
-      }
+      if (result) { this.notificationMsg.success('Novo usuário criado com sucesso!');  }
     });
-
   }
 
-  clearInput2(){
-
-     this.form = { username: '', password : '' };
-     this.spiner = false;
-     this.showErrorMessage = '';
-
-   }
-
-  getErrorMessage() {
+  getErrorMessage(){
     const emailControl = this.formLogin.get('username');
-
-    if (emailControl?.hasError('required')) {
-      return 'O e-mail é obrigatório';
-    }
-
-    if (emailControl?.hasError('email')) {
-      return 'Formato de e-mail inválido (ex: usuario@email.com)';
-    }
-
-    return '';
+    return emailControl?.hasError('required') ? 'O e-mail é obrigatório' :
+      emailControl?.hasError('email') ? 'Formato inválido (user@email.com)' : '' ;
   }
 
   onSubmit(): void {
     if (this.formLogin.valid) {
       this.spiner = true;
-
       const loginData: ICredential = this.formLogin.value;
-
       this.authService.login(loginData).pipe(delay(1500))
-        .subscribe(
-          (data: { access_token: string; }) => {
+        .subscribe( (data: { access_token: string; }) => {
             this.tokenService.saveToken(data.access_token);
             this.spiner = false;
           },
@@ -163,6 +106,13 @@ export class LoginComponent implements OnInit {
             this.spiner = false;
           }
         );
+      /*
+    localStorage.setItem('currentUser',JSON.stringify(data));
+     if(data.user.role==='ADMIN') {
+       this.data.navigate(['/admindashboard']);
+     } else {
+       this.data.navigate(['/userdashboard']);
+     }*/
     }
   }
 
@@ -171,7 +121,5 @@ export class LoginComponent implements OnInit {
     this.spiner = false;
     this.showErrorMessage = '';
   }
-
-
 
 }

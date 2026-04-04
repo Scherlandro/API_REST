@@ -185,6 +185,7 @@ export class DashboardComponent implements OnInit {
   // FINALIZA COMPRA COM TODOS
   goToCart() {
     const ids = this.purchaseState.getSelectedProductsValue();
+    console.log('Quantidade de ids ', ids)
     if (ids.length === 0) {
       //console.warn('Carrinho vazio');
       alert('Seu carrinho está vazio!');

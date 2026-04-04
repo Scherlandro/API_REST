@@ -85,6 +85,11 @@ radial-gradient(ellipse farthest-corner at left top, #FFFFFF 0%, #FFFFAC 8%, #D1
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
 }
+.product-descrision {
+  font-size: 14px;
+  display: -webkit-box;
+  flex: 1;
+}
 
 .price-section {
   margin-bottom: 8px;
@@ -131,9 +136,9 @@ radial-gradient(ellipse farthest-corner at left top, #FFFFFF 0%, #FFFFAC 8%, #D1
   width: 80%;
 }
 .remove-cart {
-  justify-content: center;
-  display: flex;
-  flex-wrap: wrap;
+  justify-content: right;
+  display: -webkit-box;
+  flex: 1;
 }
 
 
@@ -150,6 +155,11 @@ radial-gradient(ellipse farthest-corner at left top, #FFFFFF 0%, #FFFFAC 8%, #D1
   padding: 16px;
   overflow-y: auto;
   animation: slideIn 0.3s ease-out;
+}
+.banner-title {
+  font-size: 18px;
+  color: #194507;
+  padding: 10px;
 }
 
 .selected-product-banner .banner-header {
@@ -173,7 +183,7 @@ radial-gradient(ellipse farthest-corner at left top, #FFFFFF 0%, #FFFFAC 8%, #D1
 .selected-product-banner .banner-products .banner-product-item {
   display: flex;
   align-items: center;
-  padding: 12px;
+  padding: 8px;
   border-bottom: 1px solid #f0f0f0;
 }
 
