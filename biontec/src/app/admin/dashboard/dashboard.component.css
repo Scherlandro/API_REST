@@ -1,7 +1,6 @@
 .body-prod-p {
   background: radial-gradient(ellipse farthest-corner at right bottom, #FEDB37 0%, #FDB931 8%, #9f7928 30%, #8A6E2F 40%, transparent 80%),
 radial-gradient(ellipse farthest-corner at left top, #FFFFFF 0%, #FFFFAC 8%, #D1B464 25%, #5d4a1f 62.5%, #5d4a1f 100%);
-
   background-color: rgba(96, 30, 160, 0);
 }
 
@@ -59,18 +58,6 @@ radial-gradient(ellipse farthest-corner at left top, #FFFFFF 0%, #FFFFAC 8%, #D1
   transform: translateY(-5px);
   box-shadow: 0 14px 28px rgba(0, 0, 0, 0.12), 0 10px 10px rgba(0, 0, 0, 0.10);
 }
-/*-----##Destaque produtoSelecionado####-------*/
-/*.product-card.highlighted {
-  border: 2px solid #3f51b5;
-  box-shadow: 0 4px 8px rgba(63, 81, 181, 0.3);
-  transform: scale(1.02);
-  transition: all 0.3s ease;
-}
-
-.product-card.highlighted .product-title {
-  color: #3f51b5;
-  font-weight: bold;
-}*/
 
 .product-content {
   padding: 16px;
@@ -100,6 +87,7 @@ radial-gradient(ellipse farthest-corner at left top, #FFFFFF 0%, #FFFFAC 8%, #D1
   font-weight: 600;
   color: #333;
   display: block;
+  padding-top: 10px;
 }
 
 .stock-available {
@@ -281,14 +269,7 @@ radial-gradient(ellipse farthest-corner at left top, #FFFFFF 0%, #FFFFAC 8%, #D1
 
 }
 
-/* Estilo para o destaque do produto (se ainda for usado) */
-.product-card.highlighted {
-  border: 2px solid #00a650;
-  box-shadow: 0 0 10px rgba(0, 166, 80, 0.3);
-  transition: all 0.3s ease;
-}
 
-/* Estilo adicional para o container do banner */
 .selected-product-banner::-webkit-scrollbar {
   width: 6px;
 }

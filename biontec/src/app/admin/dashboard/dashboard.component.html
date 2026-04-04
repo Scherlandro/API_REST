@@ -1,13 +1,7 @@
 
-
-
-
 <div *ngIf="selectedProduct" class="selected-product-banner">
 
- <!-- <div class="products-grid">-->
  <mat-card appearance="outlined" *ngIf="selectedProduct" class="body">
-   <!-- <h3>Continue sua compra:</h3>-->
-
 
    <button *ngIf="getCartCount() > 0"
            class="floating-cart-btn"
@@ -19,13 +13,14 @@
   <div class="product-card">
 
     <div class="banner-header">
-      <label class="banner-title" >Adicionado ao carrinho!</label>
+      <label class="banner-title" ><strong>{{selectedProduct.nomeProduto}}</strong>
+        <br> Adicionado ao carrinho!</label>
       <button mat-icon-button (click)="clearHighlight()" matTooltip="Fechar">
         <mat-icon>close</mat-icon>
       </button>
     </div>
-
-    <div class="spinner-container2">
+    <mat-card-content class="product-content body">
+  <div class="spinner-container2">
     <div class="cubo-main-p">
       <div class="cubo">
         <img class="face-p front-p" [src]="getImageUrl(selectedProduct.fotoProduto)" *ngIf="selectedProduct.fotoProduto">
@@ -34,10 +29,8 @@
         <img class="face-p left-p" src="/assets/image/clone_old.png">
       </div>
     </div>
-    </div>
-
-    <div class="product-content">
-      <h3 class="product-title">{{selectedProduct.nomeProduto}}</h3>
+  </div>
+  <div class="product-content">
       <div class="price-section">
         <span class="price">{{selectedProduct.valorVenda | currency: 'BRL'}}</span>
         <span *ngIf="selectedProduct.qtdEstoque > 0" class="stock-available">Em estoque</span>
@@ -48,20 +41,12 @@
         <span>Frete grátis</span>
       </div>
     </div>
+  <button mat-raised-button color="primary" (click)="showCard()">
+    Ir ao carrinho e finalizar ({{getCartCount()}})
+  </button>
+</mat-card-content>
 
- <!--   <div class="banner-products">
-      <div *ngFor="let product of cartProducts" class="banner-product-item">
-        <div class="cubo-mini">
-          <img class="face-p" [src]="getImageUrl(product.fotoProduto)" *ngIf="product.fotoProduto">
-        </div>
-        <div class="banner-product-info">
-          <span class="product-name">{{product.nomeProduto}}</span>
-          <span class="product-price">{{product.valorVenda | currency: 'BRL'}}</span>
-        </div>
-      </div>
-    </div>-->
-
-    <mat-list class="banner-products" *ngFor="let product of cartProducts"   >
+     <mat-list class="banner-products" *ngFor="let product of cartProducts"   >
 
       <mat-list-item class="banner-product-item"  >
         <img matListItemAvatar [src]="getImageUrl(product.fotoProduto)" *ngIf="product.fotoProduto">
@@ -73,9 +58,10 @@
 
     <div class="banner-actions">
 
-      <button mat-button (click)="clearHighlight()">
+      <button mat-raised-button color="primary"  (click)="clearHighlight()">
         Continuar comprando
       </button>
+
     </div>
 
 <!--    <div class="product-actions">
@@ -85,20 +71,11 @@
       </button>
     </div>-->
 
-    <button mat-raised-button color="primary" (click)="showCard()">
-      Ver carrinho ({{getCartCount()}})
-    </button>
   </div>
   </mat-card>
-
-
-
-
 </div>
 
-
 <div>
-
   <div>
     <mat-card-content class="body-prod-p">
       <mat-toolbar class="head-table body">
@@ -159,7 +136,6 @@
               Comprar
             </button>
 
-
           </mat-card-actions>
         </mat-card>
       </div>
@@ -174,5 +150,4 @@
 
     </mat-card-content>
   </div>
-
-
+</div>

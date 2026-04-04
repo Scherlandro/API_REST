@@ -191,8 +191,7 @@ export class DashboardComponent implements OnInit {
       alert('Seu carrinho está vazio!');
       return;
     }
-
-    this.spiner = true; // Mostra um carregando enquanto salva no banco
+    this.spiner = true;
 
     this.purchaseState.saveSaleToDatabase(this.selectedUser).subscribe({
       next: (res) => {
