@@ -63,25 +63,13 @@ import com.biontecapi.service.ProdutoService;
         @PostMapping(path = "/salvar")
         @ResponseStatus(HttpStatus.CREATED)
         public ResponseEntity salvar(@RequestBody ProdutoDto produtoDto) {
-            prod_serv.save(mapper.map(produtoDto, Produto.class));
-            Optional <Produto> prodOptional = prod_serv.findById(produtoDto.getIdProduto());
-            return ResponseEntity.ok(prodOptional.map(
-                    e-> mapper.map(e, ProdutoDto.class)).map( r->ResponseEntity.ok().body(r))
-                    .orElse(ResponseEntity.notFound().build()));
+            return ResponseEntity.ok(prod_serv.save(produtoDto));
         }
 
-        @PutMapping(path = "/editar/{id_produto}")
-        public ResponseEntity editar(@PathVariable("id_produto") Integer idprod,
-                                              @RequestBody ProdutoDto produtoDto) {
-            if (!prod_serv.existsById(idprod)) {
-                return ResponseEntity.notFound().build();
-            }
-               // produto.setId_produto(idprod);
-            prod_serv.save(mapper.map(produtoDto, Produto.class));
-            Optional <Produto> prodOptional = prod_serv.findById(produtoDto.getIdProduto());
-            return ResponseEntity.ok(prodOptional.map(
-                    e-> mapper.map(e, ProdutoDto.class)).map( r->ResponseEntity.ok().body(r))
-                    .orElse(ResponseEntity.notFound().build()));
+        @PutMapping(path = "/editar")
+        public ResponseEntity editar(@RequestBody ProdutoDto produtoDto) {
+            System.out.println("PRODUTOS PARA ATUALIZAR -->" + produtoDto);
+            return ResponseEntity.ok(prod_serv.save(produtoDto));
         }
 
         @DeleteMapping(path = "/delete/{id_produto}")

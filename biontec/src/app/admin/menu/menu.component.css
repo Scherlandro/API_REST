@@ -89,12 +89,11 @@ a {
   width: 50px;
 }
 
-
  .menu-badge {
   position: relative;
   top: -45px;
   right: -20px;
-  background: #ff5722;
+  background: rgba(255, 87, 34, 0.77);
   border-radius: 50%;
   width: 20px;
   height: 20px;

@@ -108,8 +108,13 @@ export class ProductsComponent implements OnInit {
     }
   }
 
+
+  editarElement(eventProd: iProduto) {
+    this.openDialogo(eventProd);
+  }
+
   openDialogo(eventProd: iProduto) {
-    console.log("Dados do elementoDialog", eventProd)
+
     const dialogRef = this.dialog.open(DialogProdutoComponent, {
       width: '300px',
       data: eventProd === null ? {
@@ -133,32 +138,6 @@ export class ProductsComponent implements OnInit {
       }
     });
 
-    console.log("dialogRef", dialogRef)
-
-    /* dialogRef.afterClosed().subscribe(result => {
-       if (result !== undefined) {
-         if (this.tbSourceProdutos$.data
-           .map(p => p.idProduto).includes(result.idProduto)) {
-           this.prodService.editElement(result)
-             .subscribe((data: iProduto) => {
-               const index = this.tbSourceProdutos$.data
-                 .findIndex(p => p.idProduto === data.idProduto);
-               this.tbSourceProdutos$.data[index] = data;
-               this.tableProduto.renderRows();
-             });
-         } else {
-           this.prodService.createElements(result)
-             .subscribe((data: iProduto) => {
-               this.tbSourceProdutos$.data.push(result);
-               this.tableProduto.renderRows();
-             });
-         }
-       }
-     });*/
-  }
-
-  editarElement(eventProd: iProduto) {
-    this.openDialogo(eventProd);
   }
 
   deleteElement(id: number) {

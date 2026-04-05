@@ -58,6 +58,7 @@ export class ProductService {
   }
 
   editElement(element: iProduto): Observable<iProduto> {
+    console.log('Editando produto ', element)
     return this._http.put<iProduto>(this.baseUrl + 'editar', element);
   }
 
