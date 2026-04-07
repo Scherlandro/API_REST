@@ -13,6 +13,18 @@
     <input matInput [(ngModel)]="produto.codProduto">
   </mat-form-field>
 
+  <div class="image-container">
+    <img [src]="imagePreview ? imagePreview : 'assets/placeholder.png'"
+         style="width: 150px; height: 150px; object-fit: cover; border: 1px solid #ccc;">
+
+    <input type="file" #fileInput (change)="onFileSelected($event)" accept="image/*" style="display: none">
+
+    <button mat-icon-button color="accent" (click)="fileInput.click()" type="button">
+      <mat-icon>photo_camera</mat-icon>
+    </button>
+  </div>
+
+
   <mat-form-field appearance="fill">
     <mat-label>Descrição</mat-label>
     <input matInput [(ngModel)]="produto.nomeProduto">

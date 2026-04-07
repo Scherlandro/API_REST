@@ -81,6 +81,25 @@ export class DialogProdutoComponent implements OnInit {
     this.productServices.editElement(prod);
   }
 
+  onFileSelected(event: any) {
+    const file: File = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+
+      reader.onload = () => {
+        // O resultado do FileReader contém o prefixo "data:image/jpeg;base64,"
+        const fullBase64 = reader.result as string;
+        this.imagePreview = fullBase64;
+
+        // Para o banco de dados (byte[]), precisamos apenas da string base64 pura
+        // Removemos o prefixo "data:image/...;base64,"
+        this.produto.fotoProduto = fullBase64.split(',')[1] as any;
+      };
+
+      reader.readAsDataURL(file);
+    }
+  }
+
   formatter(value: number): string {
     return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
   }

@@ -82,6 +82,6 @@ public class Produto implements Serializable {
     private Integer idModelo;
 
     @Lob
-    @Column(length = 100000, name = "foto_produto")
+    @Column(name = "foto_produto", columnDefinition = "LONGBLOB")
     private byte[] fotoProduto;
 }
