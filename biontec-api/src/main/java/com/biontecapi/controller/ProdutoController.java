@@ -63,12 +63,13 @@ import com.biontecapi.service.ProdutoService;
         @PostMapping(path = "/salvar")
         @ResponseStatus(HttpStatus.CREATED)
         public ResponseEntity salvar(@RequestBody ProdutoDto produtoDto) {
+            System.out.println("NOVO PRODUTO -->" + produtoDto);
             return ResponseEntity.ok(prod_serv.save(produtoDto));
         }
 
         @PutMapping(path = "/editar")
         public ResponseEntity editar(@RequestBody ProdutoDto produtoDto) {
-            System.out.println("PRODUTOS PARA ATUALIZAR -->" + produtoDto);
+            System.out.println("PRODUTO PARA ATUALIZAR -->" + produtoDto);
             return ResponseEntity.ok(prod_serv.save(produtoDto));
         }
 

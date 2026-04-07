@@ -9,43 +9,39 @@ import {Subject, takeUntil} from "rxjs";
   templateUrl: './dialog-produto.component.html',
   styleUrls: ['./dialog-produto.component.css']
 })
+
 export class DialogProdutoComponent implements OnInit {
   isChange!: boolean;
-  isChange2!: boolean;
+  fieldStates = {
+    valorCompra: { isEdit: false },
+    valorVenda: { isEdit: false }
+  };
+
   destroy$ = new Subject<void>();
 
   constructor(
-    @Inject(MAT_DIALOG_DATA)
-    public produto: iProduto,
+    @Inject(MAT_DIALOG_DATA) public produto: iProduto,
     public dialogRef: MatDialogRef<DialogProdutoComponent>,
     public productServices: ProductService
-  ) {
-
-  }
-
+  ) {}
 
   ngOnInit(): void {
-
     if (this.produto.idProduto != null) {
       this.isChange = false;
-      this.isChange2 = false;
+      this.fieldStates.valorCompra.isEdit = false;
+      this.fieldStates.valorVenda.isEdit = false;
     } else {
       this.isChange = true;
-      this.isChange2 = true;
+      this.fieldStates.valorCompra.isEdit = true;
+      this.fieldStates.valorVenda.isEdit = true;
     }
 
-    console.log("produto", this.produto.idProduto, "isChange",this.isChange)
-
+    console.log('produto', this.produto.idProduto, 'fieldStates', this.fieldStates);
   }
-
 
   onCancel(): void {
     this.dialogRef.close();
   }
-
-/*  save():void{
-    this.productServices.createElements(this.produto);
-  }*/
 
   save(prod: iProduto) {
     if (prod.idProduto != null ) {

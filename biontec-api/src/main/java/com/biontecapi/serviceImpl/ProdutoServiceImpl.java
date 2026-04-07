@@ -34,7 +34,8 @@ public class ProdutoServiceImpl implements ProdutoService {
         Produto produto;
         if (produtoDto.getIdProduto() != null) {
             produto = produtoRepository.findById(produtoDto.getIdProduto()).orElse(new Produto());
-        } else {  produto = new Produto();   }
+        } else {
+            produto = new Produto();   }
         mapper.map(produtoDto, produto);
         return produtoRepository.save(produto);
     }
@@ -60,6 +61,10 @@ public class ProdutoServiceImpl implements ProdutoService {
 
     @Override
     public void delete(Integer id) {
-        produtoRepository.deleteById(id);
+        if (produtoRepository.existsById(id)) {
+            produtoRepository.deleteById(id);
+        } else {
+            System.out.println("Tentativa de deletar produto inexistente: " + id);
+        }
     }
 }

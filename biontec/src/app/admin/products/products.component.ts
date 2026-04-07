@@ -142,13 +142,21 @@ export class ProductsComponent implements OnInit {
 
   deleteElement(id: number) {
     if (confirm('Tem certeza em REMOVER este item ?')) {
-      this.prodService.delete(id)
-        .subscribe(data => {
-          //   this.tbSourceProdutos$.data.pop();
-          //   this.tableProduto.renderRows();
-          this.produtosFiltrados = this.products.filter(
-            p => p.idProduto !== data.idProduto);//.renderRows();
-        });
+      this.prodService.delete(id).subscribe({
+        next: () => {
+          // Remova o item da lista original (products)
+          this.products = this.products.filter(p => p.idProduto !== id);
+          // Remova o item da lista filtrada (exibida na tela)
+          this.produtosFiltrados = this.produtosFiltrados.filter(p => p.idProduto !== id);
+          // Atualize a paginação para o usuário ver a mudança imediatamente
+          this.updatePagedProdutos();
+          console.log(`Produto ${id} removido com sucesso.`);
+        },
+        error: (err) => {
+          this.onError('Erro ao deletar o produto. Verifique se ele ainda existe.');
+          console.error(err);
+        }
+      });
     }
   }
 
