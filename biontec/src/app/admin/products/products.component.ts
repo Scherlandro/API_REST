@@ -46,7 +46,6 @@ export class ProductsComponent implements OnInit {
     this.listarProdutos();
   }
 
-
   listarProdutos() {
     this.spiner = true;
     this.prodService.getTodosProdutos()
@@ -97,7 +96,6 @@ export class ProductsComponent implements OnInit {
     this.updatePagedProdutos();
   }
 
-
   changeProdutos(value: any) {
     if (value) {
       this.produtosFiltrados = this.products.filter(
@@ -108,36 +106,15 @@ export class ProductsComponent implements OnInit {
     }
   }
 
-
   editarElement(eventProd: iProduto) {
     this.openDialogo(eventProd);
   }
 
   openDialogo(eventProd: iProduto) {
-
-    const dialogRef = this.dialog.open(DialogProdutoComponent, {
-      width: '300px',
-      data: eventProd === null ? {
-        idProduto: null,
-        codProduto: '',
-        nomeProduto: '',
-        valorCompra: '',
-        percentual: '',
-        valorVenda: '',
-        qtdEstoque: '',
-        dtCadastro: ''
-      } : {
-        idProduto: eventProd.idProduto,
-        codProduto: eventProd.codProduto,
-        nomeProduto: eventProd.nomeProduto,
-        valorCompra: eventProd.valorCompra,
-        percentual: eventProd.percentual,
-        valorVenda: eventProd.valorVenda,
-        qtdEstoque: eventProd.qtdEstoque,
-        dtCadastro: eventProd.dtCadastro
-      }
+    this.dialog.open(DialogProdutoComponent, {
+      width: '500px',
+      data: {...eventProd ?? {}}
     });
-
   }
 
   deleteElement(id: number) {
