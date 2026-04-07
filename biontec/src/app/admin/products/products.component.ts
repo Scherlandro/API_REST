@@ -13,6 +13,7 @@ import {ErrorDiologComponent} from "../../shared/dialogs/error-diolog/error-diol
 import {DomSanitizer, SafeUrl} from "@angular/platform-browser";
 import {PurchaseStateService} from "../../services/purchase-state.service";
 import {TokenService} from "../../services/token.service";
+import {NotificationMgsService} from "../../services/notification-mgs.service";
 
 registerLocaleData(ptBr);
 
@@ -38,6 +39,7 @@ export class ProductsComponent implements OnInit {
     private prodService: ProductService,
     private cartService: PurchaseStateService,
     public dialog: MatDialog,
+    public notificationMsg: NotificationMgsService,
     private sanitizer: DomSanitizer
   ) {
   }
@@ -111,10 +113,39 @@ export class ProductsComponent implements OnInit {
   }
 
   openDialogo(eventProd: iProduto) {
-    this.dialog.open(DialogProdutoComponent, {
+   const dialogRef = this.dialog.open(DialogProdutoComponent, {
       width: '500px',
       data: {...eventProd ?? {}}
     });
+
+
+    dialogRef.afterClosed().subscribe(refDialog => {
+      if (refDialog) {
+        //Recarrega os dados para garantir que temos a lista de produtos atualizada do banco
+        this.prodService.getTodosProdutos().pipe(catchError(error => {
+          if (error === 'Session Expired') this.onError('Sua sessão expirou!');
+          this.tokenServer.clearTokenExpired();
+          return of([])
+        })).subscribe(prodAtulizado => {
+          this.products = prodAtulizado;
+          this.produtosFiltrados = prodAtulizado;
+          this.updatePagedProdutos();
+          // Localiza o produto que foi alterada (usando o idProduto ou codProd retornado)
+          const idProdAlterado = refDialog.idProduto || refDialog.codProduto;
+          const produtoNoArray = this.pagedProdutosFiltrados.find(v => v.idProduto === idProdAlterado);
+          if (produtoNoArray) {
+            this.prodService.editElement(produtoNoArray).subscribe({
+              next: () => {
+                this.notificationMsg.success('Produto atualizado no servidor!');
+              },
+              error: () => this.onError('Erro ao atualizar produto.')
+            });
+          }
+        });
+      }
+    });
+
+
   }
 
   deleteElement(id: number) {

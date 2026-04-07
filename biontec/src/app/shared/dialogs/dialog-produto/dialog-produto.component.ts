@@ -16,7 +16,7 @@ export class DialogProdutoComponent implements OnInit {
     valorCompra: { isEdit: false },
     valorVenda: { isEdit: false }
   };
-
+  imagePreview: string | ArrayBuffer | null = null;
   destroy$ = new Subject<void>();
 
   constructor(
@@ -34,6 +34,11 @@ export class DialogProdutoComponent implements OnInit {
       this.isChange = true;
       this.fieldStates.valorCompra.isEdit = true;
       this.fieldStates.valorVenda.isEdit = true;
+    }
+
+    // Se estiver editando e já existir foto, carrega o preview
+    if (this.produto.fotoProduto) {
+      this.imagePreview = 'data:image/jpeg;base64,' + this.produto.fotoProduto;
     }
 
     console.log('produto', this.produto.idProduto, 'fieldStates', this.fieldStates);
