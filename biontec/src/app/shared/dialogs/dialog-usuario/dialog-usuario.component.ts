@@ -2,9 +2,10 @@ import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {IUser} from "../../../interfaces/user";
 import {iItensOS} from "../../../interfaces/itens-os";
-import {Subject, takeUntil} from "rxjs";
+import {Observable, Subject, takeUntil} from "rxjs";
 import {UserService} from "../../../services/user.service";
 import {FormControl} from "@angular/forms";
+import {WebcamImage, WebcamInitError} from "ngx-webcam";
 
 @Component({
   selector: 'app-dialog-usuario',
@@ -16,6 +17,14 @@ export class DialogUsuarioComponent implements OnInit {
   destroy$ = new Subject<void>();
   emailControl = new FormControl();
   passwordControl = new FormControl();
+
+  public showWebcam = false;
+  public webcamImage: WebcamImage | null = null;
+  private trigger: Subject<void> = new Subject<void>();
+  public videoOptions: MediaTrackConstraints = {
+    width: { ideal: 1024 },
+    height: { ideal: 768 }
+  };
 
   constructor(
     @Inject(MAT_DIALOG_DATA)
@@ -62,7 +71,33 @@ export class DialogUsuarioComponent implements OnInit {
     }
   }
 
-// Método que valida se o botão "Salvar" deve ser habilitado
+  // Gatilho para tirar a foto
+  public get triggerObservable(): Observable<void> {
+    return this.trigger.asObservable();
+  }
+
+  public triggerSnapshot(): void {
+    this.trigger.next();
+    this.toggleWebcam(); // Fecha a câmera após tirar a foto
+  }
+
+  public toggleWebcam(): void {
+    this.showWebcam = !this.showWebcam;
+  }
+
+  public handleImage(webcamImage: WebcamImage): void {
+    this.webcamImage = webcamImage;
+    // Nesse caso pego a string Base64 e salvo no objeto que vai para o Java
+    //Lembrete: O prefixo data:image/jpeg;base64, deve ser removido para o byte[] do Spring
+    this.iUser.fotoUsuario = webcamImage.imageAsBase64 as any;
+  }
+
+  public handleInitError(error: WebcamInitError): void {
+    if (error.mediaStreamError && error.mediaStreamError.name === "NotAllowedError") {
+      console.warn("Permissão de câmera negada");
+    }
+  }
+
   isSaveButtonDisabled(): boolean {
     return !(this.emailControl.valid && this.passwordControl.valid);
   }

@@ -4,6 +4,32 @@
 
 <div mat-dialog-content>
 
+    <div class="webcam-wrapper" style="text-align: center; margin-bottom: 20px;">
+      <div *ngIf="!showWebcam && iUser.fotoUsuario">
+        <img [src]="'data:image/jpeg;base64,' + iUser.fotoUsuario"
+             style="width: 150px; border-radius: 8px; border: 2px solid #3f51b5;">
+      </div>
+
+      <div *ngIf="showWebcam">
+        <webcam [height]="250" [width]="180"
+                [trigger]="triggerObservable"
+                (imageCapture)="handleImage($event)"
+                (initError)="handleInitError($event)"
+                [videoOptions]="videoOptions"
+                [imageQuality]="1">
+        </webcam>
+        <br>
+        <button mat-mini-fab color="primary" (click)="triggerSnapshot()" title="Tirar Foto">
+          <mat-icon>camera</mat-icon>
+        </button>
+      </div>
+
+      <button mat-button color="accent" *ngIf="!showWebcam" (click)="toggleWebcam()">
+        {{ iUser.fotoUsuario ? 'Alterar Foto' : 'Tirar Foto' }}
+      </button>
+    </div>
+
+
   <mat-form-field appearance="fill" *ngIf="isChange" >
     <mat-label>ID</mat-label>
     <input matInput [(ngModel)]="iUser.id_usuario">

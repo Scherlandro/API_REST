@@ -29,6 +29,6 @@ public class ProdutoDto {
     private Integer idFornecedor;
     private Integer iMarca;
     private Integer idModelo;
-    private byte[] fotoProduto;
+    private byte[] fotoUsuario;
 
 }

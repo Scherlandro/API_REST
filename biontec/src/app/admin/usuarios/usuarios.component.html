@@ -58,6 +58,13 @@
         <td mat-cell *matCellDef="let element"> {{element.username}} </td>
       </ng-container>
 
+      <ng-container matColumnDef="imagem">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let element">
+          <img class="image-table " [src]="getImageUrl(element.fotoUsuario)" *ngIf="element.fotoUsuario">
+        </td>
+      </ng-container>
+
       <ng-container matColumnDef="opicoes">
         <th mat-header-cell *matHeaderCellDef> Opições</th>
         <td mat-cell *matCellDef="let element">

@@ -14,6 +14,7 @@ import {ErrorDiologComponent} from "../../shared/dialogs/error-diolog/error-diol
 import {SelectionModel} from "@angular/cdk/collections";
 
 import {TokenService} from "../../services/token.service";
+import {DomSanitizer, SafeUrl} from "@angular/platform-browser";
 
 @Component({
   selector: 'app-usuarios',
@@ -26,7 +27,7 @@ export class UsuariosComponent implements OnInit {
   @ViewChild(MatTable) tableUser!: MatTable<any>;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
-  displayedColumns: string[] = [ 'nome_usuario', 'email', 'opicoes'];
+  displayedColumns: string[] = [ 'nome_usuario', 'email','imagem', 'opicoes'];
   tbData:any;
   tbSourceUsuarios$:MatTableDataSource<IUser>;
   selection = new SelectionModel<Element>(true, []);
@@ -34,12 +35,14 @@ export class UsuariosComponent implements OnInit {
   usuarioControl = new FormControl();
   elementsFilter: any[] = [];
   ruwSelec: any;
+  imageUrl: SafeUrl | undefined;
 
   constructor(public dialog: MatDialog,
               private userService: UserService,
               public notificationMsg:  NotificationMgsService,
               private tokenServer: TokenService,
-              private detectChange: ChangeDetectorRef
+              private detectChange: ChangeDetectorRef,
+              private sanitizer: DomSanitizer
   ) {
    this.tbSourceUsuarios$ = new MatTableDataSource();
   }
@@ -150,7 +153,6 @@ export class UsuariosComponent implements OnInit {
   }
 
   removeSelectedRows() {
-  //   https://stackblitz.com/edit/delete-rows-mat-table?file=app%2Ftable-selection-example.html
     this.selection.selected.forEach(item => {
       let index: number = this.tbData.findIndex((d:any) => d === item);
       console.log('Index no RemoveSelectedRows ->',index);
@@ -173,15 +175,10 @@ export class UsuariosComponent implements OnInit {
     this.isChange = !this.isChange;
   }
 
-  /*
-  onEdit(row){
-    this.service.populateForm(row);
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.disableClose = true;
-    dialogConfig.autoFocus = true;
-    dialogConfig.width = "60%";
-    this.dialog.open(EmployeeComponent,dialogConfig);
+  getImageUrl(fotoUsuario: string): SafeUrl {
+    if (!fotoUsuario) return '';
+    const objectURL = 'data:image/jpeg;base64,' + fotoUsuario;
+    return this.sanitizer.bypassSecurityTrustUrl(objectURL);
   }
-   */
 
 }

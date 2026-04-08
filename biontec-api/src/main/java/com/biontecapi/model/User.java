@@ -27,6 +27,10 @@ public class User {
     @Column(nullable = false, length = 150)
     private String password;
 
+    @Lob
+    @Column( name = "foto_usuario", columnDefinition = "LONGBLOB")
+    private byte[] fotoUsuario;
+
     @ManyToMany(fetch = FetchType.EAGER)
     private Collection<Role> roles = new ArrayList<>();
 }

@@ -5,10 +5,9 @@ import { AppRouting } from './app.routing';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
-import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
+import { HttpClientModule} from "@angular/common/http";
 
 import {AppMaterialModule} from "./shared/app-material/app-material.module";
-import {SharedModule} from "./shared/shared.module";
 import {MatSidenavModule} from "@angular/material/sidenav";
 import {MatPaginatorModule} from "@angular/material/paginator";
 import {MatSortModule} from "@angular/material/sort";

@@ -19,6 +19,7 @@ import {DialogContasReceberComponent} from './dialogs/dialog-contas-receber/dial
 import {DialogPagamentosComponent} from './dialogs/dialog-pagamentos/dialog-pagamentos.component';
 import {DialogParcelamentosComponent} from './dialogs/dialog-parcelamentos/dialog-parcelamentos.component';
 import {DialogPixComponent} from './dialogs/dialog-pix/dialog-pix.component';
+import {WebcamModule} from "ngx-webcam";
 
 registerLocaleData(localePt);
 
@@ -43,11 +44,13 @@ registerLocaleData(localePt);
     CommonModule,
     AppMaterialModule,
     A11yModule,
-    FormsModule
+    FormsModule,
+    WebcamModule
   ],
   exports: [
     CurrencyBRLPipe,
-    DateLocalPipe
+    DateLocalPipe,
+    WebcamModule
   ],
   providers: [
     {provide: LOCALE_ID, useValue: 'pt-BR'}

@@ -24,6 +24,12 @@
   color: #32e27e;
   background: rgba(0, 3, 10, 0.05);
 }
+.image-table{
+  height: auto;
+  min-height: 50px;
+  min-width: 50px;
+  width: 20%;
+}
 
 .button-add{
   max-width: 80px;

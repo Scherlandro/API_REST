@@ -44,18 +44,28 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
 
-    @Override
+/*    @Override
     public User saveUser(User user) {
         log.info("User {} salve to the database", user.getName());
        user.setPassword(passwordEnconderConfig.PasswordEnconderConfig().encode(user.getPassword()));
         return userRepo.save(user);
+    }*/
+    @Override
+    public User saveUser(User user) {
+        // Apenas encripta se a senha não parecer já ser um hash BCrypt (geralmente começa com $2a$)
+        if (!user.getPassword().startsWith("$2a$")) {
+            user.setPassword(passwordEnconderConfig.PasswordEnconderConfig().encode(user.getPassword()));
+        }
+        return userRepo.save(user);
     }
+
 
     @Override
     public Role saveRole(Role role) {
         log.info("Role {} salve to the database", role.getName());
         return roleRepo.save(role);
     }
+
 
     @Override
     public void addRoleToUser(String username, String rolename) {
