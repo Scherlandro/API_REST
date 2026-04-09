@@ -51,9 +51,11 @@
   </mat-form-field>
 
   <mat-form-field appearance="fill">
-    <mat-label>Margem de lucro</mat-label>
-    <input matInput type="number" [(ngModel)]="produto.percentual">
-  </mat-form-field>
+    <mat-label>Margem de lucro (%)</mat-label>
+    <input matInput
+           type="number"
+           [(ngModel)]="produto.percentual"
+           (blur)="calcularPrecoVenda()"> </mat-form-field>
 
   <mat-form-field appearance="fill">
     <mat-label>Quantidade em Estoque</mat-label>

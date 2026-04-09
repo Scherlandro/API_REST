@@ -81,6 +81,17 @@ export class DialogProdutoComponent implements OnInit {
     this.productServices.editElement(prod);
   }
 
+  calcularPrecoVenda(): void {
+    const valorCompra = this.produto.valorCompra;
+    const percentual = this.produto.percentual;
+    if (valorCompra != null && percentual != null) {
+      const resultado = valorCompra + (valorCompra * (percentual / 100));
+      this.produto.valorVenda = Number(resultado.toFixed(2));
+      // Opcional: Se quiser que o campo de venda saia do modo edição após o cálculo
+       this.fieldStates.valorVenda.isEdit = false;
+    }
+  }
+
   onFileSelected(event: any) {
     const file: File = event.target.files[0];
     if (file) {
@@ -107,7 +118,6 @@ export class DialogProdutoComponent implements OnInit {
   onError(message: string): void {
     console.error(message);
   }
-
 
 }
 
