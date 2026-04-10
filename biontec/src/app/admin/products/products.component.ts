@@ -60,7 +60,6 @@ export class ProductsComponent implements OnInit {
       .subscribe((rest: iProduto[]) => {
         this.products = rest;
         this.produtosFiltrados = rest;
-        console.log('Fotos ', this.products.map((i)=> i.fotoProduto));
         this.updatePagedProdutos();
         this.spiner = false;
       });

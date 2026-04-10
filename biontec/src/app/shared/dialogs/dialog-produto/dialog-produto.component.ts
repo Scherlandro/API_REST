@@ -82,13 +82,20 @@ export class DialogProdutoComponent implements OnInit {
   }
 
   calcularPrecoVenda(): void {
-    const valorCompra = this.produto.valorCompra;
-    const percentual = this.produto.percentual;
-    if (valorCompra != null && percentual != null) {
-      const resultado = valorCompra + (valorCompra * (percentual / 100));
+    const valorCompra = Number(this.produto.valorCompra);
+    const percentual = Number(this.produto.percentual);
+    if (!isNaN(valorCompra) && !isNaN(percentual)) {
+      const margem = valorCompra * (percentual / 100);
+      const resultado = valorCompra + margem;
+
+      // Usamos o Number() em volta do toFixed porque o toFixed retorna uma string
       this.produto.valorVenda = Number(resultado.toFixed(2));
-      // Opcional: Se quiser que o campo de venda saia do modo edição após o cálculo
-       this.fieldStates.valorVenda.isEdit = false;
+
+      console.log('Cálculo realizado:', {
+        compra: valorCompra,
+        percent: percentual,
+        venda: this.produto.valorVenda
+      });
     }
   }
 
