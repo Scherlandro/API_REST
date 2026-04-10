@@ -1,61 +1,64 @@
-<div class="body">
-<h1 *ngIf="!isChange" mat-dialog-title>Adicionar Usuario</h1>
-<h1 *ngIf="isChange" mat-dialog-title>Editar Usuario</h1>
+<div class="body-user">
+  <h1 mat-dialog-title class="dialog-header">
+    {{ isChange ? 'Editar Usuário' : 'Novo Usuário' }}
+  </h1>
 
-<div mat-dialog-content>
-
-    <div class="webcam-wrapper" style="text-align: center; margin-bottom: 20px;">
-      <div *ngIf="!showWebcam && iUser.fotoUsuario">
-        <img [src]="'data:image/jpeg;base64,' + iUser.fotoUsuario"
-             style="width: 150px; border-radius: 8px; border: 2px solid #3f51b5;">
+  <div mat-dialog-content class="content-wrapper">
+    <div class="photo-section">
+      <div class="avatar-display" *ngIf="!showWebcam">
+        <img [src]="iUser.fotoUsuario ? 'data:image/jpeg;base64,' + iUser.fotoUsuario : 'assets/default-avatar.png'"
+             class="user-img">
       </div>
 
-      <div *ngIf="showWebcam">
-        <webcam [height]="250" [width]="180"
+      <div class="webcam-box" *ngIf="showWebcam">
+        <webcam [height]="200" [width]="200"
                 [trigger]="triggerObservable"
                 (imageCapture)="handleImage($event)"
-                (initError)="handleInitError($event)"
-                [videoOptions]="videoOptions"
-                [imageQuality]="1">
+                [videoOptions]="videoOptions">
         </webcam>
-        <br>
-        <button mat-mini-fab color="primary" (click)="triggerSnapshot()" title="Tirar Foto">
-          <mat-icon>camera</mat-icon>
+        <button mat-mini-fab color="warn" class="capture-btn" (click)="triggerSnapshot()">
+          <mat-icon>camera_alt</mat-icon>
         </button>
       </div>
 
-      <button mat-button color="accent" *ngIf="!showWebcam" (click)="toggleWebcam()">
-        {{ iUser.fotoUsuario ? 'Alterar Foto' : 'Tirar Foto' }}
+      <button mat-button color="primary" (click)="toggleWebcam()" class="action-photo-btn body">
+        <mat-icon>{{ showWebcam ? 'close' : 'photo_camera' }}</mat-icon>
+        {{ showWebcam ? 'Cancelar' : (iUser.fotoUsuario ? 'Alterar Foto' : 'Tirar Foto') }}
       </button>
     </div>
 
+    <div class="form-grid">
+      <mat-form-field appearance="outline" *ngIf="isChange">
+        <mat-label>ID do Usuário</mat-label>
+        <input matInput [(ngModel)]="iUser.id_usuario" readonly>
+        <mat-icon matSuffix>lock</mat-icon>
+      </mat-form-field>
 
-  <mat-form-field appearance="fill" *ngIf="isChange" >
-    <mat-label>ID</mat-label>
-    <input matInput [(ngModel)]="iUser.id_usuario">
-  </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Nome Completo</mat-label>
+        <input matInput [(ngModel)]="iUser.name" required>
+      </mat-form-field>
 
-  <mat-form-field appearance="fill">
-    <mat-label>Name</mat-label>
-    <input matInput [(ngModel)]="iUser.name">
-  </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>E-mail</mat-label>
+        <input matInput [(ngModel)]="iUser.username" [formControl]="emailControl">
+        <mat-icon matSuffix>email</mat-icon>
+      </mat-form-field>
 
-  <mat-form-field appearance="fill">
-    <mat-label>Email</mat-label>
-    <input matInput [(ngModel)]="iUser.username" [formControl]="emailControl">
-  </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Senha</mat-label>
+        <input matInput type="password" [(ngModel)]="iUser.password" [formControl]="passwordControl">
+        <mat-icon matSuffix>key</mat-icon>
+      </mat-form-field>
+    </div>
+  </div>
 
-  <mat-form-field appearance="fill">
-    <mat-label>Password</mat-label>
-    <input matInput [(ngModel)]="iUser.password" [formControl]="passwordControl">
-  </mat-form-field>
-
-  <span>
-    <button mat-raised-button [disabled]="isSaveButtonDisabled()"
-                (click)="save(iUser)">  Salvar </button>
-
-  <button mat-raised-button (click)="onCancel()">Cancel</button>
- </span>
-</div>
-
+  <div mat-dialog-actions align="end" class="actions-row">
+    <button mat-button class="cancel-button" (click)="onCancel()">CANCELAR</button>
+    <button mat-raised-button color="primary" class="body"
+            [disabled]="isSaveButtonDisabled()"
+            (click)="save(iUser)">
+      SALVAR DADOS
+    </button>
+  </div>
 </div>

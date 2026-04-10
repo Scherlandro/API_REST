@@ -1,14 +1,98 @@
+.body-user {
 
-.hr {
   background: radial-gradient(ellipse farthest-corner at right bottom, #FEDB37 0%, #FDB931 8%, #9f7928 30%, #8A6E2F 40%, transparent 80%),
   radial-gradient(ellipse farthest-corner at left top, #FFFFFF 0%, #FFFFAC 8%, #D1B464 25%, #5d4a1f 62.5%, #5d4a1f 100%);
-  border-radius: 5px;
-  line-height: 1%;
-  padding: 10px;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  width: 95vw;
-  max-width: min-content;
-  height: fit-content;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+}
+
+.dialog-header {
+  color: #333;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 20px !important;
+}
+
+
+.content-wrapper {
+  background: radial-gradient(ellipse farthest-corner at right bottom, #FEDB37 0%, #FDB931 8%, #9f7928 30%, #8A6E2F 40%, transparent 80%),
+  radial-gradient(ellipse farthest-corner at left top, #FFFFFF 0%, #FFFFAC 8%, #D1B464 25%, #5d4a1f 62.5%, #5d4a1f 100%);
+
+  border-radius: 8px;
+  padding: 24px !important;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Seção da Foto */
+.photo-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.user-img {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #fdb931;
+  background: #eee;
+}
+
+.webcam-box {
+  position: relative;
+  line-height: 0;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 3px solid #fdb931;
+}
+
+.capture-btn {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+}
+
+/* Grid de Formulário */
+.form-grid {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+mat-form-field {
+  width: 100%;
+  margin-bottom: 8px;
+}
+
+/* Botões de Ação */
+.actions-row {
+  padding: 16px 0 8px 0 !important;
+}
+
+.actions-row button {
+  padding: 0 20px;
+  height: 45px;
+  font-weight: 600;
+}
+.cancel-button{
+  padding: 8px;
+}
+
+.cancel-button:hover {
+  background: radial-gradient(ellipse farthest-corner at right bottom, #FEDB37 0%, #FDB931 8%, #9f7928 30%, #8A6E2F 40%, transparent 80%),
+  radial-gradient(ellipse farthest-corner at left top, #FFFFFF 0%, #FFFFAC 8%, #D1B464 25%, #3d3115 62.5%, #5d4a1f 100%);
+  border-radius: 10px;
+  padding: 5px;
+}
+
+
+/* Estilização interna do Material para garantir fundo branco nos inputs */
+::v-deep .mat-form-field-appearance-outline .mat-form-field-flex {
+  background: #fafafa;
 }
