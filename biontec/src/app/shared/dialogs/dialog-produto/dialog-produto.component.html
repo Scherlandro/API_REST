@@ -1,78 +1,98 @@
-<h1 *ngIf="isChange" mat-dialog-title>Adicionar Produto</h1>
-<h1 *ngIf="!isChange" mat-dialog-title>Editar Produto</h1>
+<div class="body-prod-ad">
+  <h1 mat-dialog-title class="dialog-header">
+    {{ !isChange ? 'Editar Produto' : 'Adicionar Produto' }}
+  </h1>
 
-<div mat-dialog-content>
+  <div mat-dialog-content class="content-wrapper">
 
-  <mat-form-field appearance="fill" *ngIf="!isChange">
-    <mat-label>ID</mat-label>
-    <input matInput [(ngModel)]="produto.idProduto" readonly>
-  </mat-form-field>
+    <div class="top-section-grid">
+      <div class="image-container">
+        <img [src]="imagePreview ? imagePreview : 'assets/placeholder.png'" class="product-img">
+        <input type="file" #fileInput (change)="onFileSelected($event)" accept="image/*" style="display: none">
+        <button mat-mini-fab color="accent" (click)="fileInput.click()" type="button" class="btn-photo">
+          <mat-icon>photo_camera</mat-icon>
+        </button>
+      </div>
 
-  <mat-form-field appearance="fill">
-    <mat-label>Código</mat-label>
-    <input matInput [(ngModel)]="produto.codProduto">
-  </mat-form-field>
+      <div class="id-code-inputs">
+        <mat-form-field appearance="outline" *ngIf="!isChange">
+          <mat-label>ID</mat-label>
+          <input matInput [(ngModel)]="produto.idProduto" readonly>
+        </mat-form-field>
 
-  <div class="image-container">
-    <img [src]="imagePreview ? imagePreview : 'assets/placeholder.png'"
-         style="width: 150px; height: 150px; object-fit: cover; border: 1px solid #ccc;">
+        <mat-form-field appearance="outline">
+          <mat-label>Código</mat-label>
+          <input matInput [(ngModel)]="produto.codProduto">
+        </mat-form-field>
+      </div>
+    </div>
 
-    <input type="file" #fileInput (change)="onFileSelected($event)" accept="image/*" style="display: none">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Descrição</mat-label>
+      <input matInput [(ngModel)]="produto.nomeProduto">
+    </mat-form-field>
 
-    <button mat-icon-button color="accent" (click)="fileInput.click()" type="button">
-      <mat-icon>photo_camera</mat-icon>
-    </button>
+    <div class="values-grid">
+      <mat-form-field appearance="outline">
+        <mat-label>Preço de Compra</mat-label>
+        <input matInput
+               [type]="fieldStates.valorCompra.isEdit ? 'number' : 'text'"
+               [ngModel]="fieldStates.valorCompra.isEdit ? produto.valorCompra : (produto.valorCompra | currency:'BRL')"
+               (ngModelChange)="fieldStates.valorCompra.isEdit && (produto.valorCompra = $event)"
+               (focus)="fieldStates.valorCompra.isEdit = true"
+               (blur)="fieldStates.valorCompra.isEdit = false">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Preço de Venda</mat-label>
+        <input matInput
+               [type]="fieldStates.valorVenda.isEdit ? 'number' : 'text'"
+               [ngModel]="fieldStates.valorVenda.isEdit ? produto.valorVenda : (produto.valorVenda | currency:'BRL')"
+               (ngModelChange)="fieldStates.valorVenda.isEdit && (produto.valorVenda = $event)"
+               (focus)="fieldStates.valorVenda.isEdit = true"
+               (blur)="fieldStates.valorVenda.isEdit = false">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Margem de lucro (%)</mat-label>
+        <input matInput type="number" [(ngModel)]="produto.percentual" (blur)="calcularPrecoVenda()">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Quantidade em Estoque</mat-label>
+        <input matInput type="number" [(ngModel)]="produto.qtdEstoque">
+      </mat-form-field>
+
+
+    <mat-form-field appearance="outline" class="outline">
+      <mat-label>Data de Cadastro</mat-label>
+      <!--<input matInput [matDatepicker]="picker" [(ngModel)]="produto.dtCadastro">
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>-->
+
+      <input matInput [value]="produto.dtCadastro | dateLocalBR " disabled>
+      <input matInput [matDatepicker]="picker" [(ngModel)]="produto.dtCadastro">
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="outline">
+      <mat-label>Data Atual</mat-label>
+<!--      <input matInput [matDatepicker]="picker" [(ngModel)]="produto.ultimaAtualizacao">
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>-->
+
+      <input matInput [value]="produto.dtCadastro | dateLocalBR " disabled>
+      <input matInput [matDatepicker]="picker1" [(ngModel)]="produto.dtCadastro">
+      <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+      <mat-datepicker #picker1></mat-datepicker>
+    </mat-form-field>
+    </div>
   </div>
 
-
-  <mat-form-field appearance="fill">
-    <mat-label>Descrição</mat-label>
-    <input matInput [(ngModel)]="produto.nomeProduto">
-  </mat-form-field>
-
-  <mat-form-field appearance="fill">
-    <mat-label>Preço de Compra</mat-label>
-    <input matInput
-           [type]="fieldStates.valorCompra.isEdit ? 'number' : 'text'"
-           [ngModel]="fieldStates.valorCompra.isEdit ? produto.valorCompra : (produto.valorCompra | currency:'BRL')"
-           (ngModelChange)="fieldStates.valorCompra.isEdit && (produto.valorCompra = $event)"
-           (focus)="fieldStates.valorCompra.isEdit = true"
-           (blur)="fieldStates.valorCompra.isEdit = false">
-  </mat-form-field>
-
-  <mat-form-field appearance="fill">
-    <mat-label>Preço de Venda</mat-label>
-    <input matInput
-           [type]="fieldStates.valorVenda.isEdit ? 'number' : 'text'"
-           [ngModel]="fieldStates.valorVenda.isEdit ? produto.valorVenda : (produto.valorVenda | currency:'BRL')"
-           (ngModelChange)="fieldStates.valorVenda.isEdit && (produto.valorVenda = $event)"
-           (focus)="fieldStates.valorVenda.isEdit = true"
-           (blur)="fieldStates.valorVenda.isEdit = false">
-  </mat-form-field>
-
-  <mat-form-field appearance="fill">
-    <mat-label>Margem de lucro (%)</mat-label>
-    <input matInput
-           type="number"
-           [(ngModel)]="produto.percentual"
-           (blur)="calcularPrecoVenda()"> </mat-form-field>
-
-  <mat-form-field appearance="fill">
-    <mat-label>Quantidade em Estoque</mat-label>
-    <input matInput type="number" [(ngModel)]="produto.qtdEstoque">
-  </mat-form-field>
-
-  <mat-form-field appearance="fill">
-    <mat-label>Data de Cadastro</mat-label>
-    <input matInput [value]="produto.dtCadastro | dateLocalBR " disabled>
-    <input matInput [matDatepicker]="picker" [(ngModel)]="produto.dtCadastro">
-       <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-    <mat-datepicker #picker></mat-datepicker>
-  </mat-form-field>
-
-</div>
-
-<div mat-dialog-actions align="end">
-  <button mat-button (click)="onCancel()">Cancelar</button>
-  <button mat-raised-button color="primary" (click)="save(produto)">Salvar</button>
+  <div mat-dialog-actions align="end" class="dialog-footer">
+    <button mat-button (click)="onCancel()">Cancelar</button>
+    <button mat-raised-button color="primary" (click)="save(produto)">Salvar Produto</button>
+  </div>
 </div>

@@ -1,14 +1,81 @@
-
-body {
+.body-prod-ad {
   background: radial-gradient(ellipse farthest-corner at right bottom, #FEDB37 0%, #FDB931 8%, #9f7928 30%, #8A6E2F 40%, transparent 80%),
   radial-gradient(ellipse farthest-corner at left top, #FFFFFF 0%, #FFFFAC 8%, #D1B464 25%, #5d4a1f 62.5%, #5d4a1f 100%);
-  border-radius: 5px;
-  line-height: 1%;
-  padding: 10px;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  padding: 16px;
+}
+
+.content-wrapper {
+  background: radial-gradient(ellipse farthest-corner at right bottom, #FEDB37 0%, #FDB931 8%, #9f7928 30%, #8A6E2F 40%, transparent 80%),
+  radial-gradient(ellipse farthest-corner at left top, #FFFFFF 0%, #FFFFAC 8%, #D1B464 25%, #5d4a1f 62.5%, #5d4a1f 100%);
+  border-radius: 8px;
+  padding: 20px !important;
+  display: flex;
+  flex-direction: column;
   gap: 10px;
-  width: 95vw;
-  max-width: min-content;
-  height: fit-content;
+}
+
+/* Seção Superior (Foto + ID/Cod) */
+.top-section-grid {
+  display: grid;
+  grid-template-columns: 160px 1fr; /* Coluna da foto fixa, resto flexível */
+  gap: 20px;
+  align-items: start;
+  margin-bottom: 10px;
+}
+
+.image-container {
+  position: relative;
+  width: 150px;
+}
+
+.product-img {
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 2px solid #9f7928;
+}
+
+.btn-photo {
+  position: absolute;
+  bottom: -10px;
+  right: -10px;
+  transform: scale(0.8);
+}
+
+.id-code-inputs {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+}
+
+/* Grid de duas colunas para os valores */
+.values-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* Duas colunas iguais */
+  gap: 0 15px; /* Espaço entre as colunas */
+}
+
+.full-width {
+  width: 100%;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+.dialog-header {
+  color: #333;
+  text-align: center;
+  font-weight: bold;
+}
+
+.dialog-footer {
+  padding-top: 15px !important;
+}
+
+/* Garante que o fundo branco dos inputs não suma */
+::v-deep .mat-form-field-appearance-outline .mat-form-field-flex {
+  background: white !important;
 }

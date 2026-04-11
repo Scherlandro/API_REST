@@ -33,6 +33,7 @@ export class ProductsComponent implements OnInit {
   products: iProduto[] = [];
   produtoControl = new FormControl();
   imageUrl: SafeUrl | undefined;
+  cleanInput: any;
 
   constructor(
     private tokenServer: TokenService,
@@ -109,6 +110,8 @@ export class ProductsComponent implements OnInit {
   }
 
   editarElement(eventProd: iProduto) {
+    this.produtoControl.setValue('');
+    this.consultarPorNome('');
     this.openDialogo(eventProd);
   }
 

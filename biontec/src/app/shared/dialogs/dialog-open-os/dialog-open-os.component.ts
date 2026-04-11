@@ -234,24 +234,15 @@ export class DialogOpenOsComponent implements  OnInit, OnDestroy  {
   }
 
 
-  save(os: any) {
-    console.log('ClienteControl ', this.clienteControl.status , 'funcionario', this.funcionarioControl.invalid)
- /*  if (this.clienteControl.invalid || this.funcionarioControl.invalid) {
-      this.onError('Preencha todos os campos obrigatórios');
-      return;
-    }*/
-
+  save(os: iServiceOrder) {
     const cliente: any = this.clienteControl.value;
     const funcionario: any = this.funcionarioControl.value;
     const dataAtual = new Date();
     const statusOs: any = this.statusOsControl.value
 
-    // ATENÇÃO: Se o autocomplete já tiver um objeto, pegamos a propriedade.
-    // Se o usuário não mudou nada, ou se o controle for apenas texto, tratamos aqui:
-
     if (cliente && typeof cliente === 'object') {
-      os.idCliente = cliente.idCliente;
-      os.nomeCliente = cliente.nomeCliente;
+      os.cliente.id_cliente = cliente.idCliente;
+      os.cliente.nomeCliente = cliente.nomeCliente;
     }
 
     if (funcionario && typeof funcionario === 'object') {
@@ -264,10 +255,7 @@ export class DialogOpenOsComponent implements  OnInit, OnDestroy  {
     os.status = typeof statusOs === 'object' ? statusOs : statusOs; // Ajuste conforme seu displayWith
     os.itensOS = this.itensOS;
 
-    // Log para depuração antes de enviar
-    console.log('Objeto OS antes de enviar:', os);
-
-  if(os.modo === 'adicionar' && os.modoNew === 'adicionar') {
+  if(this.faseOS == 'newOS') {
       this.osServices.create(os).pipe(takeUntil(this.destroy$))
         .subscribe({
           next: (osCriada) => {
@@ -276,12 +264,12 @@ export class DialogOpenOsComponent implements  OnInit, OnDestroy  {
           error: (err) => {
             this.onError('Erro ao criar a OS');
             console.error(err);
-          }
-        });
+          } });
     }
-    if (os.modo === 'adicionar' && os.modoNew === 'editar') {
-      console.log('isChange no save ', this.tagItemOS)
-      this.osServices.update(os).pipe(takeUntil(this.destroy$))
+    if (this.faseOS == 'editarOS') {
+      const osEditada = { ...os, itensOS:[] } // itensOS: Array.isArray(os.itensOS) ? os.itensOS : (os.itensOS ? [os.itensOS] : [])  };
+
+      this.osServices.update(osEditada).pipe(takeUntil(this.destroy$))
         .subscribe({
           next: (osAtualizada) => {
             this.dialogRef.close(osAtualizada);
