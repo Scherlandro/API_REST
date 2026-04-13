@@ -121,7 +121,7 @@ radial-gradient(ellipse farthest-corner at left top, #FFFFFF 0%, #FFFFAC 8%, #D1
 
 .add-to-cart {
   justify-content: center;
-  width: 80%;
+  width: 100%;
 }
 .remove-cart {
   justify-content: right;
