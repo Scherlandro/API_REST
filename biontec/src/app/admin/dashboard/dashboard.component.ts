@@ -36,6 +36,7 @@ export class DashboardComponent implements OnInit {
   products: iProduto[] = [];
 
   produtoControl = new FormControl();
+  private carrinhoDeCompraService: any;
 
   constructor(
     private authService: AuthService,
@@ -43,6 +44,7 @@ export class DashboardComponent implements OnInit {
     private prodService: ProductService,
     private purchaseState: PurchaseStateService,
     public dialog: MatDialog,
+    public notificationMsg: NotificationMgsService,
     private sanitizer: DomSanitizer
   ) {
   }
@@ -114,9 +116,6 @@ export class DashboardComponent implements OnInit {
      this.router.navigate(['/admin/carrinho-de-compras']);
    }
 
-
-
-
   buyNow(productId: number) {
     this.purchaseState.addSelectedProduct(productId);
     this.loadProductDetails(productId);
@@ -143,9 +142,6 @@ export class DashboardComponent implements OnInit {
     this.purchaseState.addSelectedProduct(productId);
     // Carrega os detalhes para mostrar no banner
     this.loadProductDetails(productId);
-    // NÃO redireciona - mantém na mesma página
-    console.log('Produto adicionado ao carrinho com sucesso');
-
     //this.purchaseState.startSaleOfSelectedProduct(userName, prodId);
     this.purchaseState.startSale(userName);
     this.router.navigate(['/admin/carrinho-de-compras']);
@@ -159,19 +155,35 @@ export class DashboardComponent implements OnInit {
   }
 
   addToCart(productId: number) {
-    console.log('IDPRO ADD ->', productId)
+    console.log('Objeto para Cart', productId)
+    const toCard = {
+      usuario: this.selectedUser, // Vem do this.authService.getUserName() no ngOnInit
+      prodId: productId
+    };
+    this.carrinhoDeCompraService.adicionar(toCard).subscribe({
+    next: (vendaCriada) => {
+      this.notificationMsg.success('Produto adicionado ao carrinho!');
+      // Atualiza o estado local
+      this.purchaseState.addSelectedProduct(productId);
+      this.loadProductDetails(productId);
+        setTimeout(() => {
+        const banner = document.querySelector('.selected-product-banner');
+        if (banner) banner.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }, 100);
+    },
+    error: (err) => {
+      this.onError('Erro ao adicionar produto ao carrinho no servidor');
+      console.error(err);
+    }
+  });
+
+/*
     this.purchaseState.addSelectedProduct(productId);
-
     this.loadProductDetails(productId);
-
-    // Scroll suave para o banner (opcional)
     setTimeout(() => {
       const banner = document.querySelector('.selected-product-banner');
-      if (banner) {
-        banner.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-      }
-    }, 100);
-
+      if (banner) { banner.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      } }, 100);*/
   }
 
   removeFromCart(productId: number) {
@@ -210,6 +222,37 @@ export class DashboardComponent implements OnInit {
        this.router.navigate(['/admin/carrinho-de-compras']);
     */
   }
+
+  /*
+  goToCart() {
+  const ids = this.purchaseState.getSelectedProductsValue();
+
+  if (ids.length === 0) {
+    alert('Seu carrinho está vazio!');
+    return;
+  }
+
+  // Objeto estruturado com o usuário e a lista de IDs
+  const payload = {
+    username: this.selectedUser,
+    produtosIds: ids, // Um array de números
+    dataCriacao: new Date()
+  };
+
+  this.spiner = true;
+  this.carrinhoDeCompraService.salvarCarrinhoCompleto(payload).subscribe({
+    next: (res) => {
+      this.spiner = false;
+      this.router.navigate(['/admin/carrinho-de-compras']);
+    },
+    error: (err) => {
+      this.spiner = false;
+      this.onError('Erro ao processar carrinho');
+    }
+  });
+}
+   */
+
 
   highlightProductInList(productId: number) {
     this.products = this.products.map(p => ({
