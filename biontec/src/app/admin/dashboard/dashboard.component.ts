@@ -161,7 +161,7 @@ export class DashboardComponent implements OnInit {
       prodId: productId
     };
     this.carrinhoDeCompraService.adicionar(toCard).subscribe({
-    next: (vendaCriada) => {
+    next: (vendaCriada: any) => {
       this.notificationMsg.success('Produto adicionado ao carrinho!');
       // Atualiza o estado local
       this.purchaseState.addSelectedProduct(productId);
@@ -171,7 +171,7 @@ export class DashboardComponent implements OnInit {
         if (banner) banner.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
       }, 100);
     },
-    error: (err) => {
+    error: (err:any) => {
       this.onError('Erro ao adicionar produto ao carrinho no servidor');
       console.error(err);
     }
