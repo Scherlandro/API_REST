@@ -20,7 +20,7 @@ Lógica do Mercado Livre: No mundo real, você provavelmente adicionaria uma ver
  */
 
 @RestController
-@RequestMapping("/api/cart")
+@RequestMapping("/api/cartItens")
 @RequiredArgsConstructor
 public class CartController {
 
@@ -32,9 +32,14 @@ public class CartController {
         return ResponseEntity.ok(cartService.listByUser(userId));
     }
 
-    @PostMapping
+    @PostMapping("/salvar")
     public ResponseEntity<CartItem> addItem(@RequestBody CartItemDTO dto) {
-        return ResponseEntity.ok(cartService.addToCart(dto));
+        return ResponseEntity.ok(cartService.saveCartItem(dto));
+    }
+
+    @PutMapping("/editar")
+    public ResponseEntity<CartItem> editItem(@RequestBody CartItemDTO dto) {
+        return ResponseEntity.ok(cartService.saveCartItem(dto));
     }
 
     @DeleteMapping("/{userId}/{productId}")

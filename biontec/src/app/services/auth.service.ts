@@ -49,7 +49,8 @@ import {TokenService} from "./token.service";
   login(credentials: ICredential): Observable<IToken> {
     return this._http.post<IToken>(`${this.baseUrl}login`, credentials).pipe(
       tap(res => {
-        this.saveSession(res);
+        this.saveSession(res,credentials.username);
+        this.setUserName(credentials.username);
        // this.tokenService.saveToken(res.access_token);
        // this.isAuthenticatedSubject.next(true);
       })
@@ -73,19 +74,18 @@ import {TokenService} from "./token.service";
     this.mostrarMenuEmitter.emit(false);
   }
 
-  private saveSession(data: IToken) {
+  private saveSession(data: IToken, username: string) {
 
     localStorage.setItem('token', data.access_token);
     const payload = this.tokenService.getPayload();
     const user: IUser = {
       id_usuario: payload.id,
       name: payload.name,
-      username: payload.username,
+      username: username,
       password: ''
     };
   localStorage.setItem('currentUser', JSON.stringify(user));
     this._currentUser.set(user);
-
     // Opcional: Redirecionar após login bem sucedido
     // this.router.navigate(['/dashboard']);
   }

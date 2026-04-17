@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import {BehaviorSubject, Observable, Subject} from "rxjs";
 import {VendasService} from "./vendas.service";
+import {CartItensService} from "./cart-items.service";
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +12,7 @@ export class PurchaseStateService {
   private saleData = new BehaviorSubject<any>(null);
 
   constructor(
-    private vendaService: VendasService,
+    private cartItensService: CartItensService,
   ) {
     this.loadFromStorage();
   }
@@ -75,22 +76,21 @@ export class PurchaseStateService {
     return this.selectedProductsIds.value.length;
   }
 
-  // -------------------------
   // VENDA
-  // -------------------------
 
-  startSale(userName: string) {
+
+  startShoppingCart(userName: string) {
     const sale = {
       userName,
       productIds: this.selectedProductsIds.value
     };
     this.saleData.next(sale);
     localStorage.setItem('saleData', JSON.stringify(sale));
-    this.saveSaleToDatabase(sale);
+    this.saveCartItenToDatabase(sale);
   }
 
-  saveSaleToDatabase(sale:any):Observable<any>{
-   return  this.vendaService.storesCartInBase(sale);
+  saveCartItenToDatabase(sale:any):Observable<any>{
+   return  this.cartItensService.addCartItens(sale);
   }
 
   getSale(): Observable<any> {

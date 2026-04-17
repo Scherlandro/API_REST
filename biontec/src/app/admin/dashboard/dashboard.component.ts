@@ -15,6 +15,7 @@ import {ErrorDiologComponent} from "../../shared/dialogs/error-diolog/error-diol
 import {TokenService} from "../../services/token.service";
 import {Router} from "@angular/router";
 import {AuthService} from "../../services/auth.service";
+import {CartItensService} from "../../services/cart-items.service";
 
 
 @Component({
@@ -36,13 +37,14 @@ export class DashboardComponent implements OnInit {
   products: iProduto[] = [];
 
   produtoControl = new FormControl();
-  private carrinhoDeCompraService: any;
+
 
   constructor(
     private authService: AuthService,
     private router: Router,
     private prodService: ProductService,
     private purchaseState: PurchaseStateService,
+    private carrinhoDeCompraService: CartItensService,
     public dialog: MatDialog,
     public notificationMsg: NotificationMgsService,
     private sanitizer: DomSanitizer
@@ -112,7 +114,7 @@ export class DashboardComponent implements OnInit {
   showCard() {
      // this.purchaseState.clearCart();
    //  this.purchaseState.addSelectedProduct(productId);
-     this.purchaseState.startSale(this.selectedUser);
+     this.purchaseState.startShoppingCart(this.selectedUser);
      this.router.navigate(['/admin/carrinho-de-compras']);
    }
 
@@ -143,7 +145,7 @@ export class DashboardComponent implements OnInit {
     // Carrega os detalhes para mostrar no banner
     this.loadProductDetails(productId);
     //this.purchaseState.startSaleOfSelectedProduct(userName, prodId);
-    this.purchaseState.startSale(userName);
+    this.purchaseState.startShoppingCart(userName);
     this.router.navigate(['/admin/carrinho-de-compras']);
   }
 
@@ -155,12 +157,13 @@ export class DashboardComponent implements OnInit {
   }
 
   addToCart(productId: number) {
-    console.log('Objeto para Cart', productId)
+    console.log('Usuario',this.selectedUser);
     const toCard = {
       usuario: this.selectedUser, // Vem do this.authService.getUserName() no ngOnInit
       prodId: productId
     };
-    this.carrinhoDeCompraService.adicionar(toCard).subscribe({
+    console.log('Objeto para Cart', toCard)
+    this.carrinhoDeCompraService.addCartItens(toCard).subscribe({
     next: (vendaCriada: any) => {
       this.notificationMsg.success('Produto adicionado ao carrinho!');
       // Atualiza o estado local
@@ -205,7 +208,7 @@ export class DashboardComponent implements OnInit {
     }
     this.spiner = true;
 
-    this.purchaseState.saveSaleToDatabase(this.selectedUser).subscribe({
+    this.purchaseState.saveCartItenToDatabase(this.selectedUser).subscribe({
       next: (res) => {
         this.spiner = false;
         console.log('Venda salva no banco com ID:', res.id);

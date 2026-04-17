@@ -23,7 +23,7 @@ import java.util.List;
         }
 
         @Override
-        public CartItem addToCart(CartItemDTO dto) {
+        public CartItem saveCartItem(CartItemDTO dto) {
             CartItem item = CartItem.builder()
                     .userId(dto.getUserId())
                     .productId(dto.getProductId())
