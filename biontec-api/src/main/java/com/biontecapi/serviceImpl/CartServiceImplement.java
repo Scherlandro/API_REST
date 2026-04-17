@@ -24,6 +24,8 @@ import java.util.List;
 
         @Override
         public CartItem saveCartItem(CartItemDTO dto) {
+            System.out.println("INTEM PARA O CARRINHO--> " + dto);
+
             CartItem item = CartItem.builder()
                     .userId(dto.getUserId())
                     .productId(dto.getProductId())

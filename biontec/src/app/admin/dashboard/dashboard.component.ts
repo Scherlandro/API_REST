@@ -16,6 +16,8 @@ import {TokenService} from "../../services/token.service";
 import {Router} from "@angular/router";
 import {AuthService} from "../../services/auth.service";
 import {CartItensService} from "../../services/cart-items.service";
+import {UserService} from "../../services/user.service";
+import {IUser} from "../../interfaces/user";
 
 
 @Component({
@@ -43,6 +45,7 @@ export class DashboardComponent implements OnInit {
     private authService: AuthService,
     private router: Router,
     private prodService: ProductService,
+    private userService: UserService,
     private purchaseState: PurchaseStateService,
     private carrinhoDeCompraService: CartItensService,
     public dialog: MatDialog,
@@ -157,6 +160,42 @@ export class DashboardComponent implements OnInit {
   }
 
   addToCart(productId: number) {
+    const email = this.selectedUser; // 'iscomingback@love.com'
+
+    if (!email) {
+      this.onError('Usuário não identificado.');
+      return;
+    }
+    //  Busca o usuário completo pelo e-mail/username
+    this.userService.getUserByUserName(email).subscribe({
+      next: (user: IUser) => {
+        const toCard = {
+          userId: user.id_usuario,
+          productId: productId,
+          quantity: 1
+        };
+        console.log('Enviando para o servidor:', toCard);
+        // Salva no carrinho
+        this.carrinhoDeCompraService.addCartItens(toCard).subscribe({
+          next: (vendaCriada: any) => {
+            this.notificationMsg.success('Produto adicionado ao carrinho!');
+            this.purchaseState.addSelectedProduct(productId);
+            this.loadProductDetails(productId);
+          },
+          error: (err: any) => {
+            this.onError('Erro ao salvar item no carrinho.');
+            console.error(err);
+          }
+        });
+      },
+      error: (err) => {
+        console.error('Erro ao localizar ID do usuário:', err);
+        this.onError('Não foi possível validar o usuário.');
+      }
+    });
+  }
+
+ /* addToCart(productId: number) {
     console.log('Usuario',this.selectedUser);
     const toCard = {
       usuario: this.selectedUser, // Vem do this.authService.getUserName() no ngOnInit
@@ -180,15 +219,15 @@ export class DashboardComponent implements OnInit {
     }
   });
 
-/*
+/!*
     this.purchaseState.addSelectedProduct(productId);
     this.loadProductDetails(productId);
     setTimeout(() => {
       const banner = document.querySelector('.selected-product-banner');
       if (banner) { banner.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-      } }, 100);*/
+      } }, 100);*!/
   }
-
+*/
   removeFromCart(productId: number) {
     this.purchaseState.removeSelectedProduct(productId);
   }

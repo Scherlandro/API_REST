@@ -14,9 +14,11 @@ import java.util.List;
 /*
 Lombok: Verifique se o plugin do Lombok está instalado na sua IDE para que o @Data funcione corretamente.
 
-Transactional: Usei @Transactional no método de remoção customizado para garantir que o JPA gerencie a sessão corretamente ao deletar por campos que não são a chave primária.
+Transactional: Usei @Transactional no método de remoção customizado para garantir que o JPA gerencie a sessão corretamente
+ao deletar por campos que não são a chave primária.
 
-Lógica do Mercado Livre: No mundo real, você provavelmente adicionaria uma verificação: se o produto já existe no carrinho para aquele usuário, você apenas daria um update na quantidade em vez de criar uma nova linha.
+Lógica do Mercado Livre: No mundo real, você provavelmente adicionaria uma verificação:
+se o produto já existe no carrinho para aquele usuário, você apenas daria um update na quantidade em vez de criar uma nova linha.
  */
 
 @RestController
