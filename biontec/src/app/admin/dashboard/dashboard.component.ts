@@ -139,11 +139,10 @@ export class DashboardComponent implements OnInit {
       console.info('Usuário ou produto nulo', userName, productId)
     return;
     }
- /*   var prodId: number[] = [];
+  /*  var prodId: number[] = [];
     for (const id of [productId]) {
       prodId.push(...[id]);
     }*/
-
     this.purchaseState.addSelectedProduct(productId);
     // Carrega os detalhes para mostrar no banner
     this.loadProductDetails(productId);
@@ -154,19 +153,17 @@ export class DashboardComponent implements OnInit {
 
   clearHighlight() {
     this.selectedProduct = null;
-    // this.purchaseState.clearSelectedProduct();
-   // this.purchaseState.clearSale();
- //   this.highlightProductInList(-1); // Passa um ID inválido para remover todos os destaques
+    this.purchaseState.clearSale();
+    this.highlightProductInList(-1);
   }
 
   addToCart(productId: number) {
-    const email = this.selectedUser; // 'iscomingback@love.com'
+    const email = this.selectedUser;
 
     if (!email) {
       this.onError('Usuário não identificado.');
       return;
     }
-    //  Busca o usuário completo pelo e-mail/username
     this.userService.getUserByUserName(email).subscribe({
       next: (user: IUser) => {
         const toCard = {
@@ -174,8 +171,6 @@ export class DashboardComponent implements OnInit {
           productId: productId,
           quantity: 1
         };
-        console.log('Enviando para o servidor:', toCard);
-        // Salva no carrinho
         this.carrinhoDeCompraService.addCartItens(toCard).subscribe({
           next: (vendaCriada: any) => {
             this.notificationMsg.success('Produto adicionado ao carrinho!');
@@ -189,7 +184,7 @@ export class DashboardComponent implements OnInit {
         });
       },
       error: (err) => {
-        console.error('Erro ao localizar ID do usuário:', err);
+        console.error('Erro ao localizar o usuário:', err);
         this.onError('Não foi possível validar o usuário.');
       }
     });

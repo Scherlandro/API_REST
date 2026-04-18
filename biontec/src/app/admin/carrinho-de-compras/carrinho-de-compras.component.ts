@@ -43,6 +43,8 @@ export class CarrinhoDeComprasComponent implements OnInit {
     this.purchaseState.getSale().subscribe(sale => {
       if (!sale || !sale.productIds || sale.productIds.length === 0) {
         this.listVds = [];
+      }else {
+        this.listCartFromBD();
         this.carregando = false;
         return;
       }
@@ -83,6 +85,39 @@ export class CarrinhoDeComprasComponent implements OnInit {
           this.carregando = false;
         }*/
       });
+    });
+  }
+
+  listCartFromBD() {
+    const email = this.selectedUser;
+
+    if (!email) {
+      this.onError('Usuário não identificado.');
+      return;
+    }
+    //  Busca o usuário completo pelo e-mail/username
+    this.userService.getUserByUserName(email).subscribe({
+      next: (user: IUser) => {
+        const toCard = {
+          userId: user.id_usuario,
+          //productId: productId,
+          quantity: 1
+        };
+
+        this.carrinhoDeCompraService.getCartofUser(toCard).subscribe({
+          next: (listSelect: any) => {
+            this.listVds = listSelect;
+          },
+          error: (err: any) => {
+            this.onError('Erro ao listar item do carrinho.');
+            console.error(err);
+          }
+        });
+      },
+      error: (err) => {
+        console.error('Erro ao localizar ID do usuário:', err);
+        this.onError('Não foi possível validar o usuário.');
+      }
     });
   }
 
