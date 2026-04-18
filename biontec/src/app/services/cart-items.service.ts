@@ -31,6 +31,11 @@ export class CartItensService {
     return this._http.put<iCartItens>(this.baseUrl +'editar', CartItens)
   }
 
+  removeCart(CartItens: any): Observable<any>{
+    console.log('CartItens removido', CartItens);
+    return this._http.delete<iCartItens>(this.baseUrl +'delete', CartItens)
+  }
+
   delete(id: number): Observable<any> {
     return this._http.delete<any>(`${this.baseUrl}delete/${id}`);
   }

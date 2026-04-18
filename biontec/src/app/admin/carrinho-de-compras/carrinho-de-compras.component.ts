@@ -5,6 +5,11 @@ import {ProductService} from "../../services/product.service";
 import {iProduto} from "../../interfaces/product";
 import {forkJoin, of} from "rxjs";
 import {ICliente} from "../../interfaces/cliente";
+import {UserService} from "../../services/user.service";
+import {IUser} from "../../interfaces/user";
+import {CartItensService} from "../../services/cart-items.service";
+import {ErrorDiologComponent} from "../../shared/dialogs/error-diolog/error-diolog.component";
+import {MatDialog} from "@angular/material/dialog";
 
 
 @Component({
@@ -19,10 +24,15 @@ export class CarrinhoDeComprasComponent implements OnInit {
   total = 0;
   carregando = true;
   cliente$!: ICliente;
+  selectedUser!: string;
 
   constructor(
     private purchaseState: PurchaseStateService,
-    private prodService: ProductService
+    private carrinhoDeCompraService: CartItensService,
+    private prodService: ProductService,
+    private userService: UserService,
+    public dialog: MatDialog,
+
   ) {}
 
   ngOnInit(): void {
@@ -63,6 +73,8 @@ export class CarrinhoDeComprasComponent implements OnInit {
             produtos: produtos,
             selecionado: true
           }];
+          this.selectedUser = sale.userName;
+          console.log('Nome do usuario', sale.userName)
           this.calcularTotal();
           this.carregando = false;
         },
@@ -92,7 +104,7 @@ export class CarrinhoDeComprasComponent implements OnInit {
     this.calcularTotal();
   }
 
-  removerProduto(produto: iProduto) {
+ /* removerProduto(produto: iProduto) {
     this.listVds.forEach(v => {
       v.produtos = v.produtos.filter((p:any) => p.idProduto !== produto.idProduto);
     });
@@ -100,6 +112,33 @@ export class CarrinhoDeComprasComponent implements OnInit {
     this.listVds = this.listVds.filter(v => v.produtos.length > 0);
     this.calcularTotal();
    // this.loadCart();
+  }*/
+
+  removerProduto(produto: any) {
+    const email = this.selectedUser;
+
+    if (!email) {
+      this.onError('Usuário não identificado.');
+      return;
+    }
+    this.userService.getUserByUserName(email).subscribe({
+      next: (user: IUser) => {
+        const toCard = {
+          userId: user.id_usuario,
+          productId: produto.idProduto,
+          quantity: 1
+        };
+        console.log('Enviando para o servidor:', toCard);
+        // Salva no carrinho
+        this.carrinhoDeCompraService.removeCart(toCard).subscribe(() => {
+        // Remove da lista local e recalcula
+        this.listVds.forEach(v => {
+          v.produtos = v.produtos.filter((p:any) => p.idProduto !== produto.idProduto);
+        });
+        this.purchaseState.removeSelectedProduct(produto.idProduto);
+        this.calcularTotal();
+      });
+    }});
   }
 
   toggleTodos() {
@@ -141,5 +180,10 @@ export class CarrinhoDeComprasComponent implements OnInit {
     return foto
       ? 'data:image/jpeg;base64,' + foto
       : 'assets/img/no-image.jpg';
+  }
+
+
+  onError(msg: string) {
+    this.dialog.open(ErrorDiologComponent, {data: msg});
   }
 }

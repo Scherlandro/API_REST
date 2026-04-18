@@ -10,8 +10,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
-    @Service
+@Service
     @RequiredArgsConstructor
     public class CartServiceImplement implements CartService {
 
@@ -22,7 +23,7 @@ import java.util.List;
             return repository.findByUserId(userId);
         }
 
-        @Override
+    /*    @Override
         public CartItem saveCartItem(CartItemDTO dto) {
             System.out.println("INTEM PARA O CARRINHO--> " + dto);
 
@@ -32,6 +33,28 @@ import java.util.List;
                     .quantity(dto.getQuantity())
                     .build();
             return repository.save(item);
+        }*/
+
+
+        @Override
+        @Transactional
+        public CartItem saveCartItem(CartItemDTO dto) {
+            // Tenta encontrar um item existente para o mesmo usuário e produto
+            Optional<CartItem> existingItem = repository.findByUserIdAndProductId(dto.getUserId(), dto.getProductId());
+
+            if (existingItem.isPresent()) {
+                CartItem item = existingItem.get();
+                item.setQuantity(dto.getQuantity()); // Atualiza a quantidade
+                return repository.save(item);         // Faz o UPDATE
+            } else {
+                // Se não existir, cria um novo
+                CartItem newItem = CartItem.builder()
+                        .userId(dto.getUserId())
+                        .productId(dto.getProductId())
+                        .quantity(dto.getQuantity())
+                        .build();
+                return repository.save(newItem);      // Faz o INSERT
+            }
         }
 
         @Transactional
