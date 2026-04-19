@@ -17,8 +17,8 @@ export class CartItensService {
     return this._http.get<iCartItens[]>(this.baseUrl + 'all')
   }
 
-  getCartofUser(CartItens: any): Observable<iCartItens>{
-    return this._http.get<iCartItens>(this.baseUrl+CartItens)
+  getCartofUser(cod: any): Observable<iCartItens>{
+    return this._http.get<iCartItens>(this.baseUrl+cod)
   }
 
   addCartItens(CartItens: any): Observable<iCartItens>{

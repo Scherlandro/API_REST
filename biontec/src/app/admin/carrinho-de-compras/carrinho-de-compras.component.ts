@@ -3,13 +3,14 @@ import {iVendas} from "../../interfaces/vendas";
 import {PurchaseStateService} from "../../services/purchase-state.service";
 import {ProductService} from "../../services/product.service";
 import {iProduto} from "../../interfaces/product";
-import {forkJoin, of} from "rxjs";
+import {forkJoin, Observable, of, switchMap} from "rxjs";
 import {ICliente} from "../../interfaces/cliente";
 import {UserService} from "../../services/user.service";
 import {IUser} from "../../interfaces/user";
 import {CartItensService} from "../../services/cart-items.service";
 import {ErrorDiologComponent} from "../../shared/dialogs/error-diolog/error-diolog.component";
 import {MatDialog} from "@angular/material/dialog";
+import {map} from "rxjs/operators";
 
 
 @Component({
@@ -39,87 +40,97 @@ export class CarrinhoDeComprasComponent implements OnInit {
     this.loadCart();
   }
 
-  loadCart() {
-    this.purchaseState.getSale().subscribe(sale => {
+
+loadCart() {
+  this.carregando = true;
+
+  this.purchaseState.getSale().pipe(
+    switchMap((sale: any): Observable<{ responses: any[], sale: any } | null> => {
+      // 1. Se não houver venda ou produtos
       if (!sale || !sale.productIds || sale.productIds.length === 0) {
         this.listVds = [];
-      }else {
+        this.carregando = false;
+        return of(null);
+      }
+
+      // 2. Se for carregar do BD (ajuste a condição conforme sua lógica)
+      if (sale.loadFromBD) {
         this.listCartFromBD();
         this.carregando = false;
-        return;
+        return of(null);
       }
 
       const requests = sale.productIds.map((id: number) =>
         this.prodService.getIdProduto(id)
       );
 
-      forkJoin(requests).subscribe({
-        next: (responses:any) => {
-          const produtos = responses.map((res:any) => {
-            const p = res.body || res;
-            return { ...p, qtdVd: p.qtdVd || 1, highlighted: true };
-          });
+      // Usamos 'as any' ou tipagem explícita para o forkJoin não reclamar do unknown
+      return forkJoin(requests).pipe(
+        map((responses: any) => ({ responses: responses as any[], sale }))
+      );
+    })
+  ).subscribe({
+    // Aqui aceitamos que 'data' pode ser o objeto OU null
+    next: (data: { responses: any[], sale: any } | null) => {
+      // Se for null (caiu nos ifs acima), paramos a execução aqui
+      if (!data) return;
 
-          this.listVds = [{
-            idVenda: 0,
-            cliente: this.cliente$,
-            idFuncionario: 0,
-            nomeFuncionario: sale.userName,
-            dtVenda: new Date().toISOString(),
-            subtotal: 0,
-            desconto: 0,
-            totalgeral: 0,
-            formasDePagamento: "Cartão de Crédito",
-            qtdDeParcelas: 1,
-            itensVd: [],
-            produtos: produtos,
-            selecionado: true
-          }];
-          this.selectedUser = sale.userName;
-          console.log('Nome do usuario', sale.userName)
-          this.calcularTotal();
-          this.carregando = false;
-        },
-        /*error: (err) => {
-          console.error('Erro ao carregar carrinho', err);
-          this.carregando = false;
-        }*/
+      const { responses, sale } = data;
+
+      const produtos = responses.map((res: any) => {
+        const p = res.body || res;
+        return { ...p, qtdVd: p.qtdVd || 1, highlighted: true };
       });
-    });
+
+      this.listVds = [{
+        idVenda: 0,
+        cliente: this.cliente$,
+        idFuncionario: 0,
+        nomeFuncionario: sale.userName,
+        dtVenda: new Date().toISOString(),
+        subtotal: 0,
+        desconto: 0,
+        totalgeral: 0,
+        formasDePagamento: "Cartão de Crédito",
+        qtdDeParcelas: 1,
+        itensVd: [],
+        produtos: produtos,
+        selecionado: true
+      }];
+
+      this.selectedUser = sale.userName;
+      this.calcularTotal();
+      this.carregando = false;
+    },
+    error: (err: any) => {
+      console.error('Erro ao carregar carrinho:', err);
+      this.carregando = false;
+    }
+  });
+}
+
+listCartFromBD() {
+  const email = this.selectedUser;
+
+  if (!email) {
+    this.onError('Usuário não identificado.');
+    return;
   }
 
-  listCartFromBD() {
-    const email = this.selectedUser;
-
-    if (!email) {
-      this.onError('Usuário não identificado.');
-      return;
-    }
-    //  Busca o usuário completo pelo e-mail/username
-    this.userService.getUserByUserName(email).subscribe({
-      next: (user: IUser) => {
-        const toCard = {
-          userId: user.id_usuario,
-          //productId: productId,
-          quantity: 1
-        };
-
-        this.carrinhoDeCompraService.getCartofUser(toCard).subscribe({
-          next: (listSelect: any) => {
-            this.listVds = listSelect;
-          },
-          error: (err: any) => {
-            this.onError('Erro ao listar item do carrinho.');
-            console.error(err);
-          }
-        });
+  this.userService.getUserByUserName(email)
+    .pipe(
+      switchMap((user: IUser) => this.carrinhoDeCompraService.getCartofUser(user.id_usuario))
+    )
+    .subscribe({
+      next: (listSelect: any) => {
+        this.listVds = listSelect;
       },
-      error: (err) => {
-        console.error('Erro ao localizar ID do usuário:', err);
-        this.onError('Não foi possível validar o usuário.');
+      error: (err: any) => {
+        this.onError('Erro ao processar dados do carrinho.');
+        console.error('Erro na sequência da operação:', err);
       }
     });
-  }
+}
 
   calcularTotal() {
     this.total = this.listVds.reduce((acc, vendedor) => {
