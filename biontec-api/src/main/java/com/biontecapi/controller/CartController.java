@@ -35,13 +35,14 @@ public class CartController {
     }
 
     @DeleteMapping("/{userId}/{productId}")
-    public ResponseEntity<Void> removeItem(@PathVariable Long userId, @PathVariable Long productId) {
+    public ResponseEntity<Void> removeItem(@PathVariable("userId") Long userId, @PathVariable("productId") Long productId) {
         cartService.removeFromCart(userId, productId);
         return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping("/item/{id}")
-    public ResponseEntity<Void> deleteById(@PathVariable Long id) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteById(@PathVariable("id") Long id) {
+        System.out.println("ITEM A REMOVER --> " + id);
         cartService.clearCart(id);
         return ResponseEntity.noContent().build();
     }

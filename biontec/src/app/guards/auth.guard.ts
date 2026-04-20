@@ -10,16 +10,10 @@ export const authGuard: CanActivateFn = (route, state) => {
   if (authService.isAuthenticated()) {
     return true;
   }
-
   return router.createUrlTree(['/auth']);
 };
 
 /*
-
-import {Observable} from "rxjs/index";
-import { Injectable } from '@angular/core';
-import {CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router, UrlTree} from '@angular/router';
-import {TokenService} from "../services/token.service";
 
 @Injectable()
 export class AuthGuard implements CanActivate{

@@ -78,7 +78,6 @@ export class PurchaseStateService {
 
   // VENDA
 
-
   startShoppingCart(userName: string) {
     const sale = {
       userName,

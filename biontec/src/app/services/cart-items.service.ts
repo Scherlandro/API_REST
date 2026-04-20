@@ -17,8 +17,9 @@ export class CartItensService {
     return this._http.get<iCartItens[]>(this.baseUrl + 'all')
   }
 
-  getCartofUser(cod: any): Observable<iCartItens>{
-    return this._http.get<iCartItens>(this.baseUrl+cod)
+  getCartofUser(cod: any): Observable<iCartItens[]>{
+    console.log('Id do usuario', cod)
+    return this._http.get<iCartItens[]>(this.baseUrl + cod)
   }
 
   addCartItens(CartItens: any): Observable<iCartItens>{
@@ -33,11 +34,11 @@ export class CartItensService {
 
   removeCart(CartItens: any): Observable<any>{
     console.log('CartItens removido', CartItens);
-    return this._http.delete<iCartItens>(this.baseUrl +'delete', CartItens)
+    return this._http.delete<iCartItens>(this.baseUrl + CartItens)
   }
 
   delete(id: number): Observable<any> {
-    return this._http.delete<any>(`${this.baseUrl}delete/${id}`);
+    return this._http.delete<any>(this.baseUrl + id);
   }
 
 }

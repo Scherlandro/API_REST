@@ -29,11 +29,15 @@ export class ProductService {
     return this._http.get<string[]>(this.baseUrl + 'all');
   }
 
-  getIdProduto(id: number): Observable<any> {
+  getIdProduto0(id: number): Observable<any> {
     return this._http.get(this.baseUrl + id)
       .pipe(first(), delay(100),
   /*  tap(debugar => console.log(debugar))*/
       );
+  }
+  getIdProduto(id: number): Observable<any> {
+    return this._http.get(this.baseUrl + id)
+      .pipe(map(response => response));
   }
 
   getProdutoPorCod(id: string): Observable<any> {

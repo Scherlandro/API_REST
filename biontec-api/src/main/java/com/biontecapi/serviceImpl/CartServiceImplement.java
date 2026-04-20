@@ -23,29 +23,15 @@ import java.util.Optional;
             return repository.findByUserId(userId);
         }
 
-    /*    @Override
-        public CartItem saveCartItem(CartItemDTO dto) {
-            System.out.println("INTEM PARA O CARRINHO--> " + dto);
-
-            CartItem item = CartItem.builder()
-                    .userId(dto.getUserId())
-                    .productId(dto.getProductId())
-                    .quantity(dto.getQuantity())
-                    .build();
-            return repository.save(item);
-        }*/
-
-
         @Override
         @Transactional
         public CartItem saveCartItem(CartItemDTO dto) {
-            // Tenta encontrar um item existente para o mesmo usuário e produto
             Optional<CartItem> existingItem = repository.findByUserIdAndProductId(dto.getUserId(), dto.getProductId());
 
             if (existingItem.isPresent()) {
                 CartItem item = existingItem.get();
-                item.setQuantity(dto.getQuantity()); // Atualiza a quantidade
-                return repository.save(item);         // Faz o UPDATE
+                item.setQuantity(dto.getQuantity());
+                return repository.save(item);
             } else {
                 // Se não existir, cria um novo
                 CartItem newItem = CartItem.builder()
@@ -53,7 +39,7 @@ import java.util.Optional;
                         .productId(dto.getProductId())
                         .quantity(dto.getQuantity())
                         .build();
-                return repository.save(newItem);      // Faz o INSERT
+                return repository.save(newItem);
             }
         }
 
