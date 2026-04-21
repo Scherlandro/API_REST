@@ -11,6 +11,9 @@ import {PurchaseStateService} from "../../services/purchase-state.service";
 })
 export class MenuComponent implements OnInit {
   mostrarMenuHeader: boolean = false;
+
+  cartCount$ = this.purchaseState.getCartCount();
+
   nameDoUsuario: any;
   user: ITokenUser = {
     id: 0,
@@ -34,8 +37,9 @@ export class MenuComponent implements OnInit {
     this.authService.logout();
   }
 
-
+/*
   public getCartCount(): number {
+    console.log('TAMANHO DO OBJETO CARRINHO' , this.purchaseState.getCartCount())
     return this.purchaseState.getCartCount();
-  }
+  }*/
 }

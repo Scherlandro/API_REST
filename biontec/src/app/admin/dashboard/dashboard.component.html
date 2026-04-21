@@ -3,11 +3,11 @@
 
  <mat-card appearance="outlined" *ngIf="selectedProduct" class="body">
 
-   <button *ngIf="getCartCount() > 0"
+   <button *ngIf="(cartCount$ | async) ?? 0 > 0"
            class="floating-cart-btn"
            (click)="showCard()">
      <mat-icon>shopping_cart</mat-icon>
-     <span class="cart-badge">{{getCartCount()}}</span>
+     <span class="cart-badge">{{cartCount$ | async}}</span>
    </button>
 
   <div class="product-card">
@@ -42,7 +42,7 @@
       </div>
     </div>
   <button mat-raised-button color="primary" (click)="showCard()">
-    Ir ao carrinho e finalizar ({{getCartCount()}})
+    Ir ao carrinho e finalizar ({{cartCount$ | async}})
   </button>
 </mat-card-content>
 

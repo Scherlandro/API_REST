@@ -53,7 +53,7 @@
   <mat-icon class="  body" title="Vendas" routerLink="vendas">point_of_sale | local_atm | payment</mat-icon>
 
   <span> <mat-icon class="body" title="Carrinho de Compras" routerLink="carrinho-de-compras">shopping_cart
-    </mat-icon><span  *ngIf="getCartCount() > 0"  class="menu-badge">{{getCartCount()}}</span></span>
+    </mat-icon><span *ngIf="(cartCount$ | async) ?? 0 > 0"  class="menu-badge">{{cartCount$ | async}}</span></span>
 
   <mat-icon class="  body" title="Ordem de Serviços" routerLink="os">handyman</mat-icon>
 

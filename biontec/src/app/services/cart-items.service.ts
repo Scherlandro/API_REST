@@ -18,22 +18,18 @@ export class CartItensService {
   }
 
   getCartofUser(cod: any): Observable<iCartItens[]>{
-    console.log('Id do usuario', cod)
     return this._http.get<iCartItens[]>(this.baseUrl + cod)
   }
 
   addCartItens(CartItens: any): Observable<iCartItens>{
-    console.log('Nova CartItens iniciada', CartItens);
     return this._http.post<iCartItens>(this.baseUrl +'salvar', CartItens)
   }
 
   updateCart(CartItens: iCartItens): Observable<iCartItens>{
-    console.log('CartItens atualizada', CartItens);
     return this._http.put<iCartItens>(this.baseUrl +'editar', CartItens)
   }
 
   removeCart(CartItens: any): Observable<any>{
-    console.log('CartItens removido', CartItens);
     return this._http.delete<iCartItens>(this.baseUrl + CartItens)
   }
 

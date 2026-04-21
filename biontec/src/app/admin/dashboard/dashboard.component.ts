@@ -34,6 +34,8 @@ export class DashboardComponent implements OnInit {
   pageSize = 20;
   currentPage = 0;
 
+  cartCount$ = this.purchaseState.getCartCount();
+
   produtosFiltrados: iProduto[] = [];
   pagedProdutosFiltrados: iProduto[] = [];
   products: iProduto[] = [];
@@ -105,9 +107,9 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  public getCartCount(): number {
+ /* public getCartCount(): number {
     return this.purchaseState.getCartCount();
-  }
+  }*/
 
   public isProductInCart(productId: number): boolean {
     return this.purchaseState.isProductInCart(productId);
@@ -122,27 +124,32 @@ export class DashboardComponent implements OnInit {
    }
 
   buyNow(productId: number) {
+    if (!this.purchaseState.isProductInCart(productId)) {
     this.purchaseState.addSelectedProduct(productId);
     this.loadProductDetails(productId);
     this.showAddToCartNotification();
     // this.router.navigate(['/admin/carrinho-de-compras']); // REMOVA ESTA LINHA
   }
-
-  showAddToCartNotification() {
-    // Você pode implementar um snackbar ou toast aqui
-    console.log('Produto adicionado ao carrinho!');
   }
 
+/*
+  showAddToCartNotification() {
+    //Depois implementar um snackbar ou toast aqui
+    console.log('Produto adicionado ao carrinho!');
+  }
+*/
 
+
+/*
   launchingPurchaseToShoppingCart(userName: string, productId: number) {
     if (userName == null || productId == null) {
       console.info('Usuário ou produto nulo', userName, productId)
     return;
     }
-  /*  var prodId: number[] = [];
+  /!*  var prodId: number[] = [];
     for (const id of [productId]) {
       prodId.push(...[id]);
-    }*/
+    }*!/
     this.purchaseState.addSelectedProduct(productId);
     // Carrega os detalhes para mostrar no banner
     this.loadProductDetails(productId);
@@ -150,6 +157,7 @@ export class DashboardComponent implements OnInit {
     this.purchaseState.startShoppingCart(userName);
     this.router.navigate(['/admin/carrinho-de-compras']);
   }
+*/
 
   clearHighlight() {
     this.selectedProduct = null;
@@ -164,6 +172,10 @@ export class DashboardComponent implements OnInit {
       this.onError('Usuário não identificado.');
       return;
     }
+    if (this.purchaseState.isProductInCart(productId)) {
+      this.notificationMsg.warn('Produto já está no carrinho!');
+      return;
+    }
     this.userService.getUserByUserName(email).subscribe({
       next: (user: IUser) => {
         const toCard = {
@@ -171,10 +183,16 @@ export class DashboardComponent implements OnInit {
           productId: productId,
           quantity: 1
         };
+
+
         this.carrinhoDeCompraService.addCartItens(toCard).subscribe({
           next: (vendaCriada: any) => {
             this.notificationMsg.success('Produto adicionado ao carrinho!');
-            this.purchaseState.addSelectedProduct(productId);
+            // REMOVA esta linha para não duplicar:
+             this.purchaseState.addSelectedProduct(productId);
+
+            // Apenas recarrega os produtos do carrinho do banco
+            this.loadCartProductsFromDatabase(user.id_usuario);
             this.loadProductDetails(productId);
           },
           error: (err: any) => {
@@ -188,6 +206,21 @@ export class DashboardComponent implements OnInit {
         this.onError('Não foi possível validar o usuário.');
       }
     });
+  }
+  private loadCartProductsFromDatabase(userId: number) {
+    this.carrinhoDeCompraService.getCartofUser(userId).subscribe({
+      next: (cartItems: any[]) => {
+        // Extrai os IDs dos produtos do carrinho
+        const productIds = cartItems.map(item => item.productId);
+        this.purchaseState.syncCartFromDatabase(productIds);
+        this.loadCartProducts(); // Recarrega os detalhes
+      },
+      error: (err) => console.error('Erro ao carregar carrinho do banco:', err)
+    });
+  }
+
+  showAddToCartNotification() {
+    console.log('Produto adicionado ao carrinho!');
   }
 
  /* addToCart(productId: number) {
@@ -346,6 +379,8 @@ export class DashboardComponent implements OnInit {
     this.pagedProdutosFiltrados =
       this.produtosFiltrados.slice(start, start + this.pageSize);
   }
+
+
 
   getImageUrl(foto: string): SafeUrl {
     return this.sanitizer.bypassSecurityTrustUrl(
