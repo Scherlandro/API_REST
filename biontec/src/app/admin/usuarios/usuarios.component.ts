@@ -161,7 +161,6 @@ export class UsuariosComponent implements OnInit {
     });
     this.selection = new SelectionModel<Element>(true, []);
   }
-  /** Selects all rows if they are not all selected; otherwise clear selection. */
   masterToggle() {
     this.isAllSelected() ?
       this.selection.clear() :
