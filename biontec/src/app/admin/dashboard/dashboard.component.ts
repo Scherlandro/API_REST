@@ -1,8 +1,6 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {MatCalendar} from "@angular/material/datepicker";
-import {FormControl, FormGroup} from "@angular/forms";
-import {forkJoin, Observable, of, switchMap} from "rxjs";
+import {Component, OnInit} from '@angular/core';
+import {FormControl} from "@angular/forms";
+import {forkJoin, of, switchMap} from "rxjs";
 import {NotificationMgsService} from "../../services/notification-mgs.service";
 import {PageEvent} from "@angular/material/paginator";
 import {iProduto} from "../../interfaces/product";
@@ -10,9 +8,7 @@ import {DomSanitizer, SafeUrl} from "@angular/platform-browser";
 import {ProductService} from "../../services/product.service";
 import {PurchaseStateService} from "../../services/purchase-state.service";
 import {MatDialog} from "@angular/material/dialog";
-import {catchError} from "rxjs/operators";
 import {ErrorDiologComponent} from "../../shared/dialogs/error-diolog/error-diolog.component";
-import {TokenService} from "../../services/token.service";
 import {Router} from "@angular/router";
 import {AuthService} from "../../services/auth.service";
 import {CartItensService} from "../../services/cart-items.service";
@@ -83,11 +79,9 @@ export class DashboardComponent implements OnInit {
       }
     });
   }
-
   // -------------------------
   // 🔹 CARRINHO
   // -------------------------
-
   loadCartProducts() {
     this.purchaseState.getSelectedProducts().pipe(
       switchMap(ids => {
@@ -117,8 +111,6 @@ export class DashboardComponent implements OnInit {
 
   //  COMPRA DIRETA
   showCard() {
-     // this.purchaseState.clearCart();
-   //  this.purchaseState.addSelectedProduct(productId);
      this.purchaseState.startShoppingCart(this.selectedUser);
      this.router.navigate(['/admin/carrinho-de-compras']);
    }
@@ -128,36 +120,8 @@ export class DashboardComponent implements OnInit {
     this.purchaseState.addSelectedProduct(productId);
     this.loadProductDetails(productId);
     this.showAddToCartNotification();
-    // this.router.navigate(['/admin/carrinho-de-compras']); // REMOVA ESTA LINHA
+ }
   }
-  }
-
-/*
-  showAddToCartNotification() {
-    //Depois implementar um snackbar ou toast aqui
-    console.log('Produto adicionado ao carrinho!');
-  }
-*/
-
-
-/*
-  launchingPurchaseToShoppingCart(userName: string, productId: number) {
-    if (userName == null || productId == null) {
-      console.info('Usuário ou produto nulo', userName, productId)
-    return;
-    }
-  /!*  var prodId: number[] = [];
-    for (const id of [productId]) {
-      prodId.push(...[id]);
-    }*!/
-    this.purchaseState.addSelectedProduct(productId);
-    // Carrega os detalhes para mostrar no banner
-    this.loadProductDetails(productId);
-    //this.purchaseState.startSaleOfSelectedProduct(userName, prodId);
-    this.purchaseState.startShoppingCart(userName);
-    this.router.navigate(['/admin/carrinho-de-compras']);
-  }
-*/
 
   clearHighlight() {
     this.selectedProduct = null;
@@ -183,15 +147,10 @@ export class DashboardComponent implements OnInit {
           productId: productId,
           quantity: 1
         };
-
-
         this.carrinhoDeCompraService.addCartItens(toCard).subscribe({
           next: (vendaCriada: any) => {
             this.notificationMsg.success('Produto adicionado ao carrinho!');
-            // REMOVA esta linha para não duplicar:
-             this.purchaseState.addSelectedProduct(productId);
-
-            // Apenas recarrega os produtos do carrinho do banco
+            this.purchaseState.addSelectedProduct(productId);
             this.loadCartProductsFromDatabase(user.id_usuario);
             this.loadProductDetails(productId);
           },
@@ -207,6 +166,7 @@ export class DashboardComponent implements OnInit {
       }
     });
   }
+
   private loadCartProductsFromDatabase(userId: number) {
     this.carrinhoDeCompraService.getCartofUser(userId).subscribe({
       next: (cartItems: any[]) => {
@@ -223,39 +183,6 @@ export class DashboardComponent implements OnInit {
     console.log('Produto adicionado ao carrinho!');
   }
 
- /* addToCart(productId: number) {
-    console.log('Usuario',this.selectedUser);
-    const toCard = {
-      usuario: this.selectedUser, // Vem do this.authService.getUserName() no ngOnInit
-      prodId: productId
-    };
-    console.log('Objeto para Cart', toCard)
-    this.carrinhoDeCompraService.addCartItens(toCard).subscribe({
-    next: (vendaCriada: any) => {
-      this.notificationMsg.success('Produto adicionado ao carrinho!');
-      // Atualiza o estado local
-      this.purchaseState.addSelectedProduct(productId);
-      this.loadProductDetails(productId);
-        setTimeout(() => {
-        const banner = document.querySelector('.selected-product-banner');
-        if (banner) banner.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-      }, 100);
-    },
-    error: (err:any) => {
-      this.onError('Erro ao adicionar produto ao carrinho no servidor');
-      console.error(err);
-    }
-  });
-
-/!*
-    this.purchaseState.addSelectedProduct(productId);
-    this.loadProductDetails(productId);
-    setTimeout(() => {
-      const banner = document.querySelector('.selected-product-banner');
-      if (banner) { banner.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-      } }, 100);*!/
-  }
-*/
   removeFromCart(productId: number) {
     this.purchaseState.removeSelectedProduct(productId);
   }

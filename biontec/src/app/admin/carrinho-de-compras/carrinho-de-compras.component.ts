@@ -44,16 +44,6 @@ export class CarrinhoDeComprasComponent implements OnInit {
     this.loadInitialData();
   }
 
-  /*
-    const chamadas = itensCart.map(i => this.prodService.getIdProduto(i.productId));
-        forkJoin(chamadas).subscribe(respostas => {
-          const nomes: any = respostas.map((res: any) => //  res.body?.nomeProduto || 'Sem nome'
-          res.body
-          );
-          console.log('Nomes dos produtos:', nomes.map((i:any)=>i.nomeProduto));
-        });
-   */
-
   loadInitialData() {
     this.carregando = true;
     const email = this.selectedUser;
@@ -70,19 +60,17 @@ export class CarrinhoDeComprasComponent implements OnInit {
           return of([]);
         }
         this.listCar = itensCart;
-        console.log('DETALHE DO itensCart',itensCart)
         const detalheRequests = itensCart.map(item =>
           this.prodService.getIdProduto(item.productId).pipe(
             map((res: any) => {
-              // AQUI foi necessário acessar o .body
               const dadosDoProduto = res.body;
               return {
                 ...item,
-                idProduto: item.productId,        // Sincroniza o ID
+                idProduto: item.productId,
                 nomeProduto: dadosDoProduto.nomeProduto,
                 fotoProduto: dadosDoProduto.fotoProduto,
                 valorVenda: dadosDoProduto.valorVenda,
-                qtdVd: item.quantity,  // Mapeia quantity para qtdVd
+                qtdVd: item.quantity,
                 highlighted: true
               };
             }),
@@ -93,10 +81,10 @@ export class CarrinhoDeComprasComponent implements OnInit {
               highlighted: true,
               qtdVd: item.quantity
             })) ) );
-        // O return aqui é fundamental para o próximo operador receber os dados
+        // O return aqui para o próximo operador receber os dados
         return forkJoin(detalheRequests);
       }),
-      //  Formata para o padrão iVendas[] usado no HTML
+      //  Formata em iVendas[] usado no HTML
       map((produtosDetalhados: any[]) => {
         return [{
           idVenda: 0,
@@ -111,7 +99,6 @@ export class CarrinhoDeComprasComponent implements OnInit {
       next: (resultado: any[]) => {
         this.listVds = resultado;
         this.calcularTotal();
-        console.log('Carrinho Final formatado e populado:', this.listVds);
       },
       error: (err: any) => {
         this.onError('Erro ao carregar detalhes dos produtos.');
@@ -145,8 +132,6 @@ export class CarrinhoDeComprasComponent implements OnInit {
           this.purchaseState.removeSelectedProduct(cartItens.productId);
           this.calcularTotal();
         });
-
-
   }
 
   alterarQuantidade(produto: iProduto, delta: number) {
@@ -173,9 +158,6 @@ export class CarrinhoDeComprasComponent implements OnInit {
     this.listVds.forEach(v => {
       v.selecionado = v.produtos.every((p: any) => p.highlighted);
     });
-  /*  this.selecionarTodos = this.listVds.every(v =>
-      v.produtos.every((p: any) => p.highlighted)
-    );*/
     this.selecionarTodos = this.listVds.every(v => v.selecionado);
     this.calcularTotal();
   }
@@ -193,7 +175,6 @@ export class CarrinhoDeComprasComponent implements OnInit {
       ? 'data:image/jpeg;base64,' + foto
       : 'assets/img/no-image.jpg';
   }
-
 
   onError(msg: string) {
     this.dialog.open(ErrorDiologComponent, {data: msg});
