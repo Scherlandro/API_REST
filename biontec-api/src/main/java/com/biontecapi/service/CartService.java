@@ -4,10 +4,13 @@ import com.biontecapi.dtos.CartItemDTO;
 import com.biontecapi.model.CartItem;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface CartService {
 
     List<CartItem> listByUser(Long userId) ;
+
+    Optional selectProd(Long userId, Long productId);
 
      CartItem saveCartItem(CartItemDTO dto) ;
 

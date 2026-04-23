@@ -25,19 +25,16 @@ export class DashboardComponent implements OnInit {
 
   selectedUser!: string;
   cartProducts: iProduto[] = [];
-  selectedProduct: iProduto | null = null;
+  selectedProduct: any;
   spiner = false;
+  isBanner$ = this.purchaseState.showBanner$;
   pageSize = 20;
   currentPage = 0;
-
   cartCount$ = this.purchaseState.getCartCount();
-
   produtosFiltrados: iProduto[] = [];
   pagedProdutosFiltrados: iProduto[] = [];
   products: iProduto[] = [];
-
   produtoControl = new FormControl();
-
 
   constructor(
     private authService: AuthService,
@@ -54,6 +51,8 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit(): void {
     this.selectedUser = this.authService.getUserName();
+    const bannerSalvo = this.purchaseState.getBanner();
+    this.purchaseState.showBanner(bannerSalvo);
     this.listarProdutos();
     this.prodSelecionado();
     this.loadCartProducts();
@@ -69,7 +68,6 @@ export class DashboardComponent implements OnInit {
   }
 
   loadProductDetails(productId: number) {
-
     this.prodService.getIdProduto(productId).subscribe({
       next: (response) => {
         this.selectedProduct = response.body || response;
@@ -79,6 +77,7 @@ export class DashboardComponent implements OnInit {
       }
     });
   }
+
   // -------------------------
   // 🔹 CARRINHO
   // -------------------------
@@ -101,31 +100,27 @@ export class DashboardComponent implements OnInit {
     });
   }
 
- /* public getCartCount(): number {
-    return this.purchaseState.getCartCount();
-  }*/
-
   public isProductInCart(productId: number): boolean {
     return this.purchaseState.isProductInCart(productId);
   }
 
-  //  COMPRA DIRETA
-  showCard() {
-     this.purchaseState.startShoppingCart(this.selectedUser);
-     this.router.navigate(['/admin/carrinho-de-compras']);
-   }
+  goToShoppingCart() {
+    this.purchaseState.startShoppingCart(this.selectedUser);
+    this.purchaseState.showBanner(false);
+    this.router.navigate(['/admin/carrinho-de-compras']);
+  }
 
   buyNow(productId: number) {
     if (!this.purchaseState.isProductInCart(productId)) {
-    this.purchaseState.addSelectedProduct(productId);
-    this.loadProductDetails(productId);
-    this.showAddToCartNotification();
- }
+      this.purchaseState.addSelectedProduct(productId);
+      this.loadProductDetails(productId);
+    }
   }
 
   clearHighlight() {
     this.selectedProduct = null;
     this.purchaseState.clearSale();
+    this.purchaseState.showBanner(false);
     this.highlightProductInList(-1);
   }
 
@@ -148,11 +143,12 @@ export class DashboardComponent implements OnInit {
           quantity: 1
         };
         this.carrinhoDeCompraService.addCartItens(toCard).subscribe({
-          next: (vendaCriada: any) => {
+          next: (cart: any) => {
             this.notificationMsg.success('Produto adicionado ao carrinho!');
             this.purchaseState.addSelectedProduct(productId);
             this.loadCartProductsFromDatabase(user.id_usuario);
             this.loadProductDetails(productId);
+            this.purchaseState.showBanner(true);
           },
           error: (err: any) => {
             this.onError('Erro ao salvar item no carrinho.');
@@ -179,10 +175,6 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  showAddToCartNotification() {
-    console.log('Produto adicionado ao carrinho!');
-  }
-
   removeFromCart(productId: number) {
     this.purchaseState.removeSelectedProduct(productId);
   }
@@ -190,66 +182,6 @@ export class DashboardComponent implements OnInit {
   isInCart(productId: number): boolean {
     return this.purchaseState.isProductInCart(productId);
   }
-
-  // FINALIZA COMPRA COM TODOS
-  goToCart() {
-    const ids = this.purchaseState.getSelectedProductsValue();
-    console.log('Quantidade de ids ', ids)
-    if (ids.length === 0) {
-      //console.warn('Carrinho vazio');
-      alert('Seu carrinho está vazio!');
-      return;
-    }
-    this.spiner = true;
-
-    this.purchaseState.saveCartItenToDatabase(this.selectedUser).subscribe({
-      next: (res) => {
-        this.spiner = false;
-        console.log('Venda salva no banco com ID:', res.id);
-        this.router.navigate(['/admin/carrinho-de-compras']);
-      },
-      error: (err) => {
-        this.spiner = false;
-        console.error('Erro ao salvar no banco:', err);
-        alert('Não foi possível salvar seu carrinho no momento. Tente novamente.');
-      }
-    });
-    /*
-       this.purchaseState.startSale(this.selectedUser);
-       this.router.navigate(['/admin/carrinho-de-compras']);
-    */
-  }
-
-  /*
-  goToCart() {
-  const ids = this.purchaseState.getSelectedProductsValue();
-
-  if (ids.length === 0) {
-    alert('Seu carrinho está vazio!');
-    return;
-  }
-
-  // Objeto estruturado com o usuário e a lista de IDs
-  const payload = {
-    username: this.selectedUser,
-    produtosIds: ids, // Um array de números
-    dataCriacao: new Date()
-  };
-
-  this.spiner = true;
-  this.carrinhoDeCompraService.salvarCarrinhoCompleto(payload).subscribe({
-    next: (res) => {
-      this.spiner = false;
-      this.router.navigate(['/admin/carrinho-de-compras']);
-    },
-    error: (err) => {
-      this.spiner = false;
-      this.onError('Erro ao processar carrinho');
-    }
-  });
-}
-   */
-
 
   highlightProductInList(productId: number) {
     this.products = this.products.map(p => ({
@@ -267,7 +199,6 @@ export class DashboardComponent implements OnInit {
 
   listarProdutos() {
     this.spiner = true;
-
     this.prodService.getTodosProdutos().subscribe({
       next: (res: iProduto[]) => {
         this.products = res;
@@ -306,8 +237,6 @@ export class DashboardComponent implements OnInit {
     this.pagedProdutosFiltrados =
       this.produtosFiltrados.slice(start, start + this.pageSize);
   }
-
-
 
   getImageUrl(foto: string): SafeUrl {
     return this.sanitizer.bypassSecurityTrustUrl(

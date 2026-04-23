@@ -1,74 +1,80 @@
 
-<div *ngIf="selectedProduct" class="selected-product-banner">
-
- <mat-card appearance="outlined" *ngIf="selectedProduct" class="body">
-
-   <button *ngIf="(cartCount$ | async) ?? 0 > 0"
-           class="floating-cart-btn"
-           (click)="showCard()">
-     <mat-icon>shopping_cart</mat-icon>
-     <span class="cart-badge">{{cartCount$ | async}}</span>
-   </button>
-
-  <div class="product-card">
-
-    <div class="banner-header">
-      <h3 class="banner-title" ><strong>{{selectedProduct.nomeProduto}}</strong>
-        <br> <h4 style="color: #474bff">Foi adicionado ao carrinho!</h4></h3>
-      <button mat-icon-button (click)="clearHighlight()" matTooltip="Fechar">
-        <mat-icon>close</mat-icon>
-      </button>
-    </div>
-    <mat-card-content class="product-content body">
-  <div class="spinner-container2">
-    <div class="cubo-main-p">
-      <div class="cubo">
-        <img class="face-p front-p" [src]="getImageUrl(selectedProduct.fotoProduto)" *ngIf="selectedProduct.fotoProduto">
-        <img class="face-p back-p" src="/assets/image/r2_d2.png">
-        <img class="face-p right-p" src="/assets/image/obi_wan.png">
-        <img class="face-p left-p" src="/assets/image/clone_old.png">
-      </div>
-    </div>
-  </div>
-  <div class="product-content">
-      <div class="price-section">
-        <span class="price">{{selectedProduct.valorVenda | currency: 'BRL'}}</span>
-        <span *ngIf="selectedProduct.qtdEstoque > 0" class="stock-available">Em estoque</span>
-        <span *ngIf="selectedProduct.qtdEstoque <= 0" class="stock-unavailable">Sem estoque</span>
-      </div>
-      <div class="shipping-info">
-        <mat-icon>local_shipping</mat-icon>
-        <span>Frete grátis</span>
-      </div>
-    </div>
-  <button mat-raised-button color="primary" (click)="showCard()">
-    Ir ao carrinho e finalizar ({{cartCount$ | async}})
-  </button>
-</mat-card-content>
-
-     <mat-list class="banner-products" *ngFor="let product of cartProducts"   >
-
-      <mat-list-item class="banner-product-item"  >
-        <img matListItemAvatar [src]="getImageUrl(product.fotoProduto)" *ngIf="product.fotoProduto">
-        <span class="product-descrision">{{product.nomeProduto}}</span>
-        <span class="product-price">{{product.valorVenda | currency: 'BRL'}}</span>
-
-      </mat-list-item >
-    </mat-list>
-
-    <div class="banner-actions">
-
-      <button mat-raised-button color="primary"  (click)="clearHighlight()">
-        Continuar comprando
-      </button>
-
-    </div>
-
-  </div>
-  </mat-card>
-</div>
-
 <div>
+
+
+
+  <div *ngIf="(isBanner$ | async) && selectedProduct" class="selected-product-banner">
+
+    <mat-card appearance="outlined" *ngIf="selectedProduct" class="body">
+
+      <button *ngIf="(cartCount$ | async) ?? 0 > 0"
+              class="floating-cart-btn"
+              (click)="goToShoppingCart()">
+        <mat-icon>shopping_cart</mat-icon>
+        <span class="cart-badge">{{cartCount$ | async}}</span>
+      </button>
+
+      <div class="product-card">
+
+        <div class="banner-header">
+          <h3 class="banner-title" ><strong>{{selectedProduct.nomeProduto}}</strong>
+            <br> <h4 style="color: #474bff">Foi adicionado ao carrinho!</h4></h3>
+          <button mat-icon-button (click)="clearHighlight()" matTooltip="Fechar">
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
+        <mat-card-content class="product-content body">
+          <div class="spinner-container2">
+            <div class="cubo-main-p">
+              <div class="cubo">
+                <img class="face-p front-p" [src]="getImageUrl(selectedProduct.fotoProduto)" *ngIf="selectedProduct.fotoProduto">
+                <img class="face-p back-p" src="/assets/image/r2_d2.png">
+                <img class="face-p right-p" src="/assets/image/obi_wan.png">
+                <img class="face-p left-p" src="/assets/image/clone_old.png">
+              </div>
+            </div>
+          </div>
+          <div class="product-content">
+            <div class="price-section">
+              <span class="price">{{selectedProduct.valorVenda | currency: 'BRL'}}</span>
+              <span *ngIf="selectedProduct.qtdEstoque > 0" class="stock-available">Em estoque</span>
+              <span *ngIf="selectedProduct.qtdEstoque <= 0" class="stock-unavailable">Sem estoque</span>
+            </div>
+            <div class="shipping-info">
+              <mat-icon>local_shipping</mat-icon>
+              <span>Frete grátis</span>
+            </div>
+          </div>
+          <button mat-raised-button color="primary" (click)="goToShoppingCart()">
+            Ir ao carrinho e finalizar ({{cartCount$ | async}})
+          </button>
+        </mat-card-content>
+
+        <mat-list class="banner-products" *ngFor="let product of cartProducts"   >
+
+          <mat-list-item class="banner-product-item"  >
+            <img matListItemAvatar [src]="getImageUrl(product.fotoProduto)" *ngIf="product.fotoProduto">
+            <span class="product-descrision">{{product.nomeProduto}}</span>
+            <span class="product-price">{{product.valorVenda | currency: 'BRL'}}</span>
+
+          </mat-list-item >
+        </mat-list>
+
+        <div class="banner-actions">
+
+          <button mat-raised-button color="primary"  (click)="clearHighlight()">
+            Continuar comprando
+          </button>
+
+        </div>
+
+      </div>
+    </mat-card>
+  </div>
+
+
+
+
   <div>
     <mat-card-content class="body-prod-p">
       <mat-toolbar class="head-table body">
@@ -124,7 +130,6 @@
           <mat-card-actions class="product-actions">
            <button mat-raised-button color="primary" class="add-to-cart"
                     (click)="addToCart(produto.idProduto)">
-             <!-- (click)="preparePurchase(produto.idProduto)">-->
               <mat-icon>add_shopping_cart</mat-icon>
               Adicionar ao Carrinnho
             </button>

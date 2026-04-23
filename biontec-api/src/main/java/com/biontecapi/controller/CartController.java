@@ -24,6 +24,12 @@ public class CartController {
         return ResponseEntity.ok(cartService.listByUser(userId));
     }
 
+    @GetMapping("/selectProd/{userId}/{productId}")
+    public ResponseEntity getItemCart(@PathVariable("userId") Long userId,
+                                      @PathVariable("productId") Long productId) {
+        return ResponseEntity.ok(cartService.selectProd(userId, productId));
+    }
+
     @PostMapping("/salvar")
     public ResponseEntity<CartItem> addItem(@RequestBody CartItemDTO dto) {
         return ResponseEntity.ok(cartService.saveCartItem(dto));
@@ -35,14 +41,14 @@ public class CartController {
     }
 
     @DeleteMapping("/{userId}/{productId}")
-    public ResponseEntity<Void> removeItem(@PathVariable("userId") Long userId, @PathVariable("productId") Long productId) {
+    public ResponseEntity<Void> removeItem(@PathVariable("userId") Long userId,
+                                           @PathVariable("productId") Long productId) {
         cartService.removeFromCart(userId, productId);
         return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteById(@PathVariable("id") Long id) {
-        System.out.println("ITEM A REMOVER --> " + id);
         cartService.clearCart(id);
         return ResponseEntity.noContent().build();
     }

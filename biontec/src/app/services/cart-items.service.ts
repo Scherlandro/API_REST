@@ -21,6 +21,10 @@ export class CartItensService {
     return this._http.get<iCartItens[]>(this.baseUrl + cod)
   }
 
+  selectProdForUser(email: any, cod: any): Observable<iCartItens[]>{
+    return this._http.get<iCartItens[]>(this.baseUrl+ 'selectProd/'+email+'/' + cod)
+  }
+
   addCartItens(CartItens: any): Observable<iCartItens>{
     return this._http.post<iCartItens>(this.baseUrl +'salvar', CartItens)
   }

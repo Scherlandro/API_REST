@@ -23,7 +23,12 @@ import java.util.Optional;
             return repository.findByUserId(userId);
         }
 
-        @Override
+    @Override
+    public Optional selectProd(Long userId, Long productId) {
+        return    repository.findByUserIdAndProductId(userId, productId);
+    }
+
+    @Override
         @Transactional
         public CartItem saveCartItem(CartItemDTO dto) {
             Optional<CartItem> existingItem = repository.findByUserIdAndProductId(dto.getUserId(), dto.getProductId());
