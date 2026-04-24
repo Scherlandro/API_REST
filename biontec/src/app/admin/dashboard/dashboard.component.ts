@@ -54,8 +54,53 @@ export class DashboardComponent implements OnInit {
     const bannerSalvo = this.purchaseState.getBanner();
     this.purchaseState.showBanner(bannerSalvo);
     this.listarProdutos();
-    this.prodSelecionado();
-    this.loadCartProducts();
+   // this.prodSelecionado();
+   // this.loadCartProducts();
+    this.processarPendenciasPosLogin();
+  }
+
+  private processarPendenciasPosLogin() {
+    const pendingId = this.purchaseState.getStoredProductId();
+
+    if (this.selectedUser) {
+      this.userService.getUserByUserName(this.selectedUser).subscribe(user => {
+        if (pendingId) {
+          // Se tem algo no localStorage, salva no banco primeiro
+          const toCart = { userId: user.id_usuario, productId: pendingId, quantity: 1 };
+
+          this.carrinhoDeCompraService.addCartItens(toCart).subscribe({
+            next: () => {
+              // Após salvar com sucesso, limpamos o localStorage para não processar de novo
+              this.purchaseState.clearStorageIds();
+              // Agora carregamos o carrinho COMPLETO do banco
+              this.atualizarEstadoGeralDoCarrinho(user.id_usuario, pendingId);
+            },
+            error: () => this.atualizarEstadoGeralDoCarrinho(user.id_usuario)
+          });
+        } else {
+          // Se não tinha nada no localStorage, apenas carrega o que já era do usuário
+          this.atualizarEstadoGeralDoCarrinho(user.id_usuario);
+        }
+      });
+    }
+  }
+
+  private atualizarEstadoGeralDoCarrinho(userId: number, highlightId?: number) {
+    this.carrinhoDeCompraService.getCartofUser(userId).subscribe(cartItems => {
+      const dbIds = cartItems.map((item: any) => item.productId);
+
+      // Atualiza o Service com os IDs REAIS do banco
+      this.purchaseState.syncCartFromDatabase(dbIds);
+
+      // Se houver um ID para destacar (o que foi adicionado agora), abre o banner
+      if (highlightId) {
+        this.loadProductDetails(highlightId);
+        this.purchaseState.showBanner(true);
+      }
+
+      // Carrega os detalhes visuais de todos os produtos do banco para o banner/lista
+      this.loadCartProducts();
+    });
   }
 
   prodSelecionado() {
@@ -149,6 +194,8 @@ export class DashboardComponent implements OnInit {
             this.loadCartProductsFromDatabase(user.id_usuario);
             this.loadProductDetails(productId);
             this.purchaseState.showBanner(true);
+            // Opcional: limpar o ID temporário para não repetir o processo no F5
+            // localStorage.removeItem('selectedProductsIds');
           },
           error: (err: any) => {
             this.onError('Erro ao salvar item no carrinho.');

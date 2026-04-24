@@ -106,6 +106,20 @@ export class PurchaseStateService {
       this.refreshSaleData();
     }
   }
+  // Adicione ou verifique se existe no PurchaseStateService
+  getStoredProductId(): number | null {
+    const stored = localStorage.getItem('selectedProductsIds');
+    if (stored) {
+      const ids = JSON.parse(stored);
+      return ids.length > 0 ? ids[ids.length - 1] : null;
+    }
+    return null;
+  }
+// Método para limpar o storage temporário após a persistência
+  clearStorageIds() {
+    localStorage.removeItem('selectedProductsIds');
+    this.selectedProductsIds.next([]);
+  }
 
   addToDatabaseAndSync(userId: number, productId: number): Observable<any> {
     const cartItem = { userId, productId, quantity: 1 };
