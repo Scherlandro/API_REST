@@ -106,6 +106,7 @@ export class PurchaseStateService {
       this.refreshSaleData();
     }
   }
+/*
   // Adicione ou verifique se existe no PurchaseStateService
   getStoredProductId(): number | null {
     const stored = localStorage.getItem('selectedProductsIds');
@@ -120,6 +121,7 @@ export class PurchaseStateService {
     localStorage.removeItem('selectedProductsIds');
     this.selectedProductsIds.next([]);
   }
+*/
 
   addToDatabaseAndSync(userId: number, productId: number): Observable<any> {
     const cartItem = { userId, productId, quantity: 1 };

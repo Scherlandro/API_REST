@@ -54,11 +54,12 @@ export class DashboardComponent implements OnInit {
     const bannerSalvo = this.purchaseState.getBanner();
     this.purchaseState.showBanner(bannerSalvo);
     this.listarProdutos();
-   // this.prodSelecionado();
-   // this.loadCartProducts();
-    this.processarPendenciasPosLogin();
+    this.prodSelecionado();
+    this.loadCartProducts();
+    //this.processarPendenciasPosLogin();
   }
 
+/*
   private processarPendenciasPosLogin() {
     const pendingId = this.purchaseState.getStoredProductId();
 
@@ -102,6 +103,7 @@ export class DashboardComponent implements OnInit {
       this.loadCartProducts();
     });
   }
+*/
 
   prodSelecionado() {
     this.purchaseState.getSelectedProducts().subscribe(productId => {
@@ -176,7 +178,8 @@ export class DashboardComponent implements OnInit {
       this.onError('Usuário não identificado.');
       return;
     }
-    if (this.purchaseState.isProductInCart(productId)) {
+   // if (this.purchaseState.isProductInCart(productId)) {
+    if (this.carrinhoDeCompraService.selectProdForUser(email,productId)) {
       this.notificationMsg.warn('Produto já está no carrinho!');
       return;
     }

@@ -4,103 +4,57 @@ import {
   HttpHandler,
   HttpEvent,
   HttpInterceptor,
-  HttpErrorResponse, HttpSentEvent,  HTTP_INTERCEPTORS
+  HttpErrorResponse,
+  HTTP_INTERCEPTORS
 } from '@angular/common/http';
-import { Observable, Subject, throwError } from 'rxjs';
-import {catchError} from "rxjs/operators";
-import {TokenService} from "../token.service";
-import {NotificationMgsService} from "../notification-mgs.service";
-import {environment} from "../../../environments/environment";
-import {AuthService} from "../auth.service";
+import {Observable, throwError} from 'rxjs';
+import {catchError} from 'rxjs/operators';
+import {TokenService} from '../token.service';
+import {NotificationMgsService} from '../notification-mgs.service';
+import {AuthService} from '../auth.service';
 
 @Injectable()
 export class TokenInterceptor implements HttpInterceptor {
+
   private authService = inject(AuthService);
   private notification = inject(NotificationMgsService);
-  private tokenService= inject(TokenService);
-  /*constructor(
-    private tokenService: TokenService,
-    private apiErrorService: NotificationMgsService
-  ) {}*/
+  private tokenService = inject(TokenService);
 
-  /*
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     const token = this.tokenService.getToken();
+    let authReq = request;
 
-    let authRequest = request;
-
-    // 1. Garante que se o token existir, ele SEMPRE será injetado
     if (token) {
-      authRequest = request.clone({
+      authReq = request.clone({
         setHeaders: {
           Authorization: `Bearer ${token}`
         }
       });
     }
 
-    return next.handle(authRequest).pipe(
-      catchError((error: HttpErrorResponse) => {
-        console.error('Erro capturado no Interceptor:', error);
-
-        // 2. Se for 401 ou 403, o token provavelmente é inválido ou expirou
-        if (error.status === 401 || error.status === 403) {
-          this.tokenService.clearTokenExpired();
-          this.apiErrorService.sendError("Sessão expirada. Por favor, faça login novamente.");
-          return throwError(() => new Error('Sessão Expirada'));
-        }
-
-        // 3. Se for erro de servidor (como o "id must not be null"), repassa a mensagem real
-        const errorMessage = error.error?.message || error.error?.error_message || 'Erro interno no servidor';
-        this.apiErrorService.sendError(errorMessage);
-
-        return throwError(() => error);
-      })
-    );
-  }
-}*/
-
-  intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
-
-    const token = this.tokenService.getToken();
-   // const requestUrl: Array<any> = request.url.split('/');
-  //  const apiUrl: Array<any> = environment.API_PATH.split('/');
-    let authReq = request;
-   /* if(token !== null){
-      let clone = request.clone({
-        headers: request.headers.set('Authorization', 'Bearer '+token)
-      });*/
-
-      if (token) {
-        authReq = request.clone({
-          setHeaders: { Authorization: `Bearer ${token}` }
-        });
-      }
-
-      /*return next.handle(clone).pipe(
-        catchError(error => {
-          console.log('No catchError do Interceptor',error.status)
-          if(error.status === 401){
-            this.tokenService.clearTokenExpired();
-          }
-          this.apiErrorService.sendError(error.error.message)
-          return throwError('Session Expired');
-        }) )  }
-    return next.handle(request);*/
-
     return next.handle(authReq).pipe(
       catchError((error: HttpErrorResponse) => {
-        if (error.status === 401) {
-          // Se o token expirou ou é inválido, desloga o usuário
-          this.authService.logout();
+        let errorMessage = 'Ocorreu um erro inesperado';
+
+        switch (error.status) {
+          case 401:
+            errorMessage = 'Sessão expirada. Por favor, faça login novamente.';
+            this.authService.logout(); 
+            break;
+
+          case 403:
+            errorMessage = 'Você não tem permissão para acessar este recurso.';
+            break;
+
+          default:
+            errorMessage = error.error?.message || error.message || errorMessage;
+            break;
         }
 
-        const errorMessage = error.error?.message || 'Erro de conexão com o servidor';
         this.notification.sendError(errorMessage);
-
         return throwError(() => error);
       })
     );
-
   }
 }
 
@@ -108,4 +62,4 @@ export const TokenInterceptorProvider = {
   provide: HTTP_INTERCEPTORS,
   useClass: TokenInterceptor,
   multi: true
-}
+};

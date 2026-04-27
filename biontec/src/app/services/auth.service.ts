@@ -1,6 +1,6 @@
 import {Injectable, EventEmitter, inject, signal, computed} from '@angular/core';
 import {HttpClient, HttpHeaders} from "@angular/common/http";
-import { Observable,tap,BehaviorSubject } from 'rxjs';
+import { Observable,tap } from 'rxjs';
 import {environment} from "../../environments/environment";
 import {Router} from "@angular/router";
 import {BaseService} from "./base.service";
@@ -56,11 +56,6 @@ import {TokenService} from "./token.service";
       })
     );
   }
-
-/*  login(credentials: ICredential): Observable<IToken>{
-   this.setUserName(credentials.username);
-    return this._http.post<IToken>(this.baseUrl+'login/?username='+credentials.username+'&password='+credentials.password+'','')
-  }*/
 
   logout() {
     localStorage.removeItem('token');
