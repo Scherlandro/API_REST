@@ -15,17 +15,19 @@ export class PurchaseStateService {
   private showBannerSubject = new BehaviorSubject<boolean>(false);
   private saleData = new BehaviorSubject<any>(null);
   private totalItemsCount = new BehaviorSubject<number>(0);
-  totalItemsCount$ = this.totalItemsCount.asObservable();
   private subscription: Subscription | null = null;
+
+  public totalItemsCount$ = this.totalItemsCount.asObservable();
   public showBanner$ = this.showBannerSubject.asObservable();
 
+  // 1. INICIALIZAÇÃO
   constructor(
     private authService: AuthService,
     private cartItensService: CartItensService,
     private userService: UserService,
   ) {
-    this.loadFromStorage();
-    this.initCartCountListener();
+    this.loadFromStorage();        // Primeiro: recupera dados locais
+    this.initCartCountListener();  // Segundo: ativa a escuta de mudanças
   }
 
   private loadFromStorage() {
@@ -35,19 +37,17 @@ export class PurchaseStateService {
     }
   }
 
-  syncCartFromDatabase(productIds: number[]) {
-    // Atualiza o BehaviorSubject sem duplicar
-    this.selectedProductsIds.next(productIds);
-    this.updateStorage(productIds);
-    this.refreshSaleData();
-    // A contagem será atualizada automaticamente pelo listener
+  private initCartCountListener() {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
+    // Sempre que 'selectedProductsIds' mudar, 'updateCartCount' é disparado
+    this.subscription = this.selectedProductsIds.subscribe(() => {
+      this.updateCartCount();
+    });
   }
 
-
-  private updateStorage(ids: number[]) {
-    localStorage.setItem('selectedProductsIds', JSON.stringify(ids));
-  }
-
+  // 2. MÉTODOS DE ATUALIZAÇÃO E SINCRONIZAÇÃO (ORQUESTRAÇÃO)
   private updateCartCount(): void {
     const currentUser = this.authService.getUserName();
 
@@ -56,6 +56,7 @@ export class PurchaseStateService {
       this.totalItemsCount.next(localCart.length);
       return;
     }
+
     const localCart = this.selectedProductsIds.value;
     this.totalItemsCount.next(localCart.length);
 
@@ -64,12 +65,10 @@ export class PurchaseStateService {
       take(1)
     ).subscribe({
       next: (itensCart: any[]) => {
-        // Verifica se há diferenças e sincroniza se necessário
         const dbIds = itensCart.map(item => item.productId);
         const localIds = this.selectedProductsIds.value;
 
         if (JSON.stringify(dbIds.sort()) !== JSON.stringify(localIds.sort())) {
-          // Sincroniza o estado local com o banco (se necessário)
           this.selectedProductsIds.next(dbIds);
           this.updateStorage(dbIds);
         }
@@ -78,25 +77,13 @@ export class PurchaseStateService {
     });
   }
 
-  private initCartCountListener() {
-    // Evita múltiplas assinaturas
-    if (this.subscription) {
-      this.subscription.unsubscribe();
-    }
-
-    this.subscription = this.selectedProductsIds.subscribe(() => {
-      this.updateCartCount();
-    });
+  syncCartFromDatabase(productIds: number[]) {
+    this.selectedProductsIds.next(productIds);
+    this.updateStorage(productIds);
+    this.refreshSaleData();
   }
 
-  getSelectedProducts(): Observable<number[]> {
-    return this.selectedProductsIds.asObservable();
-  }
-
-  getSelectedProductsValue(): number[] {
-    return this.selectedProductsIds.value;
-  }
-
+  // 3. AÇÕES DO USUÁRIO (MUTATION)
   addSelectedProduct(id: number) {
     const current = this.selectedProductsIds.value;
     if (!current.includes(id)) {
@@ -123,6 +110,13 @@ export class PurchaseStateService {
   }
 */
 
+  removeSelectedProduct(id: number) {
+    const updated = this.selectedProductsIds.value.filter(p => p !== id);
+    this.selectedProductsIds.next(updated);
+    this.updateStorage(updated);
+    this.refreshSaleData();
+  }
+
   addToDatabaseAndSync(userId: number, productId: number): Observable<any> {
     const cartItem = { userId, productId, quantity: 1 };
     return this.cartItensService.addCartItens(cartItem).pipe(
@@ -132,12 +126,18 @@ export class PurchaseStateService {
           const updated = [...current, productId];
           this.selectedProductsIds.next(updated);
           this.updateStorage(updated);
-        } }) );
+        }
+      })
+    );
+  }
+
+  // 4. PERSISTÊNCIA E SUPORTE
+  private updateStorage(ids: number[]) {
+    localStorage.setItem('selectedProductsIds', JSON.stringify(ids));
   }
 
   private refreshSaleData() {
     const currentSale = this.saleData.value || JSON.parse(localStorage.getItem('saleData') || '{}');
-
     if (currentSale && currentSale.productIds) {
       currentSale.productIds = this.selectedProductsIds.value;
       this.saleData.next(currentSale);
@@ -145,25 +145,7 @@ export class PurchaseStateService {
     }
   }
 
-  removeSelectedProduct(id: number) {
-    const updated = this.selectedProductsIds.value.filter(p => p !== id);
-    this.selectedProductsIds.next(updated);
-    this.updateStorage(updated);
-    this.refreshSaleData();
-  }
-
-  isProductInCart(id: number): boolean {
-    return this.selectedProductsIds.value.includes(id);
-  }
-
-  getCartCount(): Observable<number> {
-    return this.totalItemsCount$;
-  }
-
-  getCurrentCartCount(): number {
-    return this.totalItemsCount.value;
-  }
-
+  // 5. GESTÃO DE VENDA (SALES)
   startShoppingCart(userName: string) {
     const sale = {
       userName,
@@ -178,6 +160,32 @@ export class PurchaseStateService {
     return this.cartItensService.addCartItens(sale);
   }
 
+  clearSale() {
+    this.saleData.next(null);
+    localStorage.removeItem('saleData');
+  }
+
+  // 6. GETTERS E CONSULTAS (READ-ONLY)
+  getSelectedProducts(): Observable<number[]> {
+    return this.selectedProductsIds.asObservable();
+  }
+
+  getSelectedProductsValue(): number[] {
+    return this.selectedProductsIds.value;
+  }
+
+  isProductInCart(id: number): boolean {
+    return this.selectedProductsIds.value.includes(id);
+  }
+
+  getCartCount(): Observable<number> {
+    return this.totalItemsCount$;
+  }
+
+  getCurrentCartCount(): number {
+    return this.totalItemsCount.value;
+  }
+
   getSale(): Observable<any> {
     const stored = localStorage.getItem('saleData');
     if (stored && !this.saleData.value) {
@@ -186,18 +194,7 @@ export class PurchaseStateService {
     return this.saleData.asObservable();
   }
 
-  clearSale() {
-    this.saleData.next(null);
-    localStorage.removeItem('saleData');
-  }
-
-  // Limpeza para evitar memory leaks
-  ngOnDestroy() {
-    if (this.subscription) {
-      this.subscription.unsubscribe();
-    }
-  }
-
+  // 7. UI E ESTADO DE BANNER
   showBanner(show: boolean) {
     this.showBannerSubject.next(show);
     localStorage.setItem('show_banner', JSON.stringify(show));
@@ -207,8 +204,11 @@ export class PurchaseStateService {
     const stored = localStorage.getItem('show_banner');
     return stored ? JSON.parse(stored) : false;
   }
+
+  // 8. FINALIZAÇÃO
+  ngOnDestroy() {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
+  }
 }
-
-
-
-
