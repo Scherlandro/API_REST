@@ -63,3 +63,45 @@ export class AppComponent {
 
 
 }
+
+/*
+import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+
+// Componentes
+import { ErrorComponent } from './utils/error/error.component';
+
+// Material (Opcional: você pode importar um a um para melhor Tree Shaking)
+import { MatSidenavModule } from "@angular/material/sidenav";
+import { MatPaginatorModule } from "@angular/material/paginator";
+import { MatSortModule } from "@angular/material/sort";
+import { MatProgressBarModule } from "@angular/material/progress-bar";
+import { MatRippleModule } from "@angular/material/core";
+import { MatSnackBarModule } from "@angular/material/snack-bar";
+import { MatDialogModule } from "@angular/material/dialog";
+
+@Component({
+  selector: 'app-root',
+  standalone: true,
+  imports: [
+    CommonModule,
+    RouterModule,
+    FormsModule,
+    ReactiveFormsModule,
+    ErrorComponent, // Importado diretamente aqui
+    MatSidenavModule,
+    MatPaginatorModule,
+    MatSortModule,
+    MatProgressBarModule,
+    MatRippleModule,
+    MatSnackBarModule,
+    MatDialogModule
+  ],
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css'],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
+})
+export class AppComponent { }
+ */

@@ -39,7 +39,7 @@ export class TokenInterceptor implements HttpInterceptor {
         switch (error.status) {
           case 401:
             errorMessage = 'Sessão expirada. Por favor, faça login novamente.';
-            this.authService.logout(); 
+            this.authService.logout();
             break;
 
           case 403:
