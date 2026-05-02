@@ -1,7 +1,9 @@
 package com.biontecapi.controller;
 
 
+import com.biontecapi.dtos.CartItemDTO;
 import com.biontecapi.model.CartItem;
+import com.biontecapi.service.CartService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +16,7 @@ import java.util.List;
 public class CartController {
 
     @Autowired
-    private final CartService cartService;
+    private CartService cartService;
 
     @GetMapping("/{userId}")
     public ResponseEntity<List<CartItem>> getCart(@PathVariable Long userId) {
