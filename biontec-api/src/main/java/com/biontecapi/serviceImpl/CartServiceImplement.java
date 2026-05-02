@@ -28,6 +28,7 @@ public class CartServiceImplement implements CartService {
 
     @Override
     public Optional selectProd(Long userId, Long productId) {
+        System.out.println("ID_USUARIO & ID_PRODUTO" + userId + productId);
         return repository.findByUserIdAndProductId(userId, productId);
     }
 
