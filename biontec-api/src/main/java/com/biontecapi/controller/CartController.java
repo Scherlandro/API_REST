@@ -1,9 +1,7 @@
 package com.biontecapi.controller;
 
-import com.biontecapi.dtos.CartItemDTO;
+
 import com.biontecapi.model.CartItem;
-import com.biontecapi.service.CartService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,11 +11,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/cartItens")
-@RequiredArgsConstructor
 public class CartController {
 
     @Autowired
-    private CartService cartService;
+    private final CartService cartService;
 
     @GetMapping("/{userId}")
     public ResponseEntity<List<CartItem>> getCart(@PathVariable Long userId) {
@@ -52,4 +49,5 @@ public class CartController {
         cartService.clearCart(id);
         return ResponseEntity.noContent().build();
     }
+
 }

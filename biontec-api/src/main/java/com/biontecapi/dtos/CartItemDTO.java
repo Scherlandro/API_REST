@@ -2,7 +2,7 @@ package com.biontecapi.dtos;
 
 import lombok.Data;
 
-@Data
+/*@Data*/
 public class CartItemDTO {
     private Long id;
     private Long userId;

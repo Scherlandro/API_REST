@@ -91,6 +91,10 @@ export class PurchaseStateService {
       this.selectedProductsIds.next(updated);
       this.updateStorage(updated);
       this.refreshSaleData();
+      if (id) {
+         console.log('ID selecionado', id)
+        this.showBanner(true);
+      }
     }
   }
 /*
@@ -202,6 +206,7 @@ export class PurchaseStateService {
 
   getBanner(): boolean {
     const stored = localStorage.getItem('show_banner');
+    console.log('Valor do GetBanner', stored)
     return stored ? JSON.parse(stored) : false;
   }
 

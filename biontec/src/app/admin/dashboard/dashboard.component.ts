@@ -52,6 +52,7 @@ export class DashboardComponent implements OnInit {
   ngOnInit(): void {
     this.selectedUser = this.authService.getUserName();
     const bannerSalvo = this.purchaseState.getBanner();
+    console.log('Valor do Banner', bannerSalvo);
     this.purchaseState.showBanner(bannerSalvo);
     this.listarProdutos();
     this.prodSelecionado();
@@ -179,6 +180,7 @@ export class DashboardComponent implements OnInit {
       return;
     }
    // if (this.purchaseState.isProductInCart(productId)) {
+    console.log('Verificando o carrinho', this.carrinhoDeCompraService.selectProdForUser(email,productId))
     if (this.carrinhoDeCompraService.selectProdForUser(email,productId)) {
       this.notificationMsg.warn('Produto já está no carrinho!');
       return;
@@ -190,6 +192,7 @@ export class DashboardComponent implements OnInit {
           productId: productId,
           quantity: 1
         };
+        console.log('Banner no Dash', this.isBanner$, 'Cart', toCard)
         this.carrinhoDeCompraService.addCartItens(toCard).subscribe({
           next: (cart: any) => {
             this.notificationMsg.success('Produto adicionado ao carrinho!');
