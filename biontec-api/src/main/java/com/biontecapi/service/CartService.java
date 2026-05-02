@@ -12,6 +12,8 @@ public interface CartService {
 
     Optional selectProd(Long userId, Long productId);
 
+    List<CartItem> findForgottenItems(Integer days);
+
      CartItem saveCartItem(CartItemDTO dto) ;
 
      void removeFromCart(Long userId, Long productId);

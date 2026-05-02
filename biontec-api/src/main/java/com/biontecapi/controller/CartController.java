@@ -29,6 +29,11 @@ public class CartController {
         return ResponseEntity.ok(cartService.selectProd(userId, productId));
     }
 
+    @GetMapping("/forgotten/{days}")
+    public ResponseEntity findForgottenItems(@PathVariable("days") Integer days) {
+        return ResponseEntity.ok(cartService.findForgottenItems(days));
+    }
+
     @PostMapping("/salvar")
     public ResponseEntity<CartItem> addItem(@RequestBody CartItemDTO dto) {
         return ResponseEntity.ok(cartService.saveCartItem(dto));

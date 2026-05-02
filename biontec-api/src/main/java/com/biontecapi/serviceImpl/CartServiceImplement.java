@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,6 +31,13 @@ public class CartServiceImplement implements CartService {
     public Optional selectProd(Long userId, Long productId) {
         System.out.println("ID_USUARIO "+ userId + "ID_PRODUTO "  + productId);
         return repository.findByUserIdAndProductId(userId, productId);
+    }
+
+    //// Calcula a data de 5 dias atrás no Java
+    @Override
+    public List<CartItem> findForgottenItems(Integer days) {
+        LocalDateTime cincoDiasAtras = LocalDateTime.now().minusDays(days);
+      return repository.findForgottenItems(cincoDiasAtras);
     }
 
     @Override
@@ -57,6 +65,7 @@ public class CartServiceImplement implements CartService {
     public void removeFromCart(Long userId, Long productId) {
         repository.deleteByUserIdAndProductId(userId, productId);
     }
+
 
     @Override
     public void clearCart(Long id) {
