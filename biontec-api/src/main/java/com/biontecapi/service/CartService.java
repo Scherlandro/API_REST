@@ -10,11 +10,13 @@ public interface CartService {
 
     List<CartItem> listByUser(Long userId) ;
 
-    Optional selectProd(Long userId, Long productId);
+    Optional<CartItem> getItemCartForUserIdEndProdId(Long userId, Long productId);
 
     List<CartItem> findForgottenItems(Integer days);
 
      CartItem saveCartItem(CartItemDTO dto) ;
+
+    void clearForgottenItensCart();
 
      void removeFromCart(Long userId, Long productId);
 

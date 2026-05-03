@@ -6,6 +6,7 @@ import com.biontecapi.model.CartItem;
 import com.biontecapi.repository.CartItemRepository;
 import com.biontecapi.service.CartService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,16 +29,15 @@ public class CartServiceImplement implements CartService {
     }
 
     @Override
-    public Optional selectProd(Long userId, Long productId) {
+    public Optional<CartItem> getItemCartForUserIdEndProdId(Long userId, Long productId) {
         System.out.println("ID_USUARIO "+ userId + "ID_PRODUTO "  + productId);
         return repository.findByUserIdAndProductId(userId, productId);
     }
 
-    //// Calcula a data de 5 dias atrás no Java
     @Override
     public List<CartItem> findForgottenItems(Integer days) {
-        LocalDateTime cincoDiasAtras = LocalDateTime.now().minusDays(days);
-      return repository.findForgottenItems(cincoDiasAtras);
+        LocalDateTime daysAgo = LocalDateTime.now().minusDays(days);
+      return repository.findForgottenItems(daysAgo);
     }
 
     @Override
@@ -66,6 +66,12 @@ public class CartServiceImplement implements CartService {
         repository.deleteByUserIdAndProductId(userId, productId);
     }
 
+    @Scheduled(cron = "0 0 0 * * ?")
+    @Override
+    public void clearForgottenItensCart() {
+        LocalDateTime limite = LocalDateTime.now().minusDays(5);
+        repository.deleteForgottenItems(limite);
+    }
 
     @Override
     public void clearCart(Long id) {

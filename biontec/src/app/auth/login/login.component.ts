@@ -12,6 +12,7 @@ import {delay} from "rxjs/operators";
 import {FormControl, Validators,FormBuilder, FormGroup} from '@angular/forms';
 import {IpService} from "../../services/ip.service";
 import {NotificationMgsService} from "../../services/notification-mgs.service";
+import {PurchaseStateService} from "../../services/purchase-state.service";
 
 @Component({
   selector: 'app-login',
@@ -36,6 +37,7 @@ export class LoginComponent implements OnInit {
     private authService: AuthService,
     private tokenService: TokenService,
     private userService: UserService,
+    private purchaseState: PurchaseStateService,
     public dialog: MatDialog,
     private fb: FormBuilder,
     private ipService: IpService,

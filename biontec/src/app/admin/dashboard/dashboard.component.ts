@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {FormControl} from "@angular/forms";
-import {forkJoin, of, switchMap} from "rxjs";
+import {forkJoin, of, switchMap, take} from "rxjs";
 import {NotificationMgsService} from "../../services/notification-mgs.service";
 import {PageEvent} from "@angular/material/paginator";
 import {iProduto} from "../../interfaces/product";
@@ -51,69 +51,35 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit(): void {
     this.selectedUser = this.authService.getUserName();
-    const bannerSalvo = this.purchaseState.getBanner();
-    console.log('Valor do Banner', bannerSalvo);
-    this.purchaseState.showBanner(bannerSalvo);
-    this.listarProdutos();
-    this.prodSelecionado();
-    this.loadCartProducts();
-    //this.processarPendenciasPosLogin();
-  }
-
-/*
-  private processarPendenciasPosLogin() {
-    const pendingId = this.purchaseState.getStoredProductId();
-
+    this.isBanner$.subscribe(valor => {
+      console.log('O valor real do banner é:', valor, 'Vlaor prod', this.selectedProduct);
+    });
     if (this.selectedUser) {
-      this.userService.getUserByUserName(this.selectedUser).subscribe(user => {
-        if (pendingId) {
-          // Se tem algo no localStorage, salva no banco primeiro
-          const toCart = { userId: user.id_usuario, productId: pendingId, quantity: 1 };
-
-          this.carrinhoDeCompraService.addCartItens(toCart).subscribe({
-            next: () => {
-              // Após salvar com sucesso, limpamos o localStorage para não processar de novo
-              this.purchaseState.clearStorageIds();
-              // Agora carregamos o carrinho COMPLETO do banco
-              this.atualizarEstadoGeralDoCarrinho(user.id_usuario, pendingId);
-            },
-            error: () => this.atualizarEstadoGeralDoCarrinho(user.id_usuario)
-          });
-        } else {
-          // Se não tinha nada no localStorage, apenas carrega o que já era do usuário
-          this.atualizarEstadoGeralDoCarrinho(user.id_usuario);
-        }
-      });
+      // Prioridade total ao Banco de Dados se estiver logado
+      this.refreshCartFromDatabase();
     }
+
+    this.listarProdutos();
+    this.loadCartProducts();
   }
 
-  private atualizarEstadoGeralDoCarrinho(userId: number, highlightId?: number) {
-    this.carrinhoDeCompraService.getCartofUser(userId).subscribe(cartItems => {
-      const dbIds = cartItems.map((item: any) => item.productId);
 
-      // Atualiza o Service com os IDs REAIS do banco
-      this.purchaseState.syncCartFromDatabase(dbIds);
-
-      // Se houver um ID para destacar (o que foi adicionado agora), abre o banner
-      if (highlightId) {
-        this.loadProductDetails(highlightId);
-        this.purchaseState.showBanner(true);
-      }
-
-      // Carrega os detalhes visuais de todos os produtos do banco para o banner/lista
-      this.loadCartProducts();
-    });
-  }
-*/
-
-  prodSelecionado() {
-    this.purchaseState.getSelectedProducts().subscribe(productId => {
-      if (productId && productId.length > 0) {
-        const lastId = productId[productId.length - 1];
-        this.loadProductDetails(lastId);
+  listarProdutos() {
+    this.spiner = true;
+    this.prodService.getTodosProdutos().subscribe({
+      next: (res: iProduto[]) => {
+        this.products = res;
+        this.produtosFiltrados = res;
+        this.updatePagedProdutos();
+        this.spiner = false;
+      },
+      error: () => {
+        this.spiner = false;
+        this.onError('Erro ao carregar produtos');
       }
     });
   }
+
 
   loadProductDetails(productId: number) {
     this.prodService.getIdProduto(productId).subscribe({
@@ -126,94 +92,43 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  // -------------------------
-  // 🔹 CARRINHO
-  // -------------------------
-  loadCartProducts() {
-    this.purchaseState.getSelectedProducts().pipe(
-      switchMap(ids => {
-        if (!ids || ids.length === 0) {
-          return of([]);
-        }
-        const req = ids.map(id =>
-          this.prodService.getIdProduto(id)
-        );
-        return forkJoin([...req]);
-      })
-    ).subscribe({
-      next: (responses: any[]) => {
-        this.cartProducts = responses.map(res => res.body || res);
-      },
-      error: (err) => console.error(err)
-    });
-  }
-
-  public isProductInCart(productId: number): boolean {
-    return this.purchaseState.isProductInCart(productId);
-  }
-
-  goToShoppingCart() {
-    this.purchaseState.startShoppingCart(this.selectedUser);
-    this.purchaseState.showBanner(false);
-    this.router.navigate(['/admin/carrinho-de-compras']);
-  }
-
-  buyNow(productId: number) {
-    if (!this.purchaseState.isProductInCart(productId)) {
-      this.purchaseState.addSelectedProduct(productId);
-      this.loadProductDetails(productId);
-    }
-  }
-
-  clearHighlight() {
-    this.selectedProduct = null;
-    this.purchaseState.clearSale();
-    this.purchaseState.showBanner(false);
-    this.highlightProductInList(-1);
-  }
-
   addToCart(productId: number) {
     const email = this.selectedUser;
-
     if (!email) {
       this.onError('Usuário não identificado.');
       return;
     }
-   // if (this.purchaseState.isProductInCart(productId)) {
-    console.log('Verificando o carrinho', this.carrinhoDeCompraService.selectProdForUser(email,productId))
-    if (this.carrinhoDeCompraService.selectProdForUser(email,productId)) {
-      this.notificationMsg.warn('Produto já está no carrinho!');
-      return;
-    }
     this.userService.getUserByUserName(email).subscribe({
       next: (user: IUser) => {
-        const toCard = {
-          userId: user.id_usuario,
-          productId: productId,
-          quantity: 1
-        };
-        console.log('Banner no Dash', this.isBanner$, 'Cart', toCard)
-        this.carrinhoDeCompraService.addCartItens(toCard).subscribe({
-          next: (cart: any) => {
-            this.notificationMsg.success('Produto adicionado ao carrinho!');
-            this.purchaseState.addSelectedProduct(productId);
-            this.loadCartProductsFromDatabase(user.id_usuario);
-            this.loadProductDetails(productId);
-            this.purchaseState.showBanner(true);
-            // Opcional: limpar o ID temporário para não repetir o processo no F5
-            // localStorage.removeItem('selectedProductsIds');
-          },
-          error: (err: any) => {
-            this.onError('Erro ao salvar item no carrinho.');
-            console.error(err);
-          }
-        });
-      },
-      error: (err) => {
-        console.error('Erro ao localizar o usuário:', err);
-        this.onError('Não foi possível validar o usuário.');
-      }
+        this.carrinhoDeCompraService.getItemCartForUser(user.id_usuario, productId).subscribe({
+          next: (res: any) => {
+            if (res) {
+              this.notificationMsg.warn('Produto já está no carrinho!');
+            } else {
+              this.buyNow(productId);
+              //this.saveToCart(user.id_usuario, productId);
+            }}, error: () => this.buyNow(productId)  // this.goToShoppingCart(productId) //this.saveToCart(user.id_usuario, productId) // Se der 404, assume que não existe
+        });}
     });
+  }
+
+  private saveToCart(userId: number, productId: number) {
+    const toCard = { userId, productId, quantity: 1 };
+    this.carrinhoDeCompraService.addCartItens(toCard).subscribe({
+      next: () => {
+        this.notificationMsg.success('Produto adicionado!');
+        this.loadCartProductsFromDatabase(userId);
+        this.purchaseState.showBanner(true);
+      },
+      error: (err) => this.onError('Erro ao salvar item.')
+    });
+  }
+
+  buyNow(productId: number) {
+    if (!this.purchaseState.isProductInCart(productId)) {
+     // this.purchaseState.addSelectedProduct(productId);
+      this.loadProductDetails(productId);
+    }
   }
 
   private loadCartProductsFromDatabase(userId: number) {
@@ -226,6 +141,81 @@ export class DashboardComponent implements OnInit {
       },
       error: (err) => console.error('Erro ao carregar carrinho do banco:', err)
     });
+  }
+
+  updatePagedProdutos() {
+    const start = this.currentPage * this.pageSize;
+    this.pagedProdutosFiltrados =
+      this.produtosFiltrados.slice(start, start + this.pageSize);
+  }
+
+  private refreshCartFromDatabase() {
+    this.userService.getUserByUserName(this.selectedUser).pipe(
+      switchMap(user => this.carrinhoDeCompraService.getCartofUser(user.id_usuario)),
+      take(1)
+    ).subscribe({
+      next: (cartItems) => {
+        const ids = cartItems.map(item => item.productId);
+        this.purchaseState.syncCartFromDatabase(ids);
+      },
+      error: (err) => console.error('Erro ao sincronizar banco:', err)
+    });
+  }
+
+  goToShoppingCart(productId?: number) {
+    const localIds = JSON.parse(localStorage.getItem('selectedProductsIds') || '[]');
+
+    // Se houver itens no localStorage, salva no BD antes de ir para o carrinho
+    if (localIds.length > 0 && this.selectedUser) {
+
+      this.userService.getUserByUserName(this.selectedUser).subscribe(user => {
+        const requests = localIds.map((id:any) =>
+          this.carrinhoDeCompraService.addCartItens({ userId: user.id_usuario, productId: id, quantity: 1 })
+        );
+
+        forkJoin(requests).subscribe(() => {
+          this.purchaseState.syncCartFromDatabase([]); // Limpa local após salvar
+          //this.purchaseState.updateCountFromDatabase(this.selectedUser);
+          this.refreshCartFromDatabase(); // Atualiza contador com dados do BD
+          this.finalizeNavigation();
+        });
+      });
+    } else {
+      this.finalizeNavigation();
+    }
+  }
+
+  private finalizeNavigation() {
+    this.purchaseState.showBanner(false);
+    this.router.navigate(['/admin/carrinho-de-compras']);
+  }
+
+
+  loadCartProducts() {
+    this.purchaseState.getSelectedProducts().pipe(
+      switchMap(ids => {
+        if (!ids || ids.length === 0) return of([]);
+
+        // Criamos o array de chamadas
+        const requests = ids.map(id => this.prodService.getIdProduto(id));
+
+        // Usamos o spread operator (...) para satisfazer a tipagem do forkJoin
+        return forkJoin([...requests]);
+      })
+    ).subscribe({
+      next: (responses: any[]) => {
+        this.cartProducts = responses.map((res: any) => res.body || res);
+      },
+      error: (err) => console.error('Erro ao carregar produtos do carrinho:', err)
+    });
+  }
+
+
+  clearHighlight() {
+    this.selectedProduct = null;
+   // this.purchaseState.clearSale();
+    this.purchaseState.showBanner(false);
+    this.highlightProductInList(-1);
   }
 
   removeFromCart(productId: number) {
@@ -250,22 +240,6 @@ export class DashboardComponent implements OnInit {
     this.updatePagedProdutos();
   }
 
-  listarProdutos() {
-    this.spiner = true;
-    this.prodService.getTodosProdutos().subscribe({
-      next: (res: iProduto[]) => {
-        this.products = res;
-        this.produtosFiltrados = res;
-        this.updatePagedProdutos();
-        this.spiner = false;
-      },
-      error: () => {
-        this.spiner = false;
-        this.onError('Erro ao carregar produtos');
-      }
-    });
-  }
-
   consultarPorNome(nome: string) {
     if (!nome) {
       this.produtosFiltrados = this.products;
@@ -285,11 +259,7 @@ export class DashboardComponent implements OnInit {
     this.updatePagedProdutos();
   }
 
-  updatePagedProdutos() {
-    const start = this.currentPage * this.pageSize;
-    this.pagedProdutosFiltrados =
-      this.produtosFiltrados.slice(start, start + this.pageSize);
-  }
+
 
   getImageUrl(foto: string): SafeUrl {
     return this.sanitizer.bypassSecurityTrustUrl(

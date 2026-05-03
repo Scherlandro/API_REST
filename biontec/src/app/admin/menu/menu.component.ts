@@ -35,6 +35,7 @@ export class MenuComponent implements OnInit {
   logout(): void{
     // this.tokenService.clearToken()
     this.authService.logout();
+    this.purchaseState.clearAllState();
   }
 
 /*

@@ -23,10 +23,14 @@ public class CartController {
         return ResponseEntity.ok(cartService.listByUser(userId));
     }
 
-    @GetMapping("/selectProd/{userId}/{productId}")
-    public ResponseEntity getItemCart(@PathVariable("userId") Long userId,
-                                      @PathVariable("productId") Long productId) {
-        return ResponseEntity.ok(cartService.selectProd(userId, productId));
+    @GetMapping("/getItemCartForUser/{userId}/{productId}")
+    public ResponseEntity<CartItem> getItemCartForUserIdEndProdId(
+            @PathVariable("userId") Long userId,
+            @PathVariable("productId") Long productId) {
+
+        return cartService.getItemCartForUserIdEndProdId(userId, productId)
+                .map(item -> ResponseEntity.ok((CartItem) item))
+                .orElse(ResponseEntity.noContent().build());
     }
 
     @GetMapping("/forgotten/{days}")
