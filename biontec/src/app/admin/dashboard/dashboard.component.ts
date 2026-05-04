@@ -26,6 +26,7 @@ export class DashboardComponent implements OnInit {
   selectedUser!: string;
   cartProducts: iProduto[] = [];
   selectedProduct: any;
+  selectedIdProdLoclSt = this.purchaseState.getProdSelect();
   spiner = false;
   isBanner$ = this.purchaseState.showBanner$;
   pageSize = 20;
@@ -51,18 +52,25 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit(): void {
     this.selectedUser = this.authService.getUserName();
-    this.isBanner$.subscribe(valor => {
-      console.log('O valor real do banner é:', valor, 'Vlaor prod', this.selectedProduct);
-    });
     if (this.selectedUser) {
-      // Prioridade total ao Banco de Dados se estiver logado
       this.refreshCartFromDatabase();
     }
-
+    this.isBanner$.subscribe(valor => {
+      console.log('O valor real do banner é:', valor);
+      if (valor) {
+        const idsNoEstado = this.purchaseState.getSelectedIdsValue();
+        if (idsNoEstado.length > 0) {
+          const ultimoId = idsNoEstado[idsNoEstado.length - 1];
+           this.buyNow(ultimoId);
+        }
+      }
+    });
+    if (this.selectedUser) {
+      this.refreshCartFromDatabase();
+    }
     this.listarProdutos();
     this.loadCartProducts();
   }
-
 
   listarProdutos() {
     this.spiner = true;
@@ -80,8 +88,8 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-
   loadProductDetails(productId: number) {
+
     this.prodService.getIdProduto(productId).subscribe({
       next: (response) => {
         this.selectedProduct = response.body || response;
@@ -105,36 +113,43 @@ export class DashboardComponent implements OnInit {
             if (res) {
               this.notificationMsg.warn('Produto já está no carrinho!');
             } else {
-              this.buyNow(productId);
+
+              this.loadProductDetails(productId);
+              // this.buyNow(productId);
               //this.saveToCart(user.id_usuario, productId);
-            }}, error: () => this.buyNow(productId)  // this.goToShoppingCart(productId) //this.saveToCart(user.id_usuario, productId) // Se der 404, assume que não existe
-        });}
+              this.purchaseState.showBanner(true);
+            }
+          }, error: () => this.notificationMsg.warn('Produto não existe!') //this.saveToCart(user.id_usuario, productId) // Se der 404, assume que não existe
+        });
+      }
     });
   }
 
   private saveToCart(userId: number, productId: number) {
-    const toCard = { userId, productId, quantity: 1 };
+    const toCard = {userId, productId, quantity: 1};
     this.carrinhoDeCompraService.addCartItens(toCard).subscribe({
       next: () => {
         this.notificationMsg.success('Produto adicionado!');
-        this.loadCartProductsFromDatabase(userId);
-        this.purchaseState.showBanner(true);
+        this.prodService.getIdProduto(productId).subscribe(res => {
+          this.selectedProduct = res.body || res; // Define o produto do banner
+          this.purchaseState.showBanner(true);
+          this.loadCartProductsFromDatabase(userId);
+        });
       },
       error: (err) => this.onError('Erro ao salvar item.')
     });
   }
 
-  buyNow(productId: number) {
-    if (!this.purchaseState.isProductInCart(productId)) {
-     // this.purchaseState.addSelectedProduct(productId);
-      this.loadProductDetails(productId);
+    buyNow(productId: any) {
+      if (productId) {
+        this.loadProductDetails(productId);
+      }
     }
-  }
+
 
   private loadCartProductsFromDatabase(userId: number) {
     this.carrinhoDeCompraService.getCartofUser(userId).subscribe({
       next: (cartItems: any[]) => {
-        // Extrai os IDs dos produtos do carrinho
         const productIds = cartItems.map(item => item.productId);
         this.purchaseState.syncCartFromDatabase(productIds);
         this.loadCartProducts(); // Recarrega os detalhes
@@ -162,20 +177,20 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  goToShoppingCart(productId?: number) {
+  goToShoppingCart() {
     const localIds = JSON.parse(localStorage.getItem('selectedProductsIds') || '[]');
 
+    console.log('IdProd no goToShoppingCart', localIds)
     // Se houver itens no localStorage, salva no BD antes de ir para o carrinho
     if (localIds.length > 0 && this.selectedUser) {
 
       this.userService.getUserByUserName(this.selectedUser).subscribe(user => {
-        const requests = localIds.map((id:any) =>
-          this.carrinhoDeCompraService.addCartItens({ userId: user.id_usuario, productId: id, quantity: 1 })
+        const requests = localIds.map((id: any) =>
+          this.carrinhoDeCompraService.addCartItens({userId: user.id_usuario, productId: id, quantity: 1})
         );
 
         forkJoin(requests).subscribe(() => {
-          this.purchaseState.syncCartFromDatabase([]); // Limpa local após salvar
-          //this.purchaseState.updateCountFromDatabase(this.selectedUser);
+          this.purchaseState.syncCartFromDatabase([]);
           this.refreshCartFromDatabase(); // Atualiza contador com dados do BD
           this.finalizeNavigation();
         });
@@ -194,17 +209,22 @@ export class DashboardComponent implements OnInit {
   loadCartProducts() {
     this.purchaseState.getSelectedProducts().pipe(
       switchMap(ids => {
-        if (!ids || ids.length === 0) return of([]);
+        if (!ids || ids.length === 0)
+          this.selectedProduct = null;
+        return of([]);
 
-        // Criamos o array de chamadas
         const requests = ids.map(id => this.prodService.getIdProduto(id));
 
-        // Usamos o spread operator (...) para satisfazer a tipagem do forkJoin
         return forkJoin([...requests]);
       })
     ).subscribe({
       next: (responses: any[]) => {
         this.cartProducts = responses.map((res: any) => res.body || res);
+        if (this.cartProducts.length > 0 && !this.selectedProduct) {
+          this.selectedProduct = this.cartProducts[this.cartProducts.length - 1];
+          this.highlightProductInList(this.selectedProduct.idProduto);
+        }
+
       },
       error: (err) => console.error('Erro ao carregar produtos do carrinho:', err)
     });
@@ -213,7 +233,7 @@ export class DashboardComponent implements OnInit {
 
   clearHighlight() {
     this.selectedProduct = null;
-   // this.purchaseState.clearSale();
+    // this.purchaseState.clearSale();
     this.purchaseState.showBanner(false);
     this.highlightProductInList(-1);
   }
@@ -258,8 +278,6 @@ export class DashboardComponent implements OnInit {
     this.pageSize = event.pageSize;
     this.updatePagedProdutos();
   }
-
-
 
   getImageUrl(foto: string): SafeUrl {
     return this.sanitizer.bypassSecurityTrustUrl(
