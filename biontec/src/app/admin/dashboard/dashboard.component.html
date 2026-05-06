@@ -1,8 +1,6 @@
 
 <div>
 
-
-
   <div *ngIf="(isBanner$ | async) && selectedProduct" class="selected-product-banner">
 
     <mat-card appearance="outlined" *ngIf="selectedProduct" class="body">
@@ -51,8 +49,7 @@
           </button>
         </mat-card-content>
 
-        <mat-list class="banner-products" *ngFor="let product of cartProducts"   >
-
+       <mat-list class="banner-products" *ngFor="let product of cartProducts; trackBy: trackById">
           <mat-list-item class="banner-product-item"  >
             <img matListItemAvatar [src]="getImageUrl(product.fotoProduto)" *ngIf="product.fotoProduto">
             <span class="product-descrision">{{product.nomeProduto}}</span>
@@ -72,8 +69,6 @@
       </div>
     </mat-card>
   </div>
-
-
 
 
   <div>
