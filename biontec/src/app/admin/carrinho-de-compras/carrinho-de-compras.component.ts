@@ -12,6 +12,8 @@ import {ErrorDiologComponent} from "../../shared/dialogs/error-diolog/error-diol
 import {MatDialog} from "@angular/material/dialog";
 import {AuthService} from "../../services/auth.service";
 import {iCartItens} from "../../interfaces/cart-itens";
+import {DialogPagamentosComponent} from "../../shared/dialogs/dialog-pagamentos/dialog-pagamentos.component";
+import {iPagamento} from "../../interfaces/pagamento";
 
 
 @Component({
@@ -163,12 +165,38 @@ export class CarrinhoDeComprasComponent implements OnInit {
   }
 
   continuarCompra() {
-    const irParaVenda = this.listVds;
-      /*.flatMap((v:iVendas) => v.produtos)
-      .filter((p: iProduto) => p.nomeProduto);*/
-    console.log('Compra:', irParaVenda);
-    alert(`Descrição ${irParaVenda} Total: R$ ${this.total.toFixed(2)}`);
+    const cartData: any = { ...this.listVds };
+
+    console.log('Cart para venda->', cartData)
+    const origem: iVendas = {
+      idVenda: cartData.idVenda,
+      cliente: cartData.cliente,
+      idFuncionario: cartData.idFuncionario,
+      nomeFuncionario: cartData.nomeFuncionario,
+      dtVenda: cartData.dtVenda,
+      subtotal: cartData.subtotal,
+      desconto: cartData.desconto,
+      totalgeral: cartData.totalgeral,
+      formasDePagamento: cartData.formasDePagamento,
+      qtdDeParcelas: cartData.qtdDeParcelas,
+      itensVd: cartData.itensVd || cartData.iItensVd
+    };
+
+    const novoPagamento: iPagamento = {
+      origemId: origem.idVenda,
+      pagador: origem.cliente,
+      tipoOrigem: 'Carrinho de Compras',
+      status: 1,
+      dtPagamento: origem.dtVenda,
+      valorPago: this.total,
+      formaPagamento: origem.formasDePagamento
+    };
+
+    const dadosFormatados = JSON.stringify(novoPagamento, null, 2);
+
+    alert("Conferência do Novo Pagamento:\n\n" + dadosFormatados);
   }
+
 
   getImageUrl(foto: string): string {
     return foto
