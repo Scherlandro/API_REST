@@ -3,7 +3,18 @@ import {iVendas} from "../../interfaces/vendas";
 import {PurchaseStateService} from "../../services/purchase-state.service";
 import {ProductService} from "../../services/product.service";
 import {iProduto} from "../../interfaces/product";
-import {finalize, forkJoin, pipe, of, switchMap,catchError, map} from "rxjs";
+import {
+  finalize,
+  forkJoin,
+  pipe,
+  of,
+  switchMap,
+  catchError,
+  map,
+  Observable,
+  debounceTime,
+  distinctUntilChanged, takeUntil
+} from "rxjs";
 import {ICliente} from "../../interfaces/cliente";
 import {UserService} from "../../services/user.service";
 import {IUser} from "../../interfaces/user";
@@ -14,6 +25,9 @@ import {AuthService} from "../../services/auth.service";
 import {iCartItens} from "../../interfaces/cart-itens";
 import {DialogPagamentosComponent} from "../../shared/dialogs/dialog-pagamentos/dialog-pagamentos.component";
 import {iPagamento} from "../../interfaces/pagamento";
+import {FormControl, Validators} from "@angular/forms";
+import {ClienteService} from "../../services/cliente.service";
+import {startWith} from "rxjs/operators";
 
 
 @Component({
@@ -29,6 +43,8 @@ export class CarrinhoDeComprasComponent implements OnInit {
   total = 0;
   carregando = true;
   cliente$!: ICliente;
+  clientesFiltradvenda!: Observable<ICliente[]>;
+  clienteControl = new FormControl('', [Validators.required]);
   selectedUser!: string;
 
   constructor(
@@ -36,6 +52,7 @@ export class CarrinhoDeComprasComponent implements OnInit {
     private carrinhoDeCompraService: CartItensService,
     private prodService: ProductService,
     private userService: UserService,
+    private clienteService: ClienteService,
     public dialog: MatDialog,
     private purchaseState: PurchaseStateService
   ) {
@@ -44,6 +61,7 @@ export class CarrinhoDeComprasComponent implements OnInit {
   ngOnInit(): void {
     this.selectedUser = this.authService.getUserName();
     this.loadInitialData();
+  //  this.setupAutocompleteFilters();
   }
 
   loadInitialData() {
@@ -109,6 +127,27 @@ export class CarrinhoDeComprasComponent implements OnInit {
     });
   }
 
+  setupAutocompleteFilters() {
+
+    this.clientesFiltradvenda = this.clienteControl.valueChanges.pipe(
+      startWith(''),
+      debounceTime(250),
+      distinctUntilChanged(),
+      switchMap(value =>
+        typeof value === 'string' && value.length >= 1
+          ? this.clienteService.getClientePorNome(value)
+          : of([])
+      ),
+      catchError(() => of([])),
+     // takeUntil(this.destroy$)
+    );
+  }
+
+  displayCli(cliente: ICliente): string {
+    this.cliente$ = cliente;
+    return cliente ? cliente.nomeCliente : '';
+  }
+
   calcularTotal() {
     this.total = this.listVds.reduce((acc, vendedor) => {
       const subtotalVendedor = vendedor.produtos.reduce((sum: number, p: any) => {
@@ -167,7 +206,7 @@ export class CarrinhoDeComprasComponent implements OnInit {
   continuarCompra() {
     const cartData: any = { ...this.listVds };
 
-    console.log('Cart para venda->', cartData)
+    console.log('1 Cart para venda->', cartData)
     const origem: iVendas = {
       idVenda: cartData.idVenda,
       cliente: cartData.cliente,
@@ -176,15 +215,16 @@ export class CarrinhoDeComprasComponent implements OnInit {
       dtVenda: cartData.dtVenda,
       subtotal: cartData.subtotal,
       desconto: cartData.desconto,
-      totalgeral: cartData.totalgeral,
+      totalgeral: this.total,
       formasDePagamento: cartData.formasDePagamento,
       qtdDeParcelas: cartData.qtdDeParcelas,
       itensVd: cartData.itensVd || cartData.iItensVd
     };
+    console.log('2 Cart para venda ->', origem)
 
     const novoPagamento: iPagamento = {
       origemId: origem.idVenda,
-      pagador: origem.cliente,
+      pagador: this.cliente$,
       tipoOrigem: 'Carrinho de Compras',
       status: 1,
       dtPagamento: origem.dtVenda,
@@ -192,9 +232,15 @@ export class CarrinhoDeComprasComponent implements OnInit {
       formaPagamento: origem.formasDePagamento
     };
 
+    console.log('3 Cart para venda ->', novoPagamento)
+
     const dadosFormatados = JSON.stringify(novoPagamento, null, 2);
 
-    alert("Conferência do Novo Pagamento:\n\n" + dadosFormatados);
+   // alert("Conferência do Novo Pagamento:\n\n" + dadosFormatados);
+
+    this.dialog.open(DialogPagamentosComponent, {
+      data: { ...novoPagamento }
+    });
   }
 
 

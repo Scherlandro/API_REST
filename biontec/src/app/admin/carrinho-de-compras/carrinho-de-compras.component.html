@@ -44,6 +44,28 @@
   <div class="resumo-container">
     <div class="resumo-card">
       <h3>Resumo da compra</h3>
+
+
+      <!-- Cliente -->
+      <mat-form-field   appearance="fill">
+        <mat-label>Cliente</mat-label>
+        <input type="text"
+               placeholder="Digite o Cliente"
+               matInput
+               [formControl]="clienteControl"
+               [matAutocomplete]="autcli"
+               (click)="setupAutocompleteFilters()"
+        />
+        <mat-error>Campo Obrigatório não preenchido.</mat-error>
+        <mat-autocomplete #autcli="matAutocomplete" [displayWith]="displayCli">
+          <mat-option *ngFor="let cliente of clientesFiltradvenda | async" [value]="cliente">
+            {{cliente.nomeCliente}}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+
+
+
       <div class="resumo-total">
         <span>Total</span>
         <strong>R$ {{ total | number:'1.2-2' }}</strong>
