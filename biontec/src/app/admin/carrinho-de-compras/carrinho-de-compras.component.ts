@@ -144,8 +144,12 @@ export class CarrinhoDeComprasComponent implements OnInit {
   }
 
   displayCli(cliente: ICliente): string {
-    this.cliente$ = cliente;
     return cliente ? cliente.nomeCliente : '';
+  }
+
+  onClienteSelecionado(event: any) {
+    this.cliente$ = event.option.value;
+    console.log('Cliente efetivamente selecionado:', this.cliente$);
   }
 
   calcularTotal() {
@@ -204,8 +208,14 @@ export class CarrinhoDeComprasComponent implements OnInit {
   }
 
   continuarCompra() {
-    const cartData: any = { ...this.listVds };
+    this.clienteControl.markAsTouched();
 
+    if (this.clienteControl.invalid || !this.cliente$) {
+      this.onError('Por favor, selecione um cliente antes de continuar.');
+      return;
+    }
+    //const cartData: any = { ...this.listVds };
+    const cartData: any = this.listVds[0];
     console.log('1 Cart para venda->', cartData)
     const origem: iVendas = {
       idVenda: cartData.idVenda,

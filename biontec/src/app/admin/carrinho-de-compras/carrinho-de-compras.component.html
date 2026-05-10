@@ -47,7 +47,7 @@
 
 
       <!-- Cliente -->
-      <mat-form-field   appearance="fill">
+     <!-- <mat-form-field   appearance="fill">
         <mat-label>Cliente</mat-label>
         <input type="text"
                placeholder="Digite o Cliente"
@@ -59,7 +59,23 @@
         <mat-error>Campo Obrigatório não preenchido.</mat-error>
         <mat-autocomplete #autcli="matAutocomplete" [displayWith]="displayCli">
           <mat-option *ngFor="let cliente of clientesFiltradvenda | async" [value]="cliente">
-            {{cliente.nomeCliente}}
+            {{ cliente.nomeCliente }}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>-->
+
+
+      <mat-form-field>
+        <input type="text"
+               placeholder="Digite o Cliente"
+               matInput
+               [formControl]="clienteControl"
+               [matAutocomplete]="auto"
+               (click)="setupAutocompleteFilters()"    >
+        <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayCli"
+                          (optionSelected)="onClienteSelecionado($event)">
+          <mat-option *ngFor="let cliente of clientesFiltradvenda | async" [value]="cliente">
+            {{ cliente.nomeCliente }}
           </mat-option>
         </mat-autocomplete>
       </mat-form-field>
@@ -70,7 +86,18 @@
         <span>Total</span>
         <strong>R$ {{ total | number:'1.2-2' }}</strong>
       </div>
-      <button class="btn-continuar" (click)="continuarCompra()">Continuar a compra</button>
+
+      <button mat-raised-button
+              color="primary"
+              (click)="continuarCompra()"
+              [disabled]="clienteControl.invalid">
+        Continuar Compra
+      </button>
+
+      <mat-error *ngIf="clienteControl.hasError('required') && clienteControl.touched">
+        O cliente é obrigatório.
+      </mat-error>
+
     </div>
   </div>
 </div>
