@@ -35,3 +35,60 @@
 table {
   width: 100%;
 }
+
+.setup-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.row {
+  display: flex;
+  gap: 15px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.btn-calcular {
+  width: 100%;
+  margin-top: 10px;
+}
+
+/* Container dos Cards */
+.cards-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 12px;
+  padding: 15px 0;
+  max-height: 350px; /* Limita altura com scroll se houver muitas parcelas */
+  overflow-y: auto;
+}
+
+.parcela-card {
+  border-left: 4px solid #3f51b5; /* Cor primária do Material */
+  background-color: #fafafa;
+}
+
+.card-item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 5px;
+  font-size: 0.9rem;
+}
+
+.label {
+  color: #666;
+  font-weight: 500;
+}
+
+.value {
+  font-weight: bold;
+}
+
+.value-highlight {
+  font-weight: bold;
+  color: #2e7d32; /* Cor verde para o valor */
+}

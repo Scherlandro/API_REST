@@ -30,35 +30,34 @@
 
   <mat-divider></mat-divider>
 
-  <div class="table-container" *ngIf="dataSource.length > 0">
-    <table mat-table [dataSource]="dataSource" class="mat-elevation-z2">
+<div class="cards-container" *ngIf="dataSourceParcelas.length > 0">
+  <mat-card *ngFor="let p of dataSourceParcelas" class="parcela-card">
+    <mat-card-content>
+      <div class="card-item">
+        <span class="label">Parcela</span>
+        <span class="value">{{p.numero}}x</span>
+      </div>
 
-      <ng-container matColumnDef="numero">
-        <th mat-header-cell *matHeaderCell=""> Parcela </th>
-        <td mat-cell *matCell="let p"> {{p.numero}}x </td>
-      </ng-container>
+      <div class="card-item">
+        <span class="label">Vencimento</span>
+        <span class="value">{{p.vencimento | date:'dd/MM/yyyy'}}</span>
+      </div>
 
-      <ng-container matColumnDef="vencimento">
-        <th mat-header-cell *matHeaderCell=""> Vencimento </th>
-        <td mat-cell *matCell="let p"> {{p.vencimento | date:'dd/MM/yyyy'}} </td>
-      </ng-container>
-
-      <ng-container matColumnDef="valor">
-        <th mat-header-cell *matHeaderCell=""> Valor </th>
-        <td mat-cell *matCell="let p"> {{p.valor | currency:'BRL'}} </td>
-      </ng-container>
-
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-    </table>
-  </div>
-</mat-dialog-content>
+      <div class="card-item">
+        <span class="label">Valor</span>
+        <span class="value-highlight">{{p.valor | currency:'BRL'}}</span>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>
 
 <mat-dialog-actions align="end">
   <button mat-button mat-dialog-close>Cancelar</button>
-  <button mat-raised-button color="accent" [mat-dialog-close]="dataSource" [disabled]="dataSource.length === 0">
+  <button mat-raised-button color="accent"
+          [mat-dialog-close]="dataSourceParcelas"
+          [disabled]="dataSourceParcelas.length === 0">
     Confirmar Parcelamento
   </button>
 </mat-dialog-actions>
 
-</div>
+

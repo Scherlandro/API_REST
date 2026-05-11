@@ -15,7 +15,7 @@ interface Parcela {
 })
 export class DialogParcelamentosComponent implements OnInit {
   parcelaForm: FormGroup;
-  dataSource: Parcela[] = [];
+  dataSourceParcelas: Parcela[] = [];
   displayedColumns: string[] = ['numero', 'vencimento', 'valor'];
 
   constructor(
@@ -50,6 +50,6 @@ export class DialogParcelamentosComponent implements OnInit {
       });
     }
 
-    this.dataSource = parcelas;
+    this.dataSourceParcelas = parcelas;
   }
 }
