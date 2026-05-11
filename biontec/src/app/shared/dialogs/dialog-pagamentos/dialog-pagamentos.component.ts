@@ -7,6 +7,7 @@ import { MatTable, MatTableDataSource } from "@angular/material/table";
 import { Observable, Subject, debounceTime, distinctUntilChanged, of, switchMap, takeUntil } from "rxjs";
 import { catchError, startWith } from "rxjs/operators";
 import { iPagamento } from "../../../interfaces/pagamento";
+import { iParcela } from "../../../interfaces/parcela";
 import { NotificationMgsService } from "../../../services/notification-mgs.service";
 import { PagamentoService } from "../../../services/pagmentos.service";
 import { TokenService } from "../../../services/token.service";
@@ -15,7 +16,6 @@ import { ErrorDiologComponent } from "../error-diolog/error-diolog.component";
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { DialogParcelamentosComponent } from "../dialog-parcelamentos/dialog-parcelamentos.component";
 import { DialogPixComponent } from "../dialog-pix/dialog-pix.component";
-import {EfiChargeRequest} from "../../../interfaces/efi-charge-request";
 
 
 @Component({
@@ -203,22 +203,28 @@ export class DialogPagamentosComponent implements OnInit, OnDestroy{
     this.notificationMsg.sendError("Erro ao gerar cobrança na Efí. Verifique os dados do cliente.");
   }
 
-  gerarParcelas(valor: any) {
+   gerarParcelas(valor: number) {
     const dialogRef = this.dialog.open(DialogParcelamentosComponent, {
       data: valor,
       width: '500px',
       disableClose: true // Impede fechar clicando fora, forçando o uso dos botões
     });
 
-    dialogRef.afterClosed().subscribe((parcelasGeradas: any[]) => {
-      if (parcelasGeradas) {
+    dialogRef.afterClosed().subscribe((parcelasGeradas: iParcela[]) => {
+     if (parcelasGeradas && parcelasGeradas.length > 0) {
         console.log('Parcelas recebidas do modal:', parcelasGeradas);
+      // 1. Armazena as parcelas para enviar no POST da venda depois
+     // this.listaDeParcelasFinal = parcelasGeradas;
         // para enviar junto com o formulário final da venda
        // this.listaDeParcelasFinal = parcelasGeradas;
         this.notificationMsg.success(`${parcelasGeradas.length} parcelas geradas com sucesso!`);
+      //para Reactive Forms na venda, pode atualizar um campo oculto:
+      // this.vendaForm.get('parcelas')?.setValue(parcelasGeradas);
       }
     });
   }
+
+// listaDeParcelasFinal: Parcela[] = [];
 
   abrirModalPix(dadosPix: any) {
     this.dialog.open(DialogPixComponent, {

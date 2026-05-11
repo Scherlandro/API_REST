@@ -1,12 +1,9 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { iParcela } from "../../../interfaces/parcela";
 
-interface Parcela {
-  numero: number;
-  vencimento: Date;
-  valor: number;
-}
+
 
 @Component({
   selector: 'app-dialog-parcelamentos',
@@ -15,7 +12,7 @@ interface Parcela {
 })
 export class DialogParcelamentosComponent implements OnInit {
   parcelaForm: FormGroup;
-  dataSourceParcelas: Parcela[] = [];
+  dataSourceParcelas: iParcela[] = [];
   displayedColumns: string[] = ['numero', 'vencimento', 'valor'];
 
   constructor(
@@ -37,7 +34,7 @@ export class DialogParcelamentosComponent implements OnInit {
 
     const { valorTotal, quantidade, dataPrimeiraParcela } = this.parcelaForm.value;
     const valorCadaParcela = valorTotal / quantidade;
-    const parcelas: Parcela[] = [];
+    const parcelas: iParcela[] = [];
 
     for (let i = 0; i < quantidade; i++) {
       const dataVencimento = new Date(dataPrimeiraParcela);
