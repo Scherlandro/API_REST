@@ -72,6 +72,7 @@ export class DialogPagamentosComponent implements OnInit, OnDestroy{
 
   carregarPagamentos() {
 
+      console.log('this.data.origemId, this.data.tipoOrigem ', this.data.origemId, this.data.tipoOrigem)
     this.pagamentoService.buscarPorOrigem(this.data.origemId, this.data.tipoOrigem)
       .pipe(catchError(error => {
         if (error === 'Session Expired')
@@ -213,10 +214,10 @@ export class DialogPagamentosComponent implements OnInit, OnDestroy{
     dialogRef.afterClosed().subscribe((parcelasGeradas: iParcela[]) => {
      if (parcelasGeradas && parcelasGeradas.length > 0) {
         console.log('Parcelas recebidas do modal:', parcelasGeradas);
-      // 1. Armazena as parcelas para enviar no POST da venda depois
-     // this.listaDeParcelasFinal = parcelasGeradas;
-        // para enviar junto com o formulário final da venda
+
+        // para enviar junto com o formulário final da venda Armazena as parcelas para enviar no POST da venda depois
        // this.listaDeParcelasFinal = parcelasGeradas;
+// listaDeParcelasFinal: Parcela[] = [];
         this.notificationMsg.success(`${parcelasGeradas.length} parcelas geradas com sucesso!`);
       //para Reactive Forms na venda, pode atualizar um campo oculto:
       // this.vendaForm.get('parcelas')?.setValue(parcelasGeradas);
@@ -224,7 +225,6 @@ export class DialogPagamentosComponent implements OnInit, OnDestroy{
     });
   }
 
-// listaDeParcelasFinal: Parcela[] = [];
 
   abrirModalPix(dadosPix: any) {
     this.dialog.open(DialogPixComponent, {

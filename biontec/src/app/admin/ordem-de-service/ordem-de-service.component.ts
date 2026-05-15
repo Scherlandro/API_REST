@@ -1,25 +1,24 @@
-import {animate, state, style, transition, trigger} from "@angular/animations";
-import {Component, OnInit, ViewChild} from '@angular/core';
-import {FormBuilder, FormControl} from "@angular/forms";
-import {catchError, delay, first} from "rxjs/operators";
-import {of, Subject, takeUntil, throwError} from "rxjs";
-import {MatTable, MatTableDataSource} from "@angular/material/table";
-import {MatPaginator, PageEvent} from "@angular/material/paginator";
-import {MatSort} from "@angular/material/sort";
-import {MatDialog} from "@angular/material/dialog";
-import {OrdemDeServicosService} from "../../services/ordem-de-servicos.service";
-import {FaseOS, iServiceOrder} from "../../interfaces/service-order";
-import {ICliente} from "../../interfaces/cliente";
-import {ItensOsService} from "../../services/itens-os.service";
-import {ErrorDiologComponent} from "../../shared/dialogs/error-diolog/error-diolog.component";
-import {iItensOS} from "../../interfaces/itens-os";
-import {DialogOpenOsComponent} from "../../shared/dialogs/dialog-open-os/dialog-open-os.component";
-import {TokenService} from "../../services/token.service";
-import {NotificationMgsService} from "../../services/notification-mgs.service";
-import {ChangeDetectorRef} from '@angular/core';
-import {CurrencyBRLPipe} from "../../shared/pipes/currency-brl.pipe";
-import {iPagamento} from "../../interfaces/pagamento";
-import {DialogPagamentosComponent} from "../../shared/dialogs/dialog-pagamentos/dialog-pagamentos.component";
+import { animate, state, style, transition, trigger } from "@angular/animations";
+import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
+import { FormBuilder, FormControl } from "@angular/forms";
+import { MatDialog } from "@angular/material/dialog";
+import { MatPaginator, PageEvent } from "@angular/material/paginator";
+import { MatSort } from "@angular/material/sort";
+import { MatTable, MatTableDataSource } from "@angular/material/table";
+import { Subject, of } from "rxjs";
+import { catchError, delay, first } from "rxjs/operators";
+import { ICliente } from "../../interfaces/cliente";
+import { iItensOS } from "../../interfaces/itens-os";
+import { iPagamento } from "../../interfaces/pagamento";
+import { FaseOS, iServiceOrder } from "../../interfaces/service-order";
+import { ItensOsService } from "../../services/itens-os.service";
+import { NotificationMgsService } from "../../services/notification-mgs.service";
+import { OrdemDeServicosService } from "../../services/ordem-de-servicos.service";
+import { TokenService } from "../../services/token.service";
+import { DialogOpenOsComponent } from "../../shared/dialogs/dialog-open-os/dialog-open-os.component";
+import { DialogPagamentosComponent } from "../../shared/dialogs/dialog-pagamentos/dialog-pagamentos.component";
+import { ErrorDiologComponent } from "../../shared/dialogs/error-diolog/error-diolog.component";
+import { CurrencyBRLPipe } from "../../shared/pipes/currency-brl.pipe";
 
 
 @Component({
@@ -438,6 +437,7 @@ export class OrdemDeServiceComponent implements OnInit {
 
 
   finalizarOperacao(origem: any) {
+    console.log('OS PAGAMENTOS', origem.idOS)
 
     const novoPagamento: iPagamento = {
       origemId: origem.idOS,

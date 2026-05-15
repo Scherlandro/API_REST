@@ -1,33 +1,32 @@
-import {Component, OnInit} from '@angular/core';
-import {iVendas} from "../../interfaces/vendas";
-import {PurchaseStateService} from "../../services/purchase-state.service";
-import {ProductService} from "../../services/product.service";
-import {iProduto} from "../../interfaces/product";
+import { Component, OnInit } from '@angular/core';
+import { FormControl, Validators } from "@angular/forms";
+import { MatDialog } from "@angular/material/dialog";
 import {
+  Observable,
+  catchError,
+  debounceTime,
+  distinctUntilChanged,
   finalize,
   forkJoin,
-  pipe,
-  of,
-  switchMap,
-  catchError,
   map,
-  Observable,
-  debounceTime,
-  distinctUntilChanged, takeUntil
+  of,
+  switchMap
 } from "rxjs";
-import {ICliente} from "../../interfaces/cliente";
-import {UserService} from "../../services/user.service";
-import {IUser} from "../../interfaces/user";
-import {CartItensService} from "../../services/cart-items.service";
-import {ErrorDiologComponent} from "../../shared/dialogs/error-diolog/error-diolog.component";
-import {MatDialog} from "@angular/material/dialog";
-import {AuthService} from "../../services/auth.service";
-import {iCartItens} from "../../interfaces/cart-itens";
-import {DialogPagamentosComponent} from "../../shared/dialogs/dialog-pagamentos/dialog-pagamentos.component";
-import {iPagamento} from "../../interfaces/pagamento";
-import {FormControl, Validators} from "@angular/forms";
-import {ClienteService} from "../../services/cliente.service";
-import {startWith} from "rxjs/operators";
+import { startWith } from "rxjs/operators";
+import { iCartItens } from "../../interfaces/cart-itens";
+import { ICliente } from "../../interfaces/cliente";
+import { iPagamento } from "../../interfaces/pagamento";
+import { iProduto } from "../../interfaces/product";
+import { IUser } from "../../interfaces/user";
+import { iVendas } from "../../interfaces/vendas";
+import { AuthService } from "../../services/auth.service";
+import { CartItensService } from "../../services/cart-items.service";
+import { ClienteService } from "../../services/cliente.service";
+import { ProductService } from "../../services/product.service";
+import { PurchaseStateService } from "../../services/purchase-state.service";
+import { UserService } from "../../services/user.service";
+import { DialogPagamentosComponent } from "../../shared/dialogs/dialog-pagamentos/dialog-pagamentos.component";
+import { ErrorDiologComponent } from "../../shared/dialogs/error-diolog/error-diolog.component";
 
 
 @Component({
@@ -235,7 +234,7 @@ export class CarrinhoDeComprasComponent implements OnInit {
     const novoPagamento: iPagamento = {
       origemId: origem.idVenda,
       pagador: this.cliente$,
-      tipoOrigem: 'Carrinho de Compras',
+      tipoOrigem: 'CART',
       status: 1,
       dtPagamento: origem.dtVenda,
       valorPago: this.total,
